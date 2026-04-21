@@ -88,7 +88,7 @@
       if (!mobileMenu.classList.contains("is-open")) {
         mobileMenu.hidden = true;
       }
-    }, 280);
+    }, 240);
 
     if (restoreFocus) {
       navToggle.focus();
@@ -122,12 +122,12 @@
       return;
     }
 
-    const distance = Math.max(window.innerHeight * 0.6, 1);
+    const distance = Math.max(window.innerHeight * 0.85, 1);
     const progress = Math.min(window.scrollY / distance, 1);
-    parallaxHero.style.setProperty("--hero-copy-translate", `${progress * -18}px`);
-    parallaxHero.style.setProperty("--hero-copy-scale", `${1 - progress * 0.04}`);
-    parallaxHero.style.setProperty("--hero-copy-opacity", `${1 - progress * 0.28}`);
-    parallaxHero.style.setProperty("--hero-panel-translate", `${progress * 28}px`);
+    parallaxHero.style.setProperty("--hero-copy-translate", `${progress * -6}px`);
+    parallaxHero.style.setProperty("--hero-copy-scale", `${1 - progress * 0.01}`);
+    parallaxHero.style.setProperty("--hero-copy-opacity", `${1 - progress * 0.1}`);
+    parallaxHero.style.setProperty("--hero-panel-translate", `${progress * 8}px`);
   }
 
   function initializeReveal() {
@@ -136,7 +136,7 @@
     }
 
     revealItems.forEach((item, index) => {
-      item.style.transitionDelay = `${Math.min(index * 60, 320)}ms`;
+      item.style.transitionDelay = `${Math.min(index * 24, 120)}ms`;
     });
 
     if (prefersReducedMotion || !("IntersectionObserver" in window)) {
@@ -158,8 +158,8 @@
         });
       },
       {
-        threshold: 0.16,
-        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px",
       }
     );
 
