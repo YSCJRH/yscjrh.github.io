@@ -1,5 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HJR favicon">
-  <rect width="64" height="64" rx="16" fill="#17212a"/>
-  <path d="M19 18h7v11h12V18h7v28h-7V35H26v11h-7V18z" fill="#f5f4ee"/>
-  <path d="M47 18h7c0 8.7-2.3 15-6.8 19.1L55 46h-8.8l-5.1-6.3 4.1-4.6C46.6 32.2 47 27 47 18z" fill="#305c62"/>
+  <defs>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6872D9"/>
+      <stop offset="100%" stop-color="#5E6AD2"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#050506"/>
+  <rect x="5" y="5" width="54" height="54" rx="16" fill="#0A0A0C" stroke="rgba(255,255,255,0.08)"/>
+  <circle cx="18" cy="18" r="9" fill="rgba(94,106,210,0.16)"/>
+  <rect x="18" y="16" width="6" height="32" rx="3" fill="#EDEDEF"/>
+  <rect x="18" y="29" width="22" height="6" rx="3" fill="#EDEDEF"/>
+  <rect x="40" y="16" width="6" height="21" rx="3" fill="#EDEDEF"/>
+  <path d="M43 38c0 6-3 10-10 10" fill="none" stroke="url(#accent)" stroke-linecap="round" stroke-width="6"/>
 </svg>
