@@ -1,45 +1,70 @@
-# Second-Pass Homepage Optimization
+# Next Phase: Content Evidence Reinforcement
 
 ## Goal
-- Refine the current live personal site into a clearer, more mature public identity interface.
-- Keep the one-page static structure and the existing dark technical direction.
-- Improve readability, hierarchy, project storytelling, credibility, and visitor action paths without redesigning the whole site.
+- Move the homepage from a polished structural pass to a more credible public identity interface.
+- Keep the current layout direction stable and focus the next iteration on evidence, project storytelling, notes startup, and GitHub coordination.
+- Avoid further broad visual redesign unless a concrete readability issue is discovered.
 
-## Main Workstreams
-1. Hero refinement
-   - make HJR / YSCJRH more person-legible
-   - reduce first-screen repetition
-   - keep GitHub and section CTA paths clear
-2. Research and Build clarity
-   - make Research read like a credible frame, not abstract filler
-   - make Build feel curated and evidence-oriented, not like a repo list
-3. Notes and About maturity
-   - make Notes feel like deliberate ongoing tracks
-   - make About / Contact more confident and directional
-4. Typography and motion restraint
-   - improve English / Chinese reading rhythm
-   - reduce oversized headline behavior
-   - soften spacing, glow, spotlight, and ambient motion
+## Current Status
+- The local repository has completed the second-pass typography and hierarchy refinement.
+- The latest pushed commit is `c83f2ca`.
+- As checked on `2026-04-21`, the public site at `https://yscjrh.github.io/` is now serving the refined homepage version, so the next phase can focus on content evidence rather than deployment propagation.
+
+## Phase 1: Deployment And Stability
+1. Verify the live GitHub Pages site has updated to the latest commit.
+2. Recheck desktop, tablet, and `360px` mobile behavior on the live site.
+3. Confirm:
+   - the new hero copy is live
+   - Build cards show the curated story structure
+   - `CONTENT_GAPS.md` is present in the repo only and not surfaced publicly
+   - navigation, language toggle, and focus states still work
+
+## Phase 2: Evidence Collection
+1. Gather one safe, public-facing example for each research direction:
+   - `Fluorescence Analysis`
+   - `Fluorescence Analysis × Intelligent Algorithms`
+   - `Fluorescence Instrumentation`
+2. Gather one stronger factual story input for each featured repository:
+   - what workflow or problem it came from
+   - why it matters
+   - what it demonstrates about the builder
+3. Prioritize `ai-visibility-auditor` as the first repository to strengthen.
+
+## Phase 3: Notes Startup
+1. Review the first short starter drafts now present under `content/notes/`:
+   - `research-reflections-signals-and-judgment.md`
+   - `build-logs-homepage-second-pass.md`
+   - `method-notes-evidence-first-project-storytelling.md`
+2. The first homepage-linked note is now staged locally at `notes/build-logs-homepage-second-pass.html`.
+3. A lightweight notes hub is now staged locally at `notes/index.html`.
+4. Keep the remaining drafts short, truthful, and clearly marked as working material rather than polished essays.
+5. Decide whether the next public step should be:
+   - publishing this first note plus the notes hub
+   - promoting a second note draft
+   - or keeping the hub intentionally small for one more iteration
+
+## Phase 4: GitHub Coordination
+1. Compare homepage project emphasis with the GitHub profile and pinned repositories.
+2. Align public wording where useful:
+   - homepage project framing
+   - repository descriptions
+   - GitHub profile wording
+3. Keep the same factual boundaries everywhere.
 
 ## Deliverables
-- `index.html`
-- `styles.css`
-- `script.js`
-- `CONTENT_GAPS.md`
+- updated `CONTENT_GAPS.md`
+- stronger homepage copy where real evidence is available
+- first real note drafts, if safe material is provided
+- a short GitHub coordination checklist
 
 ## Constraints
-- No invented publications, awards, affiliations, metrics, results, or contact details.
-- No framework, dependency, domain, or GitHub Pages configuration changes.
-- Keep the existing repository links unchanged.
-- Keep the section order: Hero, Research, Build, Notes, About / Contact.
+- No invented publications, awards, affiliations, metrics, users, or research results.
+- No framework or deployment-setting changes.
+- No new public contact method unless explicitly provided.
+- Keep the current one-page information architecture intact.
 
 ## Validation
-- Preview locally with `python -m http.server 4173`.
-- Check desktop, tablet, and `360px` mobile layout.
-- Confirm:
-  - one clear `h1`
-  - more compact first screen
-  - stronger visitor path to GitHub and selected sections
-  - clearer project significance
-  - no fabricated proof
-  - comfortable Chinese and English reading rhythm
+- confirm the live site reflects the latest pushed version
+- verify layout and interaction on local and live pages
+- verify new content additions are supported by real source material
+- keep the final diff small, explainable, and credibility-positive
