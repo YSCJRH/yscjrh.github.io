@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Review / Current Intake Snapshot / HJR / YSCJRH</title>
+    <meta
+      name="description"
+      content="A review surface for the current intake round: project baseline, confirmed findings, risks, and next checks for YSCJRH's personal website."
+    >
+    <meta property="og:title" content="Review / Current Intake Snapshot / HJR / YSCJRH">
+    <meta
+      property="og:description"
+      content="A review-ready page that consolidates the latest intake findings, verification notes, and next actions for the personal website repository."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yscjrh.github.io/review/">
+    <meta property="og:site_name" content="HJR / YSCJRH">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#050506">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://yscjrh.github.io/review/">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js" defer></script>
+  </head>
+  <body>
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-noise"></div>
+      <div class="ambient-blob ambient-blob-primary"></div>
+      <div class="ambient-blob ambient-blob-secondary"></div>
+      <div class="ambient-blob ambient-blob-tertiary"></div>
+      <div class="ambient-blob ambient-blob-bottom"></div>
+    </div>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container site-header__inner">
+          <a class="brand" href="../index.html#top" aria-label="HJR homepage">
+            <span class="brand-mark">HJR</span>
+            <span class="brand-sub">YSCJRH</span>
+          </a>
+
+          <div class="site-header__cluster">
+            <nav class="site-nav" aria-label="Primary navigation">
+              <a href="../index.html#research">Research</a>
+              <a href="../index.html#build">Build</a>
+              <a href="../notes/">Notes</a>
+              <a href="./index.html" aria-current="page">Review</a>
+            </nav>
+
+            <div class="header-controls">
+              <button
+                class="nav-toggle"
+                type="button"
+                data-nav-toggle
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+                aria-label="Toggle navigation menu"
+              >
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="container mobile-menu-wrap">
+          <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
+            <nav class="mobile-nav" aria-label="Mobile navigation">
+              <a href="../index.html#research">Research</a>
+              <a href="../index.html#build">Build</a>
+              <a href="../notes/">Notes</a>
+              <a href="./index.html" aria-current="page">Review</a>
+            </nav>
+
+            <a
+              class="button button-primary mobile-menu__cta"
+              href="https://github.com/YSCJRH"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit the YSCJRH GitHub profile"
+            >
+              Visit GitHub
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="section article-section">
+          <div class="container article-shell notes-hub-shell">
+            <div class="article-nav" data-reveal>
+              <a class="article-back" href="../index.html#top">Back to Homepage</a>
+            </div>
+
+            <article class="surface surface-glass article-card" data-reveal>
+              <p class="eyebrow">Review Surface</p>
+              <h1 class="article-title">Current Intake Snapshot</h1>
+              <span class="note-status article-status">Review draft</span>
+              <p class="article-lead">
+                This page closes the current intake round into one reviewable surface. It consolidates the repo baseline,
+                confirmed findings, verification limits, and the next checks that should happen before the next content or
+                implementation pass.
+              </p>
+
+              <div class="article-body">
+                <section class="article-block">
+                  <h2 class="article-subtitle">What was landed in this round</h2>
+                  <ul class="article-list">
+                    <li>A maintainer-facing repository entrypoint in <a href="../README.md">README.md</a>.</li>
+                    <li>A consolidated intake summary in <a href="../docs/handoff-brief.md">docs/handoff-brief.md</a>.</li>
+                    <li>A manual QA path in <a href="../docs/manual-qa-checklist.md">docs/manual-qa-checklist.md</a>.</li>
+                    <li>A GitHub alignment checklist in <a href="../docs/github-coordination-checklist.md">docs/github-coordination-checklist.md</a>.</li>
+                    <li>A static verification note in <a href="../docs/public-surface-verification-2026-04-22.md">docs/public-surface-verification-2026-04-22.md</a>.</li>
+                    <li>A decision-log scaffold in <a href="../docs/decisions/README.md">docs/decisions/README.md</a>.</li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">Current project baseline</h2>
+                  <ul class="article-list">
+                    <li>The site remains a static GitHub Pages repository with shared <code>styles.css</code> and <code>script.js</code>.</li>
+                    <li>The homepage is still the main public surface, but the site already includes a live notes hub and one published note.</li>
+                    <li>The current bottleneck is not layout invention. It is evidence quality, GitHub coordination, and static maintenance pressure.</li>
+                    <li>This review page is meant to support auditing, not to introduce a new public narrative layer.</li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">Public surfaces under review</h2>
+                  <ul class="article-list">
+                    <li><a href="../index.html">Homepage</a></li>
+                    <li><a href="../notes/">Notes hub</a></li>
+                    <li><a href="../notes/build-logs-homepage-second-pass.html">First published note</a></li>
+                    <li><a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub profile</a></li>
+                    <li>Featured repositories: <code>ai-visibility-auditor</code>, <code>codex-via-phone</code>, <code>skylattice</code>, <code>mirror-sim</code>, <code>create-double-skill</code></li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">Confirmed findings</h2>
+                  <ul class="article-list">
+                    <li>Repo rules are aligned around a calm researcher-builder identity and strict no-invention boundaries.</li>
+                    <li>The current phase is evidence reinforcement, not redesign or framework migration.</li>
+                    <li>The homepage does include a <code>notes/</code> path today, but the more prominent notes action still points to the first published note.</li>
+                    <li>The frontend currently relies on duplicated shared shell markup, client-side bilingual switching, and hand-maintained cross-page note summaries.</li>
+                    <li>GitHub public descriptions are mostly aligned, with <code>mirror-sim</code> and <code>create-double-skill</code> still worth explicit wording review.</li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">Review risks</h2>
+                  <ul class="article-list">
+                    <li>Strengthening homepage copy without new factual input would create the biggest credibility risk.</li>
+                    <li>Homepage wording, notes wording, and GitHub wording can drift unless they are checked in one pass.</li>
+                    <li>Notes discoverability is not absent, but it is still not fully resolved as a product decision.</li>
+                    <li>Static maintenance cost will grow if more notes and shared-shell pages are added without a clearer source-of-truth pattern.</li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">What still needs real browser review</h2>
+                  <ul class="article-list">
+                    <li>Sticky-header anchor landing behavior</li>
+                    <li>Language-switch persistence across pages</li>
+                    <li>Mobile menu behavior and keyboard flow</li>
+                    <li>Reduced-motion feel and reveal behavior in a real browser</li>
+                    <li>The practical prominence of the notes hub in the current navigation experience</li>
+                  </ul>
+                </section>
+
+                <section class="article-block">
+                  <h2 class="article-subtitle">Recommended review sequence</h2>
+                  <ol class="article-list">
+                    <li>Read the handoff brief for the current baseline and boundaries.</li>
+                    <li>Open the homepage, notes hub, and first note side by side.</li>
+                    <li>Run the manual QA checklist locally.</li>
+                    <li>Run the GitHub coordination checklist against the public profile and featured repos.</li>
+                    <li>Use <code>CONTENT_GAPS.md</code> to collect only the factual inputs that are still missing.</li>
+                  </ol>
+                </section>
+              </div>
+            </article>
+
+            <article class="surface surface-glass article-card" data-reveal>
+              <p class="eyebrow">Source Pack</p>
+              <h2 class="article-subtitle">Files to keep open while reviewing</h2>
+              <p class="article-lead">
+                These are the working files behind this page. They hold the source of truth for the current intake round.
+              </p>
+              <ul class="article-list">
+                <li><a href="../personalweb.md">personalweb.md</a></li>
+                <li><a href="../AGENTS.md">AGENTS.md</a></li>
+                <li><a href="../PLANS.md">PLANS.md</a></li>
+                <li><a href="../CONTENT_GAPS.md">CONTENT_GAPS.md</a></li>
+                <li><a href="../docs/handoff-brief.md">docs/handoff-brief.md</a></li>
+                <li><a href="../docs/manual-qa-checklist.md">docs/manual-qa-checklist.md</a></li>
+                <li><a href="../docs/github-coordination-checklist.md">docs/github-coordination-checklist.md</a></li>
+                <li><a href="../docs/public-surface-verification-2026-04-22.md">docs/public-surface-verification-2026-04-22.md</a></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <p>Review surface for the current intake round.</p>
+          <a href="../index.html#top">Back to top</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

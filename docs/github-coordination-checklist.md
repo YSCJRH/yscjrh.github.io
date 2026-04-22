@@ -11,6 +11,34 @@ Keep the homepage and the public GitHub profile telling the same story:
 - open-source builder
 - note-driven thinker
 
+## Current Snapshot
+
+Public snapshot confirmed during intake:
+
+- GitHub user login: `YSCJRH`
+- profile name: `HJR`
+- profile bio: currently empty
+- profile blog/homepage field: currently empty
+
+Repository description alignment from public API:
+
+- `ai-visibility-auditor`
+  - closely aligned with homepage wording
+- `codex-via-phone`
+  - closely aligned with homepage wording
+- `skylattice`
+  - closely aligned with homepage wording
+- `mirror-sim`
+  - wording divergence to review: GitHub emphasizes the Liu Cixin / "The Mirror" framing more than the homepage does
+- `create-double-skill`
+  - wording divergence to review: GitHub description is broader than the tighter homepage framing
+
+Still not verified in this repo:
+
+- pinned repository order on the public profile
+- whether the public profile should expose the homepage URL
+- whether the sparse profile presentation is intentional long-term or just temporary
+
 ## Homepage Side
 
 Current homepage emphasis:
@@ -62,6 +90,7 @@ Things to verify manually on the public profile:
 - compare repo descriptions with homepage project summaries
 - check whether a profile README is needed or already sufficient
 - check whether the homepage URL on the GitHub profile still points to the live site
+- decide whether `mirror-sim` and `create-double-skill` should move closer to their current GitHub descriptions or closer to their current homepage framing
 
 ## Things Intentionally Left Unchanged For Now
 
