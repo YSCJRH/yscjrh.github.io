@@ -1,26 +1,24 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <title>HJR / YSCJRH - Fluorescence Research, Build, Notes</title>
+    <title>HJR / YSCJRH - Fluorescence Research, Open Tools, Notes</title>
     <meta
       name="description"
-      content="HJR / YSCJRH is a fluorescence-analysis researcher and open-source builder working across intelligent algorithms, scientific instrumentation, and working notes."
+      content="A calm personal website for HJR / YSCJRH across fluorescence analysis, intelligent algorithms, scientific instrumentation, and open-source tools."
     >
-    <meta property="og:title" content="HJR / YSCJRH - Fluorescence Research, Build, Notes">
+    <meta property="og:title" content="HJR / YSCJRH - Fluorescence Research, Open Tools, Notes">
     <meta
       property="og:description"
-      content="A calm personal homepage connecting fluorescence research, open-source building, and note-driven thinking."
+      content="A research-oriented personal website connecting fluorescence analysis, open tools, and note-driven work."
     >
     <meta property="og:site_name" content="HJR / YSCJRH">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yscjrh.github.io/">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="zh_CN">
     <meta name="twitter:card" content="summary">
-    <meta name="theme-color" content="#050506">
+    <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
@@ -33,7 +31,6 @@
       <div class="ambient-blob ambient-blob-primary"></div>
       <div class="ambient-blob ambient-blob-secondary"></div>
       <div class="ambient-blob ambient-blob-tertiary"></div>
-      <div class="ambient-blob ambient-blob-bottom"></div>
     </div>
 
     <a class="skip-link" href="#main">Skip to content / 跳到内容</a>
@@ -42,36 +39,19 @@
       <header class="site-header" id="top">
         <div class="container site-header__inner">
           <a class="brand" href="#top" aria-label="HJR homepage">
-            <span class="brand-mark">HJR</span>
-            <span class="brand-sub">YSCJRH</span>
+            <span class="brand-mark">HJR / YSCJRH</span>
+            <span class="brand-sub">Researcher · Builder · Thinker</span>
           </a>
 
           <div class="site-header__cluster">
             <nav class="site-nav" aria-label="Primary navigation">
-              <a href="#research">
-                <span class="lang-en">Research</span>
-                <span class="lang-zh">研究</span>
-              </a>
-              <a href="#build">
-                <span class="lang-en">Build</span>
-                <span class="lang-zh">构建</span>
-              </a>
-              <a href="#notes">
-                <span class="lang-en">Notes</span>
-                <span class="lang-zh">笔记</span>
-              </a>
-              <a href="#about">
-                <span class="lang-en">About</span>
-                <span class="lang-zh">关于</span>
-              </a>
+              <a href="#research">Research / 研究</a>
+              <a href="#build">Build / 构建</a>
+              <a href="#notes">Notes / 笔记</a>
+              <a href="#about">About / 关于</a>
             </nav>
 
             <div class="header-controls">
-              <div class="lang-switch" role="group" aria-label="Language switch / 语言切换">
-                <button class="lang-button" type="button" data-set-lang="zh">中文</button>
-                <button class="lang-button" type="button" data-set-lang="en">EN</button>
-              </div>
-
               <button
                 class="nav-toggle"
                 type="button"
@@ -91,22 +71,11 @@
         <div class="container mobile-menu-wrap">
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
             <nav class="mobile-nav" aria-label="Mobile navigation">
-              <a href="#research">
-                <span class="lang-en">Research</span>
-                <span class="lang-zh">研究</span>
-              </a>
-              <a href="#build">
-                <span class="lang-en">Build</span>
-                <span class="lang-zh">构建</span>
-              </a>
-              <a href="#notes">
-                <span class="lang-en">Notes</span>
-                <span class="lang-zh">笔记</span>
-              </a>
-              <a href="#about">
-                <span class="lang-en">About</span>
-                <span class="lang-zh">关于</span>
-              </a>
+              <a href="#research">Research / 研究</a>
+              <a href="#build">Build / 构建</a>
+              <a href="#notes">Notes / 笔记</a>
+              <a href="#about">About / 关于</a>
+              <a href="projects/">Projects / 项目</a>
             </nav>
 
             <a
@@ -116,8 +85,7 @@
               rel="noopener noreferrer"
               aria-label="Visit the YSCJRH GitHub profile"
             >
-              <span class="lang-en">Visit GitHub</span>
-              <span class="lang-zh">查看 GitHub</span>
+              Visit GitHub / 查看 GitHub
             </a>
           </div>
         </div>
@@ -125,709 +93,373 @@
 
       <main id="main">
         <section class="section hero-section" data-parallax-hero>
-          <div class="container hero-grid">
-            <article class="surface surface-hero hero-copy" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">HJR / YSCJRH</span>
-                <span class="lang-zh">HJR / YSCJRH</span>
-              </p>
+          <div class="container">
+            <div class="surface surface-hero hero-panel">
+              <div class="hero-grid">
+                <article class="hero-copy" data-reveal>
+                  <p class="eyebrow">Researcher · Builder · Thinker</p>
+                  <h1 class="hero-title">Exploring Fluorescence. Building Open Tools.</h1>
+                  <p class="hero-title-zh">探索荧光世界，构建开放工具。</p>
+                  <p class="hero-lead">
+                    HJR works across fluorescence analysis, intelligent algorithms, scientific instrumentation,
+                    and open-source workflows that make methods easier to inspect and reuse.
+                  </p>
+                  <p class="hero-lead hero-lead-zh">
+                    围绕荧光分析、智能算法、科学仪器与开源工作流持续展开研究与构建，
+                    让方法、判断与工具保持可见、可检视、可复用。
+                  </p>
 
-              <h1 class="hero-title">
-                <span class="lang-en">
-                  HJR is a
-                  <span class="text-accent-gradient">fluorescence analysis researcher</span>
-                  who also builds open-source tools.
-                </span>
-                <span class="lang-zh">
-                  HJR 是一位从事
-                  <span class="text-accent-gradient">荧光分析研究</span>
-                  、也持续构建开源工具的人。
-                </span>
-              </h1>
+                  <div class="hero-actions">
+                    <a
+                      class="button button-primary"
+                      href="https://github.com/YSCJRH"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit the YSCJRH GitHub profile"
+                    >
+                      Visit GitHub / 查看 GitHub
+                    </a>
+                    <a class="button button-secondary" href="projects/">
+                      View Projects / 查看项目
+                    </a>
+                  </div>
 
-              <p class="hero-lead">
-                <span class="lang-en">
-                  The work sits where research questions, intelligent algorithms, scientific instrumentation,
-                  and note-driven tooling can inform one another.
-                </span>
-                <span class="lang-zh">
-                  这项工作位于一个交叉点上：让研究问题、智能算法、科学仪器与笔记驱动的工具彼此发生作用。
-                </span>
-              </p>
+                  <ul class="hero-strip" aria-label="Core directions">
+                    <li class="hero-strip-item">
+                      <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true">
+                      <div>
+                        <strong>Fluorescence Analysis</strong>
+                        <span>荧光分析</span>
+                      </div>
+                    </li>
+                    <li class="hero-strip-item">
+                      <img src="assets/img/icon-network.svg" alt="" aria-hidden="true">
+                      <div>
+                        <strong>Intelligent Algorithms</strong>
+                        <span>智能算法</span>
+                      </div>
+                    </li>
+                    <li class="hero-strip-item">
+                      <img src="assets/img/icon-instrument.svg" alt="" aria-hidden="true">
+                      <div>
+                        <strong>Scientific Instrumentation</strong>
+                        <span>科学仪器</span>
+                      </div>
+                    </li>
+                    <li class="hero-strip-item">
+                      <img src="assets/img/icon-notes.svg" alt="" aria-hidden="true">
+                      <div>
+                        <strong>Note-driven Tools</strong>
+                        <span>笔记驱动工具</span>
+                      </div>
+                    </li>
+                  </ul>
+                </article>
 
-              <div class="hero-actions">
-                <a
-                  class="button button-primary"
-                  href="https://github.com/YSCJRH"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit the YSCJRH GitHub profile"
-                >
-                  <span class="lang-en">Visit GitHub</span>
-                  <span class="lang-zh">查看 GitHub</span>
-                </a>
-                <a class="button button-secondary" href="#build">
-                  <span class="lang-en">View Selected Projects</span>
-                  <span class="lang-zh">查看精选项目</span>
-                </a>
+                <aside class="hero-visual" data-reveal>
+                  <img
+                    class="hero-illustration"
+                    src="assets/img/hero-lab.svg"
+                    alt="A glowing microscope, sample vial, signal traces, and molecular nodes."
+                  >
+                  <div class="hero-visual-note">
+                    <p>Signals · Methods · Instruments · Tools</p>
+                    <p>信号 · 方法 · 仪器 · 工具</p>
+                  </div>
+                </aside>
               </div>
-
-              <p class="hero-path">
-                <span class="lang-en">
-                  Start with the featured project, use Research to understand the frame, and return for Notes as they appear.
-                </span>
-                <span class="lang-zh">
-                  建议先看精选项目，再用 Research 理解问题框架，最后回到 Notes 关注仍在形成中的部分。
-                </span>
-              </p>
-
-              <ul class="hero-pill-list" aria-label="Identity pillars">
-                <li class="hero-pill">
-                  <span class="lang-en">Research frame</span>
-                  <span class="lang-zh">研究框架</span>
-                </li>
-                <li class="hero-pill">
-                  <span class="lang-en">Selected tools</span>
-                  <span class="lang-zh">精选工具</span>
-                </li>
-                <li class="hero-pill">
-                  <span class="lang-en">Working notes</span>
-                  <span class="lang-zh">工作笔记</span>
-                </li>
-              </ul>
-            </article>
-
-            <article class="surface surface-glass hero-support" data-reveal>
-              <p class="surface-label">
-                <span class="lang-en">Current direction</span>
-                <span class="lang-zh">当前方向</span>
-              </p>
-
-              <dl class="status-list">
-                <div class="status-item">
-                  <dt>
-                    <span class="lang-en">Rare intersection</span>
-                    <span class="lang-zh">稀缺交叉点</span>
-                  </dt>
-                  <dd>
-                    <span class="lang-en">Fluorescence analysis, intelligent algorithms, instrumentation, and public tools are treated as one working system.</span>
-                    <span class="lang-zh">把荧光分析、智能算法、仪器系统与公开工具视作同一个工作系统来推进。</span>
-                  </dd>
-                </div>
-
-                <div class="status-item">
-                  <dt>
-                    <span class="lang-en">Public today</span>
-                    <span class="lang-zh">当前可见</span>
-                  </dt>
-                  <dd>
-                    <span class="lang-en">This page shows the research frame, selected repositories, and the note streams that are taking shape in public.</span>
-                    <span class="lang-zh">这张页面当前公开的是研究框架、精选仓库，以及正在逐步成形的几条笔记流。</span>
-                  </dd>
-                </div>
-
-                <div class="status-item">
-                  <dt>
-                    <span class="lang-en">Still early</span>
-                    <span class="lang-zh">仍在形成</span>
-                  </dt>
-                  <dd>
-                    <span class="lang-en">Stronger public examples, note entries, and research proof will be added only when they can be stated clearly and truthfully.</span>
-                    <span class="lang-zh">更具体的公开案例、笔记条目与研究证明，会在能够清楚且真实表述时再逐步补上。</span>
-                  </dd>
-                </div>
-              </dl>
-            </article>
+            </div>
           </div>
         </section>
 
         <section class="section" id="research">
           <div class="container">
-            <div class="section-header" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">Research</span>
-                <span class="lang-zh">研究</span>
-              </p>
-              <h2 class="section-title">
-                <span class="lang-en">Research directions shaped by signals, methods, and instruments.</span>
-                <span class="lang-zh">由信号、方法与仪器共同塑造的研究方向。</span>
-              </h2>
-              <p class="section-copy">
-                <span class="lang-en">
-                  This is not a publication list. It is the working frame behind the kinds of analytical questions, methods, and systems that keep recurring here.
-                </span>
-                <span class="lang-zh">
-                  这里不是论文或成果清单，而是支撑这些分析问题、方法路径与系统思考的工作框架。
-                </span>
-              </p>
-            </div>
+            <div class="surface section-panel">
+              <div class="module-head" data-reveal>
+                <div>
+                  <p class="eyebrow">Research / 研究</p>
+                  <h2 class="section-title">Three directions shaped by signals, methods, and instruments.</h2>
+                  <p class="section-copy">Long-term curiosity. Systematic exploration.</p>
+                  <p class="section-copy section-copy-zh">长期的好奇，系统性的探索。</p>
+                </div>
+              </div>
 
-            <div class="research-grid">
-              <article class="surface research-card" data-reveal>
-                <p class="surface-label">01</p>
-                <h3>
-                  <span class="lang-en">Fluorescence Analysis</span>
-                  <span class="lang-zh">荧光分析</span>
-                </h3>
-                <dl class="detail-list">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Question</span>
-                      <span class="lang-zh">问题</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How can fluorescence signals be turned into information strong enough for analytical judgment?</span>
-                      <span class="lang-zh">如何把荧光信号整理成足以支持分析判断的信息？</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Approach</span>
-                      <span class="lang-zh">路径</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Keep measurement conditions, interpretation, and repeatability in one frame instead of treating them as separate steps.</span>
-                      <span class="lang-zh">把测量条件、结果解释与重复性放在同一框架里，而不是割裂成彼此独立的步骤。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">意义</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Reliable signal reading is the base layer for later algorithmic or instrumental decisions.</span>
-                      <span class="lang-zh">稳定可靠的信号理解，是后续算法判断与仪器设计的基础层。</span>
-                    </dd>
-                  </div>
-                </dl>
-              </article>
+              <div class="research-grid">
+                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                  <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true" class="research-icon">
+                  <h3>Fluorescence Analysis / 荧光分析</h3>
+                  <p class="card-copy">
+                    Working on how fluorescence signals become information strong enough for analytical judgment.
+                  </p>
+                  <p class="card-copy card-copy-zh">
+                    关注荧光信号如何转化为足以支撑分析判断的信息。
+                  </p>
+                  <span class="card-hint" aria-hidden="true">01</span>
+                </article>
 
-              <article class="surface research-card" data-reveal>
-                <p class="surface-label">02</p>
-                <h3>
-                  <span class="lang-en">Fluorescence Analysis × Intelligent Algorithms</span>
-                  <span class="lang-zh">荧光分析 × 智能算法</span>
-                </h3>
-                <dl class="detail-list">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Question</span>
-                      <span class="lang-zh">问题</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How can difficult fluorescence data become easier to compare, interpret, and use in practice?</span>
-                      <span class="lang-zh">如何让复杂的荧光数据在实践中更容易比较、解释和使用？</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Approach</span>
-                      <span class="lang-zh">路径</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Combine algorithmic workflows with domain constraints instead of treating models as detached add-ons.</span>
-                      <span class="lang-zh">把算法工作流与领域约束一起考虑，而不是把模型当作脱离问题语境的附加层。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">意义</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Algorithms become more credible when they clarify decisions rather than hide them.</span>
-                      <span class="lang-zh">当算法帮助澄清判断而不是遮蔽判断时，它才真正对分析工作有价值。</span>
-                    </dd>
-                  </div>
-                </dl>
-              </article>
+                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                  <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="research-icon">
+                  <h3>Fluorescence Analysis × Intelligent Algorithms / 荧光分析 × 智能算法</h3>
+                  <p class="card-copy">
+                    Combining algorithmic workflows with domain constraints so comparison and interpretation stay useful in practice.
+                  </p>
+                  <p class="card-copy card-copy-zh">
+                    把算法工作流与领域约束放在一起考虑，让比较、解释与使用保持真实有效。
+                  </p>
+                  <span class="card-hint" aria-hidden="true">02</span>
+                </article>
 
-              <article class="surface research-card" data-reveal>
-                <p class="surface-label">03</p>
-                <h3>
-                  <span class="lang-en">Fluorescence Instrumentation</span>
-                  <span class="lang-zh">荧光仪器</span>
-                </h3>
-                <dl class="detail-list">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Question</span>
-                      <span class="lang-zh">问题</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How should sensing, control, method design, and instrument behavior stay aligned as one system?</span>
-                      <span class="lang-zh">感知、控制、方法设计与仪器行为，如何作为一个系统保持对齐？</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Approach</span>
-                      <span class="lang-zh">路径</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Treat instruments as working systems rather than isolated hardware components.</span>
-                      <span class="lang-zh">把仪器当作有完整工作链条的系统来思考，而不是孤立的硬件部件。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">意义</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">Analytical robustness depends on the full measurement chain, not only on post hoc data handling.</span>
-                      <span class="lang-zh">分析工作的稳健性，依赖的是完整测量链条，而不仅是事后数据处理。</span>
-                    </dd>
-                  </div>
-                </dl>
-              </article>
+                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                  <img src="assets/img/icon-instrument.svg" alt="" aria-hidden="true" class="research-icon">
+                  <h3>Fluorescence Instrumentation / 荧光仪器</h3>
+                  <p class="card-copy">
+                    Treating sensing, control, method design, and instrument behavior as one connected working system.
+                  </p>
+                  <p class="card-copy card-copy-zh">
+                    把感知、控制、方法设计与仪器行为视作一个连贯的工作系统。
+                  </p>
+                  <span class="card-hint" aria-hidden="true">03</span>
+                </article>
+              </div>
             </div>
           </div>
         </section>
+
         <section class="section" id="build">
           <div class="container">
-            <div class="section-header" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">Build</span>
-                <span class="lang-zh">构建</span>
-              </p>
-              <h2 class="section-title">
-                <span class="lang-en">Selected repositories that make ways of working more visible.</span>
-                <span class="lang-zh">让工作方式更可见的精选仓库。</span>
-              </h2>
-              <p class="section-copy">
-                <span class="lang-en">
-                  These projects are not shown as a plain repository list. Each one points to a workflow, a constraint, or a builder preference that matters to the broader identity on this page.
-                </span>
-                <span class="lang-zh">
-                  这里不是普通的仓库清单。每个项目都对应一种工作流、一个现实约束，或一种值得公开展示的构建偏好。
-                </span>
-              </p>
-            </div>
+            <div class="surface section-panel">
+              <div class="module-head" data-reveal>
+                <div>
+                  <p class="eyebrow">Build / 构建</p>
+                  <h2 class="section-title">Selected repositories that turn working ideas into usable tools.</h2>
+                  <p class="section-copy">
+                    These projects are shown as public evidence of workflow, judgment, and technical taste.
+                  </p>
+                  <p class="section-copy section-copy-zh">
+                    这些仓库不是简单罗列，而是对工作流、判断方式与技术品味的公开证据。
+                  </p>
+                </div>
+                <a class="button button-secondary module-button" href="projects/">View All Projects / 查看全部项目</a>
+              </div>
 
-            <div class="build-grid">
-              <article class="surface surface-interactive project-card project-card-featured" data-spotlight data-reveal>
-                <p class="surface-label">
-                  <span class="lang-en">Featured project</span>
-                  <span class="lang-zh">代表项目</span>
-                </p>
-                <h3>ai-visibility-auditor</h3>
-                <p class="project-copy">
-                  <span class="lang-en">AnswerLens: CLI-first AI visibility auditor for product websites.</span>
-                  <span class="lang-zh">AnswerLens：面向产品网站的命令行优先 AI 可见性审计工具。</span>
-                </p>
-                <dl class="detail-list project-story">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Explores</span>
-                      <span class="lang-zh">探索</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How AI discoverability can be audited through GitHub-native, report-driven workflows that write reviewable artifacts.</span>
-                      <span class="lang-zh">如何通过 GitHub 原生、报告驱动、可回看产物的工作流来审计 AI discoverability。</span>
-                    </dd>
+              <div class="build-grid">
+                <article class="surface surface-interactive project-card project-card-featured" data-reveal data-spotlight>
+                  <div class="project-topline">
+                    <span class="project-badge">Featured / 重点项目</span>
+                    <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="project-mark">
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">为什么重要</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">It gives teams a way to inspect why AI systems miss, flatten, or misread a site without leaning on dashboard lock-in or UI scraping.</span>
-                      <span class="lang-zh">它让团队能够检查 AI 为什么会错过、压平或误读一个网站，而不是依赖 dashboard lock-in 或 UI scraping。</span>
-                    </dd>
+                  <h3>ai-visibility-auditor</h3>
+                  <p class="project-copy">AnswerLens: CLI-first AI visibility auditor for product websites.</p>
+                  <p class="project-copy project-copy-zh">
+                    一个面向产品网站的 CLI 优先 AI 可见性审计工具，强调结构、证据与可复查输出。
+                  </p>
+                  <ul class="tag-list" aria-label="Project tags">
+                    <li>AI Visibility</li>
+                    <li>CLI</li>
+                    <li>GitHub Native</li>
+                  </ul>
+                  <div class="project-actions">
+                    <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor#readme" target="_blank" rel="noopener noreferrer">Docs</a>
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Suggests</span>
-                      <span class="lang-zh">体现</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">A builder preference for explainable structure, visible evidence, and report-first operational clarity.</span>
-                      <span class="lang-zh">它体现出一种构建偏好：偏向可解释结构、可见证据，以及以报告为先的操作清晰性。</span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  class="project-link"
-                  href="https://github.com/YSCJRH/ai-visibility-auditor"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open the ai-visibility-auditor repository on GitHub"
-                >
-                  <span class="lang-en">Open repository</span>
-                  <span class="lang-zh">查看仓库</span>
-                </a>
-              </article>
+                </article>
 
-              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                <h3>codex-via-phone</h3>
-                <p class="project-copy">
-                  <span class="lang-en">Phone-friendly private control layer for local Codex sessions on Windows.</span>
-                  <span class="lang-zh">为 Windows 本地 Codex 会话设计的、适合手机使用的私有控制层。</span>
-                </p>
-                <dl class="detail-list project-story">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Explores</span>
-                      <span class="lang-zh">探索</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How a local Codex workflow can stay phone-accessible without moving the session off a Windows PC.</span>
-                      <span class="lang-zh">如何让本地 Codex 工作流在不离开 Windows 电脑的前提下，仍然保持手机可访问。</span>
-                    </dd>
+                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <h3>codex-via-phone</h3>
+                  <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
+                  <p class="project-copy project-copy-zh">面向本地 Codex 会话的手机友好控制层，强调私有、安全与可达性。</p>
+                  <ul class="tag-list" aria-label="Project tags">
+                    <li>Windows</li>
+                    <li>Remote Access</li>
+                    <li>Private Control</li>
+                  </ul>
+                  <div class="project-actions">
+                    <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone#readme" target="_blank" rel="noopener noreferrer">Docs</a>
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">为什么重要</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">It treats access mode, first-device approval, and trusted-device boundaries as part of the product surface rather than setup afterthoughts.</span>
-                      <span class="lang-zh">它把访问模式、首次设备审批和可信设备边界，当成产品表面的一部分，而不是安装后的附带问题。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Suggests</span>
-                      <span class="lang-zh">体现</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">A bias toward self-hosted tooling, safer defaults, and practical remote access instead of convenience-first exposure.</span>
-                      <span class="lang-zh">它体现出一种偏好：偏向自托管工具、更安全的默认设置，以及以实际可用为目标的远程访问。</span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  class="project-link"
-                  href="https://github.com/YSCJRH/codex-via-phone"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open the codex-via-phone repository on GitHub"
-                >
-                  <span class="lang-en">Open repository</span>
-                  <span class="lang-zh">查看仓库</span>
-                </a>
-              </article>
+                </article>
 
-              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                <h3>skylattice</h3>
-                <p class="project-copy">
-                  <span class="lang-en">Local-first AI agent runtime for persistent memory, governed repo tasks, and Git-native self-improvement.</span>
-                  <span class="lang-zh">面向持久记忆、受治理仓库任务与 Git 原生自我改进的本地优先 AI agent runtime。</span>
-                </p>
-                <dl class="detail-list project-story">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Explores</span>
-                      <span class="lang-zh">探索</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How local-first agents can combine persistent memory, governed repo tasks, and Git-native self-improvement without hidden autonomy.</span>
-                      <span class="lang-zh">本地优先 agent 如何在不隐藏自治边界的前提下，结合持久记忆、受治理仓库任务与 Git 原生自我改进。</span>
-                    </dd>
+                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <h3>skylattice</h3>
+                  <p class="project-copy">Local-first AI agent runtime for persistent memory, governed repo tasks, and Git-native self-improvement.</p>
+                  <p class="project-copy project-copy-zh">一个本地优先的 AI agent runtime，强调记忆、治理和 Git 原生迭代。</p>
+                  <ul class="tag-list" aria-label="Project tags">
+                    <li>Agent Runtime</li>
+                    <li>Memory</li>
+                    <li>Git Native</li>
+                  </ul>
+                  <div class="project-actions">
+                    <a class="project-link" href="https://github.com/YSCJRH/skylattice" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="project-link" href="https://github.com/YSCJRH/skylattice#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                    <a class="project-link" href="https://yscjrh.github.io/skylattice/" target="_blank" rel="noopener noreferrer">Demo</a>
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">为什么重要</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">It makes governance, auditability, and reversibility visible enough to inspect before trusting the runtime with real work.</span>
-                      <span class="lang-zh">它把治理、可审计性与可回退性做得足够可见，让人能在真正信任这个 runtime 之前先检查它。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Suggests</span>
-                      <span class="lang-zh">体现</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">A builder preference for durable systems with explicit boundaries, tracked validation, and rollbackable change paths.</span>
-                      <span class="lang-zh">它体现出一种构建偏好：偏向边界明确、验证可追踪、变更可回退的长期系统。</span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  class="project-link"
-                  href="https://github.com/YSCJRH/skylattice"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open the skylattice repository on GitHub"
-                >
-                  <span class="lang-en">Open repository</span>
-                  <span class="lang-zh">查看仓库</span>
-                </a>
-              </article>
+                </article>
 
-              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                <h3>mirror-sim</h3>
-                <p class="project-copy">
-                  <span class="lang-en">A constrained, evidence-backed scenario simulation engine for fictional or explicitly authorized worlds.</span>
-                  <span class="lang-zh">一个面向虚构或明确授权知识环境的、受约束且证据可追溯的情景推演引擎。</span>
-                </p>
-                <dl class="detail-list project-story">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Explores</span>
-                      <span class="lang-zh">探索</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How a bounded corpus can become replayable what-if analysis through claims, evidence, and eval.</span>
-                      <span class="lang-zh">如何把一个受限语料转成依赖 claims、evidence 与 eval 的可回放 what-if 推演流程。</span>
-                    </dd>
+                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <h3>mirror-sim</h3>
+                  <p class="project-copy">A constrained multi-agent scenario simulation engine inspired by Liu Cixin's The Mirror.</p>
+                  <p class="project-copy project-copy-zh">一个受约束的多代理情景模拟引擎，偏向可检视的 scenario work，而不是开放世界预言。</p>
+                  <ul class="tag-list" aria-label="Project tags">
+                    <li>Simulation</li>
+                    <li>Scenario</li>
+                    <li>Evidence</li>
+                  </ul>
+                  <div class="project-actions">
+                    <a class="project-link" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="project-link" href="https://github.com/YSCJRH/mirror-sim#readme" target="_blank" rel="noopener noreferrer">Docs</a>
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">为什么重要</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">It keeps scenario work reviewable by tying claims to evidence and staying inside constrained worlds instead of pretending to predict the open world.</span>
-                      <span class="lang-zh">它让情景推演保持可审查：把 claims 绑回 evidence，同时明确停留在受限世界里，而不是假装预测开放世界。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Suggests</span>
-                      <span class="lang-zh">体现</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">A preference for deterministic, inspectable sandbox systems over open-world prediction theater.</span>
-                      <span class="lang-zh">它体现出一种偏好：更信任可检查、可回放的沙盒系统，而不是开放世界预测式的表演。</span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  class="project-link"
-                  href="https://github.com/YSCJRH/mirror-sim"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open the mirror-sim repository on GitHub"
-                >
-                  <span class="lang-en">Open repository</span>
-                  <span class="lang-zh">查看仓库</span>
-                </a>
-              </article>
+                </article>
 
-              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                <h3>create-double-skill</h3>
-                <p class="project-copy">
-                  <span class="lang-en">Build a private digital double from guided answers.</span>
-                  <span class="lang-zh">通过引导式回答构建一个私有数字分身。</span>
-                </p>
-                <dl class="detail-list project-story">
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Explores</span>
-                      <span class="lang-zh">探索</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">How guided answers can become a private double with editable profiles, markdown summaries, and reusable skill files.</span>
-                      <span class="lang-zh">如何把引导式回答整理成一个带有可编辑 profile、markdown 摘要和可复用 skill 文件的私有分身。</span>
-                    </dd>
+                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <h3>create-double-skill</h3>
+                  <p class="project-copy">Build a private digital double and an editable model of how you think, choose, and present yourself.</p>
+                  <p class="project-copy project-copy-zh">围绕可编辑自我建模展开的小型工具集，把语言、偏好与判断落成可持续材料。</p>
+                  <ul class="tag-list" aria-label="Project tags">
+                    <li>Identity Tools</li>
+                    <li>Profiles</li>
+                    <li>Skills</li>
+                  </ul>
+                  <div class="project-actions">
+                    <a class="project-link" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="project-link" href="https://github.com/YSCJRH/create-double-skill#readme" target="_blank" rel="noopener noreferrer">Docs</a>
                   </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Why it matters</span>
-                      <span class="lang-zh">为什么重要</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">It turns reflective self-modeling into local, editable artifacts instead of leaving it as one-off chat output.</span>
-                      <span class="lang-zh">它把反思性的自我建模落成了本地、可编辑的产物，而不是一次性聊天输出。</span>
-                    </dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt class="detail-term">
-                      <span class="lang-en">Suggests</span>
-                      <span class="lang-zh">体现</span>
-                    </dt>
-                    <dd class="detail-copy">
-                      <span class="lang-en">An interest in tools that preserve judgment, language, and boundaries as working material rather than hidden context.</span>
-                      <span class="lang-zh">它体现出一种兴趣：把判断、语言和边界保留下来，作为可继续使用的工作材料，而不是隐藏上下文。</span>
-                    </dd>
-                  </div>
-                </dl>
-                <a
-                  class="project-link"
-                  href="https://github.com/YSCJRH/create-double-skill"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open the create-double-skill repository on GitHub"
-                >
-                  <span class="lang-en">Open repository</span>
-                  <span class="lang-zh">查看仓库</span>
-                </a>
-              </article>
+                </article>
+              </div>
             </div>
           </div>
         </section>
 
         <section class="section" id="notes">
           <div class="container">
-            <div class="section-header" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">Notes</span>
-                <span class="lang-zh">笔记</span>
-              </p>
-              <h2 class="section-title">
-                <span class="lang-en">A public thinking surface, not a content bucket.</span>
-                <span class="lang-zh">一个公开的思考界面，而不是内容杂物间。</span>
-              </h2>
-              <p class="section-copy">
-                <span class="lang-en">
-                  Notes stay intentionally lightweight here. The purpose is to show how questions, builds, and methods continue to take shape over time.
-                </span>
-                <span class="lang-zh">
-                  这里的 Notes 会保持轻量。重点不是堆积内容，而是让问题、构建与方法如何逐步成形这件事保持可见。
-                </span>
-              </p>
-            </div>
+            <div class="surface section-panel">
+              <div class="module-head" data-reveal>
+                <div>
+                  <p class="eyebrow">Notes / 笔记</p>
+                  <h2 class="section-title">A deliberate note system for build logs, research reflections, and working methods.</h2>
+                  <p class="section-copy">Structured thinking. Continuous accumulation.</p>
+                  <p class="section-copy section-copy-zh">让研究、构建与方法的演化保持可见，但不过度包装。</p>
+                </div>
+              </div>
 
-            <div class="notes-grid">
-              <article class="surface surface-interactive note-card note-card-featured note-card-published" data-reveal data-spotlight>
-                <span class="note-status">
-                  <span class="lang-en">Draft available</span>
-                  <span class="lang-zh">草稿可读</span>
-                </span>
-                <h3>
-                  <span class="lang-en">Build Logs</span>
-                  <span class="lang-zh">构建日志</span>
-                </h3>
-                <p>
-                  <span class="lang-en">
-                    A short log on why the homepage moved from a structure-first pass to a credibility-first refinement.
-                  </span>
-                  <span class="lang-zh">
-                    一篇简短记录：为什么这张首页会从“先把结构搭起来”转向“先把可信度做扎实”。
-                  </span>
-                </p>
-                <p class="note-meta">
-                  <span class="lang-en">Useful if you want to understand why the current homepage became quieter, tighter, and more evidence-aware.</span>
-                  <span class="lang-zh">适合回看这张首页为什么会变得更克制、更紧凑，也更重视公开证据。</span>
-                </p>
-                <a class="project-link note-link" href="notes/build-logs-homepage-second-pass.html">
-                  <span class="lang-en">Read note</span>
-                  <span class="lang-zh">阅读笔记</span>
-                </a>
-              </article>
+              <div class="stream-list">
+                <article class="surface surface-interactive stream-card" data-reveal data-spotlight>
+                  <div class="stream-icon-wrap">
+                    <img src="assets/img/icon-notes.svg" alt="" aria-hidden="true" class="stream-icon">
+                  </div>
+                  <div class="stream-main">
+                    <h3>Build Logs / 构建日志</h3>
+                    <p class="stream-copy">Short public notes on why this site and selected tools take the shape they do.</p>
+                    <p class="stream-copy stream-copy-zh">记录站点与工具为何长成现在的样子，以及背后的设计取舍。</p>
+                  </div>
+                  <div class="stream-meta">
+                    <span class="stream-count">1 published / 1 篇已公开</span>
+                    <span class="note-status">Live / 已上线</span>
+                    <a class="project-link stream-link" href="notes/build-logs-homepage-second-pass.html">Read note</a>
+                  </div>
+                </article>
 
-              <article class="surface note-card" data-reveal>
-                <span class="note-status">
-                  <span class="lang-en">In progress</span>
-                  <span class="lang-zh">持续整理中</span>
-                </span>
-                <h3>
-                  <span class="lang-en">Research Reflections</span>
-                  <span class="lang-zh">研究反思</span>
-                </h3>
-                <p>
-                  <span class="lang-en">
-                    Questions, observations, and reframings that appear while a research problem is still being clarified.
-                  </span>
-                  <span class="lang-zh">
-                    记录研究问题仍在被澄清时出现的疑问、观察与重新表述。
-                  </span>
-                </p>
-                <p class="note-meta">
-                  <span class="lang-en">Worth revisiting to see how the frame of a problem is changing.</span>
-                  <span class="lang-zh">适合回看问题框架如何一步步被重新组织起来。</span>
-                </p>
-              </article>
+                <article class="surface stream-card" data-reveal>
+                  <div class="stream-icon-wrap">
+                    <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true" class="stream-icon">
+                  </div>
+                  <div class="stream-main">
+                    <h3>Research Reflections / 研究反思</h3>
+                    <p class="stream-copy">Notes on ambiguity, signal quality, and how a research question becomes clearer over time.</p>
+                    <p class="stream-copy stream-copy-zh">围绕信号质量、问题澄清与研究判断的简短反思。</p>
+                  </div>
+                  <div class="stream-meta">
+                    <span class="stream-count">1 draft / 1 篇草稿</span>
+                    <span class="note-status note-status-muted">Draft / 仓库草稿</span>
+                  </div>
+                </article>
 
-              <article class="surface note-card" data-reveal>
-                <span class="note-status">
-                  <span class="lang-en">In progress</span>
-                  <span class="lang-zh">持续整理中</span>
-                </span>
-                <h3>
-                  <span class="lang-en">Method Notes</span>
-                  <span class="lang-zh">方法备忘</span>
-                </h3>
-                <p>
-                  <span class="lang-en">
-                    Short notes on reusable workflows, heuristics, and decision rules worth keeping close at hand.
-                  </span>
-                  <span class="lang-zh">
-                    记录那些值得随手保留、可以被复用的方法、启发和决策规则。
-                  </span>
-                </p>
-                <p class="note-meta">
-                  <span class="lang-en">Worth revisiting when a working method is mature enough to be shared.</span>
-                  <span class="lang-zh">适合在某种工作方法逐渐成熟之后，再回来看它是如何被整理出来的。</span>
-                </p>
-              </article>
+                <article class="surface stream-card" data-reveal>
+                  <div class="stream-icon-wrap">
+                    <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="stream-icon">
+                  </div>
+                  <div class="stream-main">
+                    <h3>Method Notes / 方法备忘</h3>
+                    <p class="stream-copy">Compact records of reusable workflows, heuristics, and small rules worth keeping nearby.</p>
+                    <p class="stream-copy stream-copy-zh">记录可复用的工作流、启发式方法与值得长期保留的小规则。</p>
+                  </div>
+                  <div class="stream-meta">
+                    <span class="stream-count">1 draft / 1 篇草稿</span>
+                    <span class="note-status note-status-muted">Draft / 仓库草稿</span>
+                  </div>
+                </article>
+              </div>
+
+              <div class="module-footer" data-reveal>
+                <a class="button button-secondary" href="notes/">Read Notes / 阅读笔记</a>
+              </div>
             </div>
           </div>
         </section>
 
         <section class="section" id="about">
-          <div class="container about-grid">
-            <article class="surface surface-glass about-panel" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">About / Contact</span>
-                <span class="lang-zh">关于 / 联系入口</span>
-              </p>
-              <h2 class="section-title">
-                <span class="lang-en">A compact public interface for research, build work, and thinking in progress.</span>
-                <span class="lang-zh">一个面向研究、构建与进行中思考的紧凑公开入口。</span>
-              </h2>
-              <p class="section-copy">
-                <span class="lang-en">
-                  HJR is the primary name here, with YSCJRH as the public GitHub handle. This page is meant to show direction, working evidence, and the shape of ongoing questions rather than act as a full profile.
-                </span>
-                <span class="lang-zh">
-                  这里以 HJR 作为主名义，对外使用 YSCJRH 这一 GitHub handle。这张页面的目的，是公开方向、工作证据与正在展开的问题形状，而不是提供一份完整简历。
-                </span>
-              </p>
+          <div class="container">
+            <div class="surface section-panel">
+              <div class="module-head" data-reveal>
+                <div>
+                  <p class="eyebrow">About / 关于</p>
+                  <h2 class="section-title">A compact public interface for research, tools, and thinking in progress.</h2>
+                  <p class="section-copy">Less volume. More clarity.</p>
+                  <p class="section-copy section-copy-zh">不追求堆满信息，而是让交叉身份更清晰可见。</p>
+                </div>
+              </div>
 
-              <ul class="visitor-paths" aria-label="Visitor paths">
-                <li>
-                  <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">
-                    <span class="lang-en">Follow ongoing work on GitHub</span>
-                    <span class="lang-zh">在 GitHub 上关注持续更新</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#build">
-                    <span class="lang-en">Start with selected projects</span>
-                    <span class="lang-zh">从精选项目开始看</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="notes/">
-                    <span class="lang-en">Return for notes as they appear</span>
-                    <span class="lang-zh">随着笔记出现再回来查看</span>
-                  </a>
-                </li>
-              </ul>
-            </article>
+              <div class="about-grid">
+                <article class="surface surface-glass about-panel about-panel-visual" data-reveal>
+                  <img
+                    class="about-orbit"
+                    src="assets/img/about-orbit.svg"
+                    alt="An abstract glowing sphere representing a compact public profile."
+                  >
+                </article>
 
-            <article class="surface surface-interactive contact-card" data-spotlight data-reveal>
-              <p class="surface-label">
-                <span class="lang-en">Current public entry</span>
-                <span class="lang-zh">当前公开入口</span>
-              </p>
-              <h3>GitHub</h3>
-              <p>
-                <span class="lang-en">
-                  GitHub is currently the clearest place to follow visible tools, repository history, and what is actively being built.
-                </span>
-                <span class="lang-zh">
-                  目前 GitHub 是查看公开工具、仓库历史以及正在持续构建内容的最直接入口。
-                </span>
-              </p>
-              <a
-                class="project-link"
-                href="https://github.com/YSCJRH"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open the YSCJRH GitHub profile"
-              >
-                github.com/YSCJRH
-              </a>
-            </article>
+                <article class="surface surface-glass about-panel about-panel-copy" data-reveal>
+                  <h3>HJR / YSCJRH</h3>
+                  <p class="about-summary">
+                    Fluorescence analysis researcher · Builder · Open-source enthusiast
+                  </p>
+                  <p class="about-summary about-summary-zh">
+                    围绕荧光分析、智能算法、科学仪器与开源工具持续构建的研究者。
+                  </p>
+                  <p class="card-copy">
+                    I work where fluorescence analysis, intelligent algorithms, instrumentation, and note-driven tooling can inform one another.
+                  </p>
+                  <p class="card-copy card-copy-zh">
+                    我的工作位于荧光分析、智能算法、科学仪器与笔记驱动工具的交叉处。
+                  </p>
+                </article>
+
+                <article class="surface surface-interactive about-panel about-panel-facts" data-reveal data-spotlight>
+                  <p class="surface-label">Public Facts / 公开信息</p>
+                  <ul class="fact-list">
+                    <li>
+                      <strong>Name</strong>
+                      <span>HJR · GitHub handle: YSCJRH</span>
+                    </li>
+                    <li>
+                      <strong>Focus</strong>
+                      <span>Fluorescence analysis · Intelligent algorithms · Scientific instrumentation</span>
+                    </li>
+                    <li>
+                      <strong>Current entry</strong>
+                      <span>GitHub</span>
+                    </li>
+                  </ul>
+                  <a
+                    class="button button-primary fact-button"
+                    href="https://github.com/YSCJRH"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open GitHub / 打开 GitHub
+                  </a>
+                </article>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -835,15 +467,12 @@
       <footer class="site-footer">
         <div class="container footer-inner">
           <p>&copy; 2026 HJR / YSCJRH</p>
-          <p>
-            <a
-              href="https://github.com/YSCJRH"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open the YSCJRH GitHub profile"
-            >GitHub</a>
-            /
-            <a href="review/" aria-label="Open the current site review page">Review</a>
+          <p class="footer-links">
+            <a href="projects/">Projects / 项目</a>
+            <span>/</span>
+            <a href="notes/">Notes / 笔记</a>
+            <span>/</span>
+            <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
           </p>
         </div>
       </footer>

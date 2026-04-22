@@ -22,8 +22,9 @@ When taking over this repo, read these files in order:
 
 ## Current State
 
-- Homepage-first personal site with live public pages at `/`, `/notes/`, and one published note page.
-- Current phase is not a visual reset. The main work is evidence reinforcement, notes rollout decisions, GitHub wording alignment, and maintenance hardening.
+- A mixed-bilingual static personal site with live public pages at `/`, `/notes/`, one published note page, and `/projects/`.
+- The current implementation has already moved beyond the intake/review phase into a formal visual redesign that better reflects the intended researcher-builder identity.
+- The next work is validation, GitHub wording alignment, and continued evidence-backed content strengthening.
 - Public claims must stay within the truthfulness boundaries defined in `personalweb.md` and `AGENTS.md`.
 
 ## Local Preview
@@ -53,7 +54,7 @@ Main public surfaces:
 - `index.html`
 - `notes/index.html`
 - `notes/build-logs-homepage-second-pass.html`
-- `review/index.html`
+- `projects/index.html`
 - GitHub profile and featured repository descriptions
 
 Main maintenance surfaces:

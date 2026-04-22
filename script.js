@@ -1,59 +1,15 @@
 (() => {
-  const root = document.documentElement;
   const body = document.body;
-  const langButtons = Array.from(document.querySelectorAll("[data-set-lang]"));
   const navToggle = document.querySelector("[data-nav-toggle]");
   const mobileMenu = document.querySelector("[data-mobile-menu]");
   const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
   const spotlightItems = Array.from(document.querySelectorAll("[data-spotlight]"));
   const parallaxHero = document.querySelector("[data-parallax-hero]");
   const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll("a")) : [];
-  const validLanguages = new Set(["en", "zh"]);
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const desktopNavQuery = window.matchMedia("(min-width: 901px)");
   const finePointerQuery = window.matchMedia("(pointer: fine)");
   let prefersReducedMotion = reduceMotionQuery.matches;
-
-  function readSavedLanguage() {
-    try {
-      return localStorage.getItem("siteLang");
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function saveLanguage(language) {
-    try {
-      localStorage.setItem("siteLang", language);
-    } catch (error) {
-      // Keep the page functional even when storage is unavailable.
-    }
-  }
-
-  function detectLanguage() {
-    const savedLanguage = readSavedLanguage();
-    if (validLanguages.has(savedLanguage)) {
-      return savedLanguage;
-    }
-
-    const browserLanguage = (navigator.language || "").toLowerCase();
-    return browserLanguage.startsWith("zh") ? "zh" : "en";
-  }
-
-  function applyLanguage(language) {
-    if (!validLanguages.has(language)) {
-      return;
-    }
-
-    root.dataset.lang = language;
-    root.lang = language === "zh" ? "zh-CN" : "en";
-
-    langButtons.forEach((button) => {
-      const isActive = button.dataset.setLang === language;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", String(isActive));
-    });
-  }
 
   function setScrollLock(isLocked) {
     body.classList.toggle("is-scroll-locked", isLocked);
@@ -67,9 +23,11 @@
     mobileMenu.hidden = false;
     navToggle.classList.add("is-open");
     navToggle.setAttribute("aria-expanded", "true");
+
     window.requestAnimationFrame(() => {
       mobileMenu.classList.add("is-open");
     });
+
     setScrollLock(true);
   }
 
@@ -88,7 +46,7 @@
       if (!mobileMenu.classList.contains("is-open")) {
         mobileMenu.hidden = true;
       }
-    }, 240);
+    }, 220);
 
     if (restoreFocus) {
       navToggle.focus();
@@ -116,18 +74,14 @@
 
     if (prefersReducedMotion) {
       parallaxHero.style.setProperty("--hero-copy-translate", "0px");
-      parallaxHero.style.setProperty("--hero-copy-scale", "1");
-      parallaxHero.style.setProperty("--hero-copy-opacity", "1");
       parallaxHero.style.setProperty("--hero-panel-translate", "0px");
       return;
     }
 
-    const distance = Math.max(window.innerHeight * 0.85, 1);
+    const distance = Math.max(window.innerHeight * 0.9, 1);
     const progress = Math.min(window.scrollY / distance, 1);
-    parallaxHero.style.setProperty("--hero-copy-translate", `${progress * -6}px`);
-    parallaxHero.style.setProperty("--hero-copy-scale", `${1 - progress * 0.01}`);
-    parallaxHero.style.setProperty("--hero-copy-opacity", `${1 - progress * 0.1}`);
-    parallaxHero.style.setProperty("--hero-panel-translate", `${progress * 8}px`);
+    parallaxHero.style.setProperty("--hero-copy-translate", `${progress * -8}px`);
+    parallaxHero.style.setProperty("--hero-panel-translate", `${progress * 10}px`);
   }
 
   function initializeReveal() {
@@ -136,13 +90,11 @@
     }
 
     revealItems.forEach((item, index) => {
-      item.style.transitionDelay = `${Math.min(index * 24, 120)}ms`;
+      item.style.transitionDelay = `${Math.min(index * 28, 140)}ms`;
     });
 
     if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-      revealItems.forEach((item) => {
-        item.classList.add("is-visible");
-      });
+      revealItems.forEach((item) => item.classList.add("is-visible"));
       return;
     }
 
@@ -163,9 +115,7 @@
       }
     );
 
-    revealItems.forEach((item) => {
-      observer.observe(item);
-    });
+    revealItems.forEach((item) => observer.observe(item));
   }
 
   function initializeSpotlights() {
@@ -184,25 +134,11 @@
 
       item.addEventListener("pointermove", (event) => {
         const bounds = item.getBoundingClientRect();
-        const x = event.clientX - bounds.left;
-        const y = event.clientY - bounds.top;
-        item.style.setProperty("--spotlight-x", `${x}px`);
-        item.style.setProperty("--spotlight-y", `${y}px`);
+        item.style.setProperty("--spotlight-x", `${event.clientX - bounds.left}px`);
+        item.style.setProperty("--spotlight-y", `${event.clientY - bounds.top}px`);
       });
     });
   }
-
-  langButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const language = button.dataset.setLang;
-      if (!validLanguages.has(language)) {
-        return;
-      }
-
-      saveLanguage(language);
-      applyLanguage(language);
-    });
-  });
 
   if (navToggle && mobileMenu) {
     navToggle.addEventListener("click", toggleMobileMenu);
@@ -214,8 +150,7 @@
     });
 
     document.addEventListener("click", (event) => {
-      const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-      if (!isOpen) {
+      if (navToggle.getAttribute("aria-expanded") !== "true") {
         return;
       }
 
@@ -262,23 +197,22 @@
     });
   }
 
-  let isParallaxScheduled = false;
+  let parallaxScheduled = false;
   const scheduleParallax = () => {
-    if (isParallaxScheduled) {
+    if (parallaxScheduled) {
       return;
     }
 
-    isParallaxScheduled = true;
+    parallaxScheduled = true;
     window.requestAnimationFrame(() => {
       applyParallax();
-      isParallaxScheduled = false;
+      parallaxScheduled = false;
     });
   };
 
   window.addEventListener("scroll", scheduleParallax, { passive: true });
   window.addEventListener("resize", scheduleParallax);
 
-  applyLanguage(detectLanguage());
   applyParallax();
   initializeReveal();
   initializeSpotlights();

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Projects / HJR / YSCJRH</title>
+    <meta
+      name="description"
+      content="Selected projects from HJR / YSCJRH across open tools, agent systems, simulation, and reflective tooling."
+    >
+    <meta property="og:title" content="Projects / HJR / YSCJRH">
+    <meta
+      property="og:description"
+      content="A focused projects page covering the public repositories currently highlighted by HJR / YSCJRH."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yscjrh.github.io/projects/">
+    <meta property="og:site_name" content="HJR / YSCJRH">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#05070d">
+    <link rel="canonical" href="https://yscjrh.github.io/projects/">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js" defer></script>
+  </head>
+  <body>
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-noise"></div>
+      <div class="ambient-blob ambient-blob-primary"></div>
+      <div class="ambient-blob ambient-blob-secondary"></div>
+      <div class="ambient-blob ambient-blob-tertiary"></div>
+    </div>
+
+    <a class="skip-link" href="#main">Skip to content / 跳到内容</a>
+
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container site-header__inner">
+          <a class="brand" href="../index.html#top" aria-label="HJR homepage">
+            <span class="brand-mark">HJR / YSCJRH</span>
+            <span class="brand-sub">Researcher · Builder · Thinker</span>
+          </a>
+
+          <div class="site-header__cluster">
+            <nav class="site-nav" aria-label="Primary navigation">
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="./index.html" aria-current="page">Projects / 项目</a>
+            </nav>
+
+            <div class="header-controls">
+              <button
+                class="nav-toggle"
+                type="button"
+                data-nav-toggle
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+                aria-label="Toggle navigation menu"
+              >
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="container mobile-menu-wrap">
+          <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
+            <nav class="mobile-nav" aria-label="Mobile navigation">
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="./index.html" aria-current="page">Projects / 项目</a>
+            </nav>
+
+            <a
+              class="button button-primary mobile-menu__cta"
+              href="https://github.com/YSCJRH"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit GitHub / 查看 GitHub
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="section article-section">
+          <div class="container article-shell notes-hub-shell">
+            <div class="article-nav" data-reveal>
+              <a class="article-back" href="../index.html#build">Back to Homepage / 返回首页</a>
+            </div>
+
+            <article class="surface surface-glass article-card" data-reveal>
+              <p class="eyebrow">Projects / 项目</p>
+              <h1 class="article-title">Selected repositories and working systems.</h1>
+              <p class="article-lead">
+                These projects are shown as public evidence of how HJR / YSCJRH approaches tooling, governance,
+                simulation, and reflective infrastructure.
+              </p>
+              <p class="article-lead article-lead-zh">
+                这些仓库共同构成了当前公开可见的构建面：工具、治理、模拟与反思性基础设施。
+              </p>
+            </article>
+
+            <div class="build-grid">
+              <article class="surface surface-interactive project-card project-card-featured" data-reveal data-spotlight>
+                <div class="project-topline">
+                  <span class="project-badge">Featured / 重点项目</span>
+                  <img src="../assets/img/icon-network.svg" alt="" aria-hidden="true" class="project-mark">
+                </div>
+                <h3>ai-visibility-auditor</h3>
+                <p class="project-copy">AnswerLens: CLI-first AI visibility auditor for product websites.</p>
+                <p class="project-copy project-copy-zh">
+                  把 AI 可见性检查做成结构清晰、产物可复查、便于团队协作的命令行工作流。
+                </p>
+                <ul class="tag-list" aria-label="Project tags">
+                  <li>AI Visibility</li>
+                  <li>CLI</li>
+                  <li>Report-first</li>
+                </ul>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                </div>
+              </article>
+
+              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                <h3>codex-via-phone</h3>
+                <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
+                <p class="project-copy project-copy-zh">强调安全边界、设备信任与手机可达性的远程控制实验。</p>
+                <ul class="tag-list" aria-label="Project tags">
+                  <li>Windows</li>
+                  <li>Remote Access</li>
+                  <li>Private Control</li>
+                </ul>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                </div>
+              </article>
+
+              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                <h3>skylattice</h3>
+                <p class="project-copy">Local-first AI agent runtime for persistent memory, governed repo tasks, and Git-native self-improvement.</p>
+                <p class="project-copy project-copy-zh">围绕本地优先 agent runtime 的长线探索，强调治理、验证与可回退路径。</p>
+                <ul class="tag-list" aria-label="Project tags">
+                  <li>Agent Runtime</li>
+                  <li>Memory</li>
+                  <li>Git Native</li>
+                </ul>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/YSCJRH/skylattice" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="project-link" href="https://github.com/YSCJRH/skylattice#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                  <a class="project-link" href="https://yscjrh.github.io/skylattice/" target="_blank" rel="noopener noreferrer">Demo</a>
+                </div>
+              </article>
+
+              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                <h3>mirror-sim</h3>
+                <p class="project-copy">A constrained multi-agent scenario simulation engine inspired by Liu Cixin's The Mirror.</p>
+                <p class="project-copy project-copy-zh">把 scenario simulation 收束在受限语料、可检视 claims 与 evidence 上。</p>
+                <ul class="tag-list" aria-label="Project tags">
+                  <li>Simulation</li>
+                  <li>Scenario</li>
+                  <li>Evidence</li>
+                </ul>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="project-link" href="https://github.com/YSCJRH/mirror-sim#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                </div>
+              </article>
+
+              <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                <h3>create-double-skill</h3>
+                <p class="project-copy">Build a private digital double and an editable model of how you think, choose, and present yourself.</p>
+                <p class="project-copy project-copy-zh">把自我建模、语言偏好与技能表达转成可以继续编辑和复用的材料。</p>
+                <ul class="tag-list" aria-label="Project tags">
+                  <li>Identity Tools</li>
+                  <li>Profiles</li>
+                  <li>Skills</li>
+                </ul>
+                <div class="project-actions">
+                  <a class="project-link" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a class="project-link" href="https://github.com/YSCJRH/create-double-skill#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <p>&copy; 2026 HJR / YSCJRH</p>
+          <p class="footer-links">
+            <a href="../index.html">Home / 首页</a>
+            <span>/</span>
+            <a href="../notes/">Notes / 笔记</a>
+            <span>/</span>
+            <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

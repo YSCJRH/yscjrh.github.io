@@ -1,70 +1,66 @@
-# Next Phase: Content Evidence Reinforcement
+# Next Phase: Post-Redesign Validation And Content Hardening
 
 ## Goal
-- Move the homepage from a polished structural pass to a more credible public identity interface.
-- Keep the current layout direction stable and focus the next iteration on evidence, project storytelling, notes startup, and GitHub coordination.
-- Avoid further broad visual redesign unless a concrete readability issue is discovered.
+- Stabilize the new mixed-bilingual redesign now that the site has moved past the review-first phase.
+- Verify the live site matches the new homepage, notes hub, projects page, and article shell.
+- Continue strengthening public evidence without undoing the new visual direction.
 
 ## Current Status
-- The local repository has completed the second-pass typography and hierarchy refinement.
-- The latest pushed commit is `c83f2ca`.
-- As checked on `2026-04-21`, the public site at `https://yscjrh.github.io/` is now serving the refined homepage version, so the next phase can focus on content evidence rather than deployment propagation.
+- The site now has a formal redesign across `/`, `/notes/`, `/projects/`, and the first published note page.
+- Public entry paths now center on homepage, notes, projects, and GitHub rather than the earlier review surface.
+- The next bottleneck is no longer major layout invention; it is validation, factual reinforcement, and GitHub consistency.
 
-## Phase 1: Deployment And Stability
-1. Verify the live GitHub Pages site has updated to the latest commit.
-2. Recheck desktop, tablet, and `360px` mobile behavior on the live site.
+## Phase 1: Live Validation
+1. Verify GitHub Pages is serving the newest redesign commit.
+2. Recheck desktop, tablet, and `360px` mobile behavior on:
+   - homepage
+   - notes hub
+   - projects page
+   - first note page
 3. Confirm:
-   - the new hero copy is live
-   - Build cards show the curated story structure
-   - `CONTENT_GAPS.md` is present in the repo only and not surfaced publicly
-   - navigation, language toggle, and focus states still work
+   - no public page still exposes the review surface
+   - mixed bilingual copy is readable
+   - the new local SVG assets render correctly
+   - footer and navigation paths are coherent
 
-## Phase 2: Evidence Collection
+## Phase 2: Content Evidence Reinforcement
 1. Gather one safe, public-facing example for each research direction:
    - `Fluorescence Analysis`
    - `Fluorescence Analysis × Intelligent Algorithms`
    - `Fluorescence Instrumentation`
-2. Gather one stronger factual story input for each featured repository:
-   - what workflow or problem it came from
-   - why it matters
-   - what it demonstrates about the builder
-3. Prioritize `ai-visibility-auditor` as the first repository to strengthen.
+2. Gather stronger factual story inputs for the five featured repositories.
+3. Update homepage and projects copy only where new facts are genuinely supported.
 
-## Phase 3: Notes Startup
-1. Review the first short starter drafts now present under `content/notes/`:
-   - `research-reflections-signals-and-judgment.md`
-   - `build-logs-homepage-second-pass.md`
-   - `method-notes-evidence-first-project-storytelling.md`
-2. The first homepage-linked note is now staged locally at `notes/build-logs-homepage-second-pass.html`.
-3. A lightweight notes hub is now staged locally at `notes/index.html`.
-4. Keep the remaining drafts short, truthful, and clearly marked as working material rather than polished essays.
-5. Decide whether the next public step should be:
-   - publishing this first note plus the notes hub
-   - promoting a second note draft
-   - or keeping the hub intentionally small for one more iteration
+## Phase 3: Notes Growth
+1. Review the existing note inventory under `content/notes/`.
+2. Decide which draft should become the second public note.
+3. Keep note counts and status labels aligned with the actual repository inventory.
 
 ## Phase 4: GitHub Coordination
-1. Compare homepage project emphasis with the GitHub profile and pinned repositories.
-2. Align public wording where useful:
-   - homepage project framing
+1. Compare homepage/project emphasis with:
+   - GitHub profile
+   - pinned repositories
    - repository descriptions
-   - GitHub profile wording
-3. Keep the same factual boundaries everywhere.
+2. Resolve wording drift for:
+   - `mirror-sim`
+   - `create-double-skill`
+3. Keep the same truthfulness boundary on both site and GitHub.
 
 ## Deliverables
-- updated `CONTENT_GAPS.md`
-- stronger homepage copy where real evidence is available
-- first real note drafts, if safe material is provided
-- a short GitHub coordination checklist
+- validated live redesign
+- stronger evidence-backed homepage and projects copy where safe
+- next published note, if approved by available source material
+- aligned GitHub-facing wording for the featured repositories
 
 ## Constraints
 - No invented publications, awards, affiliations, metrics, users, or research results.
-- No framework or deployment-setting changes.
+- No framework migration unless static maintenance clearly becomes painful.
 - No new public contact method unless explicitly provided.
-- Keep the current one-page information architecture intact.
+- Keep the redesign calm, research-oriented, and credibility-first.
 
 ## Validation
-- confirm the live site reflects the latest pushed version
-- verify layout and interaction on local and live pages
-- verify new content additions are supported by real source material
-- keep the final diff small, explainable, and credibility-positive
+- confirm all public pages load locally and live
+- verify visual hierarchy on desktop and mobile
+- verify no lingering language-toggle dependency remains
+- verify new claims remain source-backed
+- keep the final diff explainable and credibility-positive

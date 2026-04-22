@@ -2,7 +2,7 @@
 
 Date: 2026-04-21
 
-This brief turns the current repo state into a practical handoff artifact for the next maintainer. It reflects a read-first intake pass and does not change the public site.
+This brief turns the repo state at the intake stage into a practical handoff artifact for the next maintainer. It predates the later formal redesign and should be read as intake context rather than the final site specification.
 
 ## 1. Project Baseline
 
@@ -29,7 +29,7 @@ Treat these as the main public surfaces that must stay aligned:
 1. Homepage `/`
 2. Notes hub `/notes/`
 3. First published note `/notes/build-logs-homepage-second-pass.html`
-4. Review surface `/review/`
+4. Projects page `/projects/`
 5. GitHub profile plus the five featured repository descriptions
 
 Featured repositories currently surfaced on the homepage:
@@ -222,7 +222,7 @@ Supporting operational docs created during this intake:
 - `docs/github-coordination-checklist.md`
 - `docs/public-surface-verification-2026-04-22.md`
 - `docs/decisions/README.md`
-- `review/index.html`
+- `review/index.html` as an internal review artifact rather than a formal public surface
 
 ## 10. Assumptions
 

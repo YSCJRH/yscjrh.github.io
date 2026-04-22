@@ -1,26 +1,24 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <title>Build Logs / Why The Homepage Needed A Second Pass</title>
+    <title>Build Logs / Why The Homepage Needed A Second Pass / HJR</title>
     <meta
       name="description"
-      content="A short build log on why the personal homepage moved from a structure-first pass to a credibility-first refinement."
+      content="A build log from HJR / YSCJRH on why the personal homepage moved from structure-first to credibility-first refinement."
     >
-    <meta property="og:title" content="Build Logs / Why The Homepage Needed A Second Pass">
+    <meta property="og:title" content="Build Logs / Why The Homepage Needed A Second Pass / HJR">
     <meta
       property="og:description"
-      content="A working note on how the homepage became calmer, tighter, and more evidence-aware."
+      content="A short working note on the shift from structure-first layout work to credibility-first refinement."
     >
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://yscjrh.github.io/notes/build-logs-homepage-second-pass.html">
     <meta property="og:site_name" content="HJR / YSCJRH">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="zh_CN">
     <meta name="twitter:card" content="summary">
-    <meta name="theme-color" content="#050506">
+    <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/notes/build-logs-homepage-second-pass.html">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../styles.css">
@@ -33,7 +31,6 @@
       <div class="ambient-blob ambient-blob-primary"></div>
       <div class="ambient-blob ambient-blob-secondary"></div>
       <div class="ambient-blob ambient-blob-tertiary"></div>
-      <div class="ambient-blob ambient-blob-bottom"></div>
     </div>
 
     <a class="skip-link" href="#main">Skip to content / 跳到内容</a>
@@ -42,36 +39,19 @@
       <header class="site-header" id="top">
         <div class="container site-header__inner">
           <a class="brand" href="../index.html#top" aria-label="HJR homepage">
-            <span class="brand-mark">HJR</span>
-            <span class="brand-sub">YSCJRH</span>
+            <span class="brand-mark">HJR / YSCJRH</span>
+            <span class="brand-sub">Researcher · Builder · Thinker</span>
           </a>
 
           <div class="site-header__cluster">
             <nav class="site-nav" aria-label="Primary navigation">
-              <a href="../index.html#research">
-                <span class="lang-en">Research</span>
-                <span class="lang-zh">研究</span>
-              </a>
-              <a href="../index.html#build">
-                <span class="lang-en">Build</span>
-                <span class="lang-zh">构建</span>
-              </a>
-              <a href="./index.html">
-                <span class="lang-en">Notes</span>
-                <span class="lang-zh">笔记</span>
-              </a>
-              <a href="../index.html#about">
-                <span class="lang-en">About</span>
-                <span class="lang-zh">关于</span>
-              </a>
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="./index.html">Notes / 笔记</a>
+              <a href="../projects/">Projects / 项目</a>
             </nav>
 
             <div class="header-controls">
-              <div class="lang-switch" role="group" aria-label="Language switch / 语言切换">
-                <button class="lang-button" type="button" data-set-lang="zh">中文</button>
-                <button class="lang-button" type="button" data-set-lang="en">EN</button>
-              </div>
-
               <button
                 class="nav-toggle"
                 type="button"
@@ -91,22 +71,10 @@
         <div class="container mobile-menu-wrap">
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
             <nav class="mobile-nav" aria-label="Mobile navigation">
-              <a href="../index.html#research">
-                <span class="lang-en">Research</span>
-                <span class="lang-zh">研究</span>
-              </a>
-              <a href="../index.html#build">
-                <span class="lang-en">Build</span>
-                <span class="lang-zh">构建</span>
-              </a>
-              <a href="./index.html">
-                <span class="lang-en">Notes</span>
-                <span class="lang-zh">笔记</span>
-              </a>
-              <a href="../index.html#about">
-                <span class="lang-en">About</span>
-                <span class="lang-zh">关于</span>
-              </a>
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="./index.html">Notes / 笔记</a>
+              <a href="../projects/">Projects / 项目</a>
             </nav>
 
             <a
@@ -114,10 +82,8 @@
               href="https://github.com/YSCJRH"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit the YSCJRH GitHub profile"
             >
-              <span class="lang-en">Visit GitHub</span>
-              <span class="lang-zh">查看 GitHub</span>
+              Visit GitHub / 查看 GitHub
             </a>
           </div>
         </div>
@@ -127,133 +93,58 @@
         <section class="section article-section">
           <div class="container article-shell">
             <div class="article-nav" data-reveal>
-              <a class="article-back" href="./index.html">
-                <span class="lang-en">Back to Notes</span>
-                <span class="lang-zh">返回 Notes</span>
-              </a>
+              <a class="article-back" href="./index.html">Back to Notes / 返回笔记</a>
             </div>
 
             <article class="surface surface-glass article-card" data-reveal>
-              <p class="eyebrow">
-                <span class="lang-en">Build Logs</span>
-                <span class="lang-zh">构建日志</span>
-              </p>
-
-              <h1 class="article-title">
-                <span class="lang-en">Why The Homepage Needed A Second Pass</span>
-                <span class="lang-zh">为什么首页需要第二次优化</span>
-              </h1>
-
-              <span class="note-status article-status">
-                <span class="lang-en">Working note</span>
-                <span class="lang-zh">工作笔记</span>
-              </span>
-
-              <p class="article-lead">
-                <span class="lang-en">
-                  This is a short build log about why the site moved from solving structure first to strengthening credibility, readability, and public evidence.
-                </span>
-                <span class="lang-zh">
-                  这是一篇简短的构建日志，记录这张网站为什么会从“先把结构搭起来”转向“优先增强可信度、可读性和公开证据”。
-                </span>
-              </p>
+              <p class="eyebrow">Build Logs / 构建日志</p>
+              <h1 class="article-title">Why The Homepage Needed A Second Pass</h1>
+              <p class="article-lead">为什么首页需要第二次优化。</p>
+              <span class="note-status article-status">Working note / 工作笔记</span>
 
               <div class="article-body">
                 <section class="article-block">
-                  <h2 class="article-subtitle">
-                    <span class="lang-en">What the first version already solved</span>
-                    <span class="lang-zh">第一版已经解决了什么</span>
-                  </h2>
+                  <h2 class="article-subtitle">What the first version already solved</h2>
                   <p>
-                    <span class="lang-en">
-                      The first version solved the structure problem. It put Hero, Research, Build, Notes, and About on one page and already made the overall identity readable.
-                    </span>
-                    <span class="lang-zh">
-                      第一版解决的是结构问题。它把 Hero、Research、Build、Notes 和 About 放到了同一张页面上，也已经让整体身份变得可读。
-                    </span>
+                    The first version solved the structure problem. It put Hero, Research, Build, Notes, and About on one page
+                    and made the overall identity coherent enough to read.
                   </p>
                   <p>
-                    <span class="lang-en">
-                      That mattered, because before a site can become persuasive, it first has to become coherent.
-                    </span>
-                    <span class="lang-zh">
-                      这一步很重要，因为一个网站想要变得有说服力，前提是它先得是连贯的。
-                    </span>
+                    That mattered, because before a personal website can become persuasive, it first has to become legible.
                   </p>
                 </section>
 
                 <section class="article-block">
-                  <h2 class="article-subtitle">
-                    <span class="lang-en">What the second pass was really about</span>
-                    <span class="lang-zh">第二次优化真正要解决什么</span>
-                  </h2>
+                  <h2 class="article-subtitle">Why a second pass became necessary</h2>
                   <p>
-                    <span class="lang-en">
-                      The second pass was less about style and more about credibility. The earlier version still carried some landing-page habits that made the site feel more like a polished product surface than a mature personal research/build homepage.
-                    </span>
-                    <span class="lang-zh">
-                      第二次优化更少是为了“风格”，更多是为了“可信度”。前一版仍然带着一些 landing page 的惯性，让它更像一个打磨过的产品表面，而不是一个成熟的个人研究 / 构建主页。
-                    </span>
+                    The next problem was not structure. It was credibility. The earlier version still carried some
+                    landing-page habits that made the site feel more polished than grounded.
                   </p>
                   <p>
-                    <span class="lang-en">
-                      The real task was to make the page quieter, tighter, and more faithful to the amount of public proof that actually exists today.
-                    </span>
-                    <span class="lang-zh">
-                      真正的任务，是让页面变得更克制、更紧凑，也更贴近目前已经公开存在的那部分证据。
-                    </span>
+                    For a researcher-builder homepage, that is the wrong balance. The public surface should feel calm, clear,
+                    and accurate to the amount of evidence that actually exists.
                   </p>
                 </section>
 
                 <section class="article-block">
-                  <h2 class="article-subtitle">
-                    <span class="lang-en">The main adjustments</span>
-                    <span class="lang-zh">这一轮的主要调整</span>
-                  </h2>
+                  <h2 class="article-subtitle">The practical adjustments</h2>
                   <ul class="article-list">
-                    <li>
-                      <span class="lang-en">Reduce the Hero scale so the page introduces a person before it introduces a visual effect.</span>
-                      <span class="lang-zh">把 Hero 缩回来，让页面先介绍“人”，再介绍视觉效果。</span>
-                    </li>
-                    <li>
-                      <span class="lang-en">Replace repeated teaser logic with one compact direction panel.</span>
-                      <span class="lang-zh">用一个更紧凑的方向面板替代重复的 teaser 逻辑。</span>
-                    </li>
-                    <li>
-                      <span class="lang-en">Turn Build cards from repository summaries into clearer evidence of working style.</span>
-                      <span class="lang-zh">让 Build 卡片从仓库摘要转向更清楚的工作方式与证据展示。</span>
-                    </li>
-                    <li>
-                      <span class="lang-en">Keep Notes as a deliberate thinking surface instead of a placeholder content bucket.</span>
-                      <span class="lang-zh">把 Notes 保持成一个有意保留的思考界面，而不是占位内容区。</span>
-                    </li>
-                    <li>
-                      <span class="lang-en">Make GitHub the clearest public action path without pretending there is already a fuller contact system.</span>
-                      <span class="lang-zh">让 GitHub 成为最清楚的公开行动入口，而不是假装已经具备更完整的联系系统。</span>
-                    </li>
+                    <li>Reduce the hero scale so the page introduces a person before it introduces an effect.</li>
+                    <li>Replace repeated teaser logic with a clearer directional structure.</li>
+                    <li>Turn project cards into evidence of working style instead of glossy repository summaries.</li>
+                    <li>Keep Notes as a deliberate thinking surface instead of a placeholder content bucket.</li>
+                    <li>Make GitHub the clearest current public entry without pretending there is already a full contact system.</li>
                   </ul>
                 </section>
 
                 <section class="article-block">
-                  <h2 class="article-subtitle">
-                    <span class="lang-en">The guiding rule</span>
-                    <span class="lang-zh">背后的规则</span>
-                  </h2>
+                  <h2 class="article-subtitle">The rule behind the redesign</h2>
                   <p>
-                    <span class="lang-en">
-                      Remove anything that looks more certain, louder, or more productized than the current public evidence can support.
-                    </span>
-                    <span class="lang-zh">
-                      删掉一切比现有公开证据更确定、更响亮、也更“产品化”的部分。
-                    </span>
+                    Remove anything that looks more certain, louder, or more productized than the public evidence can support.
                   </p>
                   <p>
-                    <span class="lang-en">
-                      That rule is useful beyond this page. It is also a good rule for project storytelling, note publishing, and how a personal research/build identity becomes trustworthy over time.
-                    </span>
-                    <span class="lang-zh">
-                      这条规则不只适用于这张首页。它同样适用于项目叙事、笔记发布，以及一个个人研究 / 构建身份如何在时间里慢慢建立可信度。
-                    </span>
+                    That rule remains useful beyond this page. It is also a good rule for project storytelling, note publishing,
+                    and how a long-term research identity becomes trustworthy in public.
                   </p>
                 </section>
               </div>
@@ -265,15 +156,12 @@
       <footer class="site-footer">
         <div class="container footer-inner">
           <p>&copy; 2026 HJR / YSCJRH</p>
-          <p>
-            <a
-              href="https://github.com/YSCJRH"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open the YSCJRH GitHub profile"
-            >GitHub</a>
-            /
-            <a href="../review/" aria-label="Open the current site review page">Review</a>
+          <p class="footer-links">
+            <a href="../index.html">Home / 首页</a>
+            <span>/</span>
+            <a href="./index.html">Notes / 笔记</a>
+            <span>/</span>
+            <a href="../projects/">Projects / 项目</a>
           </p>
         </div>
       </footer>

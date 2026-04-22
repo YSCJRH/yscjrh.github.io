@@ -1,0 +1,19 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="planetGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(156 152) rotate(90) scale(124)">
+      <stop stop-color="#9AB7FF"/>
+      <stop offset="1" stop-color="#294CA8"/>
+    </radialGradient>
+    <filter id="planetBlur" x="0" y="0" width="320" height="320" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+  <g filter="url(#planetBlur)" opacity="0.48">
+    <circle cx="160" cy="160" r="96" fill="#3A6AF0"/>
+  </g>
+  <circle cx="160" cy="160" r="86" fill="#09121F" stroke="#8FB1FF" stroke-opacity="0.42" stroke-width="2"/>
+  <circle cx="152" cy="152" r="62" fill="url(#planetGlow)"/>
+  <path d="M64 168C104 124 184 108 256 148" stroke="#9AB7FF" stroke-opacity="0.6" stroke-width="2.5"/>
+  <path d="M78 204C124 178 196 172 244 200" stroke="#9AB7FF" stroke-opacity="0.36" stroke-width="2"/>
+  <path d="M132 92C162 110 196 154 212 220" stroke="#D4E0FF" stroke-opacity="0.24" stroke-width="2"/>
+</svg>
