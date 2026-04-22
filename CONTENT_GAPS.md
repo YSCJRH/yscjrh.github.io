@@ -84,6 +84,56 @@ What is still missing is mostly creator-side context: origin, representative val
   - `Why it exists:`
   - `Role on homepage:`
 
+## Project Gateway Gaps
+
+This section tracks which projects still need stronger public entry points beyond the current repo-first gateway.
+
+### Public Pages
+- `ai-visibility-auditor`
+  - public entry exists
+- `skylattice`
+  - public docs exist
+- `codex-via-phone`
+  - still needs a dedicated public page if it should move beyond repo-first entry
+- `mirror-sim`
+  - still needs a dedicated public page if it should move beyond repo-first entry
+- `create-double-skill`
+  - still needs a dedicated public page if it should move beyond repo-first entry
+
+### Screenshots
+- `ai-visibility-auditor`
+  - would benefit from a stable screenshot set for the live report/demo path
+- `skylattice`
+  - would benefit from screenshots or proof snapshots of the docs and quick-start outcome
+- `codex-via-phone`
+  - needs first public screenshots if it is to become more than a repo-first card
+- `mirror-sim`
+  - needs first public screenshots or visual proof
+- `create-double-skill`
+  - needs first public screenshots or generated-output visuals
+
+### First-Run Proof
+- `codex-via-phone`
+  - needs a safe first-run proof path that can be linked publicly
+- `mirror-sim`
+  - needs public first-run proof beyond the current concept/repo framing
+- `create-double-skill`
+  - needs a cleaner first-run proof or example output path
+- `skylattice`
+  - quick start exists, but stronger proof artifacts would make the gateway more persuasive
+
+### Build Logs Or Notes Worth Adding
+- `ai-visibility-auditor`
+  - build log on why the public demo/report flow matters
+- `codex-via-phone`
+  - setup or security-model note
+- `mirror-sim`
+  - concept note or three-minute demo note
+- `create-double-skill`
+  - first-run note or example-output note
+- `skylattice`
+  - note on quick-start reasoning or governance model
+
 ## Notes Starter Topics
 
 Starter drafts now exist in `content/notes/`.

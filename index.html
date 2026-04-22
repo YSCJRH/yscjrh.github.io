@@ -124,6 +124,21 @@
                     </a>
                   </div>
 
+                  <div class="hero-shortcuts" aria-label="Project shortcuts">
+                    <a class="hero-shortcut" href="https://yscjrh.github.io/ai-visibility-auditor/">
+                      <span class="hero-shortcut-label">AnswerLens demo / AnswerLens 演示</span>
+                      <span class="hero-shortcut-note">Live entry / 在线入口</span>
+                    </a>
+                    <a class="hero-shortcut" href="https://yscjrh.github.io/skylattice/">
+                      <span class="hero-shortcut-label">Skylattice docs / Skylattice 文档</span>
+                      <span class="hero-shortcut-note">Public docs / 公开文档</span>
+                    </a>
+                    <a class="hero-shortcut" href="projects/">
+                      <span class="hero-shortcut-label">All projects / 全部项目</span>
+                      <span class="hero-shortcut-note">Gateway / 项目入口</span>
+                    </a>
+                  </div>
+
                   <ul class="hero-strip" aria-label="Core directions">
                     <li class="hero-strip-item">
                       <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true">
@@ -230,37 +245,45 @@
             <div class="surface section-panel">
               <div class="module-head" data-reveal>
                 <div>
-                  <p class="eyebrow">Build / 构建</p>
-                  <h2 class="section-title">Selected repositories that turn working ideas into usable tools.</h2>
+                  <p class="eyebrow">Projects / Build</p>
+                  <h2 class="section-title">Selected open-source projects with clear public entry points.</h2>
                   <p class="section-copy">
-                    These projects are shown as public evidence of workflow, judgment, and technical taste.
+                    Each card points first to the clearest current public entry: live demo, public docs, or an honest repo-first path.
                   </p>
                   <p class="section-copy section-copy-zh">
-                    这些仓库不是简单罗列，而是对工作流、判断方式与技术品味的公开证据。
+                    每张卡都优先指向当前最清晰的公开入口：在线演示、公开文档，或诚实的仓库入口。
                   </p>
                 </div>
-                <a class="button button-secondary module-button" href="projects/">View All Projects / 查看全部项目</a>
+                <a class="button button-secondary module-button" href="projects/">All Projects / 全部项目</a>
               </div>
 
               <div class="build-grid">
                 <article class="surface surface-interactive project-card project-card-featured" data-reveal data-spotlight>
                   <div class="project-topline">
-                    <span class="project-badge">Featured / 重点项目</span>
+                    <div class="project-chip-row">
+                      <span class="project-badge">Featured / 重点项目</span>
+                      <span class="project-status project-status-live">Live demo / 已有公开页面</span>
+                    </div>
                     <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="project-mark">
                   </div>
-                  <h3>ai-visibility-auditor</h3>
-                  <p class="project-copy">AnswerLens: CLI-first AI visibility auditor for product websites.</p>
+                  <h3>AnswerLens / ai-visibility-auditor</h3>
+                  <p class="project-copy">CLI-first AI visibility auditor for product websites.</p>
                   <p class="project-copy project-copy-zh">
-                    一个面向产品网站的 CLI 优先 AI 可见性审计工具，强调结构、证据与可复查输出。
+                    一个面向产品网站的 CLI 优先 AI 可见性审计工具，把公开入口、结构证据与可复查输出放在前面。
                   </p>
+                  <div class="project-why">
+                    <p class="project-why-label">Why it matters / 为什么重要</p>
+                    <p class="project-why-copy">It gives visitors and teams a direct way to inspect the product surface before diving into repository details.</p>
+                  </div>
                   <ul class="tag-list" aria-label="Project tags">
                     <li>AI Visibility</li>
                     <li>CLI</li>
-                    <li>GitHub Native</li>
+                    <li>Live Entry</li>
                   </ul>
-                  <div class="project-actions">
-                    <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="project-link" href="https://github.com/YSCJRH/ai-visibility-auditor#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                  <div class="project-cta-group">
+                    <a class="button button-primary button-compact" href="https://yscjrh.github.io/ai-visibility-auditor/">View live demo / 查看在线演示</a>
+                    <a class="button button-secondary button-compact" href="https://github.com/YSCJRH/ai-visibility-auditor#readme" target="_blank" rel="noopener noreferrer">Read docs / 阅读文档</a>
+                    <a class="project-repo-link" href="https://github.com/YSCJRH/ai-visibility-auditor" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
                   </div>
                 </article>
 
@@ -268,14 +291,19 @@
                   <h3>codex-via-phone</h3>
                   <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
                   <p class="project-copy project-copy-zh">面向本地 Codex 会话的手机友好控制层，强调私有、安全与可达性。</p>
+                  <span class="project-status project-status-repo">Repo-first / 当前以仓库为入口</span>
+                  <div class="project-why">
+                    <p class="project-why-label">Why it matters / 为什么重要</p>
+                    <p class="project-why-copy">It shows how remote access can stay practical without treating safety and trust boundaries as afterthoughts.</p>
+                  </div>
                   <ul class="tag-list" aria-label="Project tags">
                     <li>Windows</li>
                     <li>Remote Access</li>
                     <li>Private Control</li>
                   </ul>
-                  <div class="project-actions">
-                    <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="project-link" href="https://github.com/YSCJRH/codex-via-phone#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                  <div class="project-cta-group">
+                    <a class="button button-primary button-compact" href="https://github.com/YSCJRH/codex-via-phone" target="_blank" rel="noopener noreferrer">Read setup path / 阅读上手路径</a>
+                    <a class="project-repo-link" href="https://github.com/YSCJRH/codex-via-phone" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
                   </div>
                 </article>
 
@@ -283,15 +311,20 @@
                   <h3>skylattice</h3>
                   <p class="project-copy">Local-first AI agent runtime for persistent memory, governed repo tasks, and Git-native self-improvement.</p>
                   <p class="project-copy project-copy-zh">一个本地优先的 AI agent runtime，强调记忆、治理和 Git 原生迭代。</p>
+                  <span class="project-status project-status-docs">Public docs / 已有公开文档</span>
+                  <div class="project-why">
+                    <p class="project-why-label">Why it matters / 为什么重要</p>
+                    <p class="project-why-copy">It gives visitors a documentation-first path into a complex agent system before they need to inspect the repository internals.</p>
+                  </div>
                   <ul class="tag-list" aria-label="Project tags">
                     <li>Agent Runtime</li>
                     <li>Memory</li>
                     <li>Git Native</li>
                   </ul>
-                  <div class="project-actions">
-                    <a class="project-link" href="https://github.com/YSCJRH/skylattice" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="project-link" href="https://github.com/YSCJRH/skylattice#readme" target="_blank" rel="noopener noreferrer">Docs</a>
-                    <a class="project-link" href="https://yscjrh.github.io/skylattice/" target="_blank" rel="noopener noreferrer">Demo</a>
+                  <div class="project-cta-group">
+                    <a class="button button-primary button-compact" href="https://yscjrh.github.io/skylattice/">Read docs / 阅读文档</a>
+                    <a class="button button-secondary button-compact" href="https://yscjrh.github.io/skylattice/quickstart/">Quick start / 快速开始</a>
+                    <a class="project-repo-link" href="https://github.com/YSCJRH/skylattice" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
                   </div>
                 </article>
 
@@ -299,14 +332,19 @@
                   <h3>mirror-sim</h3>
                   <p class="project-copy">A constrained multi-agent scenario simulation engine inspired by Liu Cixin's The Mirror.</p>
                   <p class="project-copy project-copy-zh">一个受约束的多代理情景模拟引擎，偏向可检视的 scenario work，而不是开放世界预言。</p>
+                  <span class="project-status project-status-concept">Concept repo / 概念仓库</span>
+                  <div class="project-why">
+                    <p class="project-why-label">Why it matters / 为什么重要</p>
+                    <p class="project-why-copy">It keeps scenario simulation bounded and inspectable instead of treating open-world prediction as theater.</p>
+                  </div>
                   <ul class="tag-list" aria-label="Project tags">
                     <li>Simulation</li>
                     <li>Scenario</li>
                     <li>Evidence</li>
                   </ul>
-                  <div class="project-actions">
-                    <a class="project-link" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="project-link" href="https://github.com/YSCJRH/mirror-sim#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                  <div class="project-cta-group">
+                    <a class="button button-primary button-compact" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">Read concept / 阅读概念</a>
+                    <a class="project-repo-link" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
                   </div>
                 </article>
 
@@ -314,14 +352,19 @@
                   <h3>create-double-skill</h3>
                   <p class="project-copy">Build a private digital double and an editable model of how you think, choose, and present yourself.</p>
                   <p class="project-copy project-copy-zh">围绕可编辑自我建模展开的小型工具集，把语言、偏好与判断落成可持续材料。</p>
+                  <span class="project-status project-status-experiment">Tooling experiment / 实验型工具</span>
+                  <div class="project-why">
+                    <p class="project-why-label">Why it matters / 为什么重要</p>
+                    <p class="project-why-copy">It turns reflective self-modeling into editable local material instead of leaving it trapped in one-off chat output.</p>
+                  </div>
                   <ul class="tag-list" aria-label="Project tags">
                     <li>Identity Tools</li>
                     <li>Profiles</li>
                     <li>Skills</li>
                   </ul>
-                  <div class="project-actions">
-                    <a class="project-link" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="project-link" href="https://github.com/YSCJRH/create-double-skill#readme" target="_blank" rel="noopener noreferrer">Docs</a>
+                  <div class="project-cta-group">
+                    <a class="button button-primary button-compact" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">Run first double / 跑通第一次</a>
+                    <a class="project-repo-link" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
                   </div>
                 </article>
               </div>
