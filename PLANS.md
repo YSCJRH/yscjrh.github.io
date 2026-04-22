@@ -9,6 +9,7 @@
 - The redesigned homepage, notes hub, projects page, and article pages are live.
 - AnswerLens and Skylattice already have verified public Pages/docs.
 - The remaining repo-first projects still need more honest, structured entry logic.
+- Verified README deep links can now support setup, demo, and example CTAs for the repo-first projects without inventing standalone public pages.
 
 ## Phase 1: Gateway Link Audit
 1. Verify current primary public entry for each featured project.

@@ -88,6 +88,8 @@ What is still missing is mostly creator-side context: origin, representative val
 
 This section tracks which projects still need stronger public entry points beyond the current repo-first gateway.
 
+Some repo-first cards now use verified README deep links, but they still do not count as dedicated public pages.
+
 ### Public Pages
 - `ai-visibility-auditor`
   - public entry exists
@@ -114,11 +116,11 @@ This section tracks which projects still need stronger public entry points beyon
 
 ### First-Run Proof
 - `codex-via-phone`
-  - needs a safe first-run proof path that can be linked publicly
+  - README quick-start and security-model sections are now linkable, but there is still no standalone public first-run proof page
 - `mirror-sim`
-  - needs public first-run proof beyond the current concept/repo framing
+  - README now exposes a three-minute demo path, but proof is still repo-bound rather than independently public
 - `create-double-skill`
-  - needs a cleaner first-run proof or example output path
+  - README first-run and examples sections are linkable, but a cleaner public example path is still missing
 - `skylattice`
   - quick start exists, but stronger proof artifacts would make the gateway more persuasive
 
