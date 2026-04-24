@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=visual-20260424">
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -107,6 +107,11 @@
                 <article class="hero-copy" data-reveal>
                   <p class="eyebrow">Researcher · Builder · Thinker</p>
                   <h1 class="hero-title">Exploring Fluorescence. Building Open Tools.</h1>
+                  <div class="hero-mobile-visual" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <p class="hero-title-zh">探索荧光世界，构建开放工具。</p>
                   <p class="hero-lead">
                     HJR works across fluorescence analysis, intelligent algorithms, scientific instrumentation,
@@ -149,28 +154,28 @@
 
                   <ul class="hero-strip" aria-label="Core directions" aria-hidden="true" hidden>
                     <li class="hero-strip-item">
-                      <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true">
+                      <span class="visual-token visual-token-signal" aria-hidden="true"></span>
                       <div>
                         <strong>Fluorescence Analysis</strong>
                         <span>荧光分析</span>
                       </div>
                     </li>
                     <li class="hero-strip-item">
-                      <img src="assets/img/icon-network.svg" alt="" aria-hidden="true">
+                      <span class="visual-token visual-token-network" aria-hidden="true"></span>
                       <div>
                         <strong>Intelligent Algorithms</strong>
                         <span>智能算法</span>
                       </div>
                     </li>
                     <li class="hero-strip-item">
-                      <img src="assets/img/icon-instrument.svg" alt="" aria-hidden="true">
+                      <span class="visual-token visual-token-instrument" aria-hidden="true"></span>
                       <div>
                         <strong>Scientific Instrumentation</strong>
                         <span>科学仪器</span>
                       </div>
                     </li>
                     <li class="hero-strip-item">
-                      <img src="assets/img/icon-notes.svg" alt="" aria-hidden="true">
+                      <span class="visual-token visual-token-notes" aria-hidden="true"></span>
                       <div>
                         <strong>Note-driven Tools</strong>
                         <span>笔记驱动工具</span>
@@ -180,11 +185,31 @@
                 </article>
 
                 <aside class="hero-visual" data-reveal>
-                  <img
-                    class="hero-illustration"
-                    src="assets/img/hero-lab.svg"
-                    alt="A glowing microscope, sample vial, signal traces, and molecular nodes."
+                  <div
+                    class="hero-illustration hero-lab-visual"
+                    role="img"
+                    aria-label="A glowing microscope, sample slide, signal traces, and molecular nodes."
                   >
+                    <span class="lab-aura lab-aura-primary" aria-hidden="true"></span>
+                    <span class="lab-aura lab-aura-secondary" aria-hidden="true"></span>
+                    <span class="lab-wave lab-wave-one" aria-hidden="true"></span>
+                    <span class="lab-wave lab-wave-two" aria-hidden="true"></span>
+                    <span class="lab-slide" aria-hidden="true">
+                      <span class="lab-sample"></span>
+                    </span>
+                    <span class="lab-microscope" aria-hidden="true">
+                      <span class="scope-arm"></span>
+                      <span class="scope-body"></span>
+                      <span class="scope-lens scope-lens-one"></span>
+                      <span class="scope-lens scope-lens-two"></span>
+                    </span>
+                    <span class="lab-nodes" aria-hidden="true">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                  </div>
                   <div class="hero-visual-note">
                     <p>Signals · Methods · Instruments · Tools</p>
                     <p>信号 · 方法 · 仪器 · 工具</p>
@@ -193,28 +218,28 @@
               </div>
               <ul class="hero-strip hero-strip-panel" aria-label="Core directions">
                 <li class="hero-strip-item">
-                  <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true">
+                  <span class="visual-token visual-token-signal" aria-hidden="true"></span>
                   <div>
                     <strong>Fluorescence Analysis</strong>
                     <span>荧光分析</span>
                   </div>
                 </li>
                 <li class="hero-strip-item">
-                  <img src="assets/img/icon-network.svg" alt="" aria-hidden="true">
+                  <span class="visual-token visual-token-network" aria-hidden="true"></span>
                   <div>
                     <strong>Intelligent Algorithms</strong>
                     <span>智能算法</span>
                   </div>
                 </li>
                 <li class="hero-strip-item">
-                  <img src="assets/img/icon-instrument.svg" alt="" aria-hidden="true">
+                  <span class="visual-token visual-token-instrument" aria-hidden="true"></span>
                   <div>
                     <strong>Scientific Instrumentation</strong>
                     <span>科学仪器</span>
                   </div>
                 </li>
                 <li class="hero-strip-item">
-                  <img src="assets/img/icon-notes.svg" alt="" aria-hidden="true">
+                  <span class="visual-token visual-token-notes" aria-hidden="true"></span>
                   <div>
                     <strong>Note-driven Tools</strong>
                     <span>笔记驱动工具</span>
@@ -247,7 +272,11 @@
 
               <div class="research-grid">
                 <article class="surface surface-interactive research-card" data-reveal data-spotlight>
-                  <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true" class="research-icon">
+                  <div class="research-visual research-visual-signal" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <p class="surface-label">Direction 01 / 方向 01</p>
                   <h3>Fluorescence Analysis / 荧光分析</h3>
                   <p class="card-copy">
@@ -263,7 +292,11 @@
                 </article>
 
                 <article class="surface surface-interactive research-card" data-reveal data-spotlight>
-                  <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="research-icon">
+                  <div class="research-visual research-visual-network" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <p class="surface-label">Direction 02 / 方向 02</p>
                   <h3>Fluorescence Analysis × Intelligent Algorithms / 荧光分析 × 智能算法</h3>
                   <p class="card-copy">
@@ -279,7 +312,11 @@
                 </article>
 
                 <article class="surface surface-interactive research-card" data-reveal data-spotlight>
-                  <img src="assets/img/icon-instrument.svg" alt="" aria-hidden="true" class="research-icon">
+                  <div class="research-visual research-visual-instrument" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <p class="surface-label">Direction 03 / 方向 03</p>
                   <h3>Fluorescence Instrumentation / 荧光仪器</h3>
                   <p class="card-copy">
@@ -330,7 +367,12 @@
                       <span class="project-badge">Featured / 重点项目</span>
                       <span class="project-status project-status-live">Live demo / 已有公开页面</span>
                     </div>
-                    <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="project-mark">
+                    <span class="project-mark project-mark-network" aria-hidden="true"></span>
+                  </div>
+                  <div class="project-visual project-visual-answerlens" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                   </div>
                   <h3>AnswerLens / ai-visibility-auditor</h3>
                   <p class="project-copy">CLI-first AI visibility auditor for product websites.</p>
@@ -354,6 +396,11 @@
                 </article>
 
                 <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <div class="project-visual project-visual-phone" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <h3>codex-via-phone</h3>
                   <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
                   <p class="project-copy project-copy-zh">面向本地 Codex 会话的手机友好控制层，强调私有、安全与可达性。</p>
@@ -375,6 +422,11 @@
                 </article>
 
                 <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <div class="project-visual project-visual-lattice" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <h3>skylattice</h3>
                   <p class="project-copy">Local-first AI agent runtime for persistent memory, governed repo tasks, and Git-native self-improvement.</p>
                   <p class="project-copy project-copy-zh">一个本地优先的 AI agent runtime，强调记忆、治理和 Git 原生迭代。</p>
@@ -396,6 +448,11 @@
                 </article>
 
                 <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <div class="project-visual project-visual-mirror" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <h3>mirror-sim</h3>
                   <p class="project-copy">A constrained multi-agent scenario simulation engine inspired by Liu Cixin's The Mirror.</p>
                   <p class="project-copy project-copy-zh">一个受约束的多代理情景模拟引擎，偏向可检视的 scenario work，而不是开放世界预言。</p>
@@ -417,6 +474,11 @@
                 </article>
 
                 <article class="surface surface-interactive project-card project-card-compact" data-reveal>
+                  <div class="project-visual project-visual-double" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                   <h3>create-double-skill</h3>
                   <p class="project-copy">Build a private digital double and an editable model of how you think, choose, and present yourself.</p>
                   <p class="project-copy project-copy-zh">围绕可编辑自我建模展开的小型工具集，把语言、偏好与判断落成可持续材料。</p>
@@ -463,9 +525,7 @@
 
               <div class="stream-list">
                 <article class="surface surface-interactive stream-card" data-reveal data-spotlight>
-                  <div class="stream-icon-wrap">
-                    <img src="assets/img/icon-notes.svg" alt="" aria-hidden="true" class="stream-icon">
-                  </div>
+                  <div class="stream-thumb stream-thumb-notes" aria-hidden="true"></div>
                   <div class="stream-main">
                     <h3>Build Logs / 构建日志</h3>
                     <p class="stream-copy">Short public notes on why this site and selected tools take the shape they do.</p>
@@ -479,9 +539,7 @@
                 </article>
 
                 <article class="surface stream-card" data-reveal>
-                  <div class="stream-icon-wrap">
-                    <img src="assets/img/icon-signal.svg" alt="" aria-hidden="true" class="stream-icon">
-                  </div>
+                  <div class="stream-thumb stream-thumb-signal" aria-hidden="true"></div>
                   <div class="stream-main">
                     <h3>Research Reflections / 研究反思</h3>
                     <p class="stream-copy">Notes on ambiguity, signal quality, and how a research question becomes clearer over time.</p>
@@ -495,9 +553,7 @@
                 </article>
 
                 <article class="surface stream-card" data-reveal>
-                  <div class="stream-icon-wrap">
-                    <img src="assets/img/icon-network.svg" alt="" aria-hidden="true" class="stream-icon">
-                  </div>
+                  <div class="stream-thumb stream-thumb-method" aria-hidden="true"></div>
                   <div class="stream-main">
                     <h3>Method Notes / 方法备忘</h3>
                     <p class="stream-copy">Compact records of reusable workflows, heuristics, and small rules worth keeping nearby.</p>
@@ -539,11 +595,11 @@
 
               <div class="about-grid">
                 <article class="surface surface-glass about-panel about-panel-visual" data-reveal>
-                  <img
-                    class="about-orbit"
-                    src="assets/img/about-orbit.svg"
-                    alt="An abstract glowing sphere representing a compact public profile."
-                  >
+                  <div
+                    class="about-orbit about-orbit-visual"
+                    role="img"
+                    aria-label="An abstract glowing sphere representing a compact public profile."
+                  ></div>
                 </article>
 
                 <article class="surface surface-glass about-panel about-panel-copy" data-reveal>
