@@ -38,12 +38,48 @@
   const excitationBadge = root.querySelector("[data-badge-excitation]");
   const emissionBadge = root.querySelector("[data-badge-emission]");
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const sourcePanel = root.querySelector("[data-source-data-panel]");
+  const sourceSelect = root.querySelector("[data-source-dataset]");
+  const sourceElements = {
+    sourceName: root.querySelector("[data-source-name]"),
+    sourceLink: root.querySelector("[data-source-link]"),
+    sourceLicense: root.querySelector("[data-source-license]"),
+    sourceProcessing: root.querySelector("[data-source-processing]"),
+    sourceStatus: root.querySelector("[data-source-status]"),
+    sourceKind: root.querySelector("[data-source-kind]"),
+    sourceLine: root.querySelector("[data-source-line]"),
+    sourceHeatmap: root.querySelector("[data-source-heatmap]"),
+    sourceXStart: root.querySelector("[data-source-x-start]"),
+    sourceXEnd: root.querySelector("[data-source-x-end]"),
+    sourceYStart: root.querySelector("[data-source-y-start]"),
+    sourceYEnd: root.querySelector("[data-source-y-end]"),
+    sourceYLabel: root.querySelector("[data-source-y-label]"),
+    sourceModeLabel: root.querySelector("[data-source-mode-label]"),
+    sourceCaption: root.querySelector("[data-source-caption]"),
+    sourceDisclaimer: root.querySelector("[data-source-disclaimer]"),
+    sourceReferenceNote: root.querySelector("[data-source-reference-note]"),
+    sourceChartTitle: root.querySelector("[data-source-chart-title]"),
+    sourceChartDesc: root.querySelector("[data-source-chart-desc]"),
+  };
 
   const chart = {
     left: 54,
     top: 34,
     right: 588,
     bottom: 248,
+  };
+
+  const sourceChart = {
+    left: 54,
+    top: 34,
+    right: 588,
+    bottom: 258,
+  };
+
+  const sourceState = {
+    manifest: null,
+    datasets: [],
+    cache: new Map(),
   };
 
   const samples = {
@@ -368,6 +404,231 @@
     updateSpectrum();
   }
 
+  function setElementText(element, text) {
+    if (element) {
+      element.textContent = text;
+    }
+  }
+
+  function formatNumber(value, digits = 0) {
+    if (!Number.isFinite(value)) {
+      return "--";
+    }
+
+    return Number(value.toFixed(digits)).toString();
+  }
+
+  function setSourceStatus(message) {
+    setElementText(sourceElements.sourceStatus, message);
+  }
+
+  function setSourceLink(dataset) {
+    const link = sourceElements.sourceLink;
+
+    if (!link || !dataset?.source) {
+      return;
+    }
+
+    link.href = dataset.source.doi ? `https://doi.org/${dataset.source.doi}` : dataset.source.url;
+    link.textContent = dataset.source.doi || "Source link";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  }
+
+  function colorChannel(start, end, amount) {
+    return Math.round(start + (end - start) * amount);
+  }
+
+  function heatmapColor(value) {
+    const t = clamp(value, 0, 1);
+    const stops = [
+      [8, 12, 24],
+      [39, 85, 145],
+      [77, 237, 207],
+      [154, 242, 111],
+    ];
+    const scaled = t * (stops.length - 1);
+    const index = Math.min(Math.floor(scaled), stops.length - 2);
+    const local = scaled - index;
+    const start = stops[index];
+    const end = stops[index + 1];
+    return `rgb(${colorChannel(start[0], end[0], local)}, ${colorChannel(start[1], end[1], local)}, ${colorChannel(start[2], end[2], local)})`;
+  }
+
+  function hideSourceHeatmap() {
+    if (sourceElements.sourceHeatmap) {
+      sourceElements.sourceHeatmap.textContent = "";
+      sourceElements.sourceHeatmap.setAttribute("hidden", "");
+    }
+  }
+
+  function renderSourceLine(dataset, data) {
+    if (!sourceElements.sourceLine) {
+      return;
+    }
+
+    hideSourceHeatmap();
+    sourceElements.sourceLine.removeAttribute("hidden");
+
+    const xValues = data.x || [];
+    const yValues = data.y || [];
+    const xMin = data.displayRange?.x?.[0] ?? Math.min(...xValues);
+    const xMax = data.displayRange?.x?.[1] ?? Math.max(...xValues);
+    const width = sourceChart.right - sourceChart.left;
+    const height = sourceChart.bottom - sourceChart.top;
+    const points = xValues
+      .map((x, index) => {
+        const y = yValues[index];
+        const xProgress = (x - xMin) / Math.max(xMax - xMin, 1);
+        const chartX = sourceChart.left + xProgress * width;
+        const chartY = sourceChart.bottom - clamp(y, 0, 1) * height;
+        return `${chartX.toFixed(1)},${chartY.toFixed(1)}`;
+      })
+      .join(" ");
+
+    sourceElements.sourceLine.setAttribute("points", points);
+    setElementText(sourceElements.sourceXStart, `${formatNumber(xMin)} nm`);
+    setElementText(sourceElements.sourceXEnd, `${formatNumber(xMax)} nm`);
+    setElementText(sourceElements.sourceYStart, "0");
+    setElementText(sourceElements.sourceYEnd, "1");
+    setElementText(sourceElements.sourceYLabel, "a.u.");
+    setElementText(sourceElements.sourceModeLabel, "Emission wavelength");
+    setElementText(sourceElements.sourceKind, dataset.role || "spectrum1d");
+  }
+
+  function renderSourceEem(dataset, data) {
+    if (!sourceElements.sourceHeatmap || !sourceElements.sourceLine) {
+      return;
+    }
+
+    sourceElements.sourceLine.setAttribute("hidden", "");
+    sourceElements.sourceLine.setAttribute("points", "");
+    sourceElements.sourceHeatmap.removeAttribute("hidden");
+    sourceElements.sourceHeatmap.textContent = "";
+
+    const namespace = "http://www.w3.org/2000/svg";
+    const rows = data.z || [];
+    const emission = data.emission || [];
+    const excitation = data.excitation || [];
+    const rowCount = rows.length;
+    const colCount = excitation.length;
+    const cellWidth = (sourceChart.right - sourceChart.left) / Math.max(colCount, 1);
+    const cellHeight = (sourceChart.bottom - sourceChart.top) / Math.max(rowCount, 1);
+
+    rows.forEach((row, rowIndex) => {
+      row.forEach((value, colIndex) => {
+        const rect = document.createElementNS(namespace, "rect");
+        rect.setAttribute("x", String(sourceChart.left + colIndex * cellWidth));
+        rect.setAttribute("y", String(sourceChart.bottom - (rowIndex + 1) * cellHeight));
+        rect.setAttribute("width", String(cellWidth + 0.2));
+        rect.setAttribute("height", String(cellHeight + 0.2));
+        rect.setAttribute("fill", heatmapColor(value));
+        rect.setAttribute("opacity", String(0.36 + clamp(value, 0, 1) * 0.62));
+        sourceElements.sourceHeatmap.appendChild(rect);
+      });
+    });
+
+    setElementText(sourceElements.sourceXStart, `${formatNumber(excitation[0])} nm`);
+    setElementText(sourceElements.sourceXEnd, `${formatNumber(excitation.at(-1))} nm`);
+    setElementText(sourceElements.sourceYStart, `${formatNumber(emission[0])} nm`);
+    setElementText(sourceElements.sourceYEnd, `${formatNumber(emission.at(-1))} nm`);
+    setElementText(sourceElements.sourceYLabel, "Em");
+    setElementText(sourceElements.sourceModeLabel, "Excitation wavelength / heatmap");
+    setElementText(sourceElements.sourceKind, dataset.role || "EEM heatmap");
+  }
+
+  function updateSourceMetadata(dataset, data) {
+    const source = dataset.source || {};
+    const processing = dataset.processing || {};
+    setElementText(sourceElements.sourceName, source.title || dataset.label);
+    setElementText(sourceElements.sourceLicense, source.license || "Recorded in manifest");
+    setElementText(sourceElements.sourceProcessing, processing.notes || data.notes || "Normalized/downsampled for display.");
+    setSourceLink(dataset);
+    setElementText(sourceElements.sourceCaption, source.citation || "Source-derived educational example.");
+    setElementText(sourceElements.sourceChartTitle, dataset.label);
+    setElementText(
+      sourceElements.sourceChartDesc,
+      `${dataset.label}. ${processing.notes || data.notes || "Normalized and downsampled for educational visualization."}`
+    );
+  }
+
+  async function fetchJson(url) {
+    const response = await fetch(url, { cache: "no-cache" });
+
+    if (!response.ok) {
+      throw new Error(`${url} returned ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  async function showSourceDataset(datasetId) {
+    const dataset = sourceState.datasets.find((entry) => entry.id === datasetId) || sourceState.datasets[0];
+
+    if (!dataset) {
+      setSourceStatus("No plotted source-derived datasets are available.");
+      return;
+    }
+
+    try {
+      setSourceStatus(`Loading ${dataset.label}...`);
+
+      if (!sourceState.cache.has(dataset.id)) {
+        sourceState.cache.set(dataset.id, await fetchJson(`data/${dataset.dataUrl}`));
+      }
+
+      const data = sourceState.cache.get(dataset.id);
+      updateSourceMetadata(dataset, data);
+
+      if (dataset.kind === "eem") {
+        renderSourceEem(dataset, data);
+      } else {
+        renderSourceLine(dataset, data);
+      }
+
+      setSourceStatus("Loaded local source-derived example.");
+    } catch (error) {
+      console.error(error);
+      setSourceStatus("Source-derived data could not be loaded. The synthetic model above still works.");
+    }
+  }
+
+  async function initializeSourceData() {
+    if (!sourcePanel || !sourceSelect || !("fetch" in window)) {
+      return;
+    }
+
+    try {
+      sourceState.manifest = await fetchJson("data/manifest.json");
+      sourceState.datasets = sourceState.manifest.datasets.filter((dataset) => dataset.dataUrl);
+      sourceSelect.textContent = "";
+
+      sourceState.datasets.forEach((dataset) => {
+        const option = document.createElement("option");
+        option.value = dataset.id;
+        option.textContent = dataset.label;
+        sourceSelect.appendChild(option);
+      });
+
+      const reference = sourceState.manifest.datasets.find((dataset) => dataset.kind === "reference");
+      setElementText(sourceElements.sourceDisclaimer, sourceState.manifest.disclaimer);
+
+      if (reference) {
+        setElementText(
+          sourceElements.sourceReferenceNote,
+          `Reference-only: ${reference.label}. ${reference.processing?.notes || "No reference curve is embedded."}`
+        );
+      }
+
+      sourceSelect.addEventListener("change", () => showSourceDataset(sourceSelect.value));
+      await showSourceDataset(sourceState.datasets[0]?.id);
+    } catch (error) {
+      console.error(error);
+      sourceSelect.disabled = true;
+      setSourceStatus("Source-derived manifest unavailable. Synthetic controls remain available.");
+    }
+  }
+
   function applyReducedMotionPreference() {
     root.classList.toggle("is-reduced-motion", reduceMotionQuery.matches);
   }
@@ -407,4 +668,5 @@
   updateModeChrome();
   updatePart("source");
   updateSpectrum();
+  initializeSourceData();
 })();

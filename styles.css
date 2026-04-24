@@ -3702,6 +3702,183 @@ section[id] {
   gap: 0.8rem;
 }
 
+.source-data-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(77, 237, 207, 0.09), transparent 24rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+}
+
+.source-data-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.82rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.source-data-intro,
+.source-data-status,
+.source-data-caption,
+.source-reference-note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.source-data-intro {
+  max-width: 28rem;
+}
+
+.source-data-layout {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.36fr) minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.source-data-controls,
+.source-chart-wrap {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 1rem;
+  background: rgba(5, 7, 13, 0.46);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.source-data-controls {
+  display: grid;
+  gap: 0.72rem;
+  padding: 0.86rem;
+}
+
+.source-data-facts {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.source-data-facts div {
+  display: grid;
+  gap: 0.16rem;
+  padding: 0.58rem 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 0.76rem;
+  background: rgba(255, 255, 255, 0.028);
+}
+
+.source-data-facts dt {
+  color: var(--color-text-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-data-facts dd {
+  margin: 0;
+  color: rgba(237, 237, 240, 0.82);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.source-data-facts a {
+  color: #d8fff8;
+}
+
+.source-data-status {
+  padding: 0.62rem 0.68rem;
+  border: 1px solid rgba(77, 237, 207, 0.14);
+  border-radius: 0.78rem;
+  background: rgba(77, 237, 207, 0.055);
+  color: rgba(216, 255, 248, 0.78);
+}
+
+.source-chart-wrap {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.86rem;
+}
+
+.source-chart-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.source-chart-meta p {
+  margin: 0;
+  padding: 0.54rem 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 0.76rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.source-chart-meta span,
+.source-chart-meta strong {
+  display: block;
+}
+
+.source-chart-meta span {
+  color: var(--color-text-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-chart-meta strong {
+  margin-top: 0.12rem;
+  color: #d8fff8;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.source-chart {
+  width: 100%;
+  aspect-ratio: 620 / 320;
+  overflow: visible;
+  border-radius: 0.8rem;
+  background:
+    radial-gradient(circle at 58% 28%, rgba(77, 237, 207, 0.08), transparent 15rem),
+    rgba(2, 3, 8, 0.64);
+}
+
+.source-chart-grid path {
+  stroke: rgba(255, 255, 255, 0.07);
+}
+
+.source-trace {
+  fill: none;
+  stroke: #7df5df;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 12px rgba(77, 237, 207, 0.42));
+}
+
+.source-heatmap rect {
+  shape-rendering: crispEdges;
+}
+
+.source-y-start,
+.source-y-end {
+  text-anchor: start;
+}
+
+.source-reference-note {
+  padding-top: 0.05rem;
+  color: rgba(176, 186, 206, 0.72);
+}
+
 .instrument-control-panel,
 .part-panel,
 .spectrum-panel {
@@ -3968,6 +4145,10 @@ section[id] {
   .spectrum-meta-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .source-data-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 780px) {
@@ -3979,8 +4160,17 @@ section[id] {
   .instrument-control-panel,
   .part-panel,
   .spectrum-panel,
+  .source-data-panel,
   .instrument-noscript {
     padding: 0.88rem;
+  }
+
+  .source-data-head {
+    display: grid;
+  }
+
+  .source-data-intro {
+    max-width: none;
   }
 
   .instrument-stage {
@@ -4008,6 +4198,10 @@ section[id] {
   }
 
   .spectrum-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .source-chart-meta {
     grid-template-columns: 1fr;
   }
 }
@@ -4048,7 +4242,12 @@ section[id] {
   .instrument-control,
   .control-help,
   .instrument-status,
-  .part-panel p {
+  .part-panel p,
+  .source-data-intro,
+  .source-data-status,
+  .source-data-caption,
+  .source-reference-note,
+  .source-data-facts dd {
     font-size: 0.74rem;
   }
 
@@ -4068,7 +4267,8 @@ section[id] {
   .instrument-model-panel,
   .instrument-control-panel,
   .part-panel,
-  .spectrum-panel {
+  .spectrum-panel,
+  .source-data-panel {
     padding: 0.72rem;
   }
 

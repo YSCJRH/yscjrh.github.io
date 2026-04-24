@@ -1,4 +1,29 @@
-# Current Phase: Instrument Lab Concept Demo - Closed
+# Current Phase: Instrument Lab Source-derived Data Layer
+
+## Goal
+- Add a small, cited data layer to `/instrument/` without changing the conceptual demo into a calibrated simulator.
+- Keep the existing synthetic scan model as the default interaction.
+- Load only local, compact, processed JSON under `/instrument/data/`; do not fetch Zenodo, NIST, or other external sources at page runtime.
+
+## Implementation Notes
+1. Add `DATA_SOURCES.md` as the public maintainer record for recommended, deferred, and reference-only fluorescence data sources.
+2. Create `instrument/data/manifest.json` plus small processed JSON examples:
+   - one Rhodamine 6G emission spectrum
+   - one EGFP emission spectrum
+   - one Fe(II)-DOM EEM heatmap
+   - one NIST reference-only calibration/correction entry with no plotted data
+3. Add a source-derived examples panel to `/instrument/` that is visually and behaviorally separate from the synthetic scan controls.
+4. Every displayed source example must show DOI/source/license/preprocessing caveats.
+5. Do not claim calibration, quantitative comparability, material optimization, or real instrument measurement.
+
+## Validation
+1. Run the preprocessing validator.
+2. Run JavaScript syntax checks.
+3. Check local `/instrument/` in the browser for synthetic fallback, 1D spectra, EEM heatmap, citations, mobile layout, and console errors.
+
+---
+
+# Previous Phase: Instrument Lab Concept Demo - Closed
 
 ## Goal
 - Add a static `/instrument/` route that visualizes the conceptual workflow of a fluorescence spectrophotometer.

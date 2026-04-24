@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-04-24",
+  "disclaimer": "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims.",
+  "packageNotes": [
+    "The synthetic Instrument Lab controls remain the default teaching model.",
+    "Source-derived examples are shown separately so sliders are not mistaken for controls over real data.",
+    "Runtime fetches are local-only under /instrument/data/."
+  ],
+  "datasets": [
+    {
+      "id": "r6g-emission-ethylene-glycol",
+      "kind": "spectrum1d",
+      "role": "dye-spectrum",
+      "label": "Rhodamine 6G emission in ethylene glycol",
+      "dataUrl": "processed/r6g-emission-ethylene-glycol.json",
+      "source": {
+        "title": "Absorption and Fluorescence spectra of Rhodamine 6G",
+        "creators": [
+          "Nyman, Robert Andrew"
+        ],
+        "doi": "10.5281/zenodo.569817",
+        "url": "https://zenodo.org/records/569817",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "sourceFile": "fluorescence_spectrum_R6G_in_EthyleneGlycol.csv",
+        "citation": "Nyman, R. A. (2017). Absorption and Fluorescence spectra of Rhodamine 6G. Zenodo. https://doi.org/10.5281/zenodo.569817"
+      },
+      "measurement": {
+        "mode": "emission spectrum",
+        "sample": "Rhodamine 6G in ethylene glycol",
+        "xUnit": "nm",
+        "yUnit": "normalized a.u."
+      },
+      "processing": {
+        "normalization": "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
+        "downsampling": "bucket average to 320 points",
+        "sourceChecksumSha256": "de0db08f9ccef08b4c40e2328f065627d7a9b28cef4aa6f1335623a243ad7b6f",
+        "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum."
+      }
+    },
+    {
+      "id": "egfp-emission",
+      "kind": "spectrum1d",
+      "role": "fluorescent-protein-spectrum",
+      "label": "EGFP emission spectrum",
+      "dataUrl": "processed/egfp-emission.json",
+      "source": {
+        "title": "Absorption and Emission spectra of fluorescent proteins",
+        "creators": [
+          "Mastop, M.",
+          "Bindels, D.S.",
+          "Gadella Jr., T.W.J.",
+          "Goedhart, J."
+        ],
+        "doi": "10.5281/zenodo.580169",
+        "url": "https://zenodo.org/records/580169",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "sourceFile": "Goedhart_Mastop_Abs-Em_Spectra-FPs.csv",
+        "citation": "Mastop, M., Bindels, D.S., Gadella Jr., T.W.J., & Goedhart, J. (2017). Absorption and Emission spectra of fluorescent proteins. Zenodo. https://doi.org/10.5281/zenodo.580169"
+      },
+      "measurement": {
+        "mode": "emission spectrum",
+        "sample": "EGFP purified fluorescent protein table entry",
+        "xUnit": "nm",
+        "yUnit": "normalized a.u."
+      },
+      "processing": {
+        "normalization": "negative values clamped to zero; max intensity normalized to 1",
+        "downsampling": "bucket average to 260 points",
+        "sourceChecksumSha256": "b9a1f5dda187e2083357b320e54dd3fb8aa31c9de825b201dacda4447a5a9315",
+        "notes": "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display."
+      }
+    },
+    {
+      "id": "fe-dom-sample01-eem",
+      "kind": "eem",
+      "role": "source-derived-eem",
+      "label": "Fe(II)-DOM sample 01 EEM",
+      "dataUrl": "processed/fe-dom-sample01-eem.json",
+      "source": {
+        "title": "Dataset for \"Technical note: Effects of iron(II) on fluorescence properties of dissolved organic matter at circumneutral pH\"",
+        "creators": [
+          "Jia, Kun",
+          "Manning, Cara C.",
+          "Jollymore, Ashlee",
+          "Beckie, Roger D."
+        ],
+        "doi": "10.5281/zenodo.3737108",
+        "url": "https://zenodo.org/records/3737108",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "sourceFile": "sample01EEM.txt + emission_lambda.txt",
+        "citation": "Jia, K., Manning, C. C., Jollymore, A., & Beckie, R. D. (2020). Dataset for Technical note: Effects of iron(II) on fluorescence properties of dissolved organic matter at circumneutral pH. Zenodo. https://doi.org/10.5281/zenodo.3737108"
+      },
+      "measurement": {
+        "mode": "excitation-emission matrix",
+        "sample": "Sample 01 from Fe(II)-DOM dataset",
+        "xUnit": "excitation nm",
+        "yUnit": "emission nm",
+        "zUnit": "normalized a.u.",
+        "sourceValueUnit": "Raman Units (RU)"
+      },
+      "processing": {
+        "normalization": "negative matrix values clamped to zero; max intensity normalized to 1",
+        "downsampling": "2D bucket average to 64 excitation bins x 48 emission bins",
+        "axisHandling": "emission axis read from emission_lambda.txt; excitation axis inferred as 239-800 nm in 3 nm increments because the source description names excitation_lambda.txt but the Zenodo record does not include that file",
+        "sourceChecksumSha256": "265fbc0838e64482eec06a12b61141528f982752c1932c01f354855177789458",
+        "notes": "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes."
+      }
+    },
+    {
+      "id": "nist-srm-fluorescence-correction-reference",
+      "kind": "reference",
+      "role": "calibration-reference",
+      "label": "NIST fluorescence correction SRM reference",
+      "dataUrl": null,
+      "source": {
+        "title": "NIST relative intensity correction standards for fluorescence spectroscopy",
+        "creators": [
+          "National Institute of Standards and Technology"
+        ],
+        "doi": null,
+        "url": "https://www.nist.gov/programs-projects/relative-intensity-correction-standards-fluorescence-and-raman-spectroscopy",
+        "license": "Not embedded in this package",
+        "licenseUrl": null,
+        "sourceFile": null,
+        "citation": "NIST relative intensity correction standards are tracked as a reference-only candidate. No NIST data are embedded or plotted in this package."
+      },
+      "processing": {
+        "normalization": null,
+        "downsampling": null,
+        "notes": "Reference-only until an exact public NIST data file and reuse boundary are verified. Do not use this entry to claim calibration."
+      }
+    }
+  ]
+}

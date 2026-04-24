@@ -22,6 +22,18 @@ These are the missing inputs that would make the homepage more credible without 
 
 The `/instrument/` page is a conceptual visualization only. Future improvements should be based on owner-provided or clearly cited material rather than inferred instrument behavior.
 
+### Current Source-derived Data Baseline
+- Added a small public demo data package under `instrument/data/`:
+  - Rhodamine 6G emission spectrum from Zenodo DOI `10.5281/zenodo.569817`
+  - EGFP emission spectrum from Zenodo DOI `10.5281/zenodo.580169`
+  - Fe(II)-DOM sample 01 EEM heatmap from Zenodo DOI `10.5281/zenodo.3737108`
+  - NIST fluorescence correction standards as reference-only context, with no embedded or plotted NIST data
+- Boundary:
+  - these examples are source-derived, normalized, downsampled, and educational
+  - they are not site-generated measurements, calibrated spectra, quantitative comparisons, or material optimization results
+- Maintenance note:
+  - `DATA_SOURCES.md` is now the source-selection and reuse-boundary record for `/instrument/`
+
 ### Real Instrument Reference Diagrams
 - Needed:
   - safe reference diagrams or owner-provided sketches for the optical path

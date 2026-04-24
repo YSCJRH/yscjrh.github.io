@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=instrument-lab-20260424c">
+    <link rel="stylesheet" href="../styles.css?v=instrument-lab-20260424d">
     <script src="../script.js" defer></script>
     <script src="instrument.js" defer></script>
   </head>
@@ -442,6 +442,107 @@
                   </p>
                 </section>
               </div>
+
+              <section
+                class="surface surface-glass source-data-panel"
+                aria-labelledby="source-data-title"
+                data-source-data-panel
+                data-reveal
+              >
+                <div class="source-data-head">
+                  <div>
+                    <p class="eyebrow">Source-derived examples / cited data</p>
+                    <h2 class="article-subtitle" id="source-data-title">Small public spectra, displayed carefully</h2>
+                  </div>
+                  <p class="source-data-intro">
+                    These examples are loaded from a local manifest and processed JSON package. They are separate from the synthetic controls above.
+                  </p>
+                </div>
+
+                <div class="source-data-layout">
+                  <div class="source-data-controls">
+                    <label class="instrument-control instrument-select-control">
+                      <span>Dataset</span>
+                      <select data-source-dataset>
+                        <option>Loading source-derived examples...</option>
+                      </select>
+                    </label>
+
+                    <dl class="source-data-facts">
+                      <div>
+                        <dt>Source</dt>
+                        <dd data-source-name>Waiting for manifest</dd>
+                      </div>
+                      <div>
+                        <dt>DOI / link</dt>
+                        <dd>
+                          <a data-source-link href="../DATA_SOURCES.md">DATA_SOURCES.md</a>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>License</dt>
+                        <dd data-source-license>Recorded in manifest</dd>
+                      </div>
+                      <div>
+                        <dt>Processing</dt>
+                        <dd data-source-processing>Normalized/downsampled for display.</dd>
+                      </div>
+                    </dl>
+
+                    <p class="source-data-status" data-source-status aria-live="polite">
+                      Loading local source data package.
+                    </p>
+                  </div>
+
+                  <div class="source-chart-wrap">
+                    <div class="source-chart-meta">
+                      <p>
+                        <span>Kind</span>
+                        <strong data-source-kind>Source-derived</strong>
+                      </p>
+                      <p>
+                        <span>Scale</span>
+                        <strong>normalized display a.u.</strong>
+                      </p>
+                      <p>
+                        <span>Runtime</span>
+                        <strong>local JSON only</strong>
+                      </p>
+                    </div>
+
+                    <svg class="source-chart" viewBox="0 0 620 320" role="img" aria-labelledby="source-chart-title source-chart-desc">
+                      <title id="source-chart-title" data-source-chart-title">Source-derived fluorescence example</title>
+                      <desc id="source-chart-desc" data-source-chart-desc">
+                        A cited, normalized, downsampled fluorescence example for educational visualization.
+                      </desc>
+                      <g class="spectrum-grid source-chart-grid" aria-hidden="true">
+                        <path d="M54 34V258H588"></path>
+                        <path d="M54 208H588M54 158H588M54 108H588M154 34V258M254 34V258M354 34V258M454 34V258M554 34V258"></path>
+                      </g>
+                      <g class="source-heatmap" data-source-heatmap aria-hidden="true"></g>
+                      <polyline class="source-trace" data-source-line points=""></polyline>
+                      <text class="spectrum-axis-label source-y-label" x="18" y="62" data-source-y-label>a.u.</text>
+                      <text class="spectrum-axis-label" x="54" y="292" data-source-x-start>--</text>
+                      <text class="spectrum-axis-label spectrum-axis-end" x="588" y="292" data-source-x-end>--</text>
+                      <text class="spectrum-axis-label source-y-start" x="18" y="262" data-source-y-start>0</text>
+                      <text class="spectrum-axis-label source-y-end" x="18" y="38" data-source-y-end>1</text>
+                      <text class="spectrum-mode-label" x="310" y="308" text-anchor="middle" data-source-mode-label>Wavelength</text>
+                    </svg>
+
+                    <p class="source-data-caption" data-source-caption>
+                      Source-derived examples are display-processed and should not be compared as calibrated intensities.
+                    </p>
+                  </div>
+                </div>
+
+                <p class="instrument-disclaimer instrument-disclaimer-small" data-source-disclaimer>
+                  Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website and not calibrated by this site.
+                </p>
+
+                <p class="source-reference-note" data-source-reference-note>
+                  Calibration references are tracked separately and are not plotted unless an exact public data file and reuse boundary are verified.
+                </p>
+              </section>
             </section>
 
             <noscript>
