@@ -4,6 +4,18 @@ Date: 2026-04-21
 
 This brief turns the repo state at the intake stage into a practical handoff artifact for the next maintainer. It predates the later formal redesign and should be read as intake context rather than the final site specification.
 
+## 2026-04-24 Current Baseline
+
+This section supersedes older status bullets below when they describe the public surface count or next phase.
+
+- The repository is still a static GitHub Pages personal site with no build step.
+- Current public surfaces are `/`, `/projects/`, `/notes/`, `notes/build-logs-homepage-second-pass.html`, `notes/when-a-fluorescence-signal-becomes-usable.html`, and `/review/`.
+- `/review/` is live but marked `noindex, nofollow`; treat it as an internal review surface until the owner decides whether to keep or remove it.
+- The project gateway upgrade has landed on the homepage and `/projects/`.
+- A visual depth pass has landed; the homepage, projects hub, and notes hub now use local CSS/HTML visual modules instead of relying on fragile decorative image embeds.
+- The next phase is governance sync, browser QA, GitHub surface alignment, and evidence collection for stronger public claims.
+- The site currently has two public notes; the Method Notes item remains a draft source under `content/notes/`.
+
 ## 1. Project Baseline
 
 - The repository is a static GitHub Pages personal site for YSCJRH / HJR.
@@ -27,10 +39,12 @@ This brief turns the repo state at the intake stage into a practical handoff art
 Treat these as the main public surfaces that must stay aligned:
 
 1. Homepage `/`
-2. Notes hub `/notes/`
-3. First published note `/notes/build-logs-homepage-second-pass.html`
-4. Projects page `/projects/`
-5. GitHub profile plus the five featured repository descriptions
+2. Projects page `/projects/`
+3. Notes hub `/notes/`
+4. Build log note `/notes/build-logs-homepage-second-pass.html`
+5. Research reflection note `/notes/when-a-fluorescence-signal-becomes-usable.html`
+6. Review surface `/review/` as a noindex internal review artifact
+7. GitHub profile plus the five featured repository descriptions
 
 Featured repositories currently surfaced on the homepage:
 
@@ -45,20 +59,21 @@ Featured repositories currently surfaced on the homepage:
 ### Confirmed
 
 - The core repo rules are aligned between `personalweb.md` and `AGENTS.md`: calm researcher-builder identity, homepage-first structure, and strict no-invention boundaries.
-- `PLANS.md` already frames the next phase as content evidence reinforcement, not redesign or migration.
+- `PLANS.md` now frames the next phase as governance sync, public surface verification, browser QA, and evidence intake.
 - `CONTENT_GAPS.md` is the right source of truth for missing inputs. It already prioritizes:
-  - strengthening `ai-visibility-auditor`
   - collecting one safe public example for each research direction
-  - deciding the next notes publishing step
+  - collecting creator-side story inputs for the five featured repositories
+  - validating project CTA durability and public proof paths
+  - deciding the next Method Notes or project-specific notes step
   - aligning homepage wording with GitHub surfaces
-- Notes drafts under `content/notes/` are intentionally working-stage and follow the repo's truthfulness boundaries.
+- Notes drafts under `content/notes/` are intentionally working-stage and follow the repo's truthfulness boundaries. Two notes are now public HTML pages.
 
 ### Safe To Advance Without New Facts
 
 - Maintaining the current site structure and design direction
 - Improving maintainer documentation and decision scaffolding
 - Running GitHub wording consistency checks against public repository descriptions
-- Running manual QA on navigation, language switching, and notes discoverability
+- Running manual QA on navigation, mixed-bilingual copy, project CTAs, and notes discoverability
 
 ### Blocked On Owner-Provided Facts
 
@@ -68,7 +83,7 @@ These should not be strengthened by guesswork:
 - one safe public-facing example for `Fluorescence Analysis x Intelligent Algorithms`
 - one safe public-facing example for `Fluorescence Instrumentation`
 - creator-side context for why each featured repository exists, what workflow it improves, and why it belongs on the homepage
-- the intended next public notes step beyond the current first note
+- the intended next public notes step beyond the two current public notes
 
 ## 4. GitHub Alignment Snapshot
 
@@ -109,16 +124,16 @@ Use `docs/github-coordination-checklist.md` for the next coordination pass.
 - The frontend is a shared static stack, not a framework app.
 - `notes` pages reuse `../styles.css` and `../script.js`.
 - The homepage remains a section-anchored page with `#research`, `#build`, `#notes`, and `#about`.
-- Bilingual behavior is implemented by rendering both language variants in the DOM and toggling visibility client-side.
+- Mixed-bilingual copy is embedded directly in the public markup. There is no current language switcher.
 
 ### Maintainability Risks
 
 1. Repeated public shell
-   - Header, navigation, language switch, mobile menu, and footer are duplicated across the HTML files.
+   - Header, navigation, mobile menu, and footer are duplicated across the HTML files.
    - New pages will increase drift risk unless they are copied from one clear baseline.
-2. Dual language-state coupling
-   - `script.js` writes both `html[data-lang]` and `html[lang]`.
-   - `styles.css` depends on both markers: one for text visibility, one for typography and layout.
+2. Mixed-bilingual scaling
+   - English and Chinese copy are hand-maintained in the same static markup.
+   - Future multilingual growth could create drift unless a content model or generator becomes justified.
 3. Notes duplication
    - The homepage notes teaser and the notes hub both describe the same public notes surface with separate markup.
    - Future note updates can drift unless one surface is treated as the source of truth.
@@ -140,7 +155,9 @@ The correct next question is whether hand-written static HTML still scales after
 - The repo is named `yscjrh.github.io`, which fits the GitHub Pages user-site convention.
 - The live site is reachable.
 - The notes hub is live.
-- The first note page is live.
+- Both note pages are live.
+- The projects page is live.
+- The review page is live but noindexed.
 
 ### Clarified During This Intake
 
@@ -151,10 +168,8 @@ The correct next question is whether hand-written static HTML still scales after
 ### Still Needs Manual Confirmation
 
 - The exact GitHub Pages source setting in repository settings
-- Intended public notes navigation model:
-  - homepage -> first note only
-  - homepage -> notes hub
-  - or both
+- Whether `/review/` should remain a live noindex surface or be removed from the deployed tree
+- Whether the Method Notes draft should become the next public note
 - Pinned repo order on the public GitHub profile
 
 ## 7. Risks And Gaps
@@ -166,32 +181,32 @@ Highest-risk gaps for the next maintainer:
    - The limiting factor is fact-backed content, not layout.
 2. Cross-surface drift
    - Homepage copy, notes copy, GitHub repository descriptions, and future profile wording can diverge unless checked in one pass.
-3. Notes discoverability ambiguity
-   - Notes are live, but the public entry path is not yet fully resolved.
+3. Review surface ambiguity
+   - `/review/` is live and noindexed, but its long-term public/deployed status still needs an owner decision.
 4. Static maintenance overhead
    - Shared shell and repeated note summaries are still hand-maintained.
-5. No decision log yet
-   - This pass creates the directory, but no decision record exists yet.
+5. Decision log still sparse
+   - Use `docs/decisions/` for public-surface and tooling decisions that should not live only in chat or commits.
 
 ## 8. Recommended Next Actions
 
 Priority order for the next implementation pass:
 
-1. Use `CONTENT_GAPS.md` to collect a minimum fact pack:
-   - one safe public example for each research direction
-   - one stronger origin/workflow/story input for each featured repository
-2. Make one explicit notes discoverability decision:
-   - homepage should feature only the first note
-   - homepage should also expose the notes hub
-   - or notes hub should stay intentionally secondary for one more iteration
-3. Run one manual frontend QA pass focused on:
+1. Run one manual/frontend QA pass focused on:
    - sticky-header anchor behavior
-   - language switching persistence across pages
    - mobile navigation behavior
    - keyboard and reduced-motion behavior
-4. Run one GitHub coordination pass:
-   - compare pinned repos, repo descriptions, profile wording, and homepage emphasis together
-5. After the next notes/content wave, re-evaluate whether static hand-maintenance is still acceptable before considering any generator migration
+   - project CTA durability
+2. Run one GitHub coordination pass:
+   - compare pinned repos, repo descriptions, profile wording, homepage URL, and homepage emphasis together
+3. Use `CONTENT_GAPS.md` to collect a minimum fact pack:
+   - one safe public example for each research direction
+   - one stronger origin/workflow/story input for each featured repository
+4. Decide the next note step:
+   - publish Method Notes
+   - publish a project-specific build log
+   - or hold notes steady until stronger evidence inputs exist
+5. After the next notes/content wave, re-evaluate whether static hand-maintenance is still acceptable before considering any generator migration.
 
 ## 9. Validation Log
 

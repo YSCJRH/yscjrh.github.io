@@ -315,13 +315,13 @@ Before upgrading, create or update `PLANS.md` with:
 
 The v1 site should not require installation.
 
-Use one of these local preview commands:
+Use this local preview command for browser QA, especially on Windows where the default server may serve SVG files with the wrong MIME type:
 
 ```bash
-python3 -m http.server 4173
+python tools/serve.py
 ```
 
-or, if `python3` is unavailable:
+Fallback for simple reachability checks:
 
 ```bash
 python -m http.server 4173

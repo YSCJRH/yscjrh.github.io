@@ -2,11 +2,21 @@
 
 These are the missing inputs that would make the homepage more credible without forcing the site to invent proof or overstate progress.
 
+## Current Baseline
+- The project gateway is already present on the homepage and `/projects/`.
+- The notes hub is public.
+- Two notes are public:
+  - `notes/build-logs-homepage-second-pass.html`
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
+- The Method Notes item is still represented by a draft under `content/notes/`.
+- The remaining work is evidence and proof collection, not adding volume for its own sake.
+
 ## Priority Order
-1. strengthen `ai-visibility-auditor`
-2. add one public-facing example for each research direction
-3. publish the first three short notes
-4. align homepage wording with GitHub profile and pinned repositories
+1. add one public-facing example for each research direction
+2. collect creator-side story inputs for the five featured repositories
+3. validate project CTA durability and public proof paths
+4. decide whether the Method Notes draft should become the next public note
+5. align homepage wording with GitHub profile and pinned repositories
 
 ## Research Proof
 
@@ -86,9 +96,9 @@ What is still missing is mostly creator-side context: origin, representative val
 
 ## Project Gateway Gaps
 
-This section tracks which projects still need stronger public entry points beyond the current repo-first gateway.
+This section tracks which projects still need stronger public proof beyond the current gateway.
 
-Some repo-first cards now use verified README deep links, but they still do not count as dedicated public pages.
+Some repo-first cards now use README deep links, but they still do not count as dedicated public pages. Treat those links as useful current CTAs, not as permanent proof artifacts.
 
 ### Public Pages
 - `ai-visibility-auditor`
@@ -139,28 +149,30 @@ Some repo-first cards now use verified README deep links, but they still do not 
 ## Notes Starter Topics
 
 Starter drafts now exist in `content/notes/`.
-The first homepage-linked note is now staged locally as `notes/build-logs-homepage-second-pass.html`.
-A lightweight notes hub is also staged locally as `notes/index.html`.
-The remaining gap is not “having no note at all”; it is deciding when to publish the notes surface and which draft should become the second public note.
+The notes hub is public at `notes/index.html`.
+Two note pages are public and linked from both the homepage and notes hub.
+The remaining gap is deciding whether the Method Notes draft should become the next public note, and whether any project-specific build log should be prepared before that.
 
 ### Research Reflections
-- Suggested first note:
-  - what makes fluorescence signals difficult to interpret reliably
+- Current public note:
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
 - Helpful inputs:
   - one recurring ambiguity
   - one framing shift
   - one sentence on why the ambiguity matters
 
 ### Build Logs
-- Suggested first note:
-  - why this homepage or one selected repository was shaped the way it is
+- Current public note:
+  - `notes/build-logs-homepage-second-pass.html`
 - Helpful inputs:
   - one design or implementation tradeoff
   - one constraint
   - one thing intentionally left out
 
 ### Method Notes
-- Suggested first note:
+- Current status:
+  - draft only in `content/notes/method-notes-evidence-first-project-storytelling.md`
+- Possible next note:
   - one reusable workflow, heuristic, or rule of thumb worth keeping
 - Helpful inputs:
   - the workflow

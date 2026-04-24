@@ -22,23 +22,28 @@ When taking over this repo, read these files in order:
 
 ## Current State
 
-- A mixed-bilingual static personal site with live public pages at `/`, `/notes/`, one published note page, and `/projects/`.
-- The current implementation has already moved beyond the intake/review phase into a formal visual redesign that better reflects the intended researcher-builder identity.
-- The next work is validation, GitHub wording alignment, and continued evidence-backed content strengthening.
+- A mixed-bilingual static personal site with live public pages at `/`, `/projects/`, `/notes/`, two published note pages, and `/review/`.
+- The current implementation has moved beyond the initial one-page version into a homepage-first small static site.
+- The project gateway upgrade has landed on the homepage and `/projects/`.
+- A visual depth pass is live; key homepage/project/note visuals are now local CSS/HTML modules rather than fragile image embeds.
+- `/review/` is currently a live but unindexed internal review surface; do not remove or promote it without an explicit decision.
+- The next work is documentation sync, browser QA, GitHub wording alignment, and continued evidence-backed content strengthening.
 - Public claims must stay within the truthfulness boundaries defined in `personalweb.md` and `AGENTS.md`.
 
 ## Local Preview
 
-Use one of these commands from the repository root:
+Use this command from the repository root when doing browser QA in Codex or on Windows:
+
+```powershell
+python tools/serve.py
+```
+
+It is still a plain static preview server; it only ensures SVG files are served as `image/svg+xml`.
+
+Fallback:
 
 ```powershell
 python -m http.server 4173
-```
-
-or:
-
-```powershell
-python3 -m http.server 4173
 ```
 
 Then open:
@@ -52,9 +57,11 @@ http://localhost:4173/
 Main public surfaces:
 
 - `index.html`
+- `projects/index.html`
 - `notes/index.html`
 - `notes/build-logs-homepage-second-pass.html`
-- `projects/index.html`
+- `notes/when-a-fluorescence-signal-becomes-usable.html`
+- `review/index.html` as a noindex internal review surface
 - GitHub profile and featured repository descriptions
 
 Main maintenance surfaces:
@@ -64,6 +71,7 @@ Main maintenance surfaces:
 - `docs/handoff-brief.md` for the latest intake summary
 - `docs/manual-qa-checklist.md` for manual site verification
 - `docs/github-coordination-checklist.md` for GitHub/profile consistency checks
+- `docs/public-surface-verification-*.md` for dated public surface checks
 - `docs/decisions/` for future decision records
 
 ## Working Rules

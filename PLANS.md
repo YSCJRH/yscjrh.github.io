@@ -1,59 +1,60 @@
-# Next Phase: Project Gateway Upgrade
+# Current Phase: Governance Sync And Evidence QA
 
 ## Goal
-- Turn the site’s Build area into a clearer project gateway rather than a repository list.
-- Preserve the current redesign direction while improving real public entry points, CTA hierarchy, and project card usability.
-- Keep the implementation static, bilingual, calm, and GitHub Pages friendly.
+- Keep the repository documentation aligned with the current public site surface.
+- Validate the homepage, project gateway, notes pages, and public CTAs without changing site claims.
+- Preserve the static GitHub Pages architecture until there is clear evidence that manual HTML maintenance is too costly.
 
 ## Current Status
-- The redesigned homepage, notes hub, projects page, and article pages are live.
-- AnswerLens and Skylattice already have verified public Pages/docs.
-- The remaining repo-first projects still need more honest, structured entry logic.
-- Verified README deep links can now support setup, demo, and example CTAs for the repo-first projects without inventing standalone public pages.
+- The project gateway upgrade has landed on the homepage and `/projects/`.
+- The visual depth pass has landed and is live; the next visual work should be targeted QA or small refinements, not another broad redesign.
+- The live/public site surface now includes `/`, `/projects/`, `/notes/`, two note pages, and `/review/`.
+- `/review/` is treated as a live but unindexed internal review surface until the owner decides otherwise.
+- The main remaining content gap is evidence, not layout: safe research examples, project origin/workflow context, screenshots, and first-run proof.
 
-## Phase 1: Gateway Link Audit
-1. Verify current primary public entry for each featured project.
-2. Confirm which projects have:
-   - public Pages or docs
-   - stable README-backed setup path
-   - first-run proof or screenshots
-3. Record unverifiable paths in `CONTENT_GAPS.md` instead of inventing them.
+## Phase 1: Documentation Baseline Sync
+1. Update maintainer-facing docs to reflect the current surface:
+   - homepage
+   - projects hub
+   - notes hub
+   - two published notes
+   - noindex review surface
+2. Mark older intake notes as historical when they predate the current release surface.
+3. Re-baseline `CONTENT_GAPS.md` so it tracks remaining evidence gaps instead of already-shipped structure.
 
-## Phase 2: Homepage Entry Upgrade
-1. Add a compact hero shortcut strip for:
-   - AnswerLens demo
-   - Skylattice docs
-   - all projects
-2. Rename the section to `Projects / Build`.
-3. Upgrade project cards so each one has:
-   - short positioning
-   - why-it-matters line
-   - status tag
-   - primary CTA
-   - optional secondary CTA only when verified
-   - GitHub repo link
+## Phase 2: Public Surface Verification
+1. Verify local static resolution for shared CSS, JS, SVG assets, and internal page links.
+2. Verify live reachability for:
+   - `https://yscjrh.github.io/`
+   - `https://yscjrh.github.io/projects/`
+   - `https://yscjrh.github.io/notes/`
+   - both published note pages
+   - `https://yscjrh.github.io/review/`
+3. Verify primary project CTAs and record brittle README fragment links as maintenance risks.
 
-## Phase 3: Projects Page Alignment
-1. Make `/projects/` the fuller gateway page rather than a homepage duplicate.
-2. Keep CTA hierarchy aligned with homepage cards.
-3. Make repo-first projects feel intentional rather than underdeveloped.
+## Phase 3: Browser QA
+1. Preview locally with `python tools/serve.py`.
+2. Check desktop and narrow mobile layouts for:
+   - sticky header anchor behavior
+   - mobile navigation
+   - project card readability
+   - note page readability
+   - visible focus states
+3. Record results in a dated verification note rather than changing page copy during QA.
 
-## Phase 4: Validation
-1. Verify homepage, `/projects/`, and all CTA targets locally.
-2. Recheck desktop, tablet, and `360px` mobile readability.
-3. Confirm:
-   - no invented demo/docs paths were added
-   - AnswerLens and Skylattice lead with public entries
-   - repo-first projects are still honest and usable
+## Phase 4: Evidence Intake
+1. Collect owner-provided, safe public examples for the three research directions.
+2. Collect origin/workflow/representative-role inputs for the five featured repositories.
+3. Only after those inputs exist, consider homepage or project-card copy updates.
 
 ## Deliverables
-- improved project gateway on homepage
-- aligned CTA model on `/projects/`
-- updated `CONTENT_GAPS.md` for missing public project assets
-- small, reviewable static-site diff
+- updated maintainer docs
+- dated public surface verification note
+- explicit provisional decision for `/review/`
+- clear remaining evidence gaps
 
 ## Constraints
 - No framework, package manager, or Pages setting changes.
-- No invented metrics, users, customers, awards, or traction.
-- No inclusion of `yscjrh.github.io` as a normal Build project.
-- No unverified secondary CTA for repo-first projects.
+- No invented metrics, users, customers, awards, affiliations, research results, or contact methods.
+- No public copy strengthening without a trustworthy source.
+- No removal of `/review/` without an explicit owner decision.

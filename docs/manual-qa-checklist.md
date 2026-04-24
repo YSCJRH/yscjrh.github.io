@@ -1,7 +1,7 @@
 # Manual QA Checklist
 
-Status: ready for the next implementation pass  
-Last prepared: 2026-04-21
+Status: ready for governance sync and browser QA
+Last prepared: 2026-04-24
 
 This checklist is for manual verification of the current public site and local preview before or after small content/UX changes.
 
@@ -11,8 +11,10 @@ This checklist is for manual verification of the current public site and local p
 - Start a local preview server:
 
 ```powershell
-python -m http.server 4173
+python tools/serve.py
 ```
+
+This helper keeps SVG assets rendering correctly in local browser QA on Windows. If it is unavailable, fall back to `python -m http.server 4173` and check whether SVG assets still render.
 
 - Open both:
   - `http://localhost:4173/`
@@ -25,14 +27,19 @@ Use the live site for reachability checks and the local server for pre-publish r
 Check these pages at minimum:
 
 1. Homepage `/`
-2. Notes hub `/notes/`
-3. First published note `/notes/build-logs-homepage-second-pass.html`
+2. Projects hub `/projects/`
+3. Notes hub `/notes/`
+4. Build log note `/notes/build-logs-homepage-second-pass.html`
+5. Research reflection note `/notes/when-a-fluorescence-signal-becomes-usable.html`
+6. Review surface `/review/`
 
 Expected baseline:
 
 - page loads without missing CSS or JS
 - title and top navigation render correctly
 - GitHub links are intentional
+- no broken image placeholders or exposed decorative alt text appear
+- `/review/` remains noindex unless a later decision removes it from the public tree
 - no private contact details appear
 
 ## 3. Desktop Checks
@@ -42,10 +49,12 @@ On a desktop-width viewport:
 - homepage header stays readable when sticky
 - anchor navigation to `Research`, `Build`, `Notes`, and `About` lands cleanly
 - hero section remains readable without visual overlap
+- hero and project visual modules render as intended
 - build cards remain scan-friendly and do not collapse awkwardly
+- projects hub feels like the fuller gateway, not an accidental homepage duplicate
 - notes teaser remains visually connected to the rest of the homepage
 - notes hub cards remain readable and evenly spaced
-- first note page remains readable as an article page rather than a homepage fragment
+- both note pages remain readable as article pages rather than homepage fragments
 
 ## 4. Mobile Checks
 
@@ -56,23 +65,19 @@ Use a narrow viewport around `360px` wide.
 - scrolling does not feel locked after menu close
 - hero text wraps cleanly
 - research, build, and notes cards stack without clipping
+- project card CTAs wrap cleanly without overlapping
 - note pages remain readable without horizontal scrolling
 - sticky header does not hide too much of the anchor target area
 
-## 5. Language Switching
+## 5. Mixed-Bilingual Copy
 
-On homepage, notes hub, and first note page:
+The current site is mixed-bilingual in the markup. It does not currently expose a language switcher.
 
-- switch from `EN` to `中文`
-- confirm both copy and typography change together
-- navigate to another page and confirm the language choice persists
-- refresh once and confirm the saved language still applies
+On homepage, projects hub, notes hub, and note pages:
 
-Watch for:
-
-- English text hidden while English typography remains
-- Chinese text shown with English typography
-- one page remembering language while another page resets unexpectedly
+- confirm English/Chinese paired labels read intentionally
+- confirm Chinese text does not overflow compact controls or cards
+- confirm no stale UI claims refer to a language switcher
 
 ## 6. Interaction And Accessibility Checks
 
@@ -82,6 +87,7 @@ Watch for:
 - click outside the mobile menu to close it
 - verify external GitHub links open intentionally
 - verify skip link works
+- verify project CTAs expose only live/demo/docs/repo-first paths that actually resolve
 
 If available, also check reduced motion behavior:
 
@@ -92,18 +98,20 @@ If available, also check reduced motion behavior:
 
 Run this exact path:
 
-1. homepage -> featured note
-2. first note -> notes hub
-3. notes hub -> homepage
+1. homepage -> build log note
+2. build log note -> notes hub
+3. notes hub -> research reflection note
+4. research reflection note -> notes hub
+5. notes hub -> homepage
 
 Record whether the current path feels intentional or confusing.
 
 Specifically note:
 
-- whether the homepage should also link more directly to the notes hub
+- whether the homepage links to both individual notes and the notes hub clearly enough
 - whether the notes hub feels like a public destination or still like an internal staging page
 
-## 8. GitHub Surface Checks
+## 8. Project Gateway And GitHub Surface Checks
 
 Open the public GitHub profile and the five featured repositories.
 
@@ -111,6 +119,8 @@ Open the public GitHub profile and the five featured repositories.
 - representative repo is easy to find
 - profile wording does not contradict the homepage
 - homepage URL, if present on GitHub, points to the live site
+- README fragment links used by project CTAs still land on the intended sections
+- AnswerLens demo and Skylattice docs remain reachable
 
 Use `docs/github-coordination-checklist.md` during this step.
 
@@ -128,4 +138,3 @@ When logging a QA pass, keep notes short:
 - Issues found:
 - Follow-up:
 ```
-
