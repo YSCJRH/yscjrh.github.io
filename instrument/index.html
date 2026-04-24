@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Instrument Lab / HJR / YSCJRH</title>
+    <meta
+      name="description"
+      content="A conceptual fluorescence spectrophotometer workflow visualization from HJR / YSCJRH. Conceptual only, not instrument control or calibrated measurement."
+    >
+    <meta property="og:title" content="Instrument Lab / HJR / YSCJRH">
+    <meta
+      property="og:description"
+      content="A calm conceptual model of the fluorescence spectrophotometer path with right-angle excitation and emission geometry."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yscjrh.github.io/instrument/">
+    <meta property="og:site_name" content="HJR / YSCJRH">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#05070d">
+    <link rel="canonical" href="https://yscjrh.github.io/instrument/">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css?v=instrument-lab-20260424c">
+    <script src="../script.js" defer></script>
+    <script src="instrument.js" defer></script>
+  </head>
+  <body>
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-noise"></div>
+      <div class="ambient-blob ambient-blob-primary"></div>
+      <div class="ambient-blob ambient-blob-secondary"></div>
+      <div class="ambient-blob ambient-blob-tertiary"></div>
+    </div>
+
+    <a class="skip-link" href="#main">Skip to content / 跳到内容</a>
+
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container site-header__inner">
+          <a class="brand" href="../index.html#top" aria-label="HJR homepage">
+            <span class="brand-mark">HJR / YSCJRH</span>
+            <span class="brand-sub">Researcher · Builder · Thinker</span>
+          </a>
+
+          <div class="site-header__cluster">
+            <nav class="site-nav" aria-label="Primary navigation">
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../projects/">Projects / 项目</a>
+              <a href="./index.html" aria-current="page">Instrument / 仪器</a>
+            </nav>
+
+            <div class="header-controls">
+              <button
+                class="nav-toggle"
+                type="button"
+                data-nav-toggle
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+                aria-label="Toggle navigation menu"
+              >
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="container mobile-menu-wrap">
+          <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
+            <nav class="mobile-nav" aria-label="Mobile navigation">
+              <a href="../index.html#research">Research / 研究</a>
+              <a href="../index.html#build">Build / 构建</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../projects/">Projects / 项目</a>
+              <a href="./index.html" aria-current="page">Instrument / 仪器</a>
+            </nav>
+
+            <a
+              class="button button-primary mobile-menu__cta"
+              href="https://github.com/YSCJRH"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit the YSCJRH GitHub profile"
+            >
+              Visit GitHub / 查看 GitHub
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="section article-section instrument-page" data-instrument-lab>
+          <div class="container instrument-shell">
+            <div class="article-nav" data-reveal>
+              <a class="article-back" href="../index.html#research">Back to Research / 返回研究方向</a>
+            </div>
+
+            <article class="surface surface-glass article-card instrument-hero-card" data-reveal>
+              <div>
+                <p class="eyebrow">Instrument Lab / 荧光仪器可视化实验室</p>
+                <h1 class="article-title">A conceptual fluorescence spectrophotometer workflow.</h1>
+                <p class="article-lead">
+                  Follow a right-angle fluorescence collection path and watch a simplified synthetic trace respond to the controls.
+                </p>
+                <p class="article-lead article-lead-zh">
+                  从激发光进入样品池，到约 90° 方向收集发射光，再到检测与谱图输出，用一个克制的可视化模型理解荧光分光光度计的工作链路。
+                </p>
+              </div>
+              <p class="instrument-disclaimer" data-disclaimer>
+                Conceptual model only. Not real instrument control. Not calibrated measurement.
+              </p>
+            </article>
+
+            <section class="instrument-workstation" aria-label="Interactive fluorescence spectrophotometer concept model">
+              <div class="instrument-onboarding" aria-label="How to use the concept model" data-reveal>
+                <p>
+                  <strong>1. Choose a mode</strong>
+                  Pick which channel scans.
+                </p>
+                <p>
+                  <strong>2. Move one control</strong>
+                  Watch the synthetic trace respond.
+                </p>
+                <p>
+                  <strong>3. Tap a part</strong>
+                  Read what each instrument block does.
+                </p>
+              </div>
+
+              <div class="surface surface-glass instrument-model-panel" data-reveal data-spotlight>
+                <div class="panel-chrome" aria-hidden="true">
+                  <div class="panel-chrome-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <p class="panel-chrome-label">Concept model / 概念模型</p>
+                </div>
+
+                <div class="instrument-stage" aria-label="Simplified instrument light path">
+                  <svg
+                    class="instrument-diagram"
+                    viewBox="0 0 960 560"
+                    role="img"
+                    aria-labelledby="instrument-diagram-title instrument-diagram-desc"
+                  >
+                    <title id="instrument-diagram-title">Fluorescence spectrophotometer conceptual light path</title>
+                    <desc id="instrument-diagram-desc">
+                      A simplified right-angle layout showing the light source, excitation monochromator, sample cell, emission monochromator, detector, and spectrum output.
+                    </desc>
+                    <defs>
+                      <linearGradient id="instrumentBody" x1="0%" x2="100%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.16)"></stop>
+                        <stop offset="55%" stop-color="rgba(94,106,210,0.16)"></stop>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0.04)"></stop>
+                      </linearGradient>
+                      <linearGradient id="excitationGradient" x1="0%" x2="100%">
+                        <stop offset="0%" stop-color="#5f7dff"></stop>
+                        <stop offset="100%" stop-color="#73a7ff"></stop>
+                      </linearGradient>
+                      <linearGradient id="emissionGradient" x1="0%" x2="100%">
+                        <stop offset="0%" stop-color="#52f0d3"></stop>
+                        <stop offset="100%" stop-color="#9af26f"></stop>
+                      </linearGradient>
+                      <filter id="beamGlow" x="-40%" y="-40%" width="180%" height="180%">
+                        <feGaussianBlur stdDeviation="7" result="blur"></feGaussianBlur>
+                        <feMerge>
+                          <feMergeNode in="blur"></feMergeNode>
+                          <feMergeNode in="SourceGraphic"></feMergeNode>
+                        </feMerge>
+                      </filter>
+                    </defs>
+
+                    <rect class="instrument-grid-bg" x="24" y="24" width="912" height="512" rx="28"></rect>
+                    <path class="instrument-rail instrument-rail-excitation" d="M110 314H650"></path>
+                    <path class="instrument-rail instrument-rail-emission" d="M510 314V114H760"></path>
+                    <path class="instrument-angle-guide" d="M464 314H510V268"></path>
+
+                    <g class="instrument-node" transform="translate(76 252)">
+                      <rect width="128" height="150" rx="24"></rect>
+                      <circle cx="64" cy="62" r="24"></circle>
+                      <path d="M40 104h48M46 120h36"></path>
+                      <text x="64" y="188">Light source</text>
+                    </g>
+
+                    <g class="instrument-node instrument-node-excitation" transform="translate(248 252)">
+                      <rect width="142" height="150" rx="24"></rect>
+                      <path d="M36 52h70l-22 42H52z"></path>
+                      <path d="M34 110h74"></path>
+                      <text x="71" y="188">Excitation mono</text>
+                    </g>
+
+                    <g class="instrument-sample" transform="translate(430 190)">
+                      <rect x="16" y="14" width="126" height="210" rx="26"></rect>
+                      <rect x="44" y="44" width="70" height="150" rx="16"></rect>
+                      <path d="M44 128h70"></path>
+                      <circle cx="79" cy="124" r="20"></circle>
+                      <text x="79" y="252">Sample cell</text>
+                    </g>
+
+                    <g class="instrument-guard" transform="translate(604 272)">
+                      <rect width="78" height="84" rx="16"></rect>
+                      <path d="M26 22L52 62M52 22L26 62"></path>
+                      <text x="39" y="118">Beam stop</text>
+                    </g>
+
+                    <g class="instrument-node instrument-node-emission" transform="translate(438 36)">
+                      <rect width="142" height="150" rx="24"></rect>
+                      <path d="M36 52h70l-22 42H52z"></path>
+                      <path d="M34 110h74"></path>
+                      <text x="71" y="188">Emission mono</text>
+                    </g>
+
+                    <g class="instrument-node" transform="translate(650 52)">
+                      <rect width="112" height="142" rx="24"></rect>
+                      <circle cx="56" cy="64" r="28"></circle>
+                      <path d="M44 104h24"></path>
+                      <text x="56" y="184">Detector</text>
+                    </g>
+
+                    <g class="instrument-screen" transform="translate(690 300)">
+                      <rect width="204" height="118" rx="20"></rect>
+                      <polyline points="24,86 54,80 82,54 110,72 138,34 174,68"></polyline>
+                      <text x="102" y="150">Spectrum output</text>
+                    </g>
+
+                    <text class="instrument-axis-label" x="280" y="292">Excitation axis</text>
+                    <text class="instrument-axis-label instrument-axis-label-vertical" x="528" y="178">Emission collection axis</text>
+                    <text class="instrument-angle-label" x="552" y="290">90° collection</text>
+                    <g class="scan-badge scan-badge-excitation" transform="translate(270 234)">
+                      <rect width="98" height="24" rx="12"></rect>
+                      <text x="49" y="16" data-badge-excitation>Fixed</text>
+                    </g>
+                    <g class="scan-badge scan-badge-emission" transform="translate(455 18)">
+                      <rect width="98" height="24" rx="12"></rect>
+                      <text x="49" y="16" data-badge-emission>Scanning</text>
+                    </g>
+
+                    <path
+                      class="beam beam-excitation"
+                      data-excitation-beam
+                      d="M140 314H319H509"
+                    ></path>
+                    <path
+                      class="beam beam-excitation beam-excitation-residual"
+                      d="M509 314H642"
+                    ></path>
+                    <path
+                      class="beam beam-emission"
+                      data-emission-beam
+                      d="M509 314V116H706"
+                    ></path>
+                    <g class="fluorescence-plume" aria-hidden="true">
+                      <circle cx="509" cy="314" r="18"></circle>
+                      <circle cx="509" cy="286" r="31"></circle>
+                      <circle cx="509" cy="254" r="45"></circle>
+                    </g>
+                    <path class="signal-output" d="M706 128L792 300"></path>
+                    <text class="instrument-signal-label" x="742" y="226">signal</text>
+
+                    <g class="instrument-marker" data-part="source" role="button" tabindex="0" aria-label="Light source" aria-pressed="true">
+                      <circle cx="140" cy="314" r="10"></circle>
+                    </g>
+                    <g class="instrument-marker" data-part="excitation" role="button" tabindex="0" aria-label="Excitation monochromator" aria-pressed="false">
+                      <circle cx="319" cy="314" r="10"></circle>
+                    </g>
+                    <g class="instrument-marker" data-part="sample" role="button" tabindex="0" aria-label="Sample cell" aria-pressed="false">
+                      <circle cx="509" cy="314" r="10"></circle>
+                    </g>
+                    <g class="instrument-marker" data-part="emission" role="button" tabindex="0" aria-label="Emission monochromator" aria-pressed="false">
+                      <circle cx="509" cy="116" r="10"></circle>
+                    </g>
+                    <g class="instrument-marker" data-part="detector" role="button" tabindex="0" aria-label="Detector" aria-pressed="false">
+                      <circle cx="706" cy="116" r="10"></circle>
+                    </g>
+                    <g class="instrument-marker" data-part="output" role="button" tabindex="0" aria-label="Spectrum display" aria-pressed="false">
+                      <circle cx="792" cy="359" r="10"></circle>
+                    </g>
+                  </svg>
+
+                </div>
+
+                <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes">
+                  <p>
+                    <span class="path-key path-key-excitation" aria-hidden="true"></span>
+                    <strong>Blue excitation axis</strong>
+                    Light reaches the sample through the excitation monochromator; the remaining incident beam is shown as stopped, not sent to the detector.
+                  </p>
+                  <p>
+                    <span class="path-key path-key-emission" aria-hidden="true"></span>
+                    <strong>Cyan 90° collection arm</strong>
+                    Fluorescence is collected from the side path through the emission monochromator before detection.
+                  </p>
+                  <p>
+                    <span class="path-key path-key-residual" aria-hidden="true"></span>
+                    <strong>Dim residual path</strong>
+                    The straight-through excitation direction is shown as a weak blocked path to avoid implying detector collection.
+                  </p>
+                  <p>
+                    <span class="path-key path-key-signal" aria-hidden="true"></span>
+                    <strong>Signal output line</strong>
+                    The fine line after the detector represents a processed display signal, not another optical beam.
+                  </p>
+                </div>
+
+                <div class="instrument-flow-strip" aria-label="Measurement chain">
+                  <button type="button" data-part="source" aria-pressed="true">Light source</button>
+                  <button type="button" data-part="excitation" aria-pressed="false">Excitation mono</button>
+                  <button type="button" data-part="sample" aria-pressed="false">Sample cell</button>
+                  <button type="button" data-part="emission" aria-pressed="false">Emission mono</button>
+                  <button type="button" data-part="detector" aria-pressed="false">Detector</button>
+                  <button type="button" data-part="output" aria-pressed="false">Spectrum</button>
+                </div>
+              </div>
+
+              <div class="instrument-side">
+                <section class="surface surface-glass instrument-control-panel" aria-labelledby="instrument-controls-title" data-reveal>
+                  <p class="eyebrow">Controls / 控制面板</p>
+                  <h2 class="article-subtitle" id="instrument-controls-title">Explore the scan model</h2>
+
+                  <fieldset class="mode-selector" data-mode-selector>
+                    <legend>Mode / 模式</legend>
+                    <button type="button" data-mode="emission" aria-pressed="true">Emission scan</button>
+                    <button type="button" data-mode="excitation" aria-pressed="false">Excitation scan</button>
+                    <button type="button" data-mode="time" aria-pressed="false">Time / kinetic scan</button>
+                  </fieldset>
+
+                  <div class="control-stack">
+                    <label class="instrument-control">
+                      <span>Excitation wavelength <strong data-readout="excitation">365 nm</strong></span>
+                      <input data-control="excitation" type="range" min="250" max="550" step="1" value="365">
+                      <small class="control-help">Incoming-light channel for conceptual excitation.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span><span data-emission-label>Emission wavelength</span> <strong data-readout="emission">520 nm</strong></span>
+                      <input data-control="emission" type="range" min="380" max="700" step="1" value="520">
+                      <small class="control-help" id="emission-range-help">Collection-side channel selected before detection; emission scan uses the full range.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span>Slit width <strong data-readout="slit">5 nm</strong></span>
+                      <input data-control="slit" type="range" min="1" max="10" step="1" value="5">
+                      <small class="control-help">Conceptual bandpass: wider slit increases signal and broadens features.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span>Integration time <strong data-readout="integration">200 ms</strong></span>
+                      <input data-control="integration" type="range" min="20" max="1000" step="20" value="200">
+                      <small class="control-help">Signal averaging time in this model, not a lifetime measurement.</small>
+                    </label>
+
+                    <label class="instrument-control instrument-select-control">
+                      <span>Sample preset</span>
+                      <select data-control="sample">
+                        <option value="low-background">Low-background sample</option>
+                        <option value="broad-emission">Broad-emission sample</option>
+                        <option value="blank">Blank / background-dominant</option>
+                        <option value="scattering">Scattering sample</option>
+                      </select>
+                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum.</small>
+                    </label>
+                  </div>
+
+                  <p class="instrument-status" data-mode-summary>
+                    Emission scan: fixed excitation wavelength, scanning emission wavelength.
+                  </p>
+
+                  <div class="scan-state-grid" aria-label="Current conceptual scan state">
+                    <p>
+                      <span>Scan axis</span>
+                      <strong data-scan-axis-readout>Emission 380-700 nm</strong>
+                    </p>
+                    <p>
+                      <span>Fixed channel</span>
+                      <strong data-fixed-channel-readout>Excitation 365 nm</strong>
+                    </p>
+                  </div>
+                </section>
+
+                <section class="surface surface-glass part-panel" aria-live="polite" data-reveal>
+                  <p class="eyebrow">Part note / 部件说明</p>
+                  <h2 class="article-subtitle" data-part-title>Light source</h2>
+                  <p data-part-copy>
+                    Provides broadband or selected excitation energy before the path is shaped by the excitation monochromator.
+                  </p>
+                </section>
+
+                <section class="surface surface-glass spectrum-panel" aria-labelledby="spectrum-title" data-reveal>
+                  <div class="spectrum-panel-head">
+                    <div>
+                      <p class="eyebrow">Synthetic output / 合成输出</p>
+                      <h2 class="article-subtitle" id="spectrum-title">Conceptual spectrum</h2>
+                    </div>
+                    <p class="spectrum-readout" data-intensity-readout>Peak 0.00 a.u.</p>
+                  </div>
+
+                  <div class="spectrum-meta-grid" aria-label="Current synthetic output state">
+                    <p>
+                      <span>Mode</span>
+                      <strong data-chart-mode>Emission scan</strong>
+                    </p>
+                    <p>
+                      <span>Scan axis</span>
+                      <strong data-chart-axis>Emission 380-700 nm</strong>
+                    </p>
+                    <p>
+                      <span>Fixed</span>
+                      <strong data-chart-fixed>Excitation 365 nm</strong>
+                    </p>
+                    <p>
+                      <span>Scale</span>
+                      <strong>fixed synthetic a.u. / not calibrated</strong>
+                    </p>
+                  </div>
+
+                  <svg class="spectrum-chart" viewBox="0 0 620 300" role="img" aria-labelledby="spectrum-chart-title spectrum-chart-desc">
+                    <title id="spectrum-chart-title">Synthetic spectrum output</title>
+                    <desc id="spectrum-chart-desc">A simplified synthetic trace that changes when the conceptual controls change.</desc>
+                    <g class="spectrum-grid" aria-hidden="true">
+                      <path d="M54 34V248H588"></path>
+                      <path d="M54 198H588M54 148H588M54 98H588M154 34V248M254 34V248M354 34V248M454 34V248M554 34V248"></path>
+                    </g>
+                    <polyline
+                      class="spectrum-trace"
+                      data-spectrum-trace
+                      points="54,226 98,220 142,214 186,194 230,152 274,82 318,68 362,112 406,172 450,204 494,218 538,224 588,226"
+                    ></polyline>
+                    <text class="spectrum-axis-label spectrum-y-label" x="18" y="42">a.u.</text>
+                    <text class="spectrum-axis-label" x="54" y="282" data-x-axis-start>380 nm</text>
+                    <text class="spectrum-axis-label spectrum-axis-end" x="588" y="282" data-x-axis-end>700 nm</text>
+                    <text class="spectrum-mode-label" x="310" y="286" text-anchor="middle" data-spectrum-mode-label>Emission wavelength</text>
+                  </svg>
+
+                  <p class="instrument-disclaimer instrument-disclaimer-small">
+                    Illustrative synthetic traces only. Shapes and intensities do not represent calibrated spectra, real samples, or instrument validation.
+                  </p>
+                </section>
+              </div>
+            </section>
+
+            <noscript>
+              <div class="surface surface-glass instrument-noscript">
+                JavaScript is disabled, so the controls cannot update the synthetic trace. The static optical path above remains available as a conceptual fallback.
+              </div>
+            </noscript>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <p>HJR / YSCJRH - fluorescence analysis, intelligent algorithms, scientific instrumentation, open tools.</p>
+          <p class="footer-links">
+            <a href="../index.html#top">Home / 首页</a>
+            <a href="../projects/">Projects / 项目</a>
+            <a href="../notes/">Notes / 笔记</a>
+            <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

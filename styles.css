@@ -933,6 +933,7 @@ button {
   font-size: 0.76rem;
   font-weight: 600;
   opacity: 0.8;
+  text-decoration: none;
 }
 
 .research-card .surface-label {
@@ -3249,6 +3250,838 @@ section[id] {
   }
 }
 
+/* Instrument Lab concept demo. */
+.instrument-page {
+  --beam-intensity: 0.82;
+  --emission-intensity: 0.72;
+  --signal-intensity: 0.56;
+}
+
+.instrument-shell {
+  max-width: 76rem;
+}
+
+.instrument-hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.42fr);
+  gap: 1rem;
+  align-items: end;
+  background:
+    radial-gradient(circle at 78% 28%, rgba(77, 237, 207, 0.12), transparent 18rem),
+    radial-gradient(circle at 22% 18%, rgba(94, 106, 210, 0.18), transparent 20rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.014)),
+    var(--color-panel-soft);
+}
+
+.instrument-disclaimer {
+  margin: 0;
+  border: 1px solid rgba(77, 237, 207, 0.18);
+  border-radius: 0.9rem;
+  padding: 0.84rem 0.94rem;
+  color: #d8fff8;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(77, 237, 207, 0.16), transparent 7rem),
+    rgba(255, 255, 255, 0.035);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.instrument-disclaimer-small {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.018);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.instrument-workstation {
+  display: grid;
+  grid-template-columns: minmax(0, 1.32fr) minmax(20rem, 0.68fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.instrument-onboarding {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.instrument-onboarding p {
+  margin: 0;
+  border: 1px solid rgba(77, 237, 207, 0.12);
+  border-radius: 0.84rem;
+  padding: 0.68rem 0.76rem;
+  color: var(--color-text-muted);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(77, 237, 207, 0.11), transparent 6rem),
+    rgba(255, 255, 255, 0.018);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.instrument-onboarding strong {
+  display: block;
+  margin-bottom: 0.14rem;
+  color: #d8fff8;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.instrument-model-panel,
+.instrument-control-panel,
+.part-panel,
+.spectrum-panel,
+.instrument-noscript {
+  padding: 1rem;
+}
+
+.instrument-model-panel {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(94, 106, 210, 0.18), transparent 24rem),
+    radial-gradient(circle at 62% 55%, rgba(77, 237, 207, 0.1), transparent 18rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012)),
+    rgba(5, 7, 11, 0.9);
+}
+
+.instrument-stage {
+  position: relative;
+  min-height: 28rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(94, 106, 210, 0.22), transparent 18rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    #05070d;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.instrument-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.instrument-diagram {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.instrument-grid-bg {
+  fill: rgba(255, 255, 255, 0.012);
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.instrument-rail {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-linecap: round;
+  stroke-width: 8;
+}
+
+.instrument-rail-emission {
+  stroke: rgba(77, 237, 207, 0.16);
+}
+
+.instrument-angle-guide {
+  fill: none;
+  stroke: rgba(77, 237, 207, 0.36);
+  stroke-dasharray: 8 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.instrument-node rect,
+.instrument-sample > rect,
+.instrument-screen rect,
+.instrument-guard rect {
+  fill: url("#instrumentBody");
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.2;
+}
+
+.instrument-page[data-scan-mode="excitation"] .instrument-node-excitation rect,
+.instrument-page[data-scan-mode="emission"] .instrument-node-emission rect,
+.instrument-page[data-scan-mode="time"] .instrument-node-excitation rect,
+.instrument-page[data-scan-mode="time"] .instrument-node-emission rect {
+  stroke: rgba(77, 237, 207, 0.38);
+  filter: drop-shadow(0 0 16px rgba(77, 237, 207, 0.16));
+}
+
+.instrument-node circle,
+.instrument-sample circle {
+  fill: rgba(237, 237, 240, 0.16);
+  stroke: rgba(237, 237, 240, 0.36);
+  stroke-width: 1.2;
+}
+
+.instrument-node path,
+.instrument-sample path,
+.instrument-guard path {
+  fill: none;
+  stroke: rgba(237, 237, 240, 0.36);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.instrument-sample rect:nth-child(2) {
+  fill: rgba(77, 237, 207, 0.08);
+  stroke: rgba(77, 237, 207, 0.34);
+}
+
+.instrument-sample circle {
+  fill: rgba(77, 237, 207, 0.2);
+  filter: drop-shadow(0 0 18px rgba(77, 237, 207, 0.65));
+}
+
+.fluorescence-plume circle {
+  fill: none;
+  stroke: rgba(77, 237, 207, 0.34);
+  stroke-width: 2.4;
+  opacity: var(--emission-intensity, 0.72);
+  filter: drop-shadow(0 0 14px rgba(77, 237, 207, 0.4));
+}
+
+.fluorescence-plume circle:nth-child(2) {
+  opacity: calc(var(--emission-intensity, 0.72) * 0.52);
+}
+
+.fluorescence-plume circle:nth-child(3) {
+  opacity: calc(var(--emission-intensity, 0.72) * 0.28);
+}
+
+.instrument-screen polyline {
+  fill: none;
+  stroke: #7df5df;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 10px rgba(77, 237, 207, 0.72));
+}
+
+.instrument-guard rect {
+  fill: rgba(8, 10, 16, 0.72);
+  stroke: rgba(115, 167, 255, 0.18);
+}
+
+.instrument-guard path {
+  stroke: rgba(115, 167, 255, 0.52);
+  stroke-width: 4;
+}
+
+.instrument-node text,
+.instrument-sample text,
+.instrument-screen text,
+.instrument-guard text,
+.instrument-axis-label,
+.instrument-signal-label,
+.instrument-angle-label {
+  fill: rgba(237, 237, 240, 0.68);
+  font-size: 18px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.instrument-axis-label,
+.instrument-signal-label {
+  fill: rgba(176, 186, 206, 0.54);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.instrument-axis-label-vertical {
+  text-anchor: start;
+}
+
+.instrument-signal-label {
+  fill: rgba(216, 255, 248, 0.46);
+  font-size: 12px;
+}
+
+.instrument-angle-label {
+  fill: rgba(216, 255, 248, 0.72);
+  font-size: 16px;
+  text-anchor: start;
+}
+
+.beam {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 7;
+  filter: url("#beamGlow");
+  opacity: var(--beam-intensity, 0.82);
+  stroke-dasharray: 18 16;
+  animation: beam-flow 1200ms linear infinite;
+}
+
+.beam-excitation {
+  stroke: url("#excitationGradient");
+}
+
+.beam-emission {
+  stroke: url("#emissionGradient");
+  opacity: var(--emission-intensity, 0.72);
+  stroke-width: 8;
+}
+
+.beam-excitation-residual {
+  opacity: 0.24;
+  stroke-width: 4.5;
+  stroke-dasharray: 8 13;
+  filter: none;
+}
+
+.signal-output {
+  fill: none;
+  stroke: rgba(216, 255, 248, 0.46);
+  stroke-linecap: round;
+  stroke-width: 2.4;
+  opacity: var(--signal-intensity, 0.56);
+  stroke-dasharray: 10 14;
+  filter: none;
+}
+
+.scan-badge rect {
+  fill: rgba(5, 7, 11, 0.82);
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.scan-badge text {
+  fill: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-anchor: middle;
+  text-transform: uppercase;
+}
+
+.instrument-page[data-scan-mode="excitation"] .scan-badge-excitation rect,
+.instrument-page[data-scan-mode="emission"] .scan-badge-emission rect {
+  fill: rgba(77, 237, 207, 0.12);
+  stroke: rgba(77, 237, 207, 0.34);
+}
+
+.instrument-page[data-scan-mode="excitation"] .scan-badge-excitation text,
+.instrument-page[data-scan-mode="emission"] .scan-badge-emission text {
+  fill: #d8fff8;
+}
+
+.instrument-marker {
+  cursor: pointer;
+  outline: none;
+}
+
+.instrument-marker circle {
+  fill: #d8fff8;
+  stroke: rgba(237, 237, 240, 0.84);
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 16px rgba(77, 237, 207, 0.78));
+}
+
+.instrument-marker.is-active circle,
+.instrument-marker:hover circle,
+.instrument-marker:focus-visible circle {
+  fill: #ffffff;
+  stroke: #7df5df;
+  filter:
+    drop-shadow(0 0 10px rgba(77, 237, 207, 0.95))
+    drop-shadow(0 0 22px rgba(77, 237, 207, 0.52));
+}
+
+.instrument-flow-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.38rem;
+  margin-top: 0.72rem;
+}
+
+.instrument-principle-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.instrument-principle-strip p {
+  position: relative;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.76rem;
+  padding: 0.62rem 0.68rem 0.62rem 0.78rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.018);
+  font-size: 0.73rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.instrument-principle-strip strong {
+  display: block;
+  margin-bottom: 0.22rem;
+  color: #d8fff8;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.path-key {
+  display: block;
+  width: 2.1rem;
+  height: 0.18rem;
+  margin-bottom: 0.52rem;
+  border-radius: 999px;
+}
+
+.path-key-excitation {
+  background: linear-gradient(90deg, #5f7dff, #73a7ff);
+  box-shadow: 0 0 12px rgba(96, 134, 255, 0.5);
+}
+
+.path-key-emission {
+  background: linear-gradient(90deg, #52f0d3, #9af26f);
+  box-shadow: 0 0 12px rgba(77, 237, 207, 0.38);
+}
+
+.path-key-residual {
+  background: rgba(114, 145, 255, 0.42);
+  box-shadow: 0 0 8px rgba(114, 145, 255, 0.18);
+}
+
+.path-key-signal {
+  height: 0.08rem;
+  background: rgba(123, 255, 231, 0.7);
+  box-shadow: 0 0 8px rgba(77, 237, 207, 0.24);
+}
+
+.instrument-flow-strip button {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.72rem;
+  padding: 0.48rem 0.42rem;
+  color: var(--color-text-soft);
+  background: rgba(255, 255, 255, 0.018);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.instrument-flow-strip button:hover,
+.instrument-flow-strip button:focus-visible,
+.instrument-flow-strip button.is-active {
+  border-color: rgba(77, 237, 207, 0.24);
+  color: #d8fff8;
+  background:
+    radial-gradient(circle at 30% 10%, rgba(77, 237, 207, 0.12), transparent 5rem),
+    rgba(255, 255, 255, 0.04);
+}
+
+.instrument-side {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.instrument-control-panel,
+.part-panel,
+.spectrum-panel {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.mode-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.42rem;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.mode-selector legend {
+  grid-column: 1 / -1;
+  margin-bottom: 0.18rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.mode-selector button {
+  min-height: 2.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.78rem;
+  padding: 0.54rem 0.42rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.mode-selector button:hover,
+.mode-selector button:focus-visible,
+.mode-selector button.is-active {
+  border-color: rgba(77, 237, 207, 0.24);
+  color: #d8fff8;
+  background:
+    radial-gradient(circle at 30% 10%, rgba(77, 237, 207, 0.12), transparent 5rem),
+    rgba(255, 255, 255, 0.045);
+}
+
+.control-stack {
+  display: grid;
+  gap: 0.68rem;
+}
+
+.instrument-control {
+  display: grid;
+  gap: 0.36rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.instrument-control span {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.instrument-control strong {
+  color: #d8fff8;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.instrument-control input[type="range"] {
+  width: 100%;
+  accent-color: #7df5df;
+}
+
+.instrument-control input[type="range"]:disabled {
+  opacity: 0.48;
+}
+
+.instrument-select-control select {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.78rem;
+  padding: 0.54rem 0.72rem;
+  color: var(--color-text);
+  background: #0a0b10;
+}
+
+.control-help {
+  display: block;
+  color: rgba(176, 186, 206, 0.74);
+  font-size: 0.68rem;
+  font-weight: 650;
+  line-height: 1.42;
+}
+
+.instrument-status,
+.part-panel p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.scan-state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.44rem;
+}
+
+.scan-state-grid p {
+  margin: 0;
+  border: 1px solid rgba(77, 237, 207, 0.12);
+  border-radius: 0.76rem;
+  padding: 0.54rem 0.6rem;
+  background: rgba(77, 237, 207, 0.035);
+}
+
+.scan-state-grid span,
+.scan-state-grid strong {
+  display: block;
+}
+
+.scan-state-grid span {
+  color: var(--color-text-muted);
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.scan-state-grid strong {
+  margin-top: 0.14rem;
+  color: #d8fff8;
+  font-size: 0.76rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.spectrum-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.42rem;
+}
+
+.spectrum-meta-grid p {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.72rem;
+  padding: 0.48rem 0.52rem;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.spectrum-meta-grid span,
+.spectrum-meta-grid strong {
+  display: block;
+}
+
+.spectrum-meta-grid span {
+  color: var(--color-text-muted);
+  font-size: 0.62rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.spectrum-meta-grid strong {
+  margin-top: 0.12rem;
+  color: #d8fff8;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.instrument-page[data-active-part="source"] .part-panel,
+.instrument-page[data-active-part="excitation"] .part-panel,
+.instrument-page[data-active-part="sample"] .part-panel,
+.instrument-page[data-active-part="emission"] .part-panel,
+.instrument-page[data-active-part="detector"] .part-panel,
+.instrument-page[data-active-part="output"] .part-panel {
+  border-color: rgba(77, 237, 207, 0.16);
+}
+
+.spectrum-panel-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.spectrum-readout {
+  margin: 0;
+  border: 1px solid rgba(77, 237, 207, 0.18);
+  border-radius: 999px;
+  padding: 0.36rem 0.62rem;
+  color: #d8fff8;
+  background: rgba(77, 237, 207, 0.06);
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.spectrum-chart {
+  width: 100%;
+  aspect-ratio: 620 / 300;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.9rem;
+  background:
+    radial-gradient(circle at 58% 35%, rgba(77, 237, 207, 0.08), transparent 12rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.008)),
+    rgba(4, 6, 10, 0.82);
+}
+
+.spectrum-grid path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.spectrum-trace {
+  fill: none;
+  stroke: #7df5df;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 10px rgba(77, 237, 207, 0.62));
+}
+
+.spectrum-axis-label,
+.spectrum-mode-label {
+  fill: var(--color-text-muted);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.spectrum-axis-end {
+  text-anchor: end;
+}
+
+.instrument-noscript {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+@keyframes beam-flow {
+  to {
+    stroke-dashoffset: -34;
+  }
+}
+
+@media (max-width: 1100px) {
+  .instrument-hero-card,
+  .instrument-workstation {
+    grid-template-columns: 1fr;
+  }
+
+  .instrument-stage {
+    min-height: 24rem;
+  }
+
+  .spectrum-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .instrument-onboarding {
+    grid-template-columns: 1fr;
+  }
+
+  .instrument-model-panel,
+  .instrument-control-panel,
+  .part-panel,
+  .spectrum-panel,
+  .instrument-noscript {
+    padding: 0.88rem;
+  }
+
+  .instrument-stage {
+    min-height: 19rem;
+  }
+
+  .instrument-flow-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .instrument-principle-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .spectrum-panel-head {
+    display: grid;
+  }
+
+  .scan-state-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spectrum-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .instrument-shell {
+    gap: 0.7rem;
+  }
+
+  .instrument-page .article-title {
+    font-size: clamp(1.72rem, 8.2vw, 2rem);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .instrument-hero-card .article-lead,
+  .instrument-disclaimer {
+    overflow-wrap: anywhere;
+  }
+
+  .instrument-stage {
+    min-height: 15.5rem;
+  }
+
+  .instrument-axis-label,
+  .instrument-signal-label,
+  .scan-badge {
+    display: none;
+  }
+
+  .instrument-flow-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .instrument-flow-strip button,
+  .mode-selector button,
+  .instrument-control,
+  .control-help,
+  .instrument-status,
+  .part-panel p {
+    font-size: 0.74rem;
+  }
+
+  .spectrum-axis-label,
+  .spectrum-mode-label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .instrument-page .article-title {
+    max-width: 100%;
+    font-size: 1.55rem;
+  }
+
+  .instrument-hero-card,
+  .instrument-model-panel,
+  .instrument-control-panel,
+  .part-panel,
+  .spectrum-panel {
+    padding: 0.72rem;
+  }
+
+  .instrument-disclaimer {
+    padding: 0.68rem 0.72rem;
+    font-size: 0.78rem;
+  }
+
+  .instrument-stage {
+    min-height: 14.2rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -3264,7 +4097,13 @@ section[id] {
   }
 
   .ambient-blob,
-  .lab-aura {
+  .lab-aura,
+  .beam {
     animation: none;
   }
+}
+
+.instrument-page.is-reduced-motion .beam {
+  animation: none;
+  stroke-dasharray: none;
 }

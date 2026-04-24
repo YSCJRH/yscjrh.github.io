@@ -18,6 +18,70 @@ These are the missing inputs that would make the homepage more credible without 
 4. decide whether the Method Notes draft should become the next public note
 5. align homepage wording with GitHub profile and pinned repositories
 
+## Instrument Lab Follow-up Inputs
+
+The `/instrument/` page is a conceptual visualization only. Future improvements should be based on owner-provided or clearly cited material rather than inferred instrument behavior.
+
+### Real Instrument Reference Diagrams
+- Needed:
+  - safe reference diagrams or owner-provided sketches for the optical path
+  - confirmation of which details are appropriate for public explanation
+- Good input format:
+  - `Diagram/source:`
+  - `Safe public detail:`
+  - `Details to avoid:`
+
+### Validated Spectra Or Example Datasets
+- Needed:
+  - spectra or example datasets that are explicitly allowed for public use
+  - context explaining what the data represents and what it does not prove
+  - optional examples for fixed-wavelength time / kinetic scans if the page later moves beyond synthetic traces
+- Good input format:
+  - `Dataset/source:`
+  - `Allowed use:`
+  - `Caveats:`
+
+### Real-paper Spectrum Intake Protocol
+- Needed before material-optimization work:
+  - paper citation or DOI
+  - material/system name exactly as reported
+  - spectrum type, such as excitation, emission, time / kinetic, quantum-yield-related, or stability-related
+  - reported excitation wavelength, emission wavelength or range, slit/bandpass if available, solvent/matrix, concentration, instrument conditions, and normalization method
+  - whether the spectrum is a primary result, supporting comparison, or illustrative reference
+  - what the site may publicly reuse: cited summary, redrawn conceptual trace, digitized numeric approximation, or no public reuse
+- Boundaries:
+  - do not copy published spectrum figures into the site by default
+  - do not claim material optimization, validation, or performance unless the paper directly supports that statement
+  - keep digitized curves labeled as approximate and source-derived if they are ever used
+  - separate "evidence-backed material insight" from "website visualization improvement"
+- Good input format:
+  - `Paper/source:`
+  - `Material/system:`
+  - `Spectrum type:`
+  - `Measurement settings:`
+  - `What can be reused publicly:`
+  - `Optimization insight supported by the source:`
+  - `Caveats:`
+
+### Future Workflow Note
+- Needed:
+  - a short note explaining the fluorescence spectrophotometer workflow in educational terms
+  - a clear boundary between conceptual explanation and real measurement practice
+  - a short caveat distinguishing fixed-wavelength time scans from fluorescence lifetime measurements
+- Good input format:
+  - `Workflow step:`
+  - `Why it matters:`
+  - `Public caveat:`
+
+### Possible Open-source Extraction
+- Needed:
+  - decision on whether the Instrument Lab should remain a website page or become a separate public repository later
+  - scope of any reusable visualization code if extracted
+- Good input format:
+  - `Extraction reason:`
+  - `Reusable parts:`
+  - `What should stay site-specific:`
+
 ## Research Proof
 
 ### Fluorescence Analysis

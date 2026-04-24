@@ -1,4 +1,91 @@
-# Current Phase: Governance Sync And Evidence QA
+# Current Phase: Instrument Lab Concept Demo - Closed
+
+## Goal
+- Add a static `/instrument/` route that visualizes the conceptual workflow of a fluorescence spectrophotometer.
+- Make the instrumentation direction easier to understand without claiming real instrument control, calibration, validation, or manufacturer-specific UI behavior.
+- Keep the site GitHub Pages friendly: static HTML, shared CSS, and small vanilla JavaScript only.
+
+## Current Status
+- The homepage, `/projects/`, `/notes/`, two note pages, and `/review/` are live.
+- The homepage exposes an Instrument Lab entry point from the hero shortcut area and the Fluorescence Instrumentation research card.
+- The new page is treated as a concept demo rather than a mature open-source project.
+- The current Instrument Lab implementation has passed local syntax, link, responsive, reduced-motion, and 360px overflow checks.
+- The main risk is overclaiming scientific accuracy, so all synthetic data and diagrams must be explicitly framed as conceptual.
+- The optical layout refinement should emphasize the common right-angle fluorescence collection geometry: excitation travels along the incident axis, while emission is collected from a perpendicular side arm.
+
+## Closure Notes
+- This phase is now feature-complete for the conceptual website demo.
+- The page should not receive more visual complexity until there is a clear evidence-backed reason.
+- Future scientific upgrades should be evidence-driven: real-paper spectra, owner-provided spectra, or clearly cited datasets should inform the next pass.
+- The current synthetic traces remain educational placeholders, not material evidence, calibration data, or performance claims.
+
+## Next Candidate Phase: Real-paper Spectra Evidence Intake
+1. Collect source papers or owner-provided references before changing the model.
+2. For each spectrum, record citation, material/system, measurement mode, wavelength settings, sample context, and what may be reused publicly.
+3. Prefer transformed, clearly cited numerical summaries or redrawn conceptual traces over copying published figures.
+4. Keep any future material optimization language conservative unless the source supports it directly.
+5. If the next phase changes public claims or introduces source-derived data, add a dated documentation note before publishing.
+
+## Phase 1A: Scientific Geometry Refinement
+1. Keep the diagram original and conceptual, but align it with the owner-provided light-path reference and public spectrofluorometer descriptions.
+2. Show the remaining incident excitation path as stopped or rejected rather than routed toward the detector.
+3. Render the detector-to-spectrum connection as an electronic/synthetic signal path, not as another optical beam.
+4. Keep visual beams straight and uncluttered so the page remains educational for first-time visitors.
+
+## Phase 1B: Dual-audience Teaching Refinement
+1. Address fluorescence-expert review findings:
+   - rename plain time scan to fixed-wavelength `Time / kinetic scan`
+   - keep time scan distinct from fluorescence lifetime measurement
+   - use a shared fixed y-scale so weak and blank traces remain visibly weak
+   - decouple excitation beam brightness from detected synthetic signal
+   - keep blank/background traces as baseline plus small scatter/background, not a real fluorescence band
+2. Address ordinary-user review findings:
+   - add a three-step onboarding strip for first-run comprehension
+   - show which monochromator is scanning or fixed for each mode
+   - add short help text for slit width, integration time, and sample presets
+   - simplify mobile diagram labels while preserving the 90-degree workflow
+3. Keep all new wording conservative: synthetic traces are illustrative only and do not represent calibrated spectra, real samples, or instrument validation.
+
+## Phase 1: Concept Demo Implementation
+1. Create `/instrument/` with:
+   - a simplified fluorescence spectrophotometer chain
+   - animated excitation and emission paths
+   - mode selector for emission scan, excitation scan, and time / kinetic scan
+   - conceptual controls for wavelength, slit width, integration time, and sample preset
+   - synthetic spectrum output that responds to controls
+   - hotspots and short explanations for each instrument part
+2. Use SVG and vanilla JavaScript; do not add Canvas, WebGL, Three.js, a framework, or a build step.
+3. Include the disclaimer: "Conceptual model only. Not real instrument control. Not calibrated measurement."
+
+## Phase 2: Homepage Integration
+1. Add a hero shortcut to `/instrument/` labeled "Instrument Lab / Instrument Visualization".
+2. Link the "Fluorescence Instrumentation" research card to `/instrument/`.
+3. Do not list the page as a mature Build project in this pass.
+
+## Phase 3: QA
+1. Preview locally with `python tools/serve.py`.
+2. Use the Codex in-app browser to check:
+   - `/`
+   - `/instrument/`
+   - `/projects/`
+   - `/notes/`
+3. Verify no console errors, no horizontal mobile overflow, visible focus states, reduced-motion behavior, and working homepage links.
+
+## Deliverables
+- `/instrument/index.html`
+- `/instrument/instrument.js`
+- updated shared CSS for instrument-specific layout and visuals
+- homepage entry links
+- updated evidence gaps for future real diagrams, validated spectra, workflow note, and possible repo extraction
+
+## Constraints
+- No framework, package manager, Pages setting, analytics, tracking, external service, form, backend, secret, or domain changes.
+- No claims of calibrated measurement, scientific accuracy, real instrument control, validation, manufacturer compatibility, usage metrics, affiliations, awards, publications, or contact methods.
+- Do not copy a commercial instrument interface or imply a protected manufacturer design.
+
+---
+
+# Previous Phase: Governance Sync And Evidence QA
 
 ## Goal
 - Keep the repository documentation aligned with the current public site surface.
