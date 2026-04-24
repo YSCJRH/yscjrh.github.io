@@ -3739,11 +3739,15 @@ section[id] {
 .source-data-layout {
   display: grid;
   grid-template-columns: minmax(15rem, 0.36fr) minmax(0, 1fr);
+  grid-template-areas:
+    "controls chart"
+    "facts chart";
   gap: 0.9rem;
   align-items: start;
 }
 
 .source-data-controls,
+.source-data-facts,
 .source-chart-wrap {
   min-width: 0;
   border: 1px solid rgba(255, 255, 255, 0.075);
@@ -3753,15 +3757,18 @@ section[id] {
 }
 
 .source-data-controls {
+  grid-area: controls;
   display: grid;
   gap: 0.72rem;
   padding: 0.86rem;
 }
 
 .source-data-facts {
+  grid-area: facts;
   display: grid;
   gap: 0.5rem;
   margin: 0;
+  padding: 0.86rem;
 }
 
 .source-data-facts div {
@@ -3802,6 +3809,7 @@ section[id] {
 }
 
 .source-chart-wrap {
+  grid-area: chart;
   display: grid;
   gap: 0.7rem;
   padding: 0.86rem;
@@ -3844,7 +3852,7 @@ section[id] {
 
 .source-chart {
   width: 100%;
-  aspect-ratio: 620 / 320;
+  aspect-ratio: 620 / 350;
   overflow: visible;
   border-radius: 0.8rem;
   background:
@@ -4148,6 +4156,10 @@ section[id] {
 
   .source-data-layout {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "controls"
+      "chart"
+      "facts";
   }
 }
 
@@ -4175,6 +4187,11 @@ section[id] {
 
   .instrument-stage {
     min-height: 19rem;
+  }
+
+  .instrument-axis-label,
+  .instrument-signal-label {
+    display: none;
   }
 
   .instrument-flow-strip {
@@ -4233,6 +4250,10 @@ section[id] {
     display: none;
   }
 
+  .instrument-angle-label {
+    font-size: 13px;
+  }
+
   .instrument-flow-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4254,6 +4275,14 @@ section[id] {
   .spectrum-axis-label,
   .spectrum-mode-label {
     font-size: 14px;
+  }
+
+  .source-chart {
+    aspect-ratio: 620 / 370;
+  }
+
+  .source-chart .spectrum-mode-label {
+    display: none;
   }
 }
 
