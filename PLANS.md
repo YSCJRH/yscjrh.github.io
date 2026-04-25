@@ -1,4 +1,24 @@
-# Current Phase: Instrument Lab Source-derived Data Layer
+# Current Phase: Homepage Entry Hierarchy Correction
+
+## Goal
+- Keep Instrument Lab visible as a secondary concept model rather than a primary homepage feature.
+- Preserve AnswerLens, Skylattice, and the broader Projects / Build path as the main public project entries.
+- Avoid adding Instrument Lab to top navigation or the featured Build grid until it has its own repo, docs, or release path.
+
+## Implementation Notes
+1. Keep the hero shortcut, but demote its visual treatment and keep it last in the shortcut order.
+2. Keep the strongest contextual entry under the Fluorescence Instrumentation research card.
+3. Use restrained wording such as "Explore concept model / 查看概念模型" instead of product-like language.
+4. Do not change `/instrument/` functionality or scientific content in this hierarchy pass.
+
+## Validation
+1. Check homepage desktop and mobile hierarchy in the browser.
+2. Confirm `/projects/` still focuses on public repositories and project workflows.
+3. Verify no new public claims, dependencies, tracking, or external services were introduced.
+
+---
+
+# Previous Phase: Instrument Lab Source-derived Data Layer
 
 ## Goal
 - Add a small, cited data layer to `/instrument/` without changing the conceptual demo into a calibrated simulator.

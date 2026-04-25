@@ -697,10 +697,27 @@ button {
   transform: translateY(-1px);
 }
 
+.hero-shortcut--lab {
+  border-color: rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.hero-shortcut--lab:hover,
+.hero-shortcut--lab:focus-visible {
+  border-color: rgba(139, 226, 214, 0.16);
+  background: rgba(139, 226, 214, 0.028);
+  box-shadow: none;
+  transform: none;
+}
+
 .hero-shortcut-label {
   color: var(--color-text);
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+.hero-shortcut--lab .hero-shortcut-label {
+  color: var(--color-text-muted);
 }
 
 .hero-shortcut-note {
@@ -926,6 +943,21 @@ button {
   margin-top: auto;
   padding-top: 0.72rem;
   border-top: 1px solid rgba(138, 166, 255, 0.1);
+}
+
+.research-card-action {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.research-card-kicker {
+  color: rgba(236, 241, 251, 0.48);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .research-card-link {
