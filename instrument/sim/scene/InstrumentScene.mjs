@@ -1,9 +1,14 @@
 import * as THREE from "../../vendor/three/three.module.js";
 import { OrbitControls } from "../../vendor/three/addons/controls/OrbitControls.js";
+import { TransformControls } from "../../vendor/three/addons/controls/TransformControls.js";
 import WebGL from "../../vendor/three/addons/capabilities/WebGL.js";
 
 const PART_ORDER = ["source", "excitation", "sample", "emission", "detector", "output"];
 const BENCH_Y = 0.64;
+const SOURCE_OFFSET_SCALE = 260;
+const SAMPLE_OFFSET_SCALE = 220;
+const SOURCE_BASE_POSITION = new THREE.Vector3(-4.0, BENCH_Y, 0);
+const SAMPLE_BASE_POSITION = new THREE.Vector3(0, BENCH_Y + 0.12, 0);
 
 function makeMaterial(color, options = {}) {
   return new THREE.MeshStandardMaterial({
@@ -17,13 +22,17 @@ function makeMaterial(color, options = {}) {
   });
 }
 
-function createLabel(text) {
+function createLabel(text, options = {}) {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
   canvas.height = 128;
   const context = canvas.getContext("2d");
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.font = "700 42px system-ui, -apple-system, Segoe UI, sans-serif";
+  let fontSize = options.fontSize || 42;
+  do {
+    context.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, sans-serif`;
+    fontSize -= 2;
+  } while (context.measureText(text).width > canvas.width - 34 && fontSize > 22);
   context.fillStyle = "rgba(237, 237, 239, 0.92)";
   context.textAlign = "center";
   context.textBaseline = "middle";
@@ -39,7 +48,7 @@ function createLabel(text) {
       depthWrite: false,
     })
   );
-  sprite.scale.set(1.55, 0.38, 1);
+  sprite.scale.set(options.width || 1.55, options.height || 0.38, 1);
   return sprite;
 }
 
@@ -85,6 +94,78 @@ function makeBoxComponent({ width, height, depth, color, label, part }) {
   return group;
 }
 
+function createSlitAssembly(material) {
+  const group = new THREE.Group();
+  const jawGeometry = new THREE.BoxGeometry(0.055, 0.56, 0.08);
+  const leftJaw = new THREE.Mesh(jawGeometry, material);
+  const rightJaw = new THREE.Mesh(jawGeometry, material);
+  group.add(leftJaw, rightJaw);
+  group.userData.jaws = [leftJaw, rightJaw];
+  return group;
+}
+
+function setSlitGap(slitGroup, widthUm) {
+  const jaws = slitGroup?.userData?.jaws;
+  if (!jaws) {
+    return;
+  }
+
+  const progress = THREE.MathUtils.clamp((widthUm - 100) / 900, 0, 1);
+  const gap = 0.075 + progress * 0.18;
+  jaws[0].position.x = -gap;
+  jaws[1].position.x = gap;
+}
+
+function createMirrorPlate() {
+  const mirror = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, 0.035, 0.16),
+    makeMaterial(0xb9c3d8, {
+      transparent: true,
+      opacity: 0.56,
+      metalness: 0.32,
+      roughness: 0.18,
+      emissive: 0x6f88ff,
+      emissiveIntensity: 0.03,
+    })
+  );
+  return mirror;
+}
+
+function createDispersionFan(color, offsetZ) {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(
+      [
+        -0.12,
+        0.17,
+        0,
+        0.38,
+        0.17,
+        -0.18 + offsetZ,
+        0.38,
+        0.17,
+        0.18 + offsetZ,
+      ],
+      3
+    )
+  );
+  geometry.setIndex([0, 1, 2]);
+  geometry.computeVertexNormals();
+
+  return new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.11,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    })
+  );
+}
+
 function createMonochromator(label, part) {
   const group = makeBoxComponent({
     width: 1.34,
@@ -97,19 +178,84 @@ function createMonochromator(label, part) {
 
   const slitMaterial = makeMaterial(0xdde7ff, { transparent: true, opacity: 0.62, emissive: 0x6f88ff, emissiveIntensity: 0.16 });
   const gratingMaterial = makeMaterial(0x86fff0, { transparent: true, opacity: 0.7, emissive: 0x52f0d3, emissiveIntensity: 0.2 });
-  const slitGeometry = new THREE.BoxGeometry(0.05, 0.55, 0.08);
-  const entrySlit = new THREE.Mesh(slitGeometry, slitMaterial);
-  const exitSlit = new THREE.Mesh(slitGeometry, slitMaterial);
+  const entrySlit = createSlitAssembly(slitMaterial);
+  const exitSlit = createSlitAssembly(slitMaterial);
   const grating = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.04, 0.42), gratingMaterial);
+  const collimatingMirror = createMirrorPlate();
+  const focusingMirror = createMirrorPlate();
+  const selectedBand = createBeam(0x52f0d3, 0.015, 0.46);
+  const fan = new THREE.Group();
 
-  entrySlit.position.set(-0.42, 0.03, 0.47);
-  exitSlit.position.set(0.42, 0.03, -0.47);
+  entrySlit.position.set(-0.46, 0.03, 0.46);
+  exitSlit.position.set(0.46, 0.03, -0.46);
   grating.position.set(0, 0.04, 0);
   grating.rotation.y = Math.PI / 5;
+  collimatingMirror.position.set(-0.25, 0.2, -0.2);
+  collimatingMirror.rotation.y = -Math.PI / 5;
+  focusingMirror.position.set(0.25, 0.2, 0.2);
+  focusingMirror.rotation.y = Math.PI / 5;
+  fan.add(createDispersionFan(0x6f88ff, -0.12), createDispersionFan(0x52f0d3, 0), createDispersionFan(0xffd166, 0.12));
 
-  group.add(entrySlit, exitSlit, grating);
+  setCylinderBetween(selectedBand, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
+  group.add(entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBand);
   group.userData.grating = grating;
-  group.userData.cutaway = [entrySlit, exitSlit, grating];
+  group.userData.entrySlit = entrySlit;
+  group.userData.exitSlit = exitSlit;
+  group.userData.selectedBand = selectedBand;
+  group.userData.fan = fan;
+  group.userData.cutaway = [entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBand];
+  return group;
+}
+
+function updateMonochromatorCutaway(monochromator, angleDeg, selectedColor, slitWidthUm) {
+  if (!monochromator?.userData?.grating) {
+    return;
+  }
+
+  monochromator.userData.grating.rotation.y = THREE.MathUtils.degToRad(angleDeg);
+  setSlitGap(monochromator.userData.entrySlit, slitWidthUm);
+  setSlitGap(monochromator.userData.exitSlit, slitWidthUm);
+
+  if (monochromator.userData.selectedBand?.material) {
+    monochromator.userData.selectedBand.material.color.set(selectedColor);
+    monochromator.userData.selectedBand.material.opacity = 0.28 + THREE.MathUtils.clamp((slitWidthUm - 100) / 900, 0, 1) * 0.28;
+  }
+}
+
+function createBeamStop() {
+  const group = new THREE.Group();
+  const absorberMaterial = makeMaterial(0x07090f, {
+    roughness: 0.92,
+    metalness: 0,
+    emissive: 0x020305,
+    emissiveIntensity: 0.02,
+  });
+  const cavityMaterial = new THREE.MeshBasicMaterial({
+    color: 0x010205,
+    transparent: true,
+    opacity: 0.95,
+  });
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.13, 0.66), makeMaterial(0x101522, { roughness: 0.86 }));
+  const block = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.58, 0.56), absorberMaterial);
+  const cavity = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.34, 0.34), cavityMaterial);
+  const grooveA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.43, 0.025), makeMaterial(0x151a25, { roughness: 0.9 }));
+  const grooveB = grooveA.clone();
+  const label = createLabel("Beam stop / 光束终止器", { width: 2.25, fontSize: 34 });
+
+  base.position.y = -0.34;
+  block.position.y = 0.02;
+  cavity.position.set(-0.352, 0.02, 0);
+  grooveA.position.set(-0.356, 0.02, -0.19);
+  grooveB.position.set(-0.356, 0.02, 0.19);
+  label.position.set(0, -0.74, 0);
+
+  const edges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(block.geometry),
+    new THREE.LineBasicMaterial({ color: 0x526070, transparent: true, opacity: 0.25 })
+  );
+  edges.position.copy(block.position);
+
+  group.add(base, block, edges, cavity, grooveA, grooveB, label);
   return group;
 }
 
@@ -138,7 +284,7 @@ function makeHotspot() {
   );
 }
 
-export function createInstrumentScene({ host, state, onSelectPart, reducedMotion = false }) {
+export function createInstrumentScene({ host, state, onSelectPart, onGeometryChange, reducedMotion = false }) {
   if (!host || !WebGL.isWebGL2Available()) {
     return {
       available: false,
@@ -167,6 +313,20 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
   controls.maxPolarAngle = Math.PI * 0.47;
   controls.target.set(-0.5, 0.75, 1.0);
 
+  const transformControls = new TransformControls(camera, renderer.domElement);
+  transformControls.setMode("translate");
+  transformControls.setSpace("world");
+  transformControls.setSize(0.68);
+  transformControls.translationSnap = 0.02;
+  transformControls.showX = false;
+  transformControls.showY = false;
+  transformControls.showZ = true;
+  const transformHelper = transformControls.getHelper();
+  transformHelper.visible = false;
+  scene.add(transformHelper);
+  let isTransformDragging = false;
+  let activeTransformPart = null;
+
   const root = new THREE.Group();
   scene.add(root);
 
@@ -193,7 +353,7 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
 
   const components = {};
   components.source = makeBoxComponent({ width: 1.0, height: 0.82, depth: 0.9, color: 0x282c4c, label: "Light source", part: "source" });
-  components.source.position.set(-4.0, BENCH_Y, 0);
+  components.source.position.copy(SOURCE_BASE_POSITION);
   root.add(components.source);
 
   components.excitation = createMonochromator("Excitation mono", "excitation");
@@ -229,22 +389,14 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
   const sampleLabel = createLabel("Sample cell");
   sampleLabel.position.set(0, -0.9, 0);
   components.sample.add(samplePlume, sampleGlass, sampleEdges, sampleLabel);
-  components.sample.position.set(0, BENCH_Y + 0.12, 0);
+  components.sample.position.copy(SAMPLE_BASE_POSITION);
   components.sample.userData.mainMesh = sampleGlass;
   components.sample.userData.plume = samplePlume;
   markSelectable(components.sample, "sample");
   root.add(components.sample);
 
-  const stopGroup = new THREE.Group();
-  const stopBase = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.5), makeMaterial(0x111624));
-  const stopBlade = new THREE.Mesh(
-    new THREE.BoxGeometry(0.12, 0.72, 0.62),
-    makeMaterial(0x151c2b, { emissive: 0x6f88ff, emissiveIntensity: 0.05 })
-  );
-  stopBlade.rotation.z = Math.PI / 6;
-  stopBlade.position.y = 0.35;
-  stopGroup.add(stopBase, stopBlade);
-  stopGroup.position.set(1.6, BENCH_Y - 0.28, 0);
+  const stopGroup = createBeamStop();
+  stopGroup.position.set(1.72, BENCH_Y + 0.04, 0);
   root.add(stopGroup);
 
   components.emission = createMonochromator("Emission mono", "emission");
@@ -342,15 +494,24 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
       mesh.scale.setScalar(name === part ? 1.45 : 1);
     });
 
+    if ((part === "source" || part === "sample") && activeTransformPart === part) {
+      transformControls.attach(components[part]);
+      transformHelper.visible = true;
+      transformControls.enabled = true;
+    } else {
+      transformControls.detach();
+      transformHelper.visible = false;
+      transformControls.enabled = false;
+    }
+
     render();
   }
 
   function update(derived, currentState) {
-    const sampleOffset = currentState.sample.offsetUm / 220;
-    const sourceOffset = currentState.source.offsetUm / 260;
-    components.source.position.z = sourceOffset;
-    components.sample.position.x = sampleOffset * 0.18;
-    components.sample.position.z = sampleOffset;
+    const sampleOffset = currentState.sample.offsetUm / SAMPLE_OFFSET_SCALE;
+    const sourceOffset = currentState.source.offsetUm / SOURCE_OFFSET_SCALE;
+    components.source.position.copy(SOURCE_BASE_POSITION).add(new THREE.Vector3(0, 0, sourceOffset));
+    components.sample.position.copy(SAMPLE_BASE_POSITION).add(new THREE.Vector3(sampleOffset * 0.18, 0, sampleOffset));
 
     const detectorPos = detectorPosition(currentState.detector.angleDeg);
     components.detector.position.copy(detectorPos);
@@ -359,8 +520,18 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
     const outputPos = new THREE.Vector3(2.1, BENCH_Y + 0.1, 3.2);
     components.output.position.copy(outputPos);
 
-    components.excitation.userData.grating.rotation.y = THREE.MathUtils.degToRad(currentState.exMono.gratingAngleDeg);
-    components.emission.userData.grating.rotation.y = THREE.MathUtils.degToRad(currentState.emMono.gratingAngleDeg);
+    updateMonochromatorCutaway(
+      components.excitation,
+      currentState.exMono.gratingAngleDeg,
+      derived.beams.excitationColor,
+      currentState.slit.widthUm
+    );
+    updateMonochromatorCutaway(
+      components.emission,
+      currentState.emMono.gratingAngleDeg,
+      derived.beams.emissionColor,
+      currentState.slit.widthUm
+    );
 
     beams.excitation.material.color.set(derived.beams.excitationColor);
     beams.excitation.material.opacity = derived.beams.excitationIntensity;
@@ -371,7 +542,7 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
 
     const samplePoint = components.sample.position.clone().setY(BENCH_Y + 0.1);
     setCylinderBetween(beams.excitation, new THREE.Vector3(-4, BENCH_Y + 0.1, sourceOffset), samplePoint);
-    setCylinderBetween(beams.residual, samplePoint, new THREE.Vector3(1.62, BENCH_Y + 0.1, 0));
+    setCylinderBetween(beams.residual, samplePoint, new THREE.Vector3(1.36, BENCH_Y + 0.1, 0));
     setCylinderBetween(beams.emission, samplePoint, components.detector.position.clone().setY(BENCH_Y + 0.1));
     setCylinderBetween(beams.signal, components.detector.position.clone().setY(BENCH_Y + 0.16), components.output.position.clone().setY(BENCH_Y + 0.18));
 
@@ -385,7 +556,34 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
     selectPart(currentState.selectedPart);
   }
 
+  function constrainTransformedPart() {
+    const object = transformControls.object;
+    if (!object) {
+      return;
+    }
+
+    if (object === components.source) {
+      object.position.x = SOURCE_BASE_POSITION.x;
+      object.position.y = SOURCE_BASE_POSITION.y;
+      object.position.z = THREE.MathUtils.clamp(object.position.z, -120 / SOURCE_OFFSET_SCALE, 120 / SOURCE_OFFSET_SCALE);
+      onGeometryChange?.({
+        sourceOffsetUm: object.position.z * SOURCE_OFFSET_SCALE,
+      });
+    } else if (object === components.sample) {
+      object.position.y = SAMPLE_BASE_POSITION.y;
+      object.position.z = THREE.MathUtils.clamp(object.position.z, -120 / SAMPLE_OFFSET_SCALE, 120 / SAMPLE_OFFSET_SCALE);
+      object.position.x = SAMPLE_BASE_POSITION.x + object.position.z * 0.18;
+      onGeometryChange?.({
+        sampleOffsetUm: object.position.z * SAMPLE_OFFSET_SCALE,
+      });
+    }
+  }
+
   renderer.domElement.addEventListener("pointerdown", (event) => {
+    if (isTransformDragging) {
+      return;
+    }
+
     const rect = renderer.domElement.getBoundingClientRect();
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -393,8 +591,25 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
     const hit = raycaster.intersectObjects(selectable, true).find((entry) => entry.object.userData.part);
 
     if (hit?.object?.userData?.part) {
+      activeTransformPart = hit.object.userData.part === "source" || hit.object.userData.part === "sample"
+        ? hit.object.userData.part
+        : null;
       onSelectPart?.(hit.object.userData.part);
     }
+  });
+
+  transformControls.addEventListener("dragging-changed", (event) => {
+    isTransformDragging = Boolean(event.value);
+    controls.enabled = !event.value;
+  });
+
+  transformControls.addEventListener("objectChange", () => {
+    if (!isTransformDragging) {
+      return;
+    }
+
+    constrainTransformedPart();
+    render();
   });
 
   function resetView() {
@@ -419,6 +634,7 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
   }
 
   controls.addEventListener("change", render);
+  transformControls.addEventListener("change", render);
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(host);
   resize();
@@ -436,6 +652,7 @@ export function createInstrumentScene({ host, state, onSelectPart, reducedMotion
         window.cancelAnimationFrame(animationFrame);
       }
       resizeObserver.disconnect();
+      transformControls.dispose();
       controls.dispose();
       renderer.dispose();
       host.textContent = "";

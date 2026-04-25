@@ -60,6 +60,26 @@ test("mode changes chart axes but keeps source-derived controls separate", () =>
   state.mode = "time";
   const time = deriveInstrument(state);
   assert.equal(time.scanMeta.axisRange, "Time 0-120 s");
+
+  state.mode = "single";
+  const single = deriveInstrument(state);
+  assert.equal(single.scanMeta.axisRange, "Fixed Ex/Em monitor");
+  assert.equal(single.scanMeta.excitationBadge, "Fixed");
+  assert.equal(single.scanMeta.emissionBadge, "Fixed");
+});
+
+test("single-point monitor responds to geometry without moving wavelengths", () => {
+  const state = createInstrumentState();
+  state.mode = "single";
+  const base = deriveInstrument(state);
+
+  state.source.offsetUm = 110;
+  state.sample.offsetUm = 100;
+  const offset = deriveInstrument(state);
+
+  assert.equal(Math.round(base.excitationNm), Math.round(offset.excitationNm));
+  assert.equal(Math.round(base.emissionNm), Math.round(offset.emissionNm));
+  assert.ok(offset.spectrum.peak < base.spectrum.peak);
 });
 
 test("blank/background preset stays weak on fixed y scale", () => {

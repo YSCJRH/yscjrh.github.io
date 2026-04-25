@@ -236,9 +236,11 @@
                     </g>
 
                     <g class="instrument-guard" transform="translate(612 286)" aria-hidden="true">
-                      <path class="guard-blade" d="M30 0L48 54"></path>
-                      <path class="guard-base" d="M12 58H58"></path>
-                      <text x="35" y="84">blocked excitation</text>
+                      <rect class="guard-dump" x="12" y="2" width="54" height="56" rx="8"></rect>
+                      <rect class="guard-mouth" x="5" y="17" width="14" height="26" rx="3"></rect>
+                      <path class="guard-groove" d="M24 20H56M24 40H56"></path>
+                      <path class="guard-base" d="M10 62H68"></path>
+                      <text x="40" y="88">beam stop</text>
                     </g>
 
                     <g class="instrument-node instrument-node-emission" transform="translate(438 36)">
@@ -329,8 +331,8 @@
                   </p>
                   <p>
                     <span class="path-key path-key-residual" aria-hidden="true"></span>
-                    <strong>Blocked excitation path</strong>
-                    The straight-through excitation direction ends at a stop, so it is not read as detector collection.
+                    <strong>Beam stop / 光束终止器</strong>
+                    The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.
                   </p>
                   <p>
                     <span class="path-key path-key-signal" aria-hidden="true"></span>
@@ -359,6 +361,7 @@
                     <button type="button" data-mode="emission" aria-pressed="true">Emission scan</button>
                     <button type="button" data-mode="excitation" aria-pressed="false">Excitation scan</button>
                     <button type="button" data-mode="time" aria-pressed="false">Time / kinetic scan</button>
+                    <button type="button" data-mode="single" aria-pressed="false">Single-point monitor</button>
                   </fieldset>
 
                   <div class="control-stack">
@@ -386,6 +389,26 @@
                       <small class="control-help">Signal averaging time in this model, not a lifetime measurement.</small>
                     </label>
 
+                    <label class="instrument-control instrument-select-control">
+                      <span>Sample preset</span>
+                      <select data-control="sample">
+                        <option value="low-background">Low-background sample</option>
+                        <option value="broad-emission">Broad-emission sample</option>
+                        <option value="blank">Blank / background-dominant</option>
+                        <option value="scattering">Scattering sample</option>
+                      </select>
+                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum.</small>
+                    </label>
+
+                    <details class="advanced-geometry">
+                      <summary>
+                        <span>Advanced geometry / 光路对准</span>
+                        <strong>Source, sample, detector</strong>
+                      </summary>
+                      <p class="control-help advanced-geometry-note">
+                        Select the light source or sample cell in the 3D scene, then drag the blue Z-axis handle for a bounded teaching offset. These offsets change intensity and diagnostics, not selected wavelength.
+                      </p>
+
                     <label class="instrument-control">
                       <span>Source offset <strong data-readout="source-offset">0 um</strong></span>
                       <input data-control="source-offset" type="range" min="-120" max="120" step="5" value="0">
@@ -403,17 +426,7 @@
                       <input data-control="detector-angle" type="range" min="80" max="100" step="0.5" value="90">
                       <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk.</small>
                     </label>
-
-                    <label class="instrument-control instrument-select-control">
-                      <span>Sample preset</span>
-                      <select data-control="sample">
-                        <option value="low-background">Low-background sample</option>
-                        <option value="broad-emission">Broad-emission sample</option>
-                        <option value="blank">Blank / background-dominant</option>
-                        <option value="scattering">Scattering sample</option>
-                      </select>
-                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum.</small>
-                    </label>
+                    </details>
                   </div>
 
                   <p class="instrument-status" data-mode-summary>

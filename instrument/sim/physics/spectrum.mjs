@@ -49,6 +49,10 @@ function calculatePoint(mode, x, index, state, physics, profile) {
       return baseline + gaussian(x, physics.emissionNm - 28, 32 + physics.bandpassNm) * 0.024 + noise * 0.7;
     }
 
+    if (mode === "single") {
+      return baseline + noise * 0.5;
+    }
+
     return baseline + Math.sin(x / 34) * 0.004 + (x / 120) * 0.006 + noise * 0.6;
   }
 
@@ -81,6 +85,12 @@ function calculatePoint(mode, x, index, state, physics, profile) {
     return baseline + gain * emissionFit * excitation + scatter + noise;
   }
 
+  if (mode === "single") {
+    const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
+    const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
+    return baseline + gain * excitationFit * emissionFit + noise * 0.5;
+  }
+
   const time = x;
   const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
   const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
@@ -96,6 +106,7 @@ export function generateSpectrum(state, physics) {
     emission: [380, 700],
     excitation: [250, 550],
     time: [0, 120],
+    single: [0, 60],
   };
   const [min, max] = ranges[state.mode] || ranges.emission;
   const count = 96;
@@ -145,6 +156,19 @@ export function scanMetaForMode(mode, physics) {
       fixedChannel: `Ex ${Math.round(physics.excitationNm)} nm / Em ${Math.round(physics.emissionNm)} nm`,
       startLabel: "0 s",
       endLabel: "120 s",
+      emissionControlLabel: "Fixed emission channel",
+      excitationBadge: "Fixed",
+      emissionBadge: "Fixed",
+    };
+  }
+
+  if (mode === "single") {
+    return {
+      axisLabel: "Single-point readout",
+      axisRange: "Fixed Ex/Em monitor",
+      fixedChannel: `Ex ${Math.round(physics.excitationNm)} nm / Em ${Math.round(physics.emissionNm)} nm`,
+      startLabel: "0 s",
+      endLabel: "60 s",
       emissionControlLabel: "Fixed emission channel",
       excitationBadge: "Fixed",
       emissionBadge: "Fixed",

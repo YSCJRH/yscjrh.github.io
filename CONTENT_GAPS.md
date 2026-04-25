@@ -83,6 +83,9 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
   - a clear boundary between conceptual explanation and real measurement practice
   - a short caveat distinguishing fixed-wavelength time scans from fluorescence lifetime measurements
   - a practical explanation of how grating angle, slit width, alignment, and detector geometry affect a teaching model without becoming instrument specifications
+  - optional owner-provided wording for beam stop / 光束终止器 so the public explanation is precise but still approachable
+  - optional real fixed-wavelength kinetic examples if the page later moves beyond synthetic time traces
+  - source-specific EEM caveats before any heatmap is used for comparison rather than display-only context
 - Good input format:
   - `Workflow step:`
   - `Why it matters:`

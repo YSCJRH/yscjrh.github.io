@@ -2,6 +2,7 @@ import {
   applyControlValue,
   createInstrumentState,
   resetGeometry,
+  setGeometryOffsets,
   setMode,
   setSelectedPart,
 } from "./sim/state.mjs";
@@ -71,6 +72,11 @@ if (root) {
       reducedMotion: reduceMotionQuery.matches,
       onSelectPart: (part) => {
         setSelectedPart(state, part);
+        applyState();
+      },
+      onGeometryChange: (changes) => {
+        setGeometryOffsets(state, changes);
+        syncInputsFromState();
         applyState();
       },
     });

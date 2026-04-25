@@ -1,4 +1,38 @@
-# Current Phase: Instrument Lab Static Three.js Skeleton
+# Current Phase: Instrument Lab Causal Teaching Controls
+
+## Goal
+- Move `/instrument/` from a usable 3D teaching skeleton toward a clearer causal instrument model.
+- Prioritize visual correctness before adding complexity: the beam stop must read as an absorbing beam dump, not a reflector, mirror, or grating.
+- Keep the page as an educational simulation, not real instrument control, calibrated measurement, validated scientific software, or manufacturer UI.
+
+## Implementation Notes
+1. Refine the optical bench visual language:
+   - beam stop as a dark non-reflective absorber that terminates the residual excitation path
+   - monochromator cutaways with slits, mirrors, teaching grating, dispersion fan, and selected band
+   - no reflected beam from the beam stop and no decorative particle effects
+2. Add bounded direct manipulation for source/sample alignment:
+   - use local Three.js `TransformControls`
+   - constrain movement to a small teaching offset
+   - keep sliders synchronized with 3D dragging
+   - moving source/sample affects intensity/overlap, not selected wavelength
+3. Improve user hierarchy:
+   - keep 90 degree fluorescence collection as the default mental model
+   - move detector-arm perturbation into an advanced geometry area
+   - keep mode, grating angle, slit width, sample preset, and integration time as the primary controls
+4. Extend scan modes conservatively:
+   - keep emission, excitation, and time / kinetic scan
+   - add single-point monitor as a fixed Ex/Em teaching readout
+   - keep EEM/source-derived data separate from simulator sliders
+
+## Validation
+1. Run JavaScript syntax checks and unit tests for grating, slit, alignment, detector angle, scan modes, blank/background, and single-point behavior.
+2. Preview `/instrument/` locally in desktop, tablet, 390px, and 360px layouts.
+3. Confirm the beam stop cannot be read as a mirror/grating and that the residual excitation beam terminates there.
+4. Confirm no CDN runtime dependency, analytics, form, secret, personal data, or new public scientific claim was introduced.
+
+---
+
+# Previous Phase: Instrument Lab Static Three.js Skeleton
 
 ## Goal
 - Upgrade `/instrument/` from a 2D SVG concept diagram into a local, static Three.js teaching skeleton.

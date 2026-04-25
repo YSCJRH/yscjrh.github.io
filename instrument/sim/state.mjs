@@ -12,6 +12,11 @@ export const MODES = Object.freeze({
     summary:
       "Time / kinetic scan: keep excitation and emission fixed, then track a reaction- or stability-style synthetic intensity trend over time. Not a fluorescence lifetime measurement.",
   },
+  single: {
+    label: "Single-point monitor",
+    summary:
+      "Single-point monitor: keep excitation and emission fixed, then show one steady synthetic intensity readout. It is educational, not a quantitative measurement.",
+  },
 });
 
 export const PARTS = Object.freeze({
@@ -28,7 +33,7 @@ export const PARTS = Object.freeze({
   sample: {
     title: "Sample cell",
     copy:
-      "The excitation beam enters on the incident axis. Fluorescence is collected from the side arm at roughly 90 degrees, while the remaining incident beam is stopped.",
+      "The excitation beam enters on the incident axis. Fluorescence is collected from the side arm at roughly 90 degrees, while remaining transmitted excitation is absorbed by the beam stop.",
   },
   emission: {
     title: "Emission monochromator",
@@ -179,4 +184,14 @@ export function resetGeometry(state) {
   state.source.offsetUm = 0;
   state.sample.offsetUm = 0;
   state.detector.angleDeg = 90;
+}
+
+export function setGeometryOffsets(state, changes = {}) {
+  if (Number.isFinite(changes.sourceOffsetUm)) {
+    state.source.offsetUm = clamp(Math.round(changes.sourceOffsetUm), -120, 120);
+  }
+
+  if (Number.isFinite(changes.sampleOffsetUm)) {
+    state.sample.offsetUm = clamp(Math.round(changes.sampleOffsetUm), -120, 120);
+  }
 }

@@ -13,11 +13,17 @@ export function generateDiagnostics(state, derived) {
       label: "Excitation scan",
       text: `Emission is fixed at ${Math.round(derived.emissionNm)} nm while the excitation monochromator is scanned.`,
     });
-  } else {
+  } else if (state.mode === "time") {
     diagnostics.push({
       tone: "info",
       label: "Kinetic scan",
       text: `Both channels are fixed. This is a synthetic intensity-over-time trace, not lifetime decay.`,
+    });
+  } else {
+    diagnostics.push({
+      tone: "info",
+      label: "Single-point monitor",
+      text: `Both channels are fixed. The readout changes with slit width, alignment, sample preset, and integration time.`,
     });
   }
 

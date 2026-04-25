@@ -3815,7 +3815,9 @@ section[id] {
 .instrument-page[data-scan-mode="excitation"] .instrument-node-excitation rect,
 .instrument-page[data-scan-mode="emission"] .instrument-node-emission rect,
 .instrument-page[data-scan-mode="time"] .instrument-node-excitation rect,
-.instrument-page[data-scan-mode="time"] .instrument-node-emission rect {
+.instrument-page[data-scan-mode="time"] .instrument-node-emission rect,
+.instrument-page[data-scan-mode="single"] .instrument-node-excitation rect,
+.instrument-page[data-scan-mode="single"] .instrument-node-emission rect {
   stroke: rgba(77, 237, 207, 0.38);
   filter: drop-shadow(0 0 16px rgba(77, 237, 207, 0.16));
 }
@@ -3873,8 +3875,8 @@ section[id] {
 }
 
 .instrument-guard rect {
-  fill: rgba(8, 10, 16, 0.72);
-  stroke: rgba(115, 167, 255, 0.18);
+  fill: rgba(4, 6, 10, 0.88);
+  stroke: rgba(115, 167, 255, 0.14);
 }
 
 .instrument-guard path {
@@ -3883,10 +3885,19 @@ section[id] {
   stroke-linejoin: round;
 }
 
-.instrument-guard .guard-blade {
-  stroke: rgba(176, 186, 206, 0.66);
-  stroke-width: 7;
-  filter: drop-shadow(0 0 10px rgba(115, 167, 255, 0.16));
+.instrument-guard .guard-dump {
+  fill: rgba(5, 7, 12, 0.94);
+  stroke: rgba(176, 186, 206, 0.16);
+}
+
+.instrument-guard .guard-mouth {
+  fill: rgba(0, 1, 4, 0.96);
+  stroke: rgba(115, 167, 255, 0.18);
+}
+
+.instrument-guard .guard-groove {
+  stroke: rgba(176, 186, 206, 0.28);
+  stroke-width: 2;
 }
 
 .instrument-guard .guard-base {
@@ -4395,7 +4406,7 @@ section[id] {
 
 .mode-selector {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.42rem;
   min-width: 0;
   margin: 0;
@@ -4437,6 +4448,67 @@ section[id] {
 .control-stack {
   display: grid;
   gap: 0.68rem;
+}
+
+.advanced-geometry {
+  display: grid;
+  gap: 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  padding: 0.62rem;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(111, 136, 255, 0.08), transparent 8rem),
+    rgba(255, 255, 255, 0.02);
+}
+
+.advanced-geometry summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 850;
+  list-style: none;
+}
+
+.advanced-geometry summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-geometry summary::after {
+  content: "+";
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid rgba(77, 237, 207, 0.16);
+  border-radius: 999px;
+  color: #d8fff8;
+  background: rgba(77, 237, 207, 0.045);
+}
+
+.advanced-geometry[open] summary::after {
+  content: "-";
+}
+
+.advanced-geometry summary span,
+.advanced-geometry summary strong {
+  display: block;
+}
+
+.advanced-geometry summary strong {
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+}
+
+.advanced-geometry[open] {
+  gap: 0.7rem;
+}
+
+.advanced-geometry-note {
+  margin: 0;
 }
 
 .instrument-control {
