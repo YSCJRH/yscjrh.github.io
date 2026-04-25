@@ -15,15 +15,19 @@ class StaticHandler(SimpleHTTPRequestHandler):
         ".css": "text/css; charset=utf-8",
         ".html": "text/html; charset=utf-8",
         ".js": "application/javascript; charset=utf-8",
+        ".mjs": "application/javascript; charset=utf-8",
         ".svg": "image/svg+xml",
     }
 
 
 def main():
     mimetypes.add_type("image/svg+xml", ".svg")
+    mimetypes.add_type("application/javascript", ".mjs")
     os.chdir(ROOT)
     server = ThreadingHTTPServer((HOST, PORT), StaticHandler)
-    print(f"Serving {ROOT} at http://localhost:{PORT}/")
+    print(f"Serving {ROOT} at http://127.0.0.1:{PORT}/")
+    print(f"Localhost alias: http://localhost:{PORT}/")
+    print("Prefer 127.0.0.1 for Codex browser QA of local ES modules.")
     print("Press Ctrl+C to stop.")
     server.serve_forever()
 

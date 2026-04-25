@@ -1,4 +1,34 @@
-# Current Phase: Homepage Entry Hierarchy Correction
+# Current Phase: Instrument Lab Static Three.js Skeleton
+
+## Goal
+- Upgrade `/instrument/` from a 2D SVG concept diagram into a local, static Three.js teaching skeleton.
+- Keep the page as an educational simulation, not real instrument control, calibrated measurement, or validated scientific software.
+- Preserve the existing 2D SVG as a fallback and keep source-derived data examples separate from synthetic controls.
+
+## Implementation Notes
+1. Use local vendored Three.js ESM only for `/instrument/`; do not add React, R3F, Vite, npm scripts, or a site-wide build chain.
+2. Add a single state source and pure physics modules for:
+   - grating angle to selected wavelength
+   - slit width to bandpass/throughput
+   - source/sample alignment to intensity overlap
+   - detector arm angle to collection/background risk
+   - scan mode to spectrum axis and fixed-channel labels
+3. Use a 3D open optical bench as the primary visual when WebGL is available:
+   - source -> excitation monochromator -> sample -> beam stop
+   - 90 degree emission arm -> emission monochromator -> detector -> spectrum
+   - detector-to-display is a signal line, not an optical beam
+4. Keep the current source-derived spectra/EEM package as a separate cited examples area. These examples are not controlled by the simulator sliders.
+5. Maintain conservative wording: conceptual, source-derived, normalized, downsampled, not calibrated, not quantitative comparison.
+
+## Validation
+1. Run syntax checks for the entry module and scene/UI modules.
+2. Run unit tests for grating wavelength, slit bandpass/throughput, alignment, scan mode, detector angle, and blank/background behavior.
+3. Preview `/instrument/` locally and check desktop, tablet, 390px, and 360px layouts.
+4. Confirm no CDN runtime dependency, analytics, form, secret, or new public claim was introduced.
+
+---
+
+# Previous Phase: Homepage Entry Hierarchy Correction
 
 ## Goal
 - Keep Instrument Lab visible as a secondary concept model rather than a primary homepage feature.
@@ -92,6 +122,8 @@
 3. Keep all new wording conservative: synthetic traces are illustrative only and do not represent calibrated spectra, real samples, or instrument validation.
 
 ## Phase 1: Concept Demo Implementation
+Status: completed and superseded by the current local Three.js teaching-skeleton phase.
+
 1. Create `/instrument/` with:
    - a simplified fluorescence spectrophotometer chain
    - animated excitation and emission paths
@@ -99,7 +131,7 @@
    - conceptual controls for wavelength, slit width, integration time, and sample preset
    - synthetic spectrum output that responds to controls
    - hotspots and short explanations for each instrument part
-2. Use SVG and vanilla JavaScript; do not add Canvas, WebGL, Three.js, a framework, or a build step.
+2. Original v1 constraint: use SVG and vanilla JavaScript; do not add Canvas, WebGL, Three.js, a framework, or a build step. This constraint applied to the first concept demo only. The current phase intentionally upgrades `/instrument/` with local vendored Three.js while still avoiding frameworks, package managers, CDNs, and a site-wide build step.
 3. Include the disclaimer: "Conceptual model only. Not real instrument control. Not calibrated measurement."
 
 ## Phase 2: Homepage Integration

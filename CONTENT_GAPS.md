@@ -38,6 +38,7 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
 - Needed:
   - safe reference diagrams or owner-provided sketches for the optical path
   - confirmation of which details are appropriate for public explanation
+  - optional reference photos or sketches for an open optical bench skeleton, if the 3D model should move beyond a generic teaching layout
 - Good input format:
   - `Diagram/source:`
   - `Safe public detail:`
@@ -48,6 +49,7 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
   - spectra or example datasets that are explicitly allowed for public use
   - context explaining what the data represents and what it does not prove
   - optional examples for fixed-wavelength time / kinetic scans if the page later moves beyond synthetic traces
+  - source-specific caveats for EEM axes, preprocessing, blank subtraction, correction state, and normalization if heatmaps are used for comparison
 - Good input format:
   - `Dataset/source:`
   - `Allowed use:`
@@ -80,6 +82,7 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
   - a short note explaining the fluorescence spectrophotometer workflow in educational terms
   - a clear boundary between conceptual explanation and real measurement practice
   - a short caveat distinguishing fixed-wavelength time scans from fluorescence lifetime measurements
+  - a practical explanation of how grating angle, slit width, alignment, and detector geometry affect a teaching model without becoming instrument specifications
 - Good input format:
   - `Workflow step:`
   - `Why it matters:`

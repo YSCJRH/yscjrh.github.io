@@ -49,8 +49,10 @@ python -m http.server 4173
 Then open:
 
 ```text
-http://localhost:4173/
+http://127.0.0.1:4173/
 ```
+
+`http://localhost:4173/` is also available as an alias, but `127.0.0.1` is the preferred QA URL for Codex browser checks of local ES modules.
 
 ## Repo Surfaces
 

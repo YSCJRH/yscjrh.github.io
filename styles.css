@@ -3524,6 +3524,8 @@ section[id] {
   --beam-intensity: 0.82;
   --emission-intensity: 0.72;
   --signal-intensity: 0.56;
+  --excitation-color: #6f88ff;
+  --emission-color: #52f0d3;
 }
 
 .instrument-shell {
@@ -3535,11 +3537,27 @@ section[id] {
   grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.42fr);
   gap: 1rem;
   align-items: end;
+  padding-block: clamp(1.1rem, 2.4vw, 1.7rem);
   background:
     radial-gradient(circle at 78% 28%, rgba(77, 237, 207, 0.12), transparent 18rem),
     radial-gradient(circle at 22% 18%, rgba(94, 106, 210, 0.18), transparent 20rem),
     linear-gradient(180deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.014)),
     var(--color-panel-soft);
+}
+
+.instrument-hero-card > * {
+  min-width: 0;
+}
+
+.instrument-page .instrument-hero-card .article-title {
+  max-width: 42rem;
+  font-size: clamp(2.35rem, 4.9vw, 4.4rem);
+  line-height: 1.03;
+}
+
+.instrument-page .instrument-hero-card .article-lead {
+  max-width: 46rem;
+  font-size: clamp(0.96rem, 1.3vw, 1.08rem);
 }
 
 .instrument-disclaimer {
@@ -3605,6 +3623,7 @@ section[id] {
 .instrument-model-panel,
 .instrument-control-panel,
 .part-panel,
+.diagnostics-panel,
 .spectrum-panel,
 .instrument-noscript {
   padding: 1rem;
@@ -3632,6 +3651,112 @@ section[id] {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.instrument-stage-3d {
+  display: none;
+  min-height: 34rem;
+  isolation: isolate;
+}
+
+.instrument-page.has-webgl-scene .instrument-stage-3d {
+  display: block;
+}
+
+.instrument-page.has-webgl-scene .instrument-2d-fallback {
+  display: none;
+}
+
+.instrument-page.has-2d-fallback .instrument-stage-3d {
+  display: none;
+}
+
+.instrument-scene-host {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.instrument-scene-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.instrument-scene-host canvas:active {
+  cursor: grabbing;
+}
+
+.instrument-scene-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  max-width: min(25rem, calc(100% - 2rem));
+  pointer-events: none;
+}
+
+.instrument-scene-overlay p {
+  margin: 0;
+  color: rgba(237, 237, 239, 0.72);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.instrument-scene-overlay p + p {
+  margin-top: 0.3rem;
+  color: rgba(184, 195, 218, 0.76);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.45;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+.instrument-view-toolbar {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  left: 0.9rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.instrument-view-toolbar button,
+.instrument-view-toolbar span {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 0.45rem 0.64rem;
+  color: var(--color-text-muted);
+  background: rgba(5, 7, 13, 0.72);
+  font-size: 0.72rem;
+  font-weight: 750;
+  max-width: 100%;
+  white-space: normal;
+  backdrop-filter: blur(14px);
+}
+
+.instrument-view-toolbar button {
+  color: #d8fff8;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.instrument-view-toolbar button:hover,
+.instrument-view-toolbar button:focus-visible {
+  border-color: rgba(77, 237, 207, 0.35);
+  color: var(--color-text);
+  background: rgba(77, 237, 207, 0.1);
 }
 
 .instrument-stage::before {
@@ -4219,9 +4344,53 @@ section[id] {
 
 .instrument-control-panel,
 .part-panel,
+.diagnostics-panel,
 .spectrum-panel {
   display: grid;
   gap: 0.72rem;
+}
+
+.diagnostics-list {
+  display: grid;
+  gap: 0.46rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diagnostic-item {
+  display: grid;
+  gap: 0.16rem;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.78rem;
+  padding: 0.58rem 0.64rem;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.diagnostic-item strong {
+  color: #d8fff8;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.diagnostic-item span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.diagnostic-item-warn {
+  border-color: rgba(255, 211, 106, 0.2);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(255, 211, 106, 0.08), transparent 7rem),
+    rgba(255, 255, 255, 0.022);
+}
+
+.diagnostic-item-warn strong {
+  color: #ffe0a3;
 }
 
 .mode-selector {
@@ -4501,6 +4670,7 @@ section[id] {
   .instrument-model-panel,
   .instrument-control-panel,
   .part-panel,
+  .diagnostics-panel,
   .spectrum-panel,
   .source-data-panel,
   .instrument-noscript {
@@ -4558,8 +4728,8 @@ section[id] {
     gap: 0.7rem;
   }
 
-  .instrument-page .article-title {
-    font-size: clamp(1.72rem, 8.2vw, 2rem);
+  .instrument-page .instrument-hero-card .article-title {
+    font-size: clamp(1.66rem, 8vw, 1.95rem);
     line-height: 1.08;
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -4572,6 +4742,25 @@ section[id] {
 
   .instrument-stage {
     min-height: 15.5rem;
+  }
+
+  .instrument-stage-3d {
+    min-height: 18rem;
+  }
+
+  .instrument-scene-overlay {
+    top: 0.72rem;
+    left: 0.72rem;
+    max-width: calc(100% - 1.44rem);
+  }
+
+  .instrument-scene-overlay p {
+    font-size: 0.66rem;
+    line-height: 1.35;
+  }
+
+  .instrument-scene-overlay p + p {
+    font-size: 0.66rem;
   }
 
   .instrument-axis-label,
@@ -4617,15 +4806,16 @@ section[id] {
 }
 
 @media (max-width: 420px) {
-  .instrument-page .article-title {
+  .instrument-page .instrument-hero-card .article-title {
     max-width: 100%;
-    font-size: 1.55rem;
+    font-size: 1.48rem;
   }
 
   .instrument-hero-card,
   .instrument-model-panel,
   .instrument-control-panel,
   .part-panel,
+  .diagnostics-panel,
   .spectrum-panel,
   .source-data-panel {
     padding: 0.72rem;
@@ -4638,6 +4828,14 @@ section[id] {
 
   .instrument-stage {
     min-height: 14.2rem;
+  }
+
+  .instrument-stage-3d {
+    min-height: 17rem;
+  }
+
+  .instrument-scene-overlay p + p {
+    display: none;
   }
 }
 

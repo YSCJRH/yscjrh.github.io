@@ -21,9 +21,28 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=instrument-lab-20260424d">
+    <link rel="stylesheet" href="../styles.css?v=instrument-3d-20260425">
     <script src="../script.js" defer></script>
-    <script src="instrument.js" defer></script>
+    <script>
+      (() => {
+        if (location.protocol === "http:" && location.hostname === "localhost" && location.port === "4173") {
+          const preferredLocalUrl = new URL(location.href);
+          preferredLocalUrl.hostname = "127.0.0.1";
+          location.replace(preferredLocalUrl);
+          return;
+        }
+
+        import("./instrument.js?v=instrument-3d-20260425").catch((error) => {
+          console.error("Instrument Lab module failed to load.", error);
+          const root = document.querySelector("[data-instrument-lab]");
+          const status = document.querySelector("[data-webgl-status]");
+          root?.classList.add("has-2d-fallback");
+          if (status) {
+            status.textContent = "Interactive module unavailable. Showing the 2D fallback.";
+          }
+        });
+      })();
+    </script>
   </head>
   <body>
     <div class="ambient-scene" aria-hidden="true">
@@ -103,12 +122,12 @@
             <article class="surface surface-glass article-card instrument-hero-card" data-reveal>
               <div>
                 <p class="eyebrow">Instrument Lab / 荧光仪器可视化实验室</p>
-                <h1 class="article-title">A conceptual fluorescence spectrophotometer workflow.</h1>
+                <h1 class="article-title">Fluorescence instrument teaching skeleton.</h1>
                 <p class="article-lead">
-                  Follow a right-angle fluorescence collection path and watch a simplified synthetic trace respond to the controls.
+                  Explore a static 3D optical bench, grating-driven monochromators, and a simplified synthetic trace.
                 </p>
                 <p class="article-lead article-lead-zh">
-                  从激发光进入样品池，到约 90° 方向收集发射光，再到检测与谱图输出，用一个克制的可视化模型理解荧光分光光度计的工作链路。
+                  从激发单色器、样品池、90° 发射收集到检测输出，用一个克制的教学骨架理解荧光分光光度计的工作链路。
                 </p>
               </div>
               <p class="instrument-disclaimer" data-disclaimer>
@@ -142,7 +161,20 @@
                   <p class="panel-chrome-label">Concept model / 概念模型</p>
                 </div>
 
-                <div class="instrument-stage" aria-label="Simplified instrument light path">
+                <div class="instrument-stage instrument-stage-3d" aria-label="3D teaching skeleton for the fluorescence instrument path">
+                  <div class="instrument-scene-host" data-scene-host></div>
+                  <div class="instrument-scene-overlay" aria-hidden="true">
+                    <p>Open optical bench / 3D teaching skeleton</p>
+                    <p>Source -> Ex mono -> sample; 90 deg Em arm -> detector.</p>
+                  </div>
+                  <div class="instrument-view-toolbar" aria-label="3D view controls">
+                    <button type="button" data-action="reset-view">Reset view</button>
+                    <button type="button" data-action="reset-geometry">Reset alignment</button>
+                    <span data-webgl-status>Loading 3D teaching skeleton...</span>
+                  </div>
+                </div>
+
+                <div class="instrument-stage instrument-stage-fallback instrument-2d-fallback" data-fallback-diagram aria-label="Simplified instrument light path fallback">
                   <svg
                     class="instrument-diagram"
                     viewBox="0 0 960 560"
@@ -331,27 +363,45 @@
 
                   <div class="control-stack">
                     <label class="instrument-control">
-                      <span>Excitation wavelength <strong data-readout="excitation">365 nm</strong></span>
-                      <input data-control="excitation" type="range" min="250" max="550" step="1" value="365">
-                      <small class="control-help">Incoming-light channel for conceptual excitation.</small>
+                      <span>Excitation grating <strong data-readout="excitation-angle">13.4 deg</strong></span>
+                      <input data-control="excitation-angle" type="range" min="9.5" max="21.5" step="0.1" value="13.4">
+                      <small class="control-help">Derived excitation channel: <strong data-readout="excitation">365 nm</strong>.</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span><span data-emission-label>Emission wavelength</span> <strong data-readout="emission">520 nm</strong></span>
-                      <input data-control="emission" type="range" min="380" max="700" step="1" value="520">
-                      <small class="control-help" id="emission-range-help">Collection-side channel selected before detection; emission scan uses the full range.</small>
+                      <span><span data-emission-label>Emission grating angle</span> <strong data-readout="emission-angle">19.1 deg</strong></span>
+                      <input data-control="emission-angle" type="range" min="14" max="27" step="0.1" value="19.1">
+                      <small class="control-help" id="emission-range-help">Derived emission channel: <strong data-readout="emission">520 nm</strong>.</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Slit width <strong data-readout="slit">5 nm</strong></span>
-                      <input data-control="slit" type="range" min="1" max="10" step="1" value="5">
-                      <small class="control-help">Conceptual bandpass: wider slit increases signal and broadens features.</small>
+                      <span>Slit width <strong data-readout="slit">500 um</strong></span>
+                      <input data-control="slit" type="range" min="100" max="1000" step="25" value="500">
+                      <small class="control-help"><strong data-readout="bandpass">4.6 nm bandpass</strong>; wider slit increases throughput and broadens features.</small>
                     </label>
 
                     <label class="instrument-control">
                       <span>Integration time <strong data-readout="integration">200 ms</strong></span>
                       <input data-control="integration" type="range" min="20" max="1000" step="20" value="200">
                       <small class="control-help">Signal averaging time in this model, not a lifetime measurement.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span>Source offset <strong data-readout="source-offset">0 um</strong></span>
+                      <input data-control="source-offset" type="range" min="-120" max="120" step="5" value="0">
+                      <small class="control-help">Conceptual entrance alignment; it changes intensity, not wavelength.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span>Sample offset <strong data-readout="sample-offset">0 um</strong></span>
+                      <input data-control="sample-offset" type="range" min="-120" max="120" step="5" value="0">
+                      <small class="control-help">Moves overlap at the cell; peak positions stay tied to the sample preset.</small>
+                    </label>
+
+                    <label class="instrument-control">
+                      <span>Detector arm angle <strong data-readout="detector-angle">90.0 deg</strong></span>
+                      <input data-control="detector-angle" type="range" min="80" max="100" step="0.5" value="90">
+                      <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk.</small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">
@@ -379,6 +429,14 @@
                       <span>Fixed channel</span>
                       <strong data-fixed-channel-readout>Excitation 365 nm</strong>
                     </p>
+                    <p>
+                      <span>Throughput</span>
+                      <strong data-readout="throughput">0%</strong>
+                    </p>
+                    <p>
+                      <span>Overlap / collection</span>
+                      <strong><span data-readout="overlap">100%</span> / <span data-readout="collection">100%</span></strong>
+                    </p>
                   </div>
                 </section>
 
@@ -388,6 +446,17 @@
                   <p data-part-copy>
                     Provides broadband or selected excitation energy before the path is shaped by the excitation monochromator.
                   </p>
+                </section>
+
+                <section class="surface surface-glass diagnostics-panel" aria-labelledby="diagnostics-title" data-reveal>
+                  <p class="eyebrow">Diagnostics / 物理状态</p>
+                  <h2 class="article-subtitle" id="diagnostics-title">Consequences, not claims</h2>
+                  <ul class="diagnostics-list" data-diagnostics-list>
+                    <li class="diagnostic-item diagnostic-item-info">
+                      <strong>Waiting for model</strong>
+                      <span>Derived state will appear here after the simulation loads.</span>
+                    </li>
+                  </ul>
                 </section>
 
                 <section class="surface surface-glass spectrum-panel" aria-labelledby="spectrum-title" data-reveal>
