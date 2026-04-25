@@ -2100,13 +2100,17 @@ body {
 }
 
 .hero-title {
-  max-width: 11.6ch;
-  font-size: 4.9rem;
+  max-width: min(100%, 10.8ch);
+  font-size: 4.35rem;
   line-height: 0.98;
   background: linear-gradient(180deg, #ffffff 0%, #ededf0 58%, rgba(237, 237, 240, 0.72) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.hero-title span {
+  display: block;
 }
 
 .hero-focus-line {
@@ -2147,6 +2151,8 @@ body {
 .hero-copy {
   align-content: center;
   min-height: 34rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .hero-visual {
@@ -2717,9 +2723,10 @@ body {
 
 .hero-proof-row li {
   position: relative;
-  min-height: 5.8rem;
+  min-width: 0;
+  min-height: 7.1rem;
   overflow: hidden;
-  padding: 0.78rem;
+  padding: 0.74rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 0.86rem;
   background:
@@ -2740,11 +2747,25 @@ body {
   opacity: 0.16;
 }
 
+.hero-proof-row li::after {
+  content: "";
+  position: absolute;
+  right: 0.72rem;
+  top: 0.72rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: rgba(147, 157, 255, 0.56);
+  box-shadow: 0 0 18px rgba(123, 132, 232, 0.36);
+}
+
 .hero-proof-row span,
-.hero-proof-row strong {
+.hero-proof-row strong,
+.hero-proof-row em {
   position: relative;
   z-index: 1;
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .hero-proof-row span {
@@ -2757,8 +2778,16 @@ body {
 
 .hero-proof-row strong {
   color: var(--color-text);
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   line-height: 1.35;
+}
+
+.hero-proof-row em {
+  margin-top: 0.28rem;
+  color: rgba(220, 226, 255, 0.72);
+  font-size: 0.76rem;
+  font-style: normal;
+  line-height: 1.45;
 }
 
 .workflow-panel {
@@ -3071,11 +3100,26 @@ section[id] {
   .hero-proof-row {
     order: 7;
     grid-template-columns: 1fr;
+    gap: 0.56rem;
   }
 
   .hero-proof-row li {
     min-height: 0;
-    padding: 0.72rem;
+    padding: 0.82rem 0.9rem;
+  }
+
+  .hero-proof-row span {
+    margin-bottom: 0.34rem;
+  }
+
+  .hero-proof-row strong {
+    font-size: 0.92rem;
+    line-height: 1.28;
+  }
+
+  .hero-proof-row em {
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 
   .hero-mobile-visual {
