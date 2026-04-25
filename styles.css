@@ -3753,8 +3753,20 @@ section[id] {
 }
 
 .instrument-guard path {
-  stroke: rgba(115, 167, 255, 0.52);
-  stroke-width: 4;
+  stroke: rgba(176, 186, 206, 0.54);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.instrument-guard .guard-blade {
+  stroke: rgba(176, 186, 206, 0.66);
+  stroke-width: 7;
+  filter: drop-shadow(0 0 10px rgba(115, 167, 255, 0.16));
+}
+
+.instrument-guard .guard-base {
+  stroke: rgba(115, 167, 255, 0.32);
+  stroke-width: 2.4;
 }
 
 .instrument-node text,
@@ -3770,17 +3782,52 @@ section[id] {
   text-anchor: middle;
 }
 
+.component-label {
+  fill: rgba(237, 237, 240, 0.7);
+  font-size: 15px;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-anchor: middle;
+}
+
+.component-label-emission {
+  fill: rgba(216, 255, 248, 0.74);
+  font-size: 14px;
+}
+
+.component-label-sample {
+  fill: rgba(237, 237, 240, 0.74);
+}
+
+.instrument-guard text {
+  fill: rgba(176, 186, 206, 0.48);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-anchor: middle;
+  text-transform: uppercase;
+}
+
 .instrument-axis-label,
 .instrument-signal-label {
   fill: rgba(176, 186, 206, 0.54);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
-.instrument-axis-label-vertical {
-  text-anchor: start;
+.instrument-axis-label-emission {
+  display: none;
+}
+
+.instrument-axis-label-emission-clean {
+  fill: rgba(216, 255, 248, 0.58);
+  text-anchor: middle;
+}
+
+.instrument-axis-label-excitation {
+  fill: rgba(176, 186, 206, 0.42);
 }
 
 .instrument-signal-label {
@@ -3790,8 +3837,17 @@ section[id] {
 
 .instrument-angle-label {
   fill: rgba(216, 255, 248, 0.72);
-  font-size: 16px;
+  font-size: 12px;
   text-anchor: start;
+  text-transform: uppercase;
+}
+
+.instrument-angle-label:not(.instrument-angle-label-clean) {
+  display: none;
+}
+
+.instrument-angle-label-clean {
+  display: block;
 }
 
 .beam {
@@ -3831,14 +3887,19 @@ section[id] {
   filter: none;
 }
 
+.scan-badge {
+  opacity: 0.86;
+  pointer-events: none;
+}
+
 .scan-badge rect {
-  fill: rgba(5, 7, 11, 0.82);
-  stroke: rgba(255, 255, 255, 0.1);
+  fill: rgba(5, 7, 11, 0.56);
+  stroke: rgba(255, 255, 255, 0.08);
 }
 
 .scan-badge text {
   fill: var(--color-text-muted);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 850;
   text-anchor: middle;
   text-transform: uppercase;

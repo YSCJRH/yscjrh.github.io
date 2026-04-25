@@ -185,14 +185,14 @@
                       <rect width="128" height="150" rx="24"></rect>
                       <circle cx="64" cy="62" r="24"></circle>
                       <path d="M40 104h48M46 120h36"></path>
-                      <text x="64" y="188">Light source</text>
+                      <text class="component-label" x="64" y="184">Light source</text>
                     </g>
 
                     <g class="instrument-node instrument-node-excitation" transform="translate(248 252)">
                       <rect width="142" height="150" rx="24"></rect>
                       <path d="M36 52h70l-22 42H52z"></path>
                       <path d="M34 110h74"></path>
-                      <text x="71" y="188">Excitation mono</text>
+                      <text class="component-label" x="71" y="184">Excitation mono</text>
                     </g>
 
                     <g class="instrument-sample" transform="translate(430 190)">
@@ -200,43 +200,43 @@
                       <rect x="44" y="44" width="70" height="150" rx="16"></rect>
                       <path d="M44 128h70"></path>
                       <circle cx="79" cy="124" r="20"></circle>
-                      <text x="79" y="252">Sample cell</text>
+                      <text class="component-label component-label-sample" x="79" y="252">Sample cell</text>
                     </g>
 
-                    <g class="instrument-guard" transform="translate(604 272)">
-                      <rect width="78" height="84" rx="16"></rect>
-                      <path d="M26 22L52 62M52 22L26 62"></path>
-                      <text x="39" y="118">Beam stop</text>
+                    <g class="instrument-guard" transform="translate(612 286)" aria-hidden="true">
+                      <path class="guard-blade" d="M30 0L48 54"></path>
+                      <path class="guard-base" d="M12 58H58"></path>
+                      <text x="35" y="84">blocked excitation</text>
                     </g>
 
                     <g class="instrument-node instrument-node-emission" transform="translate(438 36)">
                       <rect width="142" height="150" rx="24"></rect>
                       <path d="M36 52h70l-22 42H52z"></path>
                       <path d="M34 110h74"></path>
-                      <text x="71" y="188">Emission mono</text>
+                      <text class="component-label component-label-emission" x="71" y="-10">Emission mono</text>
                     </g>
 
                     <g class="instrument-node" transform="translate(650 52)">
                       <rect width="112" height="142" rx="24"></rect>
                       <circle cx="56" cy="64" r="28"></circle>
                       <path d="M44 104h24"></path>
-                      <text x="56" y="184">Detector</text>
+                      <text class="component-label" x="56" y="176">Detector</text>
                     </g>
 
                     <g class="instrument-screen" transform="translate(690 300)">
                       <rect width="204" height="118" rx="20"></rect>
                       <polyline points="24,86 54,80 82,54 110,72 138,34 174,68"></polyline>
-                      <text x="102" y="150">Spectrum output</text>
+                      <text class="component-label" x="102" y="148">Spectrum output</text>
                     </g>
 
-                    <text class="instrument-axis-label" x="280" y="292">Excitation axis</text>
-                    <text class="instrument-axis-label instrument-axis-label-vertical" x="528" y="178">Emission collection axis</text>
-                    <text class="instrument-angle-label" x="552" y="290">90° collection</text>
+                    <text class="instrument-axis-label instrument-axis-label-excitation" x="270" y="342">excitation path</text>
+                    <text class="instrument-axis-label instrument-axis-label-emission-clean" x="612" y="96">90 deg emission arm</text>
+                    <text class="instrument-angle-label instrument-angle-label-clean" x="546" y="300">90 deg</text>
                     <g class="scan-badge scan-badge-excitation" transform="translate(270 234)">
                       <rect width="98" height="24" rx="12"></rect>
                       <text x="49" y="16" data-badge-excitation>Fixed</text>
                     </g>
-                    <g class="scan-badge scan-badge-emission" transform="translate(455 18)">
+                    <g class="scan-badge scan-badge-emission" transform="translate(460 158)">
                       <rect width="98" height="24" rx="12"></rect>
                       <text x="49" y="16" data-badge-emission>Scanning</text>
                     </g>
@@ -261,7 +261,6 @@
                       <circle cx="509" cy="254" r="45"></circle>
                     </g>
                     <path class="signal-output" d="M706 128L792 300"></path>
-                    <text class="instrument-signal-label" x="742" y="226">signal</text>
 
                     <g class="instrument-marker" data-part="source" role="button" tabindex="0" aria-label="Light source" aria-pressed="true">
                       <circle cx="140" cy="314" r="10"></circle>
@@ -298,8 +297,8 @@
                   </p>
                   <p>
                     <span class="path-key path-key-residual" aria-hidden="true"></span>
-                    <strong>Dim residual path</strong>
-                    The straight-through excitation direction is shown as a weak blocked path to avoid implying detector collection.
+                    <strong>Blocked excitation path</strong>
+                    The straight-through excitation direction ends at a stop, so it is not read as detector collection.
                   </p>
                   <p>
                     <span class="path-key path-key-signal" aria-hidden="true"></span>
