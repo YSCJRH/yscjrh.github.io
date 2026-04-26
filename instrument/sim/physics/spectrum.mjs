@@ -50,7 +50,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
     }
 
     if (mode === "single") {
-      return baseline + noise * 0.5;
+      return baseline;
     }
 
     return baseline + Math.sin(x / 34) * 0.004 + (x / 120) * 0.006 + noise * 0.6;
@@ -88,7 +88,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
   if (mode === "single") {
     const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
     const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
-    return baseline + gain * excitationFit * emissionFit + noise * 0.5;
+    return baseline + gain * excitationFit * emissionFit;
   }
 
   const time = x;
@@ -106,10 +106,10 @@ export function generateSpectrum(state, physics) {
     emission: [380, 700],
     excitation: [250, 550],
     time: [0, 120],
-    single: [0, 60],
+    single: [0, 1],
   };
   const [min, max] = ranges[state.mode] || ranges.emission;
-  const count = 96;
+  const count = state.mode === "single" ? 12 : 96;
   const points = [];
 
   for (let index = 0; index < count; index += 1) {
@@ -167,8 +167,8 @@ export function scanMetaForMode(mode, physics) {
       axisLabel: "Single-point readout",
       axisRange: "Fixed Ex/Em monitor",
       fixedChannel: `Ex ${Math.round(physics.excitationNm)} nm / Em ${Math.round(physics.emissionNm)} nm`,
-      startLabel: "0 s",
-      endLabel: "60 s",
+      startLabel: "fixed Ex",
+      endLabel: "fixed Em",
       emissionControlLabel: "Fixed emission channel",
       excitationBadge: "Fixed",
       emissionBadge: "Fixed",

@@ -1,4 +1,37 @@
-# Current Phase: Instrument Lab Causal Teaching Controls
+# Current Phase: Instrument Lab Causal Readability And Detector/EEM Refinement
+
+## Goal
+- Move `/instrument/` from a feature-complete 3D teaching skeleton toward a clearer optical-causal explainer.
+- Keep the static Three.js architecture and the educational boundary: no real instrument control, no calibrated measurement, no validated simulator claim, and no manufacturer UI.
+- Improve three visitor-facing weak points: first-glance optical path readability, detector/emission-arm causality, and source-derived EEM discoverability.
+
+## Implementation Notes
+1. Refine the 3D teaching stage:
+   - use shorter floating labels and let the side legend carry longer explanations
+   - show residual excitation as a dim segmented path that terminates in the beam stop
+   - keep excitation, emission, and detector-to-spectrum signal visually distinct
+2. Add detector-arm direct manipulation:
+   - select detector to reveal a bounded 80-100 degree arm handle
+   - default stays 90 degree collection
+   - detector-angle changes collection/background diagnostics and signal strength, not selected wavelength or sample peak position
+3. Clarify scan and spectrum semantics:
+   - keep emission, excitation, time / kinetic, and single-point modes
+   - make single-point readout a fixed Ex/Em intensity level rather than a pseudo time trace
+   - keep fixed synthetic a.u. / not calibrated visible in the chart chrome
+4. Improve source-derived examples:
+   - expose spectra and EEM through clear dataset cards in addition to the select control
+   - keep source-derived examples separate from simulator sliders
+   - keep DOI, license, preprocessing, and reference-only caveats visible
+
+## Validation
+1. Run syntax checks and unit tests for grating, slit, alignment, detector angle, scan modes, blank/background, and single-point behavior.
+2. Preview `/instrument/` in desktop and narrow layouts with Browser Use.
+3. Confirm the detector handle is bounded, the beam stop reads as absorption, and EEM remains a processed source-derived example.
+4. Confirm no CDN runtime dependency, analytics, form, secret, personal data, or new public scientific claim was introduced.
+
+---
+
+# Previous Phase: Instrument Lab Causal Teaching Controls
 
 ## Goal
 - Move `/instrument/` from a usable 3D teaching skeleton toward a clearer causal instrument model.

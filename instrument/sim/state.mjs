@@ -194,4 +194,8 @@ export function setGeometryOffsets(state, changes = {}) {
   if (Number.isFinite(changes.sampleOffsetUm)) {
     state.sample.offsetUm = clamp(Math.round(changes.sampleOffsetUm), -120, 120);
   }
+
+  if (Number.isFinite(changes.detectorAngleDeg)) {
+    state.detector.angleDeg = clamp(Number(changes.detectorAngleDeg), 80, 100);
+  }
 }

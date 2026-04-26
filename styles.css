@@ -3718,6 +3718,10 @@ section[id] {
   overflow-wrap: anywhere;
 }
 
+.instrument-page[data-active-part="detector"] .instrument-scene-overlay p + p {
+  color: rgba(216, 255, 248, 0.82);
+}
+
 .instrument-view-toolbar {
   position: absolute;
   right: 0.9rem;
@@ -4227,6 +4231,62 @@ section[id] {
   display: grid;
   gap: 0.72rem;
   padding: 0.86rem;
+}
+
+.source-dataset-cards {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.source-dataset-card {
+  display: grid;
+  gap: 0.24rem;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.86rem;
+  padding: 0.68rem 0.72rem;
+  color: var(--color-text-muted);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(77, 237, 207, 0.08), transparent 7rem),
+    rgba(255, 255, 255, 0.022);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.source-dataset-card:hover,
+.source-dataset-card:focus-visible,
+.source-dataset-card.is-active {
+  border-color: rgba(77, 237, 207, 0.3);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 12% 14%, rgba(77, 237, 207, 0.14), transparent 8rem),
+    rgba(255, 255, 255, 0.04);
+}
+
+.source-dataset-card__tag {
+  color: rgba(216, 255, 248, 0.74);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-dataset-card strong {
+  color: rgba(237, 237, 240, 0.9);
+  font-size: 0.82rem;
+  line-height: 1.28;
+}
+
+.source-dataset-card__note {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.42;
 }
 
 .source-data-facts {

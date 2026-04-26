@@ -46,6 +46,19 @@ test("detector arm is best near 90 degrees", () => {
   assert.ok(tilted.backgroundRisk > centered.backgroundRisk);
 });
 
+test("detector angle changes collection without moving selected wavelengths", () => {
+  const state = createInstrumentState();
+  const base = deriveInstrument(state);
+
+  state.detector.angleDeg = 82;
+  const tilted = deriveInstrument(state);
+
+  assert.equal(Math.round(base.excitationNm), Math.round(tilted.excitationNm));
+  assert.equal(Math.round(base.emissionNm), Math.round(tilted.emissionNm));
+  assert.ok(tilted.collection.collectionFactor < base.collection.collectionFactor);
+  assert.ok(tilted.collection.backgroundRisk > base.collection.backgroundRisk);
+});
+
 test("mode changes chart axes but keeps source-derived controls separate", () => {
   const state = createInstrumentState();
 
@@ -72,6 +85,7 @@ test("single-point monitor responds to geometry without moving wavelengths", () 
   const state = createInstrumentState();
   state.mode = "single";
   const base = deriveInstrument(state);
+  const baseValues = base.spectrum.points.map((point) => point.rawY);
 
   state.source.offsetUm = 110;
   state.sample.offsetUm = 100;
@@ -80,6 +94,7 @@ test("single-point monitor responds to geometry without moving wavelengths", () 
   assert.equal(Math.round(base.excitationNm), Math.round(offset.excitationNm));
   assert.equal(Math.round(base.emissionNm), Math.round(offset.emissionNm));
   assert.ok(offset.spectrum.peak < base.spectrum.peak);
+  assert.ok(baseValues.every((value) => value === baseValues[0]));
 });
 
 test("blank/background preset stays weak on fixed y scale", () => {

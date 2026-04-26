@@ -62,6 +62,56 @@ function setSourceLink(elements, dataset) {
   link.rel = "noopener noreferrer";
 }
 
+function datasetKindLabel(dataset) {
+  if (dataset.kind === "eem") {
+    return "EEM heatmap";
+  }
+
+  if (String(dataset.role || "").includes("protein")) {
+    return "Protein emission";
+  }
+
+  if (String(dataset.role || "").includes("dye")) {
+    return "Dye spectrum";
+  }
+
+  return dataset.kind || "Spectrum";
+}
+
+function updateDatasetCards(elements, datasetId) {
+  const cards = elements.sourceCards ? Array.from(elements.sourceCards.querySelectorAll("[data-source-card]")) : [];
+  cards.forEach((card) => {
+    const active = card.dataset.sourceCard === datasetId;
+    card.classList.toggle("is-active", active);
+    card.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function createDatasetCard(dataset, onSelect) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "source-dataset-card";
+  button.dataset.sourceCard = dataset.id;
+  button.setAttribute("aria-pressed", "false");
+
+  const tag = document.createElement("span");
+  tag.className = "source-dataset-card__tag";
+  tag.textContent = datasetKindLabel(dataset);
+
+  const label = document.createElement("strong");
+  label.textContent = dataset.label;
+
+  const note = document.createElement("span");
+  note.className = "source-dataset-card__note";
+  note.textContent = dataset.kind === "eem"
+    ? "Processed display heatmap; separate from simulator sliders."
+    : "Normalized 1D example; display only.";
+
+  button.append(tag, label, note);
+  button.addEventListener("click", () => onSelect(dataset.id));
+  return button;
+}
+
 function hideSourceHeatmap(elements) {
   if (elements.sourceHeatmap) {
     elements.sourceHeatmap.textContent = "";
@@ -100,7 +150,7 @@ function renderSourceLine(elements, dataset, data) {
   setElementText(elements.sourceYEnd, "1");
   setElementText(elements.sourceYLabel, "a.u.");
   setElementText(elements.sourceModeLabel, "Emission wavelength");
-  setElementText(elements.sourceKind, dataset.role || "spectrum1d");
+  setElementText(elements.sourceKind, datasetKindLabel(dataset));
 }
 
 function renderSourceEem(elements, dataset, data) {
@@ -140,8 +190,8 @@ function renderSourceEem(elements, dataset, data) {
   setElementText(elements.sourceYStart, `${formatNumber(emission[0])} nm`);
   setElementText(elements.sourceYEnd, `${formatNumber(emission.at(-1))} nm`);
   setElementText(elements.sourceYLabel, "Em");
-  setElementText(elements.sourceModeLabel, "Excitation wavelength / heatmap");
-  setElementText(elements.sourceKind, dataset.role || "EEM heatmap");
+  setElementText(elements.sourceModeLabel, "Excitation wavelength / EEM heatmap");
+  setElementText(elements.sourceKind, datasetKindLabel(dataset));
 }
 
 function updateSourceMetadata(elements, dataset, data) {
@@ -193,6 +243,7 @@ async function showSourceDataset(elements, datasetId) {
       renderSourceLine(elements, dataset, data);
     }
 
+    updateDatasetCards(elements, dataset.id);
     setElementText(elements.sourceStatus, "Loaded local source-derived example.");
   } catch (error) {
     console.error(error);
@@ -204,6 +255,7 @@ export async function initializeSourceData(root) {
   const sourcePanel = root.querySelector("[data-source-data-panel]");
   const sourceSelect = root.querySelector("[data-source-dataset]");
   const elements = {
+    sourceCards: root.querySelector("[data-source-cards]"),
     sourceName: root.querySelector("[data-source-name]"),
     sourceLink: root.querySelector("[data-source-link]"),
     sourceLicense: root.querySelector("[data-source-license]"),
@@ -233,12 +285,19 @@ export async function initializeSourceData(root) {
     sourceState.manifest = await fetchJson("data/manifest.json");
     sourceState.datasets = sourceState.manifest.datasets.filter((dataset) => dataset.dataUrl);
     sourceSelect.textContent = "";
+    if (elements.sourceCards) {
+      elements.sourceCards.textContent = "";
+    }
 
     sourceState.datasets.forEach((dataset) => {
       const option = document.createElement("option");
       option.value = dataset.id;
       option.textContent = dataset.label;
       sourceSelect.appendChild(option);
+      elements.sourceCards?.appendChild(createDatasetCard(dataset, (datasetId) => {
+        sourceSelect.value = datasetId;
+        showSourceDataset(elements, datasetId);
+      }));
     });
 
     const reference = sourceState.manifest.datasets.find((dataset) => dataset.kind === "reference");

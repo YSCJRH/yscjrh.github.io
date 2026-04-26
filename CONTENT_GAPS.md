@@ -86,6 +86,7 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
   - optional owner-provided wording for beam stop / 光束终止器 so the public explanation is precise but still approachable
   - optional real fixed-wavelength kinetic examples if the page later moves beyond synthetic time traces
   - source-specific EEM caveats before any heatmap is used for comparison rather than display-only context
+  - optional owner-reviewed wording for the detector-arm teaching control, especially how to explain 90° collection without implying a calibrated geometry model
 - Good input format:
   - `Workflow step:`
   - `Why it matters:`

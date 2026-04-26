@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=instrument-3d-20260425">
+    <link rel="stylesheet" href="../styles.css?v=causal-readability-20260427">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -32,7 +32,7 @@
           return;
         }
 
-        import("./instrument.js?v=instrument-3d-20260425").catch((error) => {
+        import("./instrument.js?v=causal-readability-20260427").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -165,7 +165,7 @@
                   <div class="instrument-scene-host" data-scene-host></div>
                   <div class="instrument-scene-overlay" aria-hidden="true">
                     <p>Open optical bench / 3D teaching skeleton</p>
-                    <p>Source -> Ex mono -> sample; 90 deg Em arm -> detector.</p>
+                    <p>Blue Ex path terminates at the beam stop; cyan Em path turns 90 deg to the detector.</p>
                   </div>
                   <div class="instrument-view-toolbar" aria-label="3D view controls">
                     <button type="button" data-action="reset-view">Reset view</button>
@@ -406,7 +406,7 @@
                         <strong>Source, sample, detector</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
-                        Select the light source or sample cell in the 3D scene, then drag the blue Z-axis handle for a bounded teaching offset. These offsets change intensity and diagnostics, not selected wavelength.
+                        Select source or sample in the 3D scene, then drag the blue Z-axis handle for a bounded offset. Select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
                       </p>
 
                     <label class="instrument-control">
@@ -542,6 +542,8 @@
 
                 <div class="source-data-layout">
                   <div class="source-data-controls">
+                    <div class="source-dataset-cards" data-source-cards aria-label="Source-derived dataset shortcuts"></div>
+
                     <label class="instrument-control instrument-select-control">
                       <span>Dataset</span>
                       <select data-source-dataset>

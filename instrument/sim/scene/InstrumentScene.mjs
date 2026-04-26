@@ -7,6 +7,9 @@ const PART_ORDER = ["source", "excitation", "sample", "emission", "detector", "o
 const BENCH_Y = 0.64;
 const SOURCE_OFFSET_SCALE = 260;
 const SAMPLE_OFFSET_SCALE = 220;
+const DETECTOR_RADIUS = 3.58;
+const DETECTOR_MIN_ANGLE = 80;
+const DETECTOR_MAX_ANGLE = 100;
 const SOURCE_BASE_POSITION = new THREE.Vector3(-4.0, BENCH_Y, 0);
 const SAMPLE_BASE_POSITION = new THREE.Vector3(0, BENCH_Y + 0.12, 0);
 
@@ -272,6 +275,136 @@ function createBeam(color, radius, opacity) {
   return mesh;
 }
 
+function createSegmentedBeam(color, radius, opacity, count = 6) {
+  const group = new THREE.Group();
+  group.userData.segments = Array.from({ length: count }, () => createBeam(color, radius, opacity));
+  group.userData.segments.forEach((segment) => group.add(segment));
+  return group;
+}
+
+function setSegmentedBeam(group, start, end) {
+  const segments = group?.userData?.segments || [];
+  if (!segments.length) {
+    return;
+  }
+
+  const span = new THREE.Vector3().subVectors(end, start);
+  segments.forEach((segment, index) => {
+    const t0 = index / segments.length;
+    const t1 = Math.min(t0 + 0.55 / segments.length, 1);
+    const segmentStart = start.clone().add(span.clone().multiplyScalar(t0));
+    const segmentEnd = start.clone().add(span.clone().multiplyScalar(t1));
+    setCylinderBetween(segment, segmentStart, segmentEnd);
+  });
+}
+
+function setBeamOpacity(object, opacity) {
+  if (!object) {
+    return;
+  }
+
+  object.traverse((entry) => {
+    if (entry.material) {
+      entry.material.opacity = opacity;
+    }
+  });
+}
+
+function setBeamColor(object, color) {
+  if (!object) {
+    return;
+  }
+
+  object.traverse((entry) => {
+    if (entry.material?.color) {
+      entry.material.color.set(color);
+    }
+  });
+}
+
+function createLine(points, color, opacity = 0.5) {
+  return new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(points),
+    new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity,
+      depthWrite: false,
+    })
+  );
+}
+
+function createDetectorArmControl() {
+  const group = new THREE.Group();
+  const arc = createLine([], 0x7df5df, 0.36);
+  const reference = createLine([], 0x7283a4, 0.26);
+  const handle = new THREE.Mesh(
+    new THREE.SphereGeometry(0.105, 24, 24),
+    new THREE.MeshBasicMaterial({
+      color: 0xd8fff8,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    })
+  );
+  const angleLabel = createLabel("90 deg collection", { width: 1.55, fontSize: 32 });
+
+  handle.userData.part = "detector";
+  handle.userData.detectorHandle = true;
+  arc.renderOrder = 9;
+  reference.renderOrder = 8;
+  handle.renderOrder = 12;
+  angleLabel.position.set(0, 0.42, 1.95);
+
+  group.add(reference, arc, handle, angleLabel);
+  group.userData.arc = arc;
+  group.userData.reference = reference;
+  group.userData.handle = handle;
+  group.userData.angleLabel = angleLabel;
+  return group;
+}
+
+function updateDetectorArmControl(group, samplePosition, detectorPosition, angleDeg) {
+  const arc = group?.userData?.arc;
+  const reference = group?.userData?.reference;
+  const handle = group?.userData?.handle;
+  const angleLabel = group?.userData?.angleLabel;
+  if (!arc || !reference || !handle) {
+    return;
+  }
+
+  const arcPoints = [];
+  for (let angle = DETECTOR_MIN_ANGLE; angle <= DETECTOR_MAX_ANGLE; angle += 2) {
+    const theta = THREE.MathUtils.degToRad(angle);
+    arcPoints.push(
+      new THREE.Vector3(
+        samplePosition.x + DETECTOR_RADIUS * Math.cos(theta),
+        BENCH_Y + 0.12,
+        samplePosition.z + DETECTOR_RADIUS * Math.sin(theta)
+      )
+    );
+  }
+  arc.geometry.dispose();
+  arc.geometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+
+  reference.geometry.dispose();
+  reference.geometry = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(samplePosition.x, BENCH_Y + 0.08, samplePosition.z),
+    new THREE.Vector3(samplePosition.x, BENCH_Y + 0.08, samplePosition.z + DETECTOR_RADIUS),
+  ]);
+
+  handle.position.copy(detectorPosition).setY(BENCH_Y + 0.12);
+  const offCenter = Math.abs(angleDeg - 90);
+  handle.material.opacity = offCenter > 0.25 ? 1 : 0.82;
+  handle.scale.setScalar(1 + Math.min(offCenter / 14, 0.4));
+
+  if (angleLabel) {
+    angleLabel.position.set(samplePosition.x + 0.58, BENCH_Y + 0.34, samplePosition.z + 1.92);
+    angleLabel.material.opacity = offCenter > 0.25 ? 0.95 : 0.62;
+  }
+}
+
 function makeHotspot() {
   return new THREE.Mesh(
     new THREE.SphereGeometry(0.08, 20, 20),
@@ -303,7 +436,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 80);
-  camera.position.set(5.6, 4.1, 6.3);
+  camera.position.set(5.8, 4.35, 5.55);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = !reducedMotion;
@@ -311,7 +444,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   controls.minDistance = 4.2;
   controls.maxDistance = 10.5;
   controls.maxPolarAngle = Math.PI * 0.47;
-  controls.target.set(-0.5, 0.75, 1.0);
+  controls.target.set(-0.85, 0.72, 1.15);
 
   const transformControls = new TransformControls(camera, renderer.domElement);
   transformControls.setMode("translate");
@@ -326,6 +459,9 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   scene.add(transformHelper);
   let isTransformDragging = false;
   let activeTransformPart = null;
+  let detectorDragActive = false;
+  const detectorDragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -BENCH_Y);
+  const detectorDragPoint = new THREE.Vector3();
 
   const root = new THREE.Group();
   scene.add(root);
@@ -352,11 +488,11 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   root.add(bench);
 
   const components = {};
-  components.source = makeBoxComponent({ width: 1.0, height: 0.82, depth: 0.9, color: 0x282c4c, label: "Light source", part: "source" });
+  components.source = makeBoxComponent({ width: 1.0, height: 0.82, depth: 0.9, color: 0x282c4c, label: "Source", part: "source" });
   components.source.position.copy(SOURCE_BASE_POSITION);
   root.add(components.source);
 
-  components.excitation = createMonochromator("Excitation mono", "excitation");
+  components.excitation = createMonochromator("Ex mono", "excitation");
   components.excitation.position.set(-2.15, BENCH_Y, 0);
   root.add(components.excitation);
 
@@ -386,7 +522,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   );
   samplePlume.scale.set(0.85, 1.2, 0.85);
   samplePlume.position.set(0, 0.04, 0);
-  const sampleLabel = createLabel("Sample cell");
+  const sampleLabel = createLabel("Sample");
   sampleLabel.position.set(0, -0.9, 0);
   components.sample.add(samplePlume, sampleGlass, sampleEdges, sampleLabel);
   components.sample.position.copy(SAMPLE_BASE_POSITION);
@@ -399,7 +535,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   stopGroup.position.set(1.72, BENCH_Y + 0.04, 0);
   root.add(stopGroup);
 
-  components.emission = createMonochromator("Emission mono", "emission");
+  components.emission = createMonochromator("Em mono", "emission");
   components.emission.position.set(0, BENCH_Y, 2.05);
   components.emission.rotation.y = Math.PI / 2;
   root.add(components.emission);
@@ -425,9 +561,12 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   );
   components.output.add(screenTrace);
 
+  const detectorArmControl = createDetectorArmControl();
+  root.add(detectorArmControl);
+
   const beams = {
     excitation: createBeam(0x6f88ff, 0.035, 0.82),
-    residual: createBeam(0x70809a, 0.018, 0.22),
+    residual: createSegmentedBeam(0x70809a, 0.014, 0.22, 6),
     emission: createBeam(0x52f0d3, 0.035, 0.58),
     signal: createBeam(0x8490a8, 0.012, 0.28),
   };
@@ -449,10 +588,13 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     }
   });
 
-  function detectorPosition(angleDeg) {
-    const radius = 3.58;
+  function detectorPosition(angleDeg, samplePosition = SAMPLE_BASE_POSITION) {
     const theta = THREE.MathUtils.degToRad(angleDeg);
-    return new THREE.Vector3(radius * Math.cos(theta), BENCH_Y, radius * Math.sin(theta));
+    return new THREE.Vector3(
+      samplePosition.x + DETECTOR_RADIUS * Math.cos(theta),
+      BENCH_Y,
+      samplePosition.z + DETECTOR_RADIUS * Math.sin(theta)
+    );
   }
 
   function updateHotspots() {
@@ -504,6 +646,12 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
       transformControls.enabled = false;
     }
 
+    const showDetectorArm = part === "detector";
+    detectorArmControl.visible = showDetectorArm;
+    detectorArmControl.userData.arc.material.opacity = showDetectorArm ? 0.42 : 0;
+    detectorArmControl.userData.reference.material.opacity = showDetectorArm ? 0.28 : 0;
+    detectorArmControl.userData.handle.material.opacity = showDetectorArm ? detectorArmControl.userData.handle.material.opacity : 0;
+
     render();
   }
 
@@ -513,7 +661,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     components.source.position.copy(SOURCE_BASE_POSITION).add(new THREE.Vector3(0, 0, sourceOffset));
     components.sample.position.copy(SAMPLE_BASE_POSITION).add(new THREE.Vector3(sampleOffset * 0.18, 0, sampleOffset));
 
-    const detectorPos = detectorPosition(currentState.detector.angleDeg);
+    const detectorPos = detectorPosition(currentState.detector.angleDeg, components.sample.position);
     components.detector.position.copy(detectorPos);
     components.detector.lookAt(components.sample.position.x, BENCH_Y, components.sample.position.z);
 
@@ -535,16 +683,18 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
     beams.excitation.material.color.set(derived.beams.excitationColor);
     beams.excitation.material.opacity = derived.beams.excitationIntensity;
-    beams.residual.material.opacity = derived.beams.residualIntensity;
+    setBeamColor(beams.residual, 0x70809a);
+    setBeamOpacity(beams.residual, derived.beams.residualIntensity);
     beams.emission.material.color.set(derived.beams.emissionColor);
     beams.emission.material.opacity = derived.beams.emissionIntensity;
     beams.signal.material.opacity = derived.beams.signalIntensity;
 
     const samplePoint = components.sample.position.clone().setY(BENCH_Y + 0.1);
     setCylinderBetween(beams.excitation, new THREE.Vector3(-4, BENCH_Y + 0.1, sourceOffset), samplePoint);
-    setCylinderBetween(beams.residual, samplePoint, new THREE.Vector3(1.36, BENCH_Y + 0.1, 0));
+    setSegmentedBeam(beams.residual, samplePoint, new THREE.Vector3(1.36, BENCH_Y + 0.1, 0));
     setCylinderBetween(beams.emission, samplePoint, components.detector.position.clone().setY(BENCH_Y + 0.1));
     setCylinderBetween(beams.signal, components.detector.position.clone().setY(BENCH_Y + 0.16), components.output.position.clone().setY(BENCH_Y + 0.18));
+    updateDetectorArmControl(detectorArmControl, components.sample.position, components.detector.position, currentState.detector.angleDeg);
 
     if (components.sample.userData.plume) {
       const plumeScale = 0.78 + derived.beams.emissionIntensity * 0.62;
@@ -554,6 +704,34 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
     updateHotspots();
     selectPart(currentState.selectedPart);
+  }
+
+  function detectorAngleFromPointer(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+
+    if (!raycaster.ray.intersectPlane(detectorDragPlane, detectorDragPoint)) {
+      return null;
+    }
+
+    const sample = components.sample.position;
+    const angle = THREE.MathUtils.radToDeg(
+      Math.atan2(detectorDragPoint.z - sample.z, detectorDragPoint.x - sample.x)
+    );
+    return THREE.MathUtils.clamp(angle, DETECTOR_MIN_ANGLE, DETECTOR_MAX_ANGLE);
+  }
+
+  function updateDetectorAngleFromPointer(event) {
+    const angle = detectorAngleFromPointer(event);
+    if (!Number.isFinite(angle)) {
+      return;
+    }
+
+    onGeometryChange?.({
+      detectorAngleDeg: Math.round(angle * 10) / 10,
+    });
   }
 
   function constrainTransformedPart() {
@@ -591,11 +769,41 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     const hit = raycaster.intersectObjects(selectable, true).find((entry) => entry.object.userData.part);
 
     if (hit?.object?.userData?.part) {
+      if (hit.object.userData.detectorHandle) {
+        detectorDragActive = true;
+        controls.enabled = false;
+        activeTransformPart = null;
+        transformControls.detach();
+        transformHelper.visible = false;
+        onSelectPart?.("detector");
+        updateDetectorAngleFromPointer(event);
+        renderer.domElement.setPointerCapture?.(event.pointerId);
+        return;
+      }
+
       activeTransformPart = hit.object.userData.part === "source" || hit.object.userData.part === "sample"
         ? hit.object.userData.part
         : null;
       onSelectPart?.(hit.object.userData.part);
     }
+  });
+
+  renderer.domElement.addEventListener("pointermove", (event) => {
+    if (!detectorDragActive) {
+      return;
+    }
+
+    updateDetectorAngleFromPointer(event);
+  });
+
+  renderer.domElement.addEventListener("pointerup", (event) => {
+    if (!detectorDragActive) {
+      return;
+    }
+
+    detectorDragActive = false;
+    controls.enabled = true;
+    renderer.domElement.releasePointerCapture?.(event.pointerId);
   });
 
   transformControls.addEventListener("dragging-changed", (event) => {
@@ -613,8 +821,8 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   });
 
   function resetView() {
-    camera.position.set(5.6, 4.1, 6.3);
-    controls.target.set(-0.5, 0.75, 1.0);
+    camera.position.set(5.8, 4.35, 5.55);
+    controls.target.set(-0.85, 0.72, 1.15);
     controls.update();
     render();
   }

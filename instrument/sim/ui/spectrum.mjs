@@ -152,7 +152,10 @@ export function updateSpectrumChrome(root, elements, state, derived) {
     elements.trace.setAttribute("points", pointsToPolyline(derived.spectrum));
   }
 
-  setText(elements.intensityReadout, `Peak ${derived.spectrum.peak.toFixed(2)} a.u.`);
+  setText(
+    elements.intensityReadout,
+    `${state.mode === "single" ? "Point" : "Peak"} ${derived.spectrum.peak.toFixed(2)} a.u.`
+  );
   root.style.setProperty("--beam-intensity", String(derived.beams.excitationIntensity));
   root.style.setProperty("--emission-intensity", String(derived.beams.emissionIntensity));
   root.style.setProperty("--signal-intensity", String(derived.beams.signalIntensity));
