@@ -1,4 +1,35 @@
-# Current Phase: Instrument Lab Causal Readability And Detector/EEM Refinement
+# Current Phase: Instrument Lab Teaching Depth And Causal Hints
+
+## Goal
+- Move `/instrument/` from a feature-complete 3D teaching skeleton toward a more legible cause-and-effect teaching instrument.
+- Keep the static Three.js architecture and the educational boundary: no real instrument control, no calibrated measurement, no validated simulator claim, and no manufacturer UI.
+- Improve four visitor-facing weak points: operation discoverability, monochromator cause-and-effect, misalignment feedback, and source-derived EEM framing.
+
+## Implementation Notes
+1. Clarify current baseline and vendor notes:
+   - TransformControls is now an active bounded alignment dependency for `/instrument/`
+   - the page remains static and local to GitHub Pages
+2. Improve operation discovery:
+   - add a lightweight scene hint near the 3D panel
+   - add part-specific hints for source, sample, detector, monochromators, and output
+   - make the advanced geometry summary explicitly mention detector angle
+3. Deepen teaching visuals without adding claims:
+   - make the selected monochromator band and slit opening more visible
+   - make source/sample misalignment dim or disturb the optical feedback more clearly
+   - make detector-angle deviation visibly connect to collection/background diagnostics
+4. Keep source-derived examples secondary:
+   - keep the Fe(II)-DOM EEM as a processed educational display
+   - do not add an `eemPreview` main simulator mode until state, axes, caveats, and tests are specified
+
+## Validation
+1. Run syntax checks and unit tests for grating, slit, alignment, detector angle, scan modes, blank/background, and single-point behavior.
+2. Preview `/instrument/` in desktop and narrow layouts with Browser Use.
+3. Confirm selected-part hints, detector handle, misalignment feedback, and EEM wording are visible and not overstated.
+4. Confirm no CDN runtime dependency, analytics, form, secret, personal data, or new public scientific claim was introduced.
+
+---
+
+# Previous Phase: Instrument Lab Causal Readability And Detector/EEM Refinement
 
 ## Goal
 - Move `/instrument/` from a feature-complete 3D teaching skeleton toward a clearer optical-causal explainer.

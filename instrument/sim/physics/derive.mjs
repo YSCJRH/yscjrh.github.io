@@ -1,9 +1,9 @@
-import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs";
-import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs";
-import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs";
-import { generateDiagnostics } from "./diagnostics.mjs";
-import { clamp } from "../state.mjs";
+import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=teaching-depth-20260427b";
+import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=teaching-depth-20260427b";
+import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=teaching-depth-20260427b";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=teaching-depth-20260427b";
+import { generateDiagnostics } from "./diagnostics.mjs?v=teaching-depth-20260427b";
+import { clamp } from "../state.mjs?v=teaching-depth-20260427b";
 
 export function deriveInstrument(state) {
   const excitationNm = wavelengthFromGratingAngle(state.exMono.gratingAngleDeg);
@@ -32,8 +32,8 @@ export function deriveInstrument(state) {
     beams: {
       excitationColor: wavelengthToColor(excitationNm),
       emissionColor: wavelengthToColor(emissionNm),
-      excitationIntensity: 0.86,
-      residualIntensity: 0.18,
+      excitationIntensity: clamp(0.48 + alignment.sourceFactor * 0.38, 0.42, 0.86),
+      residualIntensity: clamp(0.08 + alignment.overlapFactor * 0.12, 0.08, 0.2),
       emissionIntensity: clamp(0.2 + spectrum.peak * 0.54, 0.18, 0.88),
       signalIntensity: clamp(0.22 + spectrum.peak * 0.46, 0.2, 0.74),
     },

@@ -187,6 +187,7 @@ function createMonochromator(label, part) {
   const collimatingMirror = createMirrorPlate();
   const focusingMirror = createMirrorPlate();
   const selectedBand = createBeam(0x52f0d3, 0.015, 0.46);
+  const selectedBandGlow = createBeam(0x52f0d3, 0.032, 0.14);
   const fan = new THREE.Group();
 
   entrySlit.position.set(-0.46, 0.03, 0.46);
@@ -200,13 +201,15 @@ function createMonochromator(label, part) {
   fan.add(createDispersionFan(0x6f88ff, -0.12), createDispersionFan(0x52f0d3, 0), createDispersionFan(0xffd166, 0.12));
 
   setCylinderBetween(selectedBand, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
-  group.add(entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBand);
+  setCylinderBetween(selectedBandGlow, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
+  group.add(entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand);
   group.userData.grating = grating;
   group.userData.entrySlit = entrySlit;
   group.userData.exitSlit = exitSlit;
   group.userData.selectedBand = selectedBand;
+  group.userData.selectedBandGlow = selectedBandGlow;
   group.userData.fan = fan;
-  group.userData.cutaway = [entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBand];
+  group.userData.cutaway = [entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand];
   return group;
 }
 
@@ -218,11 +221,42 @@ function updateMonochromatorCutaway(monochromator, angleDeg, selectedColor, slit
   monochromator.userData.grating.rotation.y = THREE.MathUtils.degToRad(angleDeg);
   setSlitGap(monochromator.userData.entrySlit, slitWidthUm);
   setSlitGap(monochromator.userData.exitSlit, slitWidthUm);
+  const slitProgress = THREE.MathUtils.clamp((slitWidthUm - 100) / 900, 0, 1);
+  const bandShift = THREE.MathUtils.clamp((angleDeg - 18) * 0.012, -0.13, 0.13);
+  const selectedStart = new THREE.Vector3(-0.02, 0.16, bandShift * 0.35);
+  const selectedEnd = new THREE.Vector3(0.46, 0.16, -0.46 + bandShift);
+
+  setCylinderBetween(monochromator.userData.selectedBand, selectedStart, selectedEnd);
+  setCylinderBetween(monochromator.userData.selectedBandGlow, selectedStart, selectedEnd);
 
   if (monochromator.userData.selectedBand?.material) {
     monochromator.userData.selectedBand.material.color.set(selectedColor);
-    monochromator.userData.selectedBand.material.opacity = 0.28 + THREE.MathUtils.clamp((slitWidthUm - 100) / 900, 0, 1) * 0.28;
+    monochromator.userData.selectedBand.material.opacity = 0.36 + slitProgress * 0.28;
   }
+
+  if (monochromator.userData.selectedBandGlow?.material) {
+    monochromator.userData.selectedBandGlow.material.color.set(selectedColor);
+    monochromator.userData.selectedBandGlow.material.opacity = 0.12 + slitProgress * 0.16;
+  }
+
+  monochromator.userData.fan?.traverse((object) => {
+    if (object.material) {
+      object.material.opacity = 0.08 + slitProgress * 0.08;
+    }
+  });
+}
+
+function updateSampleAlignmentIndicator(component, derived) {
+  const ring = component?.userData?.alignmentRing;
+  if (!ring) {
+    return;
+  }
+
+  const overlap = derived.alignment.overlapFactor;
+  const sampleOffset = Math.abs(derived.alignment.sampleFactor - 1);
+  ring.material.color.set(overlap < 0.72 ? 0xffd166 : 0x7df5df);
+  ring.material.opacity = 0.16 + overlap * 0.36;
+  ring.scale.setScalar(1 + sampleOffset * 0.45);
 }
 
 function createBeamStop() {
@@ -396,8 +430,11 @@ function updateDetectorArmControl(group, samplePosition, detectorPosition, angle
 
   handle.position.copy(detectorPosition).setY(BENCH_Y + 0.12);
   const offCenter = Math.abs(angleDeg - 90);
+  handle.material.color.set(offCenter >= 3 ? 0xffd166 : 0xd8fff8);
   handle.material.opacity = offCenter > 0.25 ? 1 : 0.82;
   handle.scale.setScalar(1 + Math.min(offCenter / 14, 0.4));
+  arc.material.color.set(offCenter >= 3 ? 0xffd166 : 0x7df5df);
+  arc.material.opacity = offCenter >= 3 ? 0.5 : 0.36;
 
   if (angleLabel) {
     angleLabel.position.set(samplePosition.x + 0.58, BENCH_Y + 0.34, samplePosition.z + 1.92);
@@ -522,12 +559,25 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   );
   samplePlume.scale.set(0.85, 1.2, 0.85);
   samplePlume.position.set(0, 0.04, 0);
+  const alignmentRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.48, 0.014, 12, 52),
+    new THREE.MeshBasicMaterial({
+      color: 0x7df5df,
+      transparent: true,
+      opacity: 0.42,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    })
+  );
+  alignmentRing.rotation.x = Math.PI / 2;
+  alignmentRing.position.set(0, 0.02, 0);
   const sampleLabel = createLabel("Sample");
   sampleLabel.position.set(0, -0.9, 0);
-  components.sample.add(samplePlume, sampleGlass, sampleEdges, sampleLabel);
+  components.sample.add(samplePlume, alignmentRing, sampleGlass, sampleEdges, sampleLabel);
   components.sample.position.copy(SAMPLE_BASE_POSITION);
   components.sample.userData.mainMesh = sampleGlass;
   components.sample.userData.plume = samplePlume;
+  components.sample.userData.alignmentRing = alignmentRing;
   markSelectable(components.sample, "sample");
   root.add(components.sample);
 
@@ -701,6 +751,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
       components.sample.userData.plume.material.opacity = 0.08 + derived.beams.emissionIntensity * 0.18;
       components.sample.userData.plume.scale.set(0.82 * plumeScale, 1.08 * plumeScale, 0.82 * plumeScale);
     }
+    updateSampleAlignmentIndicator(components.sample, derived);
 
     updateHotspots();
     selectPart(currentState.selectedPart);

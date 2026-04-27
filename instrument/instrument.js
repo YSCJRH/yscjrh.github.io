@@ -5,16 +5,16 @@ import {
   setGeometryOffsets,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs";
-import { deriveInstrument } from "./sim/physics/derive.mjs";
-import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs";
+} from "./sim/state.mjs?v=teaching-depth-20260427b";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=teaching-depth-20260427b";
+import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=teaching-depth-20260427b";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs";
-import { initializeSourceData } from "./sim/ui/source-data.mjs";
+} from "./sim/ui/spectrum.mjs?v=teaching-depth-20260427b";
+import { initializeSourceData } from "./sim/ui/source-data.mjs?v=teaching-depth-20260427b";
 
 const root = document.querySelector("[data-instrument-lab]");
 

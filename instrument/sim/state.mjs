@@ -24,31 +24,43 @@ export const PARTS = Object.freeze({
     title: "Light source",
     copy:
       "Provides excitation energy for the model. A broadband source is narrowed by excitation-side optics before the sample.",
+    hint:
+      "Select source in the 3D view, then drag the blue Z-axis handle or use Source offset. Alignment changes intensity, not wavelength.",
   },
   excitation: {
     title: "Excitation monochromator",
     copy:
       "Uses slits, mirrors, and a teaching grating angle to choose a conceptual excitation band. Rotating the grating changes the selected wavelength.",
+    hint:
+      "Move the excitation grating control to watch the selected band and excitation color change. Slit width changes bandpass and throughput.",
   },
   sample: {
     title: "Sample cell",
     copy:
       "The excitation beam enters on the incident axis. Fluorescence is collected from the side arm at roughly 90 degrees, while remaining transmitted excitation is absorbed by the beam stop.",
+    hint:
+      "Select sample in the 3D view, then drag the blue Z-axis handle or use Sample offset. The overlap indicator weakens when the cell is off the focus path.",
   },
   emission: {
     title: "Emission monochromator",
     copy:
       "Sits on the 90-degree collection arm and selects the emission-side wavelength band before detection.",
+    hint:
+      "Move the emission grating control to change the selected emission-side band. This is still a teaching model, not a calibrated selector.",
   },
   detector: {
     title: "Detector",
     copy:
       "Receives selected emission-side light. Geometry and emission-side optics reduce direct excitation light before the detector.",
+    hint:
+      "Select detector to reveal the cyan arm handle. Drag within the 80-100 degree teaching range; signal collection is best near 90 degrees.",
   },
   output: {
     title: "Spectrum display",
     copy:
       "Shows a generated trace for the selected conceptual mode. The detector-to-display connection is an electronic signal path, not another light beam.",
+    hint:
+      "The trace is derived from the current model state. Source-derived examples below stay separate from these synthetic controls.",
   },
 });
 

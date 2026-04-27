@@ -36,6 +36,8 @@ test("alignment offset lowers intensity without changing selected wavelength", (
   assert.equal(Math.round(base.excitationNm), Math.round(shifted.excitationNm));
   assert.equal(Math.round(base.emissionNm), Math.round(shifted.emissionNm));
   assert.ok(shifted.alignment.overlapFactor < base.alignment.overlapFactor);
+  assert.ok(shifted.beams.excitationIntensity < base.beams.excitationIntensity);
+  assert.ok(shifted.beams.residualIntensity < base.beams.residualIntensity);
 });
 
 test("detector arm is best near 90 degrees", () => {

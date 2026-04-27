@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs";
+import { MODES, PARTS } from "../state.mjs?v=teaching-depth-20260427b";
 
 const chart = {
   left: 54,
@@ -75,6 +75,8 @@ export function collectInstrumentElements(root) {
     modeSummary: root.querySelector("[data-mode-summary]"),
     partTitle: root.querySelector("[data-part-title]"),
     partCopy: root.querySelector("[data-part-copy]"),
+    partHint: root.querySelector("[data-part-hint]"),
+    sceneHint: root.querySelector("[data-scene-hint]"),
     trace: root.querySelector("[data-spectrum-trace]"),
     xAxisStart: root.querySelector("[data-x-axis-start]"),
     xAxisEnd: root.querySelector("[data-x-axis-end]"),
@@ -145,6 +147,8 @@ export function updatePartChrome(elements, state) {
 
   setText(elements.partTitle, PARTS[part].title);
   setText(elements.partCopy, PARTS[part].copy);
+  setText(elements.partHint, PARTS[part].hint);
+  setText(elements.sceneHint, PARTS[part].hint);
 }
 
 export function updateSpectrumChrome(root, elements, state, derived) {

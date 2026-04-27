@@ -1,4 +1,4 @@
-import { SAMPLE_PROFILES, clamp } from "../state.mjs";
+import { SAMPLE_PROFILES, clamp } from "../state.mjs?v=teaching-depth-20260427b";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 

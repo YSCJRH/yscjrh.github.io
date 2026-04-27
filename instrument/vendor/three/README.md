@@ -13,7 +13,7 @@ Local patch:
 - Control add-ons import `../../three.module.js` instead of the bare `three` specifier so the static page does not depend on an import map.
 
 Runtime note:
-- The current MVP imports `three.module.js`, `three.core.js`, `OrbitControls.js`, and `WebGL.js`.
-- `TransformControls.js` is vendored for the planned restricted-manipulation phase, but is not imported by the current page and does not add runtime transfer unless a later phase loads it.
+- The current `/instrument/` page imports `three.module.js`, `OrbitControls.js`, `TransformControls.js`, and `WebGL.js`.
+- `TransformControls.js` is used only for bounded source/sample alignment handles on the local static Instrument Lab page. It is not a site-wide dependency and is not loaded by the rest of the personal website.
 
 License: MIT; see LICENSE.

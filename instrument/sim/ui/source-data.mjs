@@ -64,7 +64,7 @@ function setSourceLink(elements, dataset) {
 
 function datasetKindLabel(dataset) {
   if (dataset.kind === "eem") {
-    return "EEM heatmap";
+    return "Processed EEM display";
   }
 
   if (String(dataset.role || "").includes("protein")) {
@@ -92,6 +92,7 @@ function createDatasetCard(dataset, onSelect) {
   button.type = "button";
   button.className = "source-dataset-card";
   button.dataset.sourceCard = dataset.id;
+  button.dataset.sourceKind = dataset.kind;
   button.setAttribute("aria-pressed", "false");
 
   const tag = document.createElement("span");
@@ -104,7 +105,7 @@ function createDatasetCard(dataset, onSelect) {
   const note = document.createElement("span");
   note.className = "source-dataset-card__note";
   note.textContent = dataset.kind === "eem"
-    ? "Processed display heatmap; separate from simulator sliders."
+    ? "Processed educational EEM heatmap; axes and caveats shown below. Separate from simulator sliders."
     : "Normalized 1D example; display only.";
 
   button.append(tag, label, note);

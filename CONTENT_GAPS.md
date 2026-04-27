@@ -92,6 +92,20 @@ The `/instrument/` page is a conceptual visualization only. Future improvements 
   - `Why it matters:`
   - `Public caveat:`
 
+### Possible Synthetic EEM Preview
+- Needed before adding an `EEM preview` mode to the simulator:
+  - state definition for excitation axis, emission axis, and display resolution
+  - wording that distinguishes synthetic educational EEM from source-derived public EEM examples
+  - tests confirming synthetic EEM controls do not modify real source-derived datasets
+  - browser QA for mobile heatmap readability and axis labels
+- Boundary:
+  - do not promote the current Fe(II)-DOM heatmap into an interactive simulator mode
+  - do not imply calibrated EEM correction, quantitative comparison, or material optimization
+- Good input format:
+  - `Preview purpose:`
+  - `Synthetic variables:`
+  - `Public caveat:`
+
 ### Possible Open-source Extraction
 - Needed:
   - decision on whether the Instrument Lab should remain a website page or become a separate public repository later

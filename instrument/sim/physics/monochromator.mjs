@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs";
+import { clamp } from "../state.mjs?v=teaching-depth-20260427b";
 
 export function bandpassFromSlit(widthUm) {
   return clamp(0.7 + widthUm * 0.0077, 1.2, 8.6);

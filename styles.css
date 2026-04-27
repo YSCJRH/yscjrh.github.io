@@ -3775,6 +3775,20 @@ section[id] {
   pointer-events: none;
 }
 
+.instrument-operability-note {
+  margin: 0.72rem 0 0;
+  border: 1px solid rgba(77, 237, 207, 0.14);
+  border-radius: 0.84rem;
+  padding: 0.64rem 0.74rem;
+  color: rgba(216, 255, 248, 0.84);
+  background:
+    radial-gradient(circle at 8% 20%, rgba(77, 237, 207, 0.1), transparent 8rem),
+    rgba(255, 255, 255, 0.022);
+  font-size: 0.77rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .instrument-diagram {
   position: absolute;
   inset: 0;
@@ -4268,6 +4282,10 @@ section[id] {
     rgba(255, 255, 255, 0.04);
 }
 
+.source-dataset-card[data-source-kind="eem"] {
+  border-color: rgba(77, 237, 207, 0.16);
+}
+
 .source-dataset-card__tag {
   color: rgba(216, 255, 248, 0.74);
   font-size: 0.62rem;
@@ -4624,6 +4642,17 @@ section[id] {
   color: var(--color-text-muted);
   font-size: 0.88rem;
   line-height: 1.6;
+}
+
+.part-panel .part-hint {
+  border: 1px solid rgba(77, 237, 207, 0.12);
+  border-radius: 0.78rem;
+  padding: 0.58rem 0.64rem;
+  color: rgba(216, 255, 248, 0.82);
+  background: rgba(77, 237, 207, 0.04);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.48;
 }
 
 .scan-state-grid {

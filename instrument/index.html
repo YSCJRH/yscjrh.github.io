@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=causal-readability-20260427">
+    <link rel="stylesheet" href="../styles.css?v=teaching-depth-20260427b">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -32,7 +32,7 @@
           return;
         }
 
-        import("./instrument.js?v=causal-readability-20260427").catch((error) => {
+        import("./instrument.js?v=teaching-depth-20260427b").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -318,6 +318,10 @@
 
                 </div>
 
+                <p class="instrument-operability-note" data-scene-hint>
+                  Select source, sample, or detector to reveal bounded geometry controls. These teaching controls change intensity and diagnostics, not selected wavelength.
+                </p>
+
                 <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes">
                   <p>
                     <span class="path-key path-key-excitation" aria-hidden="true"></span>
@@ -402,8 +406,8 @@
 
                     <details class="advanced-geometry">
                       <summary>
-                        <span>Advanced geometry / 光路对准</span>
-                        <strong>Source, sample, detector</strong>
+                        <span>Advanced geometry: detector angle / 高级光路：检测角</span>
+                        <strong>Source/sample offset + 80-100 deg detector arm</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
                         Select source or sample in the 3D scene, then drag the blue Z-axis handle for a bounded offset. Select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
@@ -458,6 +462,9 @@
                   <h2 class="article-subtitle" data-part-title>Light source</h2>
                   <p data-part-copy>
                     Provides broadband or selected excitation energy before the path is shaped by the excitation monochromator.
+                  </p>
+                  <p class="part-hint" data-part-hint>
+                    Select source in the 3D view, then drag the blue Z-axis handle or use Source offset. Alignment changes intensity, not wavelength.
                   </p>
                 </section>
 
