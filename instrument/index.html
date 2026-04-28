@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=material-teaching-20260428">
+    <link rel="stylesheet" href="../styles.css?v=sample-fixed-20260428">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -32,7 +32,7 @@
           return;
         }
 
-        import("./instrument.js?v=material-teaching-20260428").catch((error) => {
+        import("./instrument.js?v=sample-fixed-20260428").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -419,12 +419,12 @@
                     <details class="advanced-geometry">
                       <summary>
                         <span>Advanced geometry: detector angle / 高级光路：检测角</span>
-                        <strong>Source/sample offset + 80-100 deg detector arm / 光源和样品偏移 + 80-100° 检测臂</strong>
+                        <strong>Source offset + 80-100 deg detector arm / 光源偏移 + 80-100° 检测臂</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
-                        Select source or sample in the 3D scene, then drag the blue Z-axis handle for a bounded offset. Select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
+                        Select source in the 3D scene, then drag the blue Z-axis handle for a bounded entrance offset. The sample cell stays fixed in the holder; select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
                         <br>
-                        在 3D 场景中选择光源或样品池，可拖动蓝色 Z 轴手柄做受限偏移；选择检测器可显示青色检测臂手柄。这些几何变化只影响强度和诊断，不改变选通波长。
+                        在 3D 场景中选择光源，可拖动蓝色 Z 轴手柄做受限入口偏移；样品池固定在样品架中。选择检测器可显示青色检测臂手柄。这些几何变化只影响强度和诊断，不改变选通波长。
                       </p>
 
                     <label class="instrument-control">
@@ -433,11 +433,9 @@
                       <small class="control-help">Conceptual entrance alignment; it changes intensity, not wavelength. 概念入口对准，只改变强度，不改变波长。</small>
                     </label>
 
-                    <label class="instrument-control">
-                      <span>Sample offset / 样品偏移 <strong data-readout="sample-offset">0 um</strong></span>
-                      <input data-control="sample-offset" type="range" min="-120" max="120" step="5" value="0">
-                      <small class="control-help">Moves overlap at the cell; peak positions stay tied to the sample preset. 改变样品池处的重叠程度，峰位仍由样品预设决定。</small>
-                    </label>
+                    <p class="control-help">
+                      Sample cell is fixed in this model, matching the usual cuvette-holder workflow. 样品池在此模型中固定，贴近常见比色皿架的使用方式。
+                    </p>
 
                     <label class="instrument-control">
                       <span>Detector arm angle / 检测臂角度 <strong data-readout="detector-angle">90.0 deg</strong></span>

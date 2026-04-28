@@ -1,13 +1,13 @@
-import { clamp } from "../state.mjs?v=material-teaching-20260428";
+import { clamp } from "../state.mjs?v=sample-fixed-20260428";
 
 function gaussianOffset(offsetUm, toleranceUm) {
   const normalized = offsetUm / Math.max(toleranceUm, 1);
   return Math.exp(-0.5 * normalized * normalized);
 }
 
-export function deriveAlignment(sourceOffsetUm, sampleOffsetUm) {
+export function deriveAlignment(sourceOffsetUm) {
   const sourceFactor = gaussianOffset(sourceOffsetUm, 92);
-  const sampleFactor = gaussianOffset(sampleOffsetUm, 116);
+  const sampleFactor = 1;
 
   return {
     sourceFactor,

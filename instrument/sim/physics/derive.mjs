@@ -1,16 +1,16 @@
-import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=material-teaching-20260428";
-import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=material-teaching-20260428";
-import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=material-teaching-20260428";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=material-teaching-20260428";
-import { generateDiagnostics } from "./diagnostics.mjs?v=material-teaching-20260428";
-import { clamp } from "../state.mjs?v=material-teaching-20260428";
+import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=sample-fixed-20260428";
+import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=sample-fixed-20260428";
+import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=sample-fixed-20260428";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=sample-fixed-20260428";
+import { generateDiagnostics } from "./diagnostics.mjs?v=sample-fixed-20260428";
+import { clamp } from "../state.mjs?v=sample-fixed-20260428";
 
 export function deriveInstrument(state) {
   const excitationNm = wavelengthFromGratingAngle(state.exMono.gratingAngleDeg);
   const emissionNm = wavelengthFromGratingAngle(state.emMono.gratingAngleDeg);
   const bandpassNm = bandpassFromSlit(state.slit.widthUm);
   const throughput = throughputFromSlit(state.slit.widthUm);
-  const alignment = deriveAlignment(state.source.offsetUm, state.sample.offsetUm);
+  const alignment = deriveAlignment(state.source.offsetUm);
   const collection = collectionFromDetectorAngle(state.detector.angleDeg);
 
   const physics = {

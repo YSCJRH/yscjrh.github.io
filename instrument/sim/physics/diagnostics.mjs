@@ -45,7 +45,7 @@ export function generateDiagnostics(state, derived) {
     diagnostics.push({
       tone: "warn",
       label: "Alignment / 对准",
-      text: "Source or sample offset lowers overlap and intensity; it does not move the selected wavelength. / 光源或样品偏移会降低重叠和强度，但不会移动选通波长。",
+      text: "Source entrance offset lowers overlap and intensity; the fixed sample cell stays in the measurement holder and selected wavelength does not move. / 光源入口偏移会降低重叠和强度；固定样品池仍在测量架中，选通波长不会移动。",
     });
   }
 

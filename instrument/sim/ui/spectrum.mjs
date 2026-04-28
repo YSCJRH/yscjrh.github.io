@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=material-teaching-20260428";
+import { MODES, PARTS } from "../state.mjs?v=sample-fixed-20260428";
 
 const chart = {
   left: 54,
@@ -43,7 +43,6 @@ export function collectInstrumentElements(root) {
     integration: root.querySelector('[data-control="integration"]'),
     sample: root.querySelector('[data-control="sample"]'),
     sourceOffset: root.querySelector('[data-control="source-offset"]'),
-    sampleOffset: root.querySelector('[data-control="sample-offset"]'),
     detectorAngle: root.querySelector('[data-control="detector-angle"]'),
   };
 
@@ -65,7 +64,6 @@ export function collectInstrumentElements(root) {
       bandpass: root.querySelector('[data-readout="bandpass"]'),
       integration: root.querySelector('[data-readout="integration"]'),
       sourceOffset: root.querySelector('[data-readout="source-offset"]'),
-      sampleOffset: root.querySelector('[data-readout="sample-offset"]'),
       detectorAngle: root.querySelector('[data-readout="detector-angle"]'),
       throughput: root.querySelector('[data-readout="throughput"]'),
       overlap: root.querySelector('[data-readout="overlap"]'),
@@ -105,7 +103,6 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.bandpass, `${derived.bandpassNm.toFixed(1)} nm bandpass / 带宽`);
   setText(readouts.integration, `${state.integrationTimeMs} ms`);
   setText(readouts.sourceOffset, `${state.source.offsetUm} um`);
-  setText(readouts.sampleOffset, `${state.sample.offsetUm} um`);
   setText(readouts.detectorAngle, `${state.detector.angleDeg.toFixed(1)} deg`);
   setText(readouts.throughput, `${Math.round(derived.throughput * 100)}%`);
   setText(readouts.overlap, `${Math.round(derived.alignment.overlapFactor * 100)}%`);

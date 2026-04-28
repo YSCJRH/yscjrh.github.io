@@ -34,21 +34,21 @@ export const PARTS = Object.freeze({
     copy:
       "Uses slits, mirrors, and a teaching grating angle to choose a conceptual excitation band. Rotating the grating changes the selected wavelength. / 通过狭缝、反射镜和教学化的光栅角选择概念激发带；旋转光栅会改变选通波长。",
     hint:
-      "Move the excitation grating control to watch the selected band and excitation color change. Slit width changes bandpass and throughput. / 移动激发光栅控制项，可观察选中谱带和激发光颜色变化；狭缝宽度会改变带宽和通光量。",
+      "Select the excitation monochromator, then drag the internal grating handle or use arrow keys to watch the selected band and excitation color change. / 选择激发单色器后，可拖动内部光栅手柄或使用方向键，观察选中谱带和激发光颜色变化。",
   },
   sample: {
     title: "Sample cell / 样品池",
     copy:
       "The excitation beam enters on the incident axis. Fluorescence is collected from the side arm at roughly 90 degrees, while remaining transmitted excitation is absorbed by the beam stop. / 激发光沿入射轴进入样品；荧光从约 90° 的侧向臂收集，剩余透射激发光由光束终止器吸收。",
     hint:
-      "Select sample in the 3D view, then drag the blue Z-axis handle or use Sample offset. The overlap indicator weakens when the cell is off the focus path. / 在 3D 视图中选择样品池后，可拖动蓝色 Z 轴手柄或使用 Sample offset；样品偏离焦点路径时，重叠指示会变弱。",
+      "The sample cell is fixed in the holder. Select it to inspect the light path and 90-degree collection geometry; use sample preset to change illustrative sample behavior. / 样品池固定在样品架中；选择它用于查看光路和 90° 收集几何，使用样品预设改变示意样品行为。",
   },
   emission: {
     title: "Emission monochromator / 发射单色器",
     copy:
       "Sits on the 90-degree collection arm and selects the emission-side wavelength band before detection. / 位于 90° 收集臂上，在检测前选择发射侧波长带。",
     hint:
-      "Move the emission grating control to change the selected emission-side band. This is still a teaching model, not a calibrated selector. / 移动发射光栅控制项可改变发射侧选中谱带；这仍是教学模型，不是校准选择器。",
+      "Select the emission monochromator, then drag the internal grating handle or use arrow keys to change the emission-side selected band. / 选择发射单色器后，可拖动内部光栅手柄或使用方向键，改变发射侧选中谱带。",
   },
   detector: {
     title: "Detector / 检测器",
@@ -172,9 +172,6 @@ export function applyControlValue(state, controlName, rawValue) {
     case "source-offset":
       state.source.offsetUm = clamp(numeric, -120, 120);
       break;
-    case "sample-offset":
-      state.sample.offsetUm = clamp(numeric, -120, 120);
-      break;
     case "detector-angle":
       state.detector.angleDeg = clamp(numeric, 80, 100);
       break;
@@ -206,11 +203,15 @@ export function setGeometryOffsets(state, changes = {}) {
     state.source.offsetUm = clamp(Math.round(changes.sourceOffsetUm), -120, 120);
   }
 
-  if (Number.isFinite(changes.sampleOffsetUm)) {
-    state.sample.offsetUm = clamp(Math.round(changes.sampleOffsetUm), -120, 120);
-  }
-
   if (Number.isFinite(changes.detectorAngleDeg)) {
     state.detector.angleDeg = clamp(Number(changes.detectorAngleDeg), 80, 100);
+  }
+
+  if (Number.isFinite(changes.excitationAngleDeg)) {
+    state.exMono.gratingAngleDeg = clamp(Number(changes.excitationAngleDeg), 9.5, 21.5);
+  }
+
+  if (Number.isFinite(changes.emissionAngleDeg)) {
+    state.emMono.gratingAngleDeg = clamp(Number(changes.emissionAngleDeg), 14, 27);
   }
 }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createInstrumentState } from "../state.mjs";
+import { createInstrumentState, setGeometryOffsets } from "../state.mjs";
 import { deriveInstrument } from "../physics/derive.mjs";
 import { wavelengthFromGratingAngle } from "../physics/grating.mjs";
 import { bandpassFromSlit, throughputFromSlit } from "../physics/monochromator.mjs";
@@ -30,7 +30,6 @@ test("alignment offset lowers intensity without changing selected wavelength", (
   const base = deriveInstrument(state);
 
   state.source.offsetUm = 100;
-  state.sample.offsetUm = 80;
   const shifted = deriveInstrument(state);
 
   assert.equal(Math.round(base.excitationNm), Math.round(shifted.excitationNm));
@@ -90,7 +89,6 @@ test("single-point monitor responds to geometry without moving wavelengths", () 
   const baseValues = base.spectrum.points.map((point) => point.rawY);
 
   state.source.offsetUm = 110;
-  state.sample.offsetUm = 100;
   const offset = deriveInstrument(state);
 
   assert.equal(Math.round(base.excitationNm), Math.round(offset.excitationNm));
@@ -106,4 +104,34 @@ test("blank/background preset stays weak on fixed y scale", () => {
   const derived = deriveInstrument(state);
   assert.ok(derived.spectrum.peak < 0.2);
   assert.equal(derived.spectrum.yScaleMax, 1.35);
+});
+
+test("3D grating angle updates clamp wavelengths without moving geometry", () => {
+  const state = createInstrumentState();
+  const base = deriveInstrument(state);
+
+  setGeometryOffsets(state, {
+    excitationAngleDeg: 99,
+    emissionAngleDeg: -4,
+  });
+  const changed = deriveInstrument(state);
+
+  assert.equal(state.exMono.gratingAngleDeg, 21.5);
+  assert.equal(state.emMono.gratingAngleDeg, 14);
+  assert.notEqual(Math.round(base.excitationNm), Math.round(changed.excitationNm));
+  assert.notEqual(Math.round(base.emissionNm), Math.round(changed.emissionNm));
+  assert.equal(state.source.offsetUm, 0);
+  assert.equal(state.sample.offsetUm, 0);
+  assert.equal(state.detector.angleDeg, 90);
+});
+
+test("sample cell remains fixed when geometry offsets are applied", () => {
+  const state = createInstrumentState();
+  setGeometryOffsets(state, {
+    sampleOffsetUm: 120,
+    sourceOffsetUm: 80,
+  });
+
+  assert.equal(state.sample.offsetUm, 0);
+  assert.equal(state.source.offsetUm, 80);
 });

@@ -6,12 +6,15 @@ import WebGL from "../../vendor/three/addons/capabilities/WebGL.js";
 const PART_ORDER = ["source", "excitation", "sample", "emission", "detector", "output"];
 const BENCH_Y = 0.64;
 const SOURCE_OFFSET_SCALE = 260;
-const SAMPLE_OFFSET_SCALE = 220;
 const DETECTOR_RADIUS = 3.58;
 const DETECTOR_MIN_ANGLE = 80;
 const DETECTOR_MAX_ANGLE = 100;
 const SOURCE_BASE_POSITION = new THREE.Vector3(-4.0, BENCH_Y, 0);
 const SAMPLE_BASE_POSITION = new THREE.Vector3(0, BENCH_Y + 0.12, 0);
+const GRATING_RANGES = Object.freeze({
+  excitation: { min: 9.5, max: 21.5 },
+  emission: { min: 14, max: 27 },
+});
 
 function makeMaterial(color, options = {}) {
   return new THREE.MeshStandardMaterial({
@@ -30,16 +33,46 @@ function createLabel(text, options = {}) {
   canvas.width = 512;
   canvas.height = 128;
   const context = canvas.getContext("2d");
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  let fontSize = options.fontSize || 42;
-  do {
-    context.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, sans-serif`;
-    fontSize -= 2;
-  } while (context.measureText(text).width > canvas.width - 34 && fontSize > 22);
-  context.fillStyle = "rgba(237, 237, 239, 0.92)";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+  function drawLabel(nextText) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    const showPanel = options.panel !== false;
+    if (showPanel) {
+      const x = 18;
+      const y = 24;
+      const width = canvas.width - 36;
+      const height = canvas.height - 48;
+      const radius = 18;
+      context.beginPath();
+      context.moveTo(x + radius, y);
+      context.lineTo(x + width - radius, y);
+      context.quadraticCurveTo(x + width, y, x + width, y + radius);
+      context.lineTo(x + width, y + height - radius);
+      context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      context.lineTo(x + radius, y + height);
+      context.quadraticCurveTo(x, y + height, x, y + height - radius);
+      context.lineTo(x, y + radius);
+      context.quadraticCurveTo(x, y, x + radius, y);
+      context.closePath();
+      context.fillStyle = "rgba(5, 8, 16, 0.74)";
+      context.fill();
+      context.strokeStyle = "rgba(125, 245, 223, 0.28)";
+      context.lineWidth = 2;
+      context.stroke();
+    }
+
+    let fontSize = options.fontSize || 42;
+    do {
+      context.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, sans-serif`;
+      fontSize -= 2;
+    } while (context.measureText(nextText).width > canvas.width - 58 && fontSize > 22);
+    context.fillStyle = "rgba(237, 237, 239, 0.94)";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(nextText, canvas.width / 2, canvas.height / 2);
+  }
+
+  drawLabel(text);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -49,10 +82,24 @@ function createLabel(text, options = {}) {
       transparent: true,
       opacity: 0.92,
       depthWrite: false,
+      depthTest: false,
     })
   );
   sprite.scale.set(options.width || 1.55, options.height || 0.38, 1);
+  sprite.userData.baseScale = sprite.scale.clone();
+  sprite.renderOrder = options.renderOrder || 32;
+  sprite.userData.updateText = (nextText) => {
+    drawLabel(nextText);
+    texture.needsUpdate = true;
+  };
   return sprite;
+}
+
+function createLeaderLine(start, end, color = 0x7df5df, opacity = 0.24) {
+  const line = createLine([start, end], color, opacity);
+  line.material.depthTest = false;
+  line.renderOrder = 28;
+  return line;
 }
 
 function markSelectable(group, part) {
@@ -73,7 +120,7 @@ function setCylinderBetween(mesh, start, end) {
   mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
 }
 
-function makeBoxComponent({ width, height, depth, color, label, part }) {
+function makeBoxComponent({ width, height, depth, color, label, part, labelOffset = null, labelScale = 1 }) {
   const group = new THREE.Group();
   const mesh = new THREE.Mesh(
     new THREE.BoxGeometry(width, height, depth),
@@ -89,10 +136,21 @@ function makeBoxComponent({ width, height, depth, color, label, part }) {
     new THREE.LineBasicMaterial({ color: 0xb8c1ff, transparent: true, opacity: 0.22 })
   );
   const labelSprite = createLabel(label);
-  labelSprite.position.set(0, -height * 0.82, 0);
+  if (labelScale !== 1) {
+    labelSprite.scale.multiplyScalar(labelScale);
+    labelSprite.userData.baseScale = labelSprite.scale.clone();
+  }
+  const labelPosition = labelOffset || new THREE.Vector3(0, height * 0.72 + 0.42, 0);
+  labelSprite.position.copy(labelPosition);
+  const leader = createLeaderLine(
+    new THREE.Vector3(0, height * 0.5 + 0.05, 0),
+    new THREE.Vector3(labelPosition.x, labelPosition.y - 0.18, labelPosition.z)
+  );
 
-  group.add(mesh, edge, labelSprite);
+  group.add(mesh, edge, leader, labelSprite);
   group.userData.mainMesh = mesh;
+  group.userData.label = labelSprite;
+  group.userData.labelLeader = leader;
   markSelectable(group, part);
   return group;
 }
@@ -169,6 +227,92 @@ function createDispersionFan(color, offsetZ) {
   );
 }
 
+function createGratingRotationControl(part) {
+  const group = new THREE.Group();
+  const range = GRATING_RANGES[part] || GRATING_RANGES.emission;
+  const arc = createLine([], 0x7df5df, 0.42);
+  const stem = createLine([], 0x7df5df, 0.26);
+  const handle = new THREE.Mesh(
+    new THREE.SphereGeometry(0.09, 22, 22),
+    new THREE.MeshBasicMaterial({
+      color: 0xd8fff8,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: false,
+    })
+  );
+  const hitPlate = new THREE.Mesh(
+    new THREE.BoxGeometry(1.36, 0.44, 0.42),
+    new THREE.MeshBasicMaterial({
+      color: 0x7df5df,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      depthTest: false,
+    })
+  );
+  const label = createLabel("Grating angle / 光栅角", { width: 2.1, height: 0.34, fontSize: 28 });
+
+  group.position.set(0.05, 0.63, 0.03);
+  group.visible = false;
+  arc.renderOrder = 26;
+  stem.renderOrder = 25;
+  arc.material.depthTest = false;
+  stem.material.depthTest = false;
+  handle.renderOrder = 31;
+  label.position.set(0, 0.26, 0.62);
+  handle.userData.part = part;
+  handle.userData.gratingHandle = true;
+  handle.userData.gratingPart = part;
+  hitPlate.position.set(0, 0, 0.12);
+  hitPlate.userData.part = part;
+  hitPlate.userData.gratingHandle = true;
+  hitPlate.userData.gratingPart = part;
+  group.add(hitPlate, arc, stem, handle, label);
+  group.userData.arc = arc;
+  group.userData.stem = stem;
+  group.userData.handle = handle;
+  group.userData.hitPlate = hitPlate;
+  group.userData.label = label;
+  group.userData.range = range;
+  return group;
+}
+
+function gratingHandlePosition(angleDeg, range) {
+  const progress = THREE.MathUtils.clamp((angleDeg - range.min) / (range.max - range.min), 0, 1);
+  const theta = THREE.MathUtils.lerp(-0.78, 0.78, progress);
+  return new THREE.Vector3(Math.sin(theta) * 0.58, 0, Math.cos(theta) * 0.34);
+}
+
+function updateGratingRotationControl(monochromator, angleDeg, wavelengthNm, color) {
+  const control = monochromator?.userData?.gratingControl;
+  if (!control) {
+    return;
+  }
+
+  const range = control.userData.range;
+  const arcPoints = [];
+  for (let angle = range.min; angle <= range.max; angle += 0.75) {
+    arcPoints.push(gratingHandlePosition(angle, range));
+  }
+  arcPoints.push(gratingHandlePosition(range.max, range));
+
+  control.userData.arc.geometry.dispose();
+  control.userData.arc.geometry = new THREE.BufferGeometry().setFromPoints(arcPoints);
+  control.userData.arc.material.color.set(color);
+  control.userData.handle.position.copy(gratingHandlePosition(angleDeg, range));
+  control.userData.handle.material.color.set(color);
+  control.userData.stem.geometry.dispose();
+  control.userData.stem.geometry = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, -0.43, 0),
+    control.userData.handle.position.clone().multiplyScalar(0.78),
+  ]);
+  control.userData.stem.material.color.set(color);
+  control.userData.label.userData.updateText?.(`${angleDeg.toFixed(1)} deg / ${Math.round(wavelengthNm)} nm`);
+}
+
 function createMonochromator(label, part) {
   const group = makeBoxComponent({
     width: 1.34,
@@ -189,11 +333,15 @@ function createMonochromator(label, part) {
   const selectedBand = createBeam(0x52f0d3, 0.015, 0.46);
   const selectedBandGlow = createBeam(0x52f0d3, 0.032, 0.14);
   const fan = new THREE.Group();
+  const gratingControl = createGratingRotationControl(part);
 
   entrySlit.position.set(-0.46, 0.03, 0.46);
   exitSlit.position.set(0.46, 0.03, -0.46);
   grating.position.set(0, 0.04, 0);
   grating.rotation.y = Math.PI / 5;
+  grating.userData.part = part;
+  grating.userData.gratingHandle = true;
+  grating.userData.gratingPart = part;
   collimatingMirror.position.set(-0.25, 0.2, -0.2);
   collimatingMirror.rotation.y = -Math.PI / 5;
   focusingMirror.position.set(0.25, 0.2, 0.2);
@@ -202,18 +350,20 @@ function createMonochromator(label, part) {
 
   setCylinderBetween(selectedBand, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
   setCylinderBetween(selectedBandGlow, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
-  group.add(entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand);
+  group.add(entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand, gratingControl);
   group.userData.grating = grating;
+  group.userData.part = part;
   group.userData.entrySlit = entrySlit;
   group.userData.exitSlit = exitSlit;
   group.userData.selectedBand = selectedBand;
   group.userData.selectedBandGlow = selectedBandGlow;
   group.userData.fan = fan;
-  group.userData.cutaway = [entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand];
+  group.userData.gratingControl = gratingControl;
+  group.userData.cutaway = [entrySlit, exitSlit, collimatingMirror, focusingMirror, grating, fan, selectedBandGlow, selectedBand, gratingControl];
   return group;
 }
 
-function updateMonochromatorCutaway(monochromator, angleDeg, selectedColor, slitWidthUm) {
+function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selectedColor, slitWidthUm) {
   if (!monochromator?.userData?.grating) {
     return;
   }
@@ -244,6 +394,7 @@ function updateMonochromatorCutaway(monochromator, angleDeg, selectedColor, slit
       object.material.opacity = 0.08 + slitProgress * 0.08;
     }
   });
+  updateGratingRotationControl(monochromator, angleDeg, wavelengthNm, selectedColor);
 }
 
 function updateSampleAlignmentIndicator(component, derived) {
@@ -253,10 +404,9 @@ function updateSampleAlignmentIndicator(component, derived) {
   }
 
   const overlap = derived.alignment.overlapFactor;
-  const sampleOffset = Math.abs(derived.alignment.sampleFactor - 1);
   ring.material.color.set(overlap < 0.72 ? 0xffd166 : 0x7df5df);
   ring.material.opacity = 0.16 + overlap * 0.36;
-  ring.scale.setScalar(1 + sampleOffset * 0.45);
+  ring.scale.setScalar(1);
 }
 
 function createBeamStop() {
@@ -278,13 +428,14 @@ function createBeamStop() {
   const grooveA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.43, 0.025), makeMaterial(0x151a25, { roughness: 0.9 }));
   const grooveB = grooveA.clone();
   const label = createLabel("Beam stop / 光束终止器", { width: 2.25, fontSize: 34 });
+  const leader = createLeaderLine(new THREE.Vector3(0, 0.33, 0), new THREE.Vector3(0, 0.72, 0.08), 0x8490a8, 0.3);
 
   base.position.y = -0.34;
   block.position.y = 0.02;
   cavity.position.set(-0.352, 0.02, 0);
   grooveA.position.set(-0.356, 0.02, -0.19);
   grooveB.position.set(-0.356, 0.02, 0.19);
-  label.position.set(0, -0.74, 0);
+  label.position.set(0, 0.9, 0.08);
 
   const edges = new THREE.LineSegments(
     new THREE.EdgesGeometry(block.geometry),
@@ -292,7 +443,7 @@ function createBeamStop() {
   );
   edges.position.copy(block.position);
 
-  group.add(base, block, edges, cavity, grooveA, grooveB, label);
+  group.add(base, block, edges, cavity, grooveA, grooveB, leader, label);
   return group;
 }
 
@@ -442,6 +593,107 @@ function updateDetectorArmControl(group, samplePosition, detectorPosition, angle
   }
 }
 
+function createOutputMiniGraph() {
+  const group = new THREE.Group();
+  const axisMaterial = new THREE.LineBasicMaterial({
+    color: 0xaeb8d8,
+    transparent: true,
+    opacity: 0.42,
+    depthWrite: false,
+    depthTest: false,
+  });
+  const traceMaterial = new THREE.LineBasicMaterial({
+    color: 0x8dfff0,
+    transparent: true,
+    opacity: 0.94,
+    depthWrite: false,
+    depthTest: false,
+  });
+  const axis = new THREE.LineSegments(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-0.58, -0.22, 0.09),
+      new THREE.Vector3(0.58, -0.22, 0.09),
+      new THREE.Vector3(-0.58, -0.22, 0.09),
+      new THREE.Vector3(-0.58, 0.36, 0.09),
+    ]),
+    axisMaterial
+  );
+  const trace = new THREE.Line(new THREE.BufferGeometry().setFromPoints([]), traceMaterial);
+  const bar = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -0.22, 0.1), new THREE.Vector3(0, 0.1, 0.1)]),
+    traceMaterial.clone()
+  );
+  const point = new THREE.Mesh(
+    new THREE.SphereGeometry(0.045, 18, 18),
+    new THREE.MeshBasicMaterial({
+      color: 0x8dfff0,
+      transparent: true,
+      opacity: 0.94,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: false,
+    })
+  );
+  const label = createLabel("a.u.", { width: 0.62, height: 0.22, fontSize: 28, panel: false });
+
+  group.position.set(0, 0.02, 0);
+  axis.renderOrder = 32;
+  trace.renderOrder = 33;
+  bar.renderOrder = 34;
+  point.renderOrder = 35;
+  label.position.set(-0.42, 0.42, 0.1);
+  group.add(axis, trace, bar, point, label);
+  group.userData.trace = trace;
+  group.userData.bar = bar;
+  group.userData.point = point;
+  return group;
+}
+
+function updateOutputMiniSpectrum(output, derived, currentState) {
+  const graph = output?.userData?.miniGraph;
+  const points = derived?.spectrum?.points || [];
+  if (!graph || !points.length) {
+    return;
+  }
+
+  const xMin = -0.52;
+  const xMax = 0.54;
+  const yMin = -0.2;
+  const yMax = 0.36;
+  const color = currentState.mode === "excitation" ? derived.beams.excitationColor : derived.beams.emissionColor;
+  const tracePoints = points.map((point, index) => {
+    const progress = points.length <= 1 ? 0.5 : index / (points.length - 1);
+    return new THREE.Vector3(
+      THREE.MathUtils.lerp(xMin, xMax, progress),
+      THREE.MathUtils.lerp(yMin, yMax, THREE.MathUtils.clamp(point.y, 0, 1)),
+      0.1
+    );
+  });
+
+  graph.userData.trace.visible = currentState.mode !== "single";
+  graph.userData.bar.visible = currentState.mode === "single";
+  graph.userData.point.visible = true;
+  graph.userData.trace.material.color.set(color);
+  graph.userData.bar.material.color.set(color);
+  graph.userData.point.material.color.set(color);
+
+  if (currentState.mode === "single") {
+    const y = tracePoints[0]?.y ?? yMin;
+    graph.userData.bar.geometry.dispose();
+    graph.userData.bar.geometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, yMin, 0.1),
+      new THREE.Vector3(0, y, 0.1),
+    ]);
+    graph.userData.point.position.set(0, y, 0.1);
+    return;
+  }
+
+  graph.userData.trace.geometry.dispose();
+  graph.userData.trace.geometry = new THREE.BufferGeometry().setFromPoints(tracePoints);
+  const peakPoint = tracePoints.reduce((peak, point) => (point.y > peak.y ? point : peak), tracePoints[0]);
+  graph.userData.point.position.copy(peakPoint);
+}
+
 function makeHotspot() {
   return new THREE.Mesh(
     new THREE.SphereGeometry(0.08, 20, 20),
@@ -486,7 +738,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   const transformControls = new TransformControls(camera, renderer.domElement);
   transformControls.setMode("translate");
   transformControls.setSpace("world");
-  transformControls.setSize(0.68);
+  transformControls.setSize(0.52);
   transformControls.translationSnap = 0.02;
   transformControls.showX = false;
   transformControls.showY = false;
@@ -497,8 +749,16 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   let isTransformDragging = false;
   let activeTransformPart = null;
   let detectorDragActive = false;
+  let gratingDragActive = null;
+  let gratingDragStartX = 0;
+  let gratingDragStartAngle = 0;
   const detectorDragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -BENCH_Y);
   const detectorDragPoint = new THREE.Vector3();
+  renderer.domElement.tabIndex = 0;
+  renderer.domElement.setAttribute(
+    "aria-label",
+    "3D fluorescence instrument scene. Select a monochromator and use arrow keys to rotate the teaching grating. / 3D 荧光仪器场景；选择单色器后可用方向键旋转教学光栅。"
+  );
 
   const root = new THREE.Group();
   scene.add(root);
@@ -572,12 +832,14 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   alignmentRing.rotation.x = Math.PI / 2;
   alignmentRing.position.set(0, 0.02, 0);
   const sampleLabel = createLabel("Sample / 样品");
-  sampleLabel.position.set(0, -0.9, 0);
-  components.sample.add(samplePlume, alignmentRing, sampleGlass, sampleEdges, sampleLabel);
+  const sampleLeader = createLeaderLine(new THREE.Vector3(0, 0.58, 0), new THREE.Vector3(0, 1.17, 0), 0x7df5df, 0.28);
+  sampleLabel.position.set(0, 1.35, 0);
+  components.sample.add(samplePlume, alignmentRing, sampleGlass, sampleEdges, sampleLeader, sampleLabel);
   components.sample.position.copy(SAMPLE_BASE_POSITION);
   components.sample.userData.mainMesh = sampleGlass;
   components.sample.userData.plume = samplePlume;
   components.sample.userData.alignmentRing = alignmentRing;
+  components.sample.userData.label = sampleLabel;
   markSelectable(components.sample, "sample");
   root.add(components.sample);
 
@@ -594,22 +856,23 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   components.detector.position.set(0, BENCH_Y, 3.58);
   root.add(components.detector);
 
-  components.output = makeBoxComponent({ width: 1.5, height: 0.86, depth: 0.16, color: 0x162039, label: "Spectrum / 谱图", part: "output" });
+  components.output = makeBoxComponent({
+    width: 1.5,
+    height: 0.86,
+    depth: 0.16,
+    color: 0x162039,
+    label: "Spectrum / 谱图",
+    part: "output",
+    labelOffset: new THREE.Vector3(-0.1, 1.62, 0.18),
+    labelScale: 0.62,
+  });
   components.output.position.set(2.1, BENCH_Y + 0.1, 3.2);
   components.output.rotation.y = -Math.PI / 5;
   root.add(components.output);
 
-  const screenTrace = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-0.52, 0.04, 0.09),
-      new THREE.Vector3(-0.26, 0.12, 0.09),
-      new THREE.Vector3(-0.03, 0.34, 0.09),
-      new THREE.Vector3(0.22, 0.18, 0.09),
-      new THREE.Vector3(0.48, 0.42, 0.09),
-    ]),
-    new THREE.LineBasicMaterial({ color: 0x8dfff0, transparent: true, opacity: 0.92 })
-  );
-  components.output.add(screenTrace);
+  const outputMiniGraph = createOutputMiniGraph();
+  components.output.add(outputMiniGraph);
+  components.output.userData.miniGraph = outputMiniGraph;
 
   const detectorArmControl = createDetectorArmControl();
   root.add(detectorArmControl);
@@ -667,6 +930,12 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    const labelScale = width < 520 ? 0.78 : 1;
+    root.traverse((object) => {
+      if (object.isSprite && object.userData.baseScale) {
+        object.scale.copy(object.userData.baseScale).multiplyScalar(labelScale);
+      }
+    });
     render();
   }
 
@@ -686,7 +955,11 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
       mesh.scale.setScalar(name === part ? 1.45 : 1);
     });
 
-    if ((part === "source" || part === "sample") && activeTransformPart === part) {
+    if (components.sample.userData.alignmentRing?.material) {
+      components.sample.userData.alignmentRing.material.opacity = part === "sample" ? 0.22 : 0.1;
+    }
+
+    if (part === "source" && activeTransformPart === part) {
       transformControls.attach(components[part]);
       transformHelper.visible = true;
       transformControls.enabled = true;
@@ -701,15 +974,16 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     detectorArmControl.userData.arc.material.opacity = showDetectorArm ? 0.42 : 0;
     detectorArmControl.userData.reference.material.opacity = showDetectorArm ? 0.28 : 0;
     detectorArmControl.userData.handle.material.opacity = showDetectorArm ? detectorArmControl.userData.handle.material.opacity : 0;
+    components.excitation.userData.gratingControl.visible = part === "excitation";
+    components.emission.userData.gratingControl.visible = part === "emission";
 
     render();
   }
 
   function update(derived, currentState) {
-    const sampleOffset = currentState.sample.offsetUm / SAMPLE_OFFSET_SCALE;
     const sourceOffset = currentState.source.offsetUm / SOURCE_OFFSET_SCALE;
     components.source.position.copy(SOURCE_BASE_POSITION).add(new THREE.Vector3(0, 0, sourceOffset));
-    components.sample.position.copy(SAMPLE_BASE_POSITION).add(new THREE.Vector3(sampleOffset * 0.18, 0, sampleOffset));
+    components.sample.position.copy(SAMPLE_BASE_POSITION);
 
     const detectorPos = detectorPosition(currentState.detector.angleDeg, components.sample.position);
     components.detector.position.copy(detectorPos);
@@ -721,15 +995,18 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     updateMonochromatorCutaway(
       components.excitation,
       currentState.exMono.gratingAngleDeg,
+      derived.excitationNm,
       derived.beams.excitationColor,
       currentState.slit.widthUm
     );
     updateMonochromatorCutaway(
       components.emission,
       currentState.emMono.gratingAngleDeg,
+      derived.emissionNm,
       derived.beams.emissionColor,
       currentState.slit.widthUm
     );
+    updateOutputMiniSpectrum(components.output, derived, currentState);
 
     beams.excitation.material.color.set(derived.beams.excitationColor);
     beams.excitation.material.opacity = derived.beams.excitationIntensity;
@@ -785,6 +1062,33 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     });
   }
 
+  function currentGratingAngle(part) {
+    return part === "excitation" ? state.exMono.gratingAngleDeg : state.emMono.gratingAngleDeg;
+  }
+
+  function emitGratingAngle(part, angleDeg) {
+    const range = GRATING_RANGES[part];
+    if (!range) {
+      return;
+    }
+
+    const clamped = THREE.MathUtils.clamp(angleDeg, range.min, range.max);
+    onGeometryChange?.(
+      part === "excitation"
+        ? { excitationAngleDeg: Math.round(clamped * 10) / 10 }
+        : { emissionAngleDeg: Math.round(clamped * 10) / 10 }
+    );
+  }
+
+  function updateGratingAngleFromPointer(event) {
+    if (!gratingDragActive) {
+      return;
+    }
+
+    const delta = (event.clientX - gratingDragStartX) * 0.035;
+    emitGratingAngle(gratingDragActive, gratingDragStartAngle + delta);
+  }
+
   function constrainTransformedPart() {
     const object = transformControls.object;
     if (!object) {
@@ -798,13 +1102,6 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
       onGeometryChange?.({
         sourceOffsetUm: object.position.z * SOURCE_OFFSET_SCALE,
       });
-    } else if (object === components.sample) {
-      object.position.y = SAMPLE_BASE_POSITION.y;
-      object.position.z = THREE.MathUtils.clamp(object.position.z, -120 / SAMPLE_OFFSET_SCALE, 120 / SAMPLE_OFFSET_SCALE);
-      object.position.x = SAMPLE_BASE_POSITION.x + object.position.z * 0.18;
-      onGeometryChange?.({
-        sampleOffsetUm: object.position.z * SAMPLE_OFFSET_SCALE,
-      });
     }
   }
 
@@ -817,7 +1114,9 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(selectable, true).find((entry) => entry.object.userData.part);
+    const hits = raycaster.intersectObjects(selectable, true);
+    const hit = hits.find((entry) => entry.object.userData.detectorHandle || entry.object.userData.gratingHandle)
+      || hits.find((entry) => entry.object.userData.part);
 
     if (hit?.object?.userData?.part) {
       if (hit.object.userData.detectorHandle) {
@@ -832,29 +1131,77 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
         return;
       }
 
-      activeTransformPart = hit.object.userData.part === "source" || hit.object.userData.part === "sample"
+      if (hit.object.userData.gratingHandle) {
+        gratingDragActive = hit.object.userData.gratingPart;
+        gratingDragStartX = event.clientX;
+        gratingDragStartAngle = currentGratingAngle(gratingDragActive);
+        controls.enabled = false;
+        activeTransformPart = null;
+        transformControls.detach();
+        transformHelper.visible = false;
+        onSelectPart?.(gratingDragActive);
+        updateGratingAngleFromPointer(event);
+        renderer.domElement.focus({ preventScroll: true });
+        renderer.domElement.setPointerCapture?.(event.pointerId);
+        return;
+      }
+
+      if (hit.object.userData.part === "excitation" || hit.object.userData.part === "emission") {
+        gratingDragActive = hit.object.userData.part;
+        gratingDragStartX = event.clientX;
+        gratingDragStartAngle = currentGratingAngle(gratingDragActive);
+        controls.enabled = false;
+        activeTransformPart = null;
+        transformControls.detach();
+        transformHelper.visible = false;
+        onSelectPart?.(gratingDragActive);
+        updateGratingAngleFromPointer(event);
+        renderer.domElement.focus({ preventScroll: true });
+        renderer.domElement.setPointerCapture?.(event.pointerId);
+        return;
+      }
+
+      activeTransformPart = hit.object.userData.part === "source"
         ? hit.object.userData.part
         : null;
       onSelectPart?.(hit.object.userData.part);
+      renderer.domElement.focus({ preventScroll: true });
     }
   });
 
   renderer.domElement.addEventListener("pointermove", (event) => {
-    if (!detectorDragActive) {
-      return;
+    if (detectorDragActive) {
+      updateDetectorAngleFromPointer(event);
+    } else if (gratingDragActive) {
+      updateGratingAngleFromPointer(event);
     }
-
-    updateDetectorAngleFromPointer(event);
   });
 
   renderer.domElement.addEventListener("pointerup", (event) => {
-    if (!detectorDragActive) {
+    if (!detectorDragActive && !gratingDragActive) {
       return;
     }
 
     detectorDragActive = false;
+    gratingDragActive = null;
     controls.enabled = true;
     renderer.domElement.releasePointerCapture?.(event.pointerId);
+  });
+
+  renderer.domElement.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+      return;
+    }
+
+    const part = state.selectedPart;
+    if (part !== "excitation" && part !== "emission") {
+      return;
+    }
+
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" || event.key === "ArrowUp" ? 1 : -1;
+    const step = event.shiftKey ? 1 : 0.2;
+    emitGratingAngle(part, currentGratingAngle(part) + direction * step);
   });
 
   transformControls.addEventListener("dragging-changed", (event) => {
