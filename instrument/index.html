@@ -32,7 +32,7 @@
           return;
         }
 
-        import("./instrument.js?v=sample-fixed-20260428").catch((error) => {
+        import("./instrument.js?v=mono-inspector-20260428").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -150,9 +150,9 @@
                   <span>移动一个控制项，观察合成谱线如何响应。</span>
                 </p>
                 <p>
-                  <strong>3. Tap a part / 点选部件</strong>
-                  Read what each instrument block does.
-                  <span>点选一个部件，阅读它在仪器链路中的作用。</span>
+                  <strong>3. Open a mono / 打开单色器</strong>
+                  Click Ex or Em mono to inspect the grating.
+                  <span>点选激发或发射单色器，查看内部光栅。</span>
                 </p>
               </div>
 
@@ -325,9 +325,9 @@
                 </div>
 
                 <p class="instrument-operability-note" data-scene-hint>
-                  Select source, sample, or detector to reveal bounded geometry controls. These teaching controls change intensity and diagnostics, not selected wavelength.
+                  Select Ex or Em mono to open the housing and drag the internal grating; select source or detector for bounded geometry controls.
                   <br>
-                  选择光源、样品池或检测器，可显示受限几何控制；这些教学控制只影响强度和诊断，不改变选通波长。
+                  选择激发或发射单色器可打开外壳并拖动内部光栅；选择光源或检测器可显示受限几何控制。
                 </p>
 
                 <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes / 概念光路几何说明">

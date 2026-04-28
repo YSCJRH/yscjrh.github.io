@@ -3,17 +3,18 @@ import {
   createInstrumentState,
   resetGeometry,
   setGeometryOffsets,
+  setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=sample-fixed-20260428";
+} from "./sim/state.mjs?v=mono-inspector-20260428";
 import { deriveInstrument } from "./sim/physics/derive.mjs?v=sample-fixed-20260428";
-import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=sample-fixed-20260428";
+import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=mono-inspector-20260428";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=sample-fixed-20260428";
+} from "./sim/ui/spectrum.mjs?v=mono-inspector-20260428";
 import { initializeSourceData } from "./sim/ui/source-data.mjs?v=sample-fixed-20260428";
 
 const root = document.querySelector("[data-instrument-lab]");
@@ -75,6 +76,11 @@ if (root) {
       },
       onGeometryChange: (changes) => {
         setGeometryOffsets(state, changes);
+        syncInputsFromState();
+        applyState();
+      },
+      onGratingAngleChange: (part, angleDeg) => {
+        setGratingAngle(state, part, angleDeg);
         syncInputsFromState();
         applyState();
       },

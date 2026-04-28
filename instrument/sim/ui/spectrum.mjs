@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=sample-fixed-20260428";
+import { MODES, PARTS } from "../state.mjs?v=mono-inspector-20260428";
 
 const chart = {
   left: 54,

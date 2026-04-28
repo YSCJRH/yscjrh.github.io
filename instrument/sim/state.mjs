@@ -34,7 +34,7 @@ export const PARTS = Object.freeze({
     copy:
       "Uses slits, mirrors, and a teaching grating angle to choose a conceptual excitation band. Rotating the grating changes the selected wavelength. / 通过狭缝、反射镜和教学化的光栅角选择概念激发带；旋转光栅会改变选通波长。",
     hint:
-      "Select the excitation monochromator, then drag the internal grating handle or use arrow keys to watch the selected band and excitation color change. / 选择激发单色器后，可拖动内部光栅手柄或使用方向键，观察选中谱带和激发光颜色变化。",
+      "Click the excitation monochromator to open the blackened housing, then drag the internal grating handle or use arrow keys. / 点击激发单色器打开黑化外壳，然后拖动内部光栅手柄或使用方向键。",
   },
   sample: {
     title: "Sample cell / 样品池",
@@ -48,7 +48,7 @@ export const PARTS = Object.freeze({
     copy:
       "Sits on the 90-degree collection arm and selects the emission-side wavelength band before detection. / 位于 90° 收集臂上，在检测前选择发射侧波长带。",
     hint:
-      "Select the emission monochromator, then drag the internal grating handle or use arrow keys to change the emission-side selected band. / 选择发射单色器后，可拖动内部光栅手柄或使用方向键，改变发射侧选中谱带。",
+      "Click the emission monochromator to open the blackened housing, then drag the internal grating handle or use arrow keys. / 点击发射单色器打开黑化外壳，然后拖动内部光栅手柄或使用方向键。",
   },
   detector: {
     title: "Detector / 检测器",
@@ -155,10 +155,10 @@ export function applyControlValue(state, controlName, rawValue) {
 
   switch (controlName) {
     case "excitation-angle":
-      state.exMono.gratingAngleDeg = clamp(numeric, 9.5, 21.5);
+      setGratingAngle(state, "excitation", numeric);
       break;
     case "emission-angle":
-      state.emMono.gratingAngleDeg = clamp(numeric, 14, 27);
+      setGratingAngle(state, "emission", numeric);
       break;
     case "slit":
       state.slit.widthUm = clamp(numeric, 100, 1000);
@@ -192,6 +192,20 @@ export function setSelectedPart(state, part) {
   }
 }
 
+export function setGratingAngle(state, part, angleDeg) {
+  const numeric = Number(angleDeg);
+
+  if (!Number.isFinite(numeric)) {
+    return;
+  }
+
+  if (part === "excitation") {
+    state.exMono.gratingAngleDeg = clamp(numeric, 9.5, 21.5);
+  } else if (part === "emission") {
+    state.emMono.gratingAngleDeg = clamp(numeric, 14, 27);
+  }
+}
+
 export function resetGeometry(state) {
   state.source.offsetUm = 0;
   state.sample.offsetUm = 0;
@@ -208,10 +222,10 @@ export function setGeometryOffsets(state, changes = {}) {
   }
 
   if (Number.isFinite(changes.excitationAngleDeg)) {
-    state.exMono.gratingAngleDeg = clamp(Number(changes.excitationAngleDeg), 9.5, 21.5);
+    setGratingAngle(state, "excitation", changes.excitationAngleDeg);
   }
 
   if (Number.isFinite(changes.emissionAngleDeg)) {
-    state.emMono.gratingAngleDeg = clamp(Number(changes.emissionAngleDeg), 14, 27);
+    setGratingAngle(state, "emission", changes.emissionAngleDeg);
   }
 }
