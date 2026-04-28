@@ -5,16 +5,16 @@ import {
   setGeometryOffsets,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=bilingual-semantic-20260428";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=bilingual-semantic-20260428";
-import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=bilingual-semantic-20260428";
+} from "./sim/state.mjs?v=material-teaching-20260428";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=material-teaching-20260428";
+import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=material-teaching-20260428";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=bilingual-semantic-20260428";
-import { initializeSourceData } from "./sim/ui/source-data.mjs?v=bilingual-semantic-20260428";
+} from "./sim/ui/spectrum.mjs?v=material-teaching-20260428";
+import { initializeSourceData } from "./sim/ui/source-data.mjs?v=material-teaching-20260428";
 
 const root = document.querySelector("[data-instrument-lab]");
 

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "r6g-emission-ethylene-glycol",
   "kind": "spectrum1d",
-  "label": "Rhodamine 6G emission in ethylene glycol",
+  "label": "Rhodamine 6G emission in ethylene glycol / 乙二醇中罗丹明 6G 发射谱",
   "xUnit": "nm",
   "yUnit": "normalized a.u.",
   "x": [

@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs?v=bilingual-semantic-20260428";
+import { clamp } from "../state.mjs?v=material-teaching-20260428";
 
 export function bandpassFromSlit(widthUm) {
   return clamp(0.7 + widthUm * 0.0077, 1.2, 8.6);

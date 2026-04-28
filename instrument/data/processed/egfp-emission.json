@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "egfp-emission",
   "kind": "spectrum1d",
-  "label": "EGFP emission spectrum",
+  "label": "EGFP emission spectrum / EGFP 发射谱",
   "xUnit": "nm",
   "yUnit": "normalized a.u.",
   "x": [

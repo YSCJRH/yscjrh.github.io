@@ -1,4 +1,4 @@
-import { SAMPLE_PROFILES, clamp } from "../state.mjs?v=bilingual-semantic-20260428";
+import { SAMPLE_PROFILES, clamp } from "../state.mjs?v=material-teaching-20260428";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 

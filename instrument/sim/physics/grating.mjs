@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs?v=bilingual-semantic-20260428";
+import { clamp } from "../state.mjs?v=material-teaching-20260428";
 
 export const TEACHING_GRATING = Object.freeze({
   grooveDensityPerMm: 1200,

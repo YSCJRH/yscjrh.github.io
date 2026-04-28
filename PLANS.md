@@ -1,4 +1,34 @@
-# Current Phase: Instrument Lab Bilingual Semantic Polish
+# Current Phase: Instrument Lab Source-derived Teaching Layer
+
+## Goal
+- Strengthen `/instrument/` with trusted fluorescence-material and instrumentation context without turning it into a material optimizer, calibrated simulator, or real instrument controller.
+- Keep synthetic instrument controls and source-derived examples visibly separate.
+- Use existing compact local data first: especially the Fe(II)-DOM EEM, now with display-only slice exploration.
+
+## Implementation Notes
+1. Source triage and public boundaries:
+   - classify future sources as `displayable data`, `reference-only`, `teaching context`, or `defer`
+   - keep PhotochemCAD, NIST SRM curves, OpenFluor components, and paper/vendor figures out of embedded displays until reuse boundaries are verified
+2. EEM slice explorer:
+   - add emission/excitation slice viewing for the existing Fe(II)-DOM EEM
+   - keep slice controls local to the source-derived examples panel
+   - do not let EEM slice controls affect the 3D scene, synthetic controls, diagnostics, or synthetic spectrum
+3. Corrections and artifacts teaching:
+   - add compact caveats for detector response, excitation flux, slit bandpass, scatter, inner-filter effects, and detector linearity
+   - frame NIST and USGS guidance as teaching context only, not as correction procedures applied by this site
+4. Sample and geometry boundaries:
+   - explain that the current right-angle geometry is a useful default for clear dilute samples
+   - note front-face collection and sample environment effects as boundaries, not implemented simulator modes
+
+## Validation
+1. Run syntax checks, unit tests, data validation, and `git diff --check`.
+2. Preview `/instrument/` with Browser Use and check source-derived cards, EEM slice controls, teaching cards, mobile layout, and console logs.
+3. Confirm no new raw datasets, external runtime fetches, privacy details, form, analytics, real instrument control, calibration claim, validation claim, material optimization claim, or quantitative comparison was introduced.
+4. Confirm all new visitor-facing copy remains bilingual.
+
+---
+
+# Previous Phase: Instrument Lab Bilingual Semantic Polish
 
 ## Goal
 - Make `/instrument/` fully understandable for Chinese readers by pairing visitor-facing English UI copy with concise Chinese equivalents.

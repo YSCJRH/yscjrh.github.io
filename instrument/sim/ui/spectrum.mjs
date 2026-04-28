@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=bilingual-semantic-20260428";
+import { MODES, PARTS } from "../state.mjs?v=material-teaching-20260428";
 
 const chart = {
   left: 54,

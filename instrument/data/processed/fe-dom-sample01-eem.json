@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "fe-dom-sample01-eem",
   "kind": "eem",
-  "label": "Fe(II)-DOM sample 01 EEM",
+  "label": "Fe(II)-DOM sample 01 EEM / Fe(II)-DOM 样品 01 EEM",
   "excitationUnit": "nm",
   "emissionUnit": "nm",
   "zUnit": "normalized a.u.",

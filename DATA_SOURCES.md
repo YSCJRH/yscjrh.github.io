@@ -12,17 +12,37 @@ The page remains an educational visualization: source-derived data are normalize
 | EEM heatmap | Jia, Manning, Jollymore, Beckie, [Fe(II)-DOM fluorescence dataset](https://zenodo.org/records/3737108), DOI `10.5281/zenodo.3737108` | CC BY 4.0 | One compact excitation-emission matrix heatmap | Use `sample01EEM.txt` and `emission_lambda.txt`; clamp negative values, downsample to a browser-sized heatmap, normalize to display a.u. The source PDF names `excitation_lambda.txt`, but that file is absent from the Zenodo record, so the display excitation axis is explicitly recorded as inferred. |
 | Reference / calibration context | NIST, [Relative intensity correction standards for fluorescence and Raman spectroscopy](https://www.nist.gov/programs-projects/relative-intensity-correction-standards-fluorescence-and-raman-spectroscopy) | Not embedded | Reference-only citation for future calibration/correction discussion | No NIST curve is embedded or plotted until an exact public data file and reuse boundary are verified. Do not claim calibration from this entry. |
 
-## Deferred Sources
+## Source Triage Categories
 
-| Candidate | Status | Reason to defer |
+Use these statuses before any new public data or material example is embedded:
+
+| Status | Meaning | Public boundary |
 | --- | --- | --- |
-| PhotochemCAD common compounds spectra | Citation/reference candidate only | Useful common-compound spectra, but redistribution and site embedding terms must be verified before use. |
-| MDPI/Mendeley EVOO fluorescence EEM ageing dataset | Candidate for later material/story examples | Domain-specific and needs license, format, and reuse-boundary review before embedding. |
-| Zenodo DOM storage experiment Aqualog EEM dataset, DOI `10.5281/zenodo.5497806` | Candidate for later EEM examples | CC BY 4.0, but raw `Aqualog.zip` is about 41 MB; do not copy the full dataset into the site. |
-| USGS McKenzie River Basin absorbance/EEM/PARAFAC data | Candidate for later environmental-fluorescence context | Needs exact data package, public-domain/license review, and a small-subset extraction plan. |
-| PANGAEA North Sea surface microlayer EEM data | Candidate for later EEM examples | Needs exact license and format review before embedding; likely better as a later domain example. |
-| OpenFluor PARAFAC component reference | Interpretation/reference candidate | Useful for component context, but not a raw first-pass spectrum package. |
-| Zenodo fluorescence lifetime database, DOI `10.5281/zenodo.11083940` | Reference candidate only | The current page uses fixed-wavelength time / kinetic scans, not fluorescence lifetime measurements. Use only if a lifetime-specific explanation is added. |
+| `displayable data` | Small numerical data can be processed into local JSON after source, license, axis, and claim review. | Display as source-derived, normalized/downsampled, not calibrated, and not quantitatively comparable. |
+| `reference-only` | Source can support teaching copy or caveats, but no curve, table, or figure is embedded. | Cite as context only; do not imply the page applies the method or standard. |
+| `teaching context` | Source helps explain an instrument concept, artifact, or sample limitation. | Use short conservative explanations, not copied figures or method claims. |
+| `defer` | Source is promising but currently too large, ambiguous, domain-specific, or unclear for public reuse. | Keep in this file until a smaller, licensed, well-described subset exists. |
+
+## Candidate Sources And Current Status
+
+| Candidate | Current status | Intended use | Reason / gate before embedding |
+| --- | --- | --- | --- |
+| PhotochemCAD common compounds spectra | `reference-only` for now | Common-compound context | Useful spectra, but redistribution and site embedding terms must be verified before plotting. |
+| NIST fluorescence SRM / correction materials | `reference-only` | Correction-literacy notes: detector response, excitation flux, wavelength accuracy, linearity, standards | No NIST curve is embedded or plotted until exact public data files and reuse boundaries are verified. Do not imply calibration. |
+| NIST fluorescence measurement guidance | `teaching context` | Explain why spectra differ between instruments and why corrected spectra need standards | Use as caveat support only; the page does not apply NIST correction procedures. |
+| OpenFluor / PARAFAC component references | `reference-only` | Explain that EEM interpretation can involve published components and model context | Do not infer component identity from the current single Fe-DOM EEM display. |
+| USGS fDOM field/lab methods and data releases | `teaching context`, possible later `displayable data` | Environmental fluorescence caveats, interferences, QA, possible compact DOM example | Needs exact data package, public-domain/license review, small subset plan, and no source-attribution claim. |
+| MDPI/Mendeley EVOO fluorescence EEM ageing dataset | `defer` | Material/food fluorescence teaching example | CC BY 4.0 page exists, but keep deferred until exact file selection, format review, processing notes, and no quality-classification claim are complete. |
+| Zenodo DOM storage experiment Aqualog EEM dataset, DOI `10.5281/zenodo.5497806` | `defer` | Later EEM example | CC BY 4.0, but raw `Aqualog.zip` is about 41 MB; do not copy the full dataset into the site. |
+| PANGAEA North Sea surface microlayer EEM data | `defer` | Later EEM example | Needs exact license and format review before embedding. |
+| Zenodo fluorescence lifetime database, DOI `10.5281/zenodo.11083940` | `reference-only` | Lifetime-specific context only | Current page uses fixed-wavelength time / kinetic scans, not lifetime measurements. |
+
+## Next Teaching Enhancements
+
+- EEM slice explorer: use the existing Fe(II)-DOM processed EEM to show emission or excitation cross-sections. This is display-only and remains separate from synthetic sliders.
+- Corrections and artifacts: add short caveat cards for detector response, excitation flux, slit bandpass, Rayleigh/Raman scatter, inner-filter effects, and linearity/saturation.
+- Sample and geometry boundaries: clarify that the current right-angle model is useful for clear dilute samples, while dense/turbid/solid samples may require other geometries such as front-face collection.
+- Data provenance as UI: show DOI/link, license, source file, processing notes, claim boundary, and reference-only status directly in the page.
 
 ## Proposed Data Schema
 
@@ -41,6 +61,10 @@ Required dataset fields:
 - `kind`: `spectrum1d`, `eem`, or `reference`
 - `role`
 - `label`
+- optional `teachingTags`
+- optional `displayModes`, for example `line`, `eem`, `eem-slice`, or `reference-only`
+- optional `defaultSlices` for EEM cross-section controls
+- optional `claimBoundary`
 - `dataUrl` for plotted data, or `null` for reference-only entries
 - `source`: title, creators, DOI if available, URL, license, source file, citation
 - `measurement`: mode, sample/context, units

@@ -21,11 +21,11 @@ const FILES = {
 
 const SOURCE_NOTES = {
   r6g:
-    "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum.",
+    "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum. / 源荧光计数先按 Zenodo 记录中的室内光尖峰说明做窄尖峰抑制，再分桶平均、负值置零并按最大值归一化；该数据包用于教学显示，不是校正参考谱。",
   egfp:
-    "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display.",
+    "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display. / EGFP 发射列来自公开荧光蛋白表格，经分桶平均降采样、负值置零并按最大值归一化，仅用于显示。",
   dom:
-    "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes.",
+    "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes. / sample01EEM.txt 经过负值置零、压缩热图分桶平均并按最大值归一化；emission_lambda.txt 提供行轴。来源说明提到 excitation_lambda.txt，但 Zenodo 记录中未包含该文件，因此显示用激发轴根据矩阵宽度和来源说明推断为 239-800 nm、3 nm 间隔。",
 };
 
 function sha256(text) {
@@ -155,7 +155,7 @@ function parseRhodamine(text) {
 
   return makeSpectrum(
     "r6g-emission-ethylene-glycol",
-    "Rhodamine 6G emission in ethylene glycol",
+    "Rhodamine 6G emission in ethylene glycol / 乙二醇中罗丹明 6G 发射谱",
     normalized.map((point) => point.x),
     normalized.map((point) => point.y),
     { notes: SOURCE_NOTES.r6g }
@@ -183,7 +183,7 @@ function parseEgfp(text) {
 
   return makeSpectrum(
     "egfp-emission",
-    "EGFP emission spectrum",
+    "EGFP emission spectrum / EGFP 发射谱",
     normalized.map((point) => point.x),
     normalized.map((point) => point.y),
     { notes: SOURCE_NOTES.egfp }
@@ -270,7 +270,7 @@ function downsampleEem(matrix, excitation, emission, targetCols, targetRows) {
     schemaVersion: 1,
     id: "fe-dom-sample01-eem",
     kind: "eem",
-    label: "Fe(II)-DOM sample 01 EEM",
+    label: "Fe(II)-DOM sample 01 EEM / Fe(II)-DOM 样品 01 EEM",
     excitationUnit: "nm",
     emissionUnit: "nm",
     zUnit: "normalized a.u.",
@@ -310,7 +310,7 @@ async function buildArtifacts() {
     schemaVersion: 1,
     generatedAt: GENERATED_AT,
     disclaimer:
-      "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims.",
+      "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims. / 页面展示的引用数据已为教学可视化归一化或降采样；它们不是本站测量结果，未经本站校准，也不构成定量性能声明。",
     packageNotes: [
       "The synthetic Instrument Lab controls remain the default teaching model.",
       "Source-derived examples are shown separately so sliders are not mistaken for controls over real data.",
@@ -322,6 +322,10 @@ async function buildArtifacts() {
         kind: "spectrum1d",
         role: "dye-spectrum",
         label: r6g.label,
+        teachingTags: ["dye", "1D emission", "source-derived"],
+        displayModes: ["line"],
+        claimBoundary:
+          "Source-derived normalized dye emission example for educational display only; not calibrated and not a quantitative comparison. / 引用来源的归一化染料发射示例，仅作教学显示；未经校准，也不是定量比较。",
         dataUrl: "processed/r6g-emission-ethylene-glycol.json",
         source: {
           title: "Absorption and Fluorescence spectra of Rhodamine 6G",
@@ -353,6 +357,10 @@ async function buildArtifacts() {
         kind: "spectrum1d",
         role: "fluorescent-protein-spectrum",
         label: egfp.label,
+        teachingTags: ["fluorescent protein", "1D emission", "source-derived"],
+        displayModes: ["line"],
+        claimBoundary:
+          "Source-derived normalized fluorescent-protein emission example for educational display only; not calibrated and not a biological performance claim. / 引用来源的归一化荧光蛋白发射示例，仅作教学显示；未经校准，也不构成生物性能声明。",
         dataUrl: "processed/egfp-emission.json",
         source: {
           title: "Absorption and Emission spectra of fluorescent proteins",
@@ -383,6 +391,15 @@ async function buildArtifacts() {
         kind: "eem",
         role: "source-derived-eem",
         label: domEem.label,
+        teachingTags: ["DOM", "EEM", "source-derived", "slice explorer"],
+        displayModes: ["eem", "eem-slice"],
+        defaultSlices: {
+          sliceAxis: "emission",
+          excitationNm: 338,
+          emissionNm: 442,
+        },
+        claimBoundary:
+          "Processed EEM heatmap and slices for educational display only; excitation axis is inferred, and the display is not calibrated or suitable for component identification. / 处理后的 EEM 热图与切片仅作教学显示；激发轴为推断值，显示结果未经校准，也不适合用于组分识别。",
         dataUrl: "processed/fe-dom-sample01-eem.json",
         source: {
           title:
@@ -417,7 +434,11 @@ async function buildArtifacts() {
         id: "nist-srm-fluorescence-correction-reference",
         kind: "reference",
         role: "calibration-reference",
-        label: "NIST fluorescence correction SRM reference",
+        label: "NIST fluorescence correction SRM reference / NIST 荧光校正 SRM 参考",
+        teachingTags: ["reference-only", "correction literacy", "not plotted"],
+        displayModes: ["reference-only"],
+        claimBoundary:
+          "Reference-only correction-literacy entry; no NIST data are embedded, plotted, or used to claim calibration. / 仅作校正意识参考；未嵌入、绘制或使用 NIST 数据来声明校准。",
         dataUrl: null,
         source: {
           title: "NIST relative intensity correction standards for fluorescence spectroscopy",
@@ -434,7 +455,7 @@ async function buildArtifacts() {
           normalization: null,
           downsampling: null,
           notes:
-            "Reference-only until an exact public NIST data file and reuse boundary are verified. Do not use this entry to claim calibration.",
+            "Reference-only until an exact public NIST data file and reuse boundary are verified. Do not use this entry to claim calibration. / 在确认具体公开 NIST 数据文件和复用边界前，仅作参考记录；不得用此条目声明校准。",
         },
       },
     ],
@@ -469,6 +490,28 @@ async function validateOutput() {
   const manifestPath = path.join(DATA_DIR, "manifest.json");
   const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
   let packageBytes = (await fs.stat(manifestPath)).size;
+  const supportedDataKinds = new Set(["spectrum1d", "eem"]);
+
+  const assertFiniteArray = (values, label, minLength = 1) => {
+    if (!Array.isArray(values) || values.length < minLength) {
+      throw new Error(`${label} must be a non-empty numeric array.`);
+    }
+
+    values.forEach((value) => {
+      if (!Number.isFinite(value)) {
+        throw new Error(`Non-finite value in ${label}.`);
+      }
+    });
+  };
+
+  const assertNormalizedArray = (values, label) => {
+    assertFiniteArray(values, label);
+    values.forEach((value) => {
+      if (value < 0 || value > 1) {
+        throw new Error(`${label} contains value outside normalized display range [0, 1].`);
+      }
+    });
+  };
 
   if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.datasets)) {
     throw new Error("Manifest schema is invalid.");
@@ -479,8 +522,20 @@ async function validateOutput() {
       throw new Error(`Manifest dataset is missing provenance fields: ${dataset.id || "(unknown)"}`);
     }
 
+    if (!dataset.claimBoundary || !Array.isArray(dataset.displayModes) || !dataset.displayModes.length) {
+      throw new Error(`Manifest dataset is missing display boundary fields: ${dataset.id || "(unknown)"}`);
+    }
+
     if (dataset.kind === "reference") {
       continue;
+    }
+
+    if (!supportedDataKinds.has(dataset.kind)) {
+      throw new Error(`Unsupported plottable dataset kind for ${dataset.id}: ${dataset.kind}`);
+    }
+
+    if (!dataset.dataUrl) {
+      throw new Error(`Plottable dataset is missing dataUrl: ${dataset.id}`);
     }
 
     const dataPath = path.join(DATA_DIR, dataset.dataUrl);
@@ -488,20 +543,35 @@ async function validateOutput() {
     packageBytes += (await fs.stat(dataPath)).size;
 
     if (dataset.kind === "spectrum1d") {
-      if (!Array.isArray(data.x) || !Array.isArray(data.y) || data.x.length !== data.y.length) {
+      if (!Array.isArray(data.x) || !Array.isArray(data.y) || data.x.length !== data.y.length || data.x.length < 2) {
         throw new Error(`Invalid 1D spectrum arrays for ${dataset.id}`);
       }
 
-      for (const value of [...data.x, ...data.y]) {
-        if (!Number.isFinite(value)) {
-          throw new Error(`Non-finite 1D value in ${dataset.id}`);
-        }
-      }
+      assertFiniteArray(data.x, `1D x axis for ${dataset.id}`, 2);
+      assertNormalizedArray(data.y, `1D y values for ${dataset.id}`);
     }
 
     if (dataset.kind === "eem") {
       if (!Array.isArray(data.excitation) || !Array.isArray(data.emission) || !Array.isArray(data.z)) {
         throw new Error(`Invalid EEM arrays for ${dataset.id}`);
+      }
+
+      assertFiniteArray(data.excitation, `EEM excitation axis for ${dataset.id}`, 2);
+      assertFiniteArray(data.emission, `EEM emission axis for ${dataset.id}`, 2);
+
+      if (dataset.displayModes.includes("eem-slice")) {
+        const defaults = dataset.defaultSlices || {};
+        if (!["emission", "excitation"].includes(defaults.sliceAxis)) {
+          throw new Error(`EEM slice display has invalid default slice axis for ${dataset.id}`);
+        }
+
+        if (defaults.sliceAxis === "emission" && !Number.isFinite(defaults.excitationNm)) {
+          throw new Error(`EEM emission slice display needs finite excitationNm for ${dataset.id}`);
+        }
+
+        if (defaults.sliceAxis === "excitation" && !Number.isFinite(defaults.emissionNm)) {
+          throw new Error(`EEM excitation slice display needs finite emissionNm for ${dataset.id}`);
+        }
       }
 
       if (data.z.length !== data.emission.length) {
@@ -513,11 +583,7 @@ async function validateOutput() {
           throw new Error(`EEM column count does not match excitation axis for ${dataset.id}`);
         }
 
-        row.forEach((value) => {
-          if (!Number.isFinite(value)) {
-            throw new Error(`Non-finite EEM value in ${dataset.id}`);
-          }
-        });
+        assertNormalizedArray(row, `EEM z row for ${dataset.id}`);
       });
     }
   }

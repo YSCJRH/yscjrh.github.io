@@ -4292,7 +4292,7 @@ section[id] {
     rgba(255, 255, 255, 0.04);
 }
 
-.source-dataset-card[data-source-kind="eem"] {
+.source-dataset-card[data-source-card-kind="eem"] {
   border-color: rgba(77, 237, 207, 0.16);
 }
 
@@ -4360,6 +4360,29 @@ section[id] {
   border-radius: 0.78rem;
   background: rgba(77, 237, 207, 0.055);
   color: rgba(216, 255, 248, 0.78);
+}
+
+.source-slice-panel {
+  display: grid;
+  gap: 0.64rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(77, 237, 207, 0.16);
+  border-radius: 0.86rem;
+  background:
+    radial-gradient(circle at 16% 4%, rgba(77, 237, 207, 0.1), transparent 8rem),
+    rgba(77, 237, 207, 0.045);
+}
+
+.source-slice-panel[hidden] {
+  display: none;
+}
+
+.source-slice-title {
+  margin: 0;
+  color: #d8fff8;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
 }
 
 .source-chart-wrap {
@@ -4431,6 +4454,53 @@ section[id] {
   shape-rendering: crispEdges;
 }
 
+.source-slice-marker line,
+.source-slice-marker rect {
+  vector-effect: non-scaling-stroke;
+}
+
+.source-slice-marker line {
+  stroke: rgba(216, 255, 248, 0.9);
+  stroke-width: 2.2;
+  stroke-dasharray: 7 6;
+  filter: drop-shadow(0 0 7px rgba(77, 237, 207, 0.58));
+}
+
+.source-slice-marker rect {
+  fill: rgba(216, 255, 248, 0.1);
+  stroke: rgba(216, 255, 248, 0.58);
+  stroke-width: 1.4;
+}
+
+.source-slice-chart-wrap {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.source-slice-chart-wrap[hidden] {
+  display: none;
+}
+
+.source-slice-meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.source-slice-chart {
+  width: 100%;
+  aspect-ratio: 620 / 190;
+  overflow: visible;
+  border-radius: 0.8rem;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(104, 114, 217, 0.12), transparent 12rem),
+    rgba(2, 3, 8, 0.6);
+}
+
+.source-slice-trace {
+  stroke: #9af26f;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 10px rgba(154, 242, 111, 0.34));
+}
+
 .source-y-start,
 .source-y-end {
   text-anchor: start;
@@ -4439,6 +4509,65 @@ section[id] {
 .source-reference-note {
   padding-top: 0.05rem;
   color: rgba(176, 186, 206, 0.72);
+}
+
+.source-reference-note a {
+  color: #d8fff8;
+}
+
+.teaching-layer-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 84% 8%, rgba(104, 114, 217, 0.1), transparent 22rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022));
+}
+
+.teaching-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.teaching-card-grid-compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.teaching-card {
+  display: grid;
+  gap: 0.38rem;
+  min-width: 0;
+  padding: 0.82rem;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 0.92rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
+    rgba(5, 7, 13, 0.52);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.teaching-card span {
+  color: rgba(216, 255, 248, 0.74);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.teaching-card strong {
+  color: rgba(237, 237, 240, 0.92);
+  font-size: 0.9rem;
+  line-height: 1.28;
+}
+
+.teaching-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
 .instrument-control-panel,
@@ -4831,6 +4960,11 @@ section[id] {
       "chart"
       "facts";
   }
+
+  .teaching-card-grid,
+  .teaching-card-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 780px) {
@@ -4890,6 +5024,15 @@ section[id] {
   }
 
   .source-chart-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .source-slice-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .teaching-card-grid,
+  .teaching-card-grid-compact {
     grid-template-columns: 1fr;
   }
 }
@@ -4990,6 +5133,14 @@ section[id] {
   .spectrum-panel,
   .source-data-panel {
     padding: 0.72rem;
+  }
+
+  .teaching-layer-panel {
+    padding: 0.72rem;
+  }
+
+  .teaching-card {
+    padding: 0.7rem;
   }
 
   .instrument-disclaimer {

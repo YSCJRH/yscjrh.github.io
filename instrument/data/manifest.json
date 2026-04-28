@@ -12,7 +12,16 @@
       "id": "r6g-emission-ethylene-glycol",
       "kind": "spectrum1d",
       "role": "dye-spectrum",
-      "label": "Rhodamine 6G emission in ethylene glycol",
+      "label": "Rhodamine 6G emission in ethylene glycol / 乙二醇中罗丹明 6G 发射谱",
+      "teachingTags": [
+        "dye",
+        "1D emission",
+        "source-derived"
+      ],
+      "displayModes": [
+        "line"
+      ],
+      "claimBoundary": "Source-derived normalized dye emission example for educational display only; not calibrated and not a quantitative comparison. / 引用来源的归一化染料发射示例，仅作教学显示；未经校准，也不是定量比较。",
       "dataUrl": "processed/r6g-emission-ethylene-glycol.json",
       "source": {
         "title": "Absorption and Fluorescence spectra of Rhodamine 6G",
@@ -43,7 +52,16 @@
       "id": "egfp-emission",
       "kind": "spectrum1d",
       "role": "fluorescent-protein-spectrum",
-      "label": "EGFP emission spectrum",
+      "label": "EGFP emission spectrum / EGFP 发射谱",
+      "teachingTags": [
+        "fluorescent protein",
+        "1D emission",
+        "source-derived"
+      ],
+      "displayModes": [
+        "line"
+      ],
+      "claimBoundary": "Source-derived normalized fluorescent-protein emission example for educational display only; not calibrated and not a biological performance claim. / 引用来源的归一化荧光蛋白发射示例，仅作教学显示；未经校准，也不构成生物性能声明。",
       "dataUrl": "processed/egfp-emission.json",
       "source": {
         "title": "Absorption and Emission spectra of fluorescent proteins",
@@ -77,7 +95,23 @@
       "id": "fe-dom-sample01-eem",
       "kind": "eem",
       "role": "source-derived-eem",
-      "label": "Fe(II)-DOM sample 01 EEM",
+      "label": "Fe(II)-DOM sample 01 EEM / Fe(II)-DOM 样品 01 EEM",
+      "teachingTags": [
+        "DOM",
+        "EEM",
+        "source-derived",
+        "slice explorer"
+      ],
+      "displayModes": [
+        "eem",
+        "eem-slice"
+      ],
+      "defaultSlices": {
+        "sliceAxis": "emission",
+        "excitationNm": 338,
+        "emissionNm": 442
+      },
+      "claimBoundary": "Processed EEM heatmap and slices for educational display only; excitation axis is inferred, and the display is not calibrated or suitable for component identification. / 处理后的 EEM 热图与切片仅作教学显示；激发轴为推断值，显示结果未经校准，也不适合用于组分识别。",
       "dataUrl": "processed/fe-dom-sample01-eem.json",
       "source": {
         "title": "Dataset for \"Technical note: Effects of iron(II) on fluorescence properties of dissolved organic matter at circumneutral pH\"",
@@ -114,7 +148,16 @@
       "id": "nist-srm-fluorescence-correction-reference",
       "kind": "reference",
       "role": "calibration-reference",
-      "label": "NIST fluorescence correction SRM reference",
+      "label": "NIST fluorescence correction SRM reference / NIST 荧光校正 SRM 参考",
+      "teachingTags": [
+        "reference-only",
+        "correction literacy",
+        "not plotted"
+      ],
+      "displayModes": [
+        "reference-only"
+      ],
+      "claimBoundary": "Reference-only correction-literacy entry; no NIST data are embedded, plotted, or used to claim calibration. / 仅作校正意识参考；未嵌入、绘制或使用 NIST 数据来声明校准。",
       "dataUrl": null,
       "source": {
         "title": "NIST relative intensity correction standards for fluorescence spectroscopy",
