@@ -373,6 +373,7 @@ Before calling a task complete, check as many of these as apply:
 - external links are intentional
 - no secrets or private information are present
 - diff is reviewable
+- bilingual public UI remains paired where the site already uses paired English / Chinese copy, including dynamic JavaScript-generated labels and messages
 
 If visual preview is available in Codex app, use the in-app browser for local or public pages that do not require login.
 
@@ -676,6 +677,18 @@ Avoid:
 For Chinese copy, keep it precise and slightly literary if appropriate, but not slogan-heavy.
 
 For English copy, keep it clear, technical, and understated.
+
+### Bilingual public UI
+
+This site already presents important public interface surfaces in paired English / Chinese. When adding or editing visitor-facing UI copy on those surfaces, provide a Chinese counterpart unless the text is a proper noun, unit, DOI, code identifier, repository name, brand name, or citation text.
+
+Preferred patterns:
+
+- short labels, buttons, tabs, and panel titles: `English / 中文`
+- longer explanatory copy: English sentence first, then a natural Chinese sentence nearby or on the next line
+- crowded diagram labels: short paired terms in the figure, with longer explanation in the legend or note panel
+
+Do not treat JavaScript-generated labels, statuses, diagnostics, chart captions, fallbacks, or error messages as exceptions. They need the same bilingual review as static HTML.
 
 ---
 

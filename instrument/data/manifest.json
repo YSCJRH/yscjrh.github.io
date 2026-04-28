@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-04-24",
-  "disclaimer": "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims.",
+  "disclaimer": "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims. / 页面展示的引用数据已为教学可视化归一化或降采样；它们不是本站测量结果，未经本站校准，也不构成定量性能声明。",
   "packageNotes": [
     "The synthetic Instrument Lab controls remain the default teaching model.",
     "Source-derived examples are shown separately so sliders are not mistaken for controls over real data.",
@@ -36,7 +36,7 @@
         "normalization": "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
         "downsampling": "bucket average to 320 points",
         "sourceChecksumSha256": "de0db08f9ccef08b4c40e2328f065627d7a9b28cef4aa6f1335623a243ad7b6f",
-        "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum."
+        "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum. / 源荧光计数先按 Zenodo 记录中的室内光尖峰说明做窄尖峰抑制，再分桶平均、负值置零并按最大值归一化；该数据包用于教学显示，不是校正参考谱。"
       }
     },
     {
@@ -70,7 +70,7 @@
         "normalization": "negative values clamped to zero; max intensity normalized to 1",
         "downsampling": "bucket average to 260 points",
         "sourceChecksumSha256": "b9a1f5dda187e2083357b320e54dd3fb8aa31c9de825b201dacda4447a5a9315",
-        "notes": "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display."
+        "notes": "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display. / EGFP 发射列来自公开荧光蛋白表格，经分桶平均降采样、负值置零并按最大值归一化，仅用于显示。"
       }
     },
     {
@@ -107,7 +107,7 @@
         "downsampling": "2D bucket average to 64 excitation bins x 48 emission bins",
         "axisHandling": "emission axis read from emission_lambda.txt; excitation axis inferred as 239-800 nm in 3 nm increments because the source description names excitation_lambda.txt but the Zenodo record does not include that file",
         "sourceChecksumSha256": "265fbc0838e64482eec06a12b61141528f982752c1932c01f354855177789458",
-        "notes": "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes."
+        "notes": "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes. / sample01EEM.txt 经过负值置零、压缩热图分桶平均并按最大值归一化；emission_lambda.txt 提供行轴。来源说明提到 excitation_lambda.txt，但 Zenodo 记录中未包含该文件，因此显示用激发轴根据矩阵宽度和来源说明推断为 239-800 nm、3 nm 间隔。"
       }
     },
     {
@@ -131,7 +131,7 @@
       "processing": {
         "normalization": null,
         "downsampling": null,
-        "notes": "Reference-only until an exact public NIST data file and reuse boundary are verified. Do not use this entry to claim calibration."
+        "notes": "Reference-only until an exact public NIST data file and reuse boundary are verified. Do not use this entry to claim calibration. / 在确认具体公开 NIST 数据文件和复用边界前，仅作参考记录；不得用此条目声明校准。"
       }
     }
   ]

@@ -66,21 +66,21 @@ test("mode changes chart axes but keeps source-derived controls separate", () =>
 
   state.mode = "emission";
   const emission = deriveInstrument(state);
-  assert.equal(emission.scanMeta.axisRange, "Emission 380-700 nm");
+  assert.equal(emission.scanMeta.axisRange, "Emission 380-700 nm / 发射 380-700 nm");
 
   state.mode = "excitation";
   const excitation = deriveInstrument(state);
-  assert.equal(excitation.scanMeta.axisRange, "Excitation 250-550 nm");
+  assert.equal(excitation.scanMeta.axisRange, "Excitation 250-550 nm / 激发 250-550 nm");
 
   state.mode = "time";
   const time = deriveInstrument(state);
-  assert.equal(time.scanMeta.axisRange, "Time 0-120 s");
+  assert.equal(time.scanMeta.axisRange, "Time 0-120 s / 时间 0-120 s");
 
   state.mode = "single";
   const single = deriveInstrument(state);
-  assert.equal(single.scanMeta.axisRange, "Fixed Ex/Em monitor");
-  assert.equal(single.scanMeta.excitationBadge, "Fixed");
-  assert.equal(single.scanMeta.emissionBadge, "Fixed");
+  assert.equal(single.scanMeta.axisRange, "Fixed Ex/Em monitor / 固定激发与发射监测");
+  assert.equal(single.scanMeta.excitationBadge, "Fixed / 固定");
+  assert.equal(single.scanMeta.emissionBadge, "Fixed / 固定");
 });
 
 test("single-point monitor responds to geometry without moving wavelengths", () => {

@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs?v=teaching-depth-20260427b";
+import { clamp } from "../state.mjs?v=bilingual-semantic-20260428";
 
 export function bandpassFromSlit(widthUm) {
   return clamp(0.7 + widthUm * 0.0077, 1.2, 8.6);
@@ -11,12 +11,12 @@ export function throughputFromSlit(widthUm) {
 
 export function resolutionLabel(bandpassNm) {
   if (bandpassNm <= 3) {
-    return "narrow bandpass / higher resolution";
+    return "narrow bandpass / higher resolution / 窄带宽 / 较高分辨率";
   }
 
   if (bandpassNm >= 7) {
-    return "wide bandpass / lower resolution";
+    return "wide bandpass / lower resolution / 宽带宽 / 较低分辨率";
   }
 
-  return "moderate bandpass";
+  return "moderate bandpass / 中等带宽";
 }

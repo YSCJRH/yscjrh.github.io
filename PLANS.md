@@ -1,4 +1,30 @@
-# Current Phase: Instrument Lab Teaching Depth And Causal Hints
+# Current Phase: Instrument Lab Bilingual Semantic Polish
+
+## Goal
+- Make `/instrument/` fully understandable for Chinese readers by pairing visitor-facing English UI copy with concise Chinese equivalents.
+- Keep the current static Three.js architecture, scientific behavior, and educational boundary unchanged.
+- Treat bilingual pairing as a repeatable project rule so future public UI changes do not require the same repair pass.
+
+## Implementation Notes
+1. Update static Instrument Lab copy:
+   - hero, disclaimer, onboarding, 3D panel hints, controls, legends, chart labels, source-derived examples, noscript, and footer
+   - use `English / 中文` for short UI labels and a nearby Chinese sentence for longer explanations
+2. Update dynamic Instrument Lab copy:
+   - mode summaries, part notes, sample presets, diagnostics, scan metadata, source-data statuses, and fallback messages
+   - preserve scientific caveats: conceptual model, synthetic output, not real control, not calibrated
+3. Solidify the rule in `AGENTS.md`:
+   - public bilingual UI surfaces must keep English and Chinese paired
+   - JavaScript-generated UI text is included in bilingual review
+
+## Validation
+1. Run syntax checks and existing instrument unit tests.
+2. Use `rg` to review remaining English-only visitor-facing strings, excluding vendor files, units, DOI/citations, code identifiers, dataset titles, and accessibility-only technical labels.
+3. Preview `/instrument/` with Browser Use and check the first viewport, controls, diagnostics, source-derived examples, mode switches, part switches, advanced geometry, and mobile fit.
+4. Confirm no new public claims, personal facts, analytics, forms, external services, real instrument control, or calibration claims were introduced.
+
+---
+
+# Previous Phase: Instrument Lab Teaching Depth And Causal Hints
 
 ## Goal
 - Move `/instrument/` from a feature-complete 3D teaching skeleton toward a more legible cause-and-effect teaching instrument.

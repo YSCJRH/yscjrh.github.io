@@ -1,9 +1,9 @@
-import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=teaching-depth-20260427b";
-import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=teaching-depth-20260427b";
-import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=teaching-depth-20260427b";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=teaching-depth-20260427b";
-import { generateDiagnostics } from "./diagnostics.mjs?v=teaching-depth-20260427b";
-import { clamp } from "../state.mjs?v=teaching-depth-20260427b";
+import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=bilingual-semantic-20260428";
+import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=bilingual-semantic-20260428";
+import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=bilingual-semantic-20260428";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=bilingual-semantic-20260428";
+import { generateDiagnostics } from "./diagnostics.mjs?v=bilingual-semantic-20260428";
+import { clamp } from "../state.mjs?v=bilingual-semantic-20260428";
 
 export function deriveInstrument(state) {
   const excitationNm = wavelengthFromGratingAngle(state.exMono.gratingAngleDeg);

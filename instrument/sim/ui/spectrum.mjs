@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=teaching-depth-20260427b";
+import { MODES, PARTS } from "../state.mjs?v=bilingual-semantic-20260428";
 
 const chart = {
   left: 54,
@@ -102,7 +102,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.excitation, `${Math.round(derived.excitationNm)} nm`);
   setText(readouts.emission, `${Math.round(derived.emissionNm)} nm`);
   setText(readouts.slit, `${state.slit.widthUm} um`);
-  setText(readouts.bandpass, `${derived.bandpassNm.toFixed(1)} nm bandpass`);
+  setText(readouts.bandpass, `${derived.bandpassNm.toFixed(1)} nm bandpass / 带宽`);
   setText(readouts.integration, `${state.integrationTimeMs} ms`);
   setText(readouts.sourceOffset, `${state.source.offsetUm} um`);
   setText(readouts.sampleOffset, `${state.sample.offsetUm} um`);
@@ -131,7 +131,7 @@ export function updateModeChrome(elements, state, derived) {
   setText(elements.emissionBadge, derived.scanMeta.emissionBadge);
   setText(elements.scanAxisReadout, derived.scanMeta.axisRange);
   setText(elements.fixedChannelReadout, derived.scanMeta.fixedChannel);
-  setText(elements.chartModeReadout, MODES[state.mode]?.label || "Emission scan");
+  setText(elements.chartModeReadout, MODES[state.mode]?.label || "Emission scan / 发射扫描");
   setText(elements.chartAxisReadout, derived.scanMeta.axisRange);
   setText(elements.chartFixedReadout, derived.scanMeta.fixedChannel);
 }
@@ -158,7 +158,7 @@ export function updateSpectrumChrome(root, elements, state, derived) {
 
   setText(
     elements.intensityReadout,
-    `${state.mode === "single" ? "Point" : "Peak"} ${derived.spectrum.peak.toFixed(2)} a.u.`
+    `${state.mode === "single" ? "Point / 单点" : "Peak / 峰值"} ${derived.spectrum.peak.toFixed(2)} a.u.`
   );
   root.style.setProperty("--beam-intensity", String(derived.beams.excitationIntensity));
   root.style.setProperty("--emission-intensity", String(derived.beams.emissionIntensity));

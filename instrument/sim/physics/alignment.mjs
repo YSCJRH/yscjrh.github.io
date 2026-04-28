@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs?v=teaching-depth-20260427b";
+import { clamp } from "../state.mjs?v=bilingual-semantic-20260428";
 
 function gaussianOffset(offsetUm, toleranceUm) {
   const normalized = offsetUm / Math.max(toleranceUm, 1);

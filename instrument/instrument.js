@@ -5,16 +5,16 @@ import {
   setGeometryOffsets,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=teaching-depth-20260427b";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=teaching-depth-20260427b";
-import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=teaching-depth-20260427b";
+} from "./sim/state.mjs?v=bilingual-semantic-20260428";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=bilingual-semantic-20260428";
+import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=bilingual-semantic-20260428";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=teaching-depth-20260427b";
-import { initializeSourceData } from "./sim/ui/source-data.mjs?v=teaching-depth-20260427b";
+} from "./sim/ui/spectrum.mjs?v=bilingual-semantic-20260428";
+import { initializeSourceData } from "./sim/ui/source-data.mjs?v=bilingual-semantic-20260428";
 
 const root = document.querySelector("[data-instrument-lab]");
 
@@ -85,8 +85,8 @@ if (root) {
     root.classList.toggle("has-2d-fallback", !sceneController.available);
     updateWebglStatus(
       sceneController.available
-        ? "3D teaching skeleton active. 2D optical path remains as fallback."
-        : `${sceneController.reason || "3D scene unavailable."} Showing the 2D fallback.`
+        ? "3D teaching skeleton active. 2D optical path remains as fallback. / 3D 教学骨架已启用；二维光路仍作为备用。"
+        : `${sceneController.reason || "3D scene unavailable. / 3D 场景不可用。"} Showing the 2D fallback. / 显示二维备用图。`
     );
   }
 

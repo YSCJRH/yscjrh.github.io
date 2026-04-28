@@ -7,12 +7,12 @@
     <title>Instrument Lab / HJR / YSCJRH</title>
     <meta
       name="description"
-      content="A conceptual fluorescence spectrophotometer workflow visualization from HJR / YSCJRH. Conceptual only, not instrument control or calibrated measurement."
+      content="A conceptual fluorescence spectrophotometer workflow visualization from HJR / YSCJRH. 荧光分光光度计工作链路的概念可视化，非真实仪器控制或校准测量。"
     >
     <meta property="og:title" content="Instrument Lab / HJR / YSCJRH">
     <meta
       property="og:description"
-      content="A calm conceptual model of the fluorescence spectrophotometer path with right-angle excitation and emission geometry."
+      content="A calm conceptual model of the fluorescence spectrophotometer path with right-angle excitation and emission geometry. 以 90° 激发/发射几何展示荧光仪器概念链路。"
     >
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yscjrh.github.io/instrument/">
@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=teaching-depth-20260427b">
+    <link rel="stylesheet" href="../styles.css?v=bilingual-semantic-20260428">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -32,13 +32,13 @@
           return;
         }
 
-        import("./instrument.js?v=teaching-depth-20260427b").catch((error) => {
+        import("./instrument.js?v=bilingual-semantic-20260428").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
           root?.classList.add("has-2d-fallback");
           if (status) {
-            status.textContent = "Interactive module unavailable. Showing the 2D fallback.";
+            status.textContent = "Interactive module unavailable. Showing the 2D fallback. / 交互模块不可用，显示二维备用图。";
           }
         });
       })();
@@ -58,13 +58,13 @@
     <div class="site-shell">
       <header class="site-header" id="top">
         <div class="container site-header__inner">
-          <a class="brand" href="../index.html#top" aria-label="HJR homepage">
+          <a class="brand" href="../index.html#top" aria-label="HJR homepage / HJR 首页">
             <span class="brand-mark">HJR / YSCJRH</span>
-            <span class="brand-sub">Researcher · Builder · Thinker</span>
+            <span class="brand-sub">Researcher · Builder · Thinker / 研究者 · 构建者 · 思考者</span>
           </a>
 
           <div class="site-header__cluster">
-            <nav class="site-nav" aria-label="Primary navigation">
+            <nav class="site-nav" aria-label="Primary navigation / 主导航">
               <a href="../index.html#research">Research / 研究</a>
               <a href="../index.html#build">Build / 构建</a>
               <a href="../notes/">Notes / 笔记</a>
@@ -79,7 +79,7 @@
                 data-nav-toggle
                 aria-expanded="false"
                 aria-controls="mobile-menu"
-                aria-label="Toggle navigation menu"
+                aria-label="Toggle navigation menu / 切换导航菜单"
               >
                 <span class="nav-toggle__line"></span>
                 <span class="nav-toggle__line"></span>
@@ -91,7 +91,7 @@
 
         <div class="container mobile-menu-wrap">
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
-            <nav class="mobile-nav" aria-label="Mobile navigation">
+            <nav class="mobile-nav" aria-label="Mobile navigation / 移动端导航">
               <a href="../index.html#research">Research / 研究</a>
               <a href="../index.html#build">Build / 构建</a>
               <a href="../notes/">Notes / 笔记</a>
@@ -104,7 +104,7 @@
               href="https://github.com/YSCJRH"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit the YSCJRH GitHub profile"
+              aria-label="Visit the YSCJRH GitHub profile / 查看 YSCJRH 的 GitHub 主页"
             >
               Visit GitHub / 查看 GitHub
             </a>
@@ -122,7 +122,7 @@
             <article class="surface surface-glass article-card instrument-hero-card" data-reveal>
               <div>
                 <p class="eyebrow">Instrument Lab / 荧光仪器可视化实验室</p>
-                <h1 class="article-title">Fluorescence instrument teaching skeleton.</h1>
+                <h1 class="article-title">Fluorescence instrument teaching skeleton / 荧光仪器教学骨架</h1>
                 <p class="article-lead">
                   Explore a static 3D optical bench, grating-driven monochromators, and a simplified synthetic trace.
                 </p>
@@ -132,22 +132,27 @@
               </div>
               <p class="instrument-disclaimer" data-disclaimer>
                 Conceptual model only. Not real instrument control. Not calibrated measurement.
+                <br>
+                仅为概念模型，不是真实仪器控制，也不是校准测量。
               </p>
             </article>
 
-            <section class="instrument-workstation" aria-label="Interactive fluorescence spectrophotometer concept model">
-              <div class="instrument-onboarding" aria-label="How to use the concept model" data-reveal>
+            <section class="instrument-workstation" aria-label="Interactive fluorescence spectrophotometer concept model / 交互式荧光分光光度计概念模型">
+              <div class="instrument-onboarding" aria-label="How to use the concept model / 如何使用概念模型" data-reveal>
                 <p>
-                  <strong>1. Choose a mode</strong>
+                  <strong>1. Choose a mode / 选择模式</strong>
                   Pick which channel scans.
+                  <span>选择扫描模式，先看哪一路通道在变化。</span>
                 </p>
                 <p>
-                  <strong>2. Move one control</strong>
+                  <strong>2. Move one control / 移动控制项</strong>
                   Watch the synthetic trace respond.
+                  <span>移动一个控制项，观察合成谱线如何响应。</span>
                 </p>
                 <p>
-                  <strong>3. Tap a part</strong>
+                  <strong>3. Tap a part / 点选部件</strong>
                   Read what each instrument block does.
+                  <span>点选一个部件，阅读它在仪器链路中的作用。</span>
                 </p>
               </div>
 
@@ -161,29 +166,30 @@
                   <p class="panel-chrome-label">Concept model / 概念模型</p>
                 </div>
 
-                <div class="instrument-stage instrument-stage-3d" aria-label="3D teaching skeleton for the fluorescence instrument path">
+                <div class="instrument-stage instrument-stage-3d" aria-label="3D teaching skeleton for the fluorescence instrument path / 荧光仪器光路的 3D 教学骨架">
                   <div class="instrument-scene-host" data-scene-host></div>
                   <div class="instrument-scene-overlay" aria-hidden="true">
-                    <p>Open optical bench / 3D teaching skeleton</p>
+                    <p>Open optical bench / 3D teaching skeleton / 开放式光学台 / 3D 教学骨架</p>
                     <p>Blue Ex path terminates at the beam stop; cyan Em path turns 90 deg to the detector.</p>
+                    <p>蓝色激发光在光束终止器处结束；青色发射光以 90° 方向进入检测器。</p>
                   </div>
-                  <div class="instrument-view-toolbar" aria-label="3D view controls">
-                    <button type="button" data-action="reset-view">Reset view</button>
-                    <button type="button" data-action="reset-geometry">Reset alignment</button>
-                    <span data-webgl-status>Loading 3D teaching skeleton...</span>
+                  <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
+                    <button type="button" data-action="reset-view">Reset view / 重置视角</button>
+                    <button type="button" data-action="reset-geometry">Reset alignment / 重置对准</button>
+                    <span data-webgl-status>Loading 3D teaching skeleton... / 正在加载 3D 教学骨架...</span>
                   </div>
                 </div>
 
-                <div class="instrument-stage instrument-stage-fallback instrument-2d-fallback" data-fallback-diagram aria-label="Simplified instrument light path fallback">
+                <div class="instrument-stage instrument-stage-fallback instrument-2d-fallback" data-fallback-diagram aria-label="Simplified instrument light path fallback / 简化仪器光路备用图">
                   <svg
                     class="instrument-diagram"
                     viewBox="0 0 960 560"
                     role="img"
                     aria-labelledby="instrument-diagram-title instrument-diagram-desc"
                   >
-                    <title id="instrument-diagram-title">Fluorescence spectrophotometer conceptual light path</title>
+                    <title id="instrument-diagram-title">Fluorescence spectrophotometer conceptual light path / 荧光分光光度计概念光路</title>
                     <desc id="instrument-diagram-desc">
-                      A simplified right-angle layout showing the light source, excitation monochromator, sample cell, emission monochromator, detector, and spectrum output.
+                      A simplified right-angle layout showing the light source, excitation monochromator, sample cell, emission monochromator, detector, and spectrum output. 简化的 90° 光路布局，展示光源、激发单色器、样品池、发射单色器、检测器和谱图输出。
                     </desc>
                     <defs>
                       <linearGradient id="instrumentBody" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -217,14 +223,14 @@
                       <rect width="128" height="150" rx="24"></rect>
                       <circle cx="64" cy="62" r="24"></circle>
                       <path d="M40 104h48M46 120h36"></path>
-                      <text class="component-label" x="64" y="184">Light source</text>
+                      <text class="component-label" x="64" y="184">Light source / 光源</text>
                     </g>
 
                     <g class="instrument-node instrument-node-excitation" transform="translate(248 252)">
                       <rect width="142" height="150" rx="24"></rect>
                       <path d="M36 52h70l-22 42H52z"></path>
                       <path d="M34 110h74"></path>
-                      <text class="component-label" x="71" y="184">Excitation mono</text>
+                      <text class="component-label" x="71" y="184">Ex mono / 激发单色器</text>
                     </g>
 
                     <g class="instrument-sample" transform="translate(430 190)">
@@ -232,7 +238,7 @@
                       <rect x="44" y="44" width="70" height="150" rx="16"></rect>
                       <path d="M44 128h70"></path>
                       <circle cx="79" cy="124" r="20"></circle>
-                      <text class="component-label component-label-sample" x="79" y="252">Sample cell</text>
+                      <text class="component-label component-label-sample" x="79" y="252">Sample / 样品池</text>
                     </g>
 
                     <g class="instrument-guard" transform="translate(612 286)" aria-hidden="true">
@@ -240,39 +246,39 @@
                       <rect class="guard-mouth" x="5" y="17" width="14" height="26" rx="3"></rect>
                       <path class="guard-groove" d="M24 20H56M24 40H56"></path>
                       <path class="guard-base" d="M10 62H68"></path>
-                      <text x="40" y="88">beam stop</text>
+                      <text x="40" y="88">beam stop / 光束终止</text>
                     </g>
 
                     <g class="instrument-node instrument-node-emission" transform="translate(438 36)">
                       <rect width="142" height="150" rx="24"></rect>
                       <path d="M36 52h70l-22 42H52z"></path>
                       <path d="M34 110h74"></path>
-                      <text class="component-label component-label-emission" x="71" y="-10">Emission mono</text>
+                      <text class="component-label component-label-emission" x="71" y="-10">Em mono / 发射单色器</text>
                     </g>
 
                     <g class="instrument-node" transform="translate(650 52)">
                       <rect width="112" height="142" rx="24"></rect>
                       <circle cx="56" cy="64" r="28"></circle>
                       <path d="M44 104h24"></path>
-                      <text class="component-label" x="56" y="176">Detector</text>
+                      <text class="component-label" x="56" y="176">Detector / 检测器</text>
                     </g>
 
                     <g class="instrument-screen" transform="translate(690 300)">
                       <rect width="204" height="118" rx="20"></rect>
                       <polyline points="24,86 54,80 82,54 110,72 138,34 174,68"></polyline>
-                      <text class="component-label" x="102" y="148">Spectrum output</text>
+                      <text class="component-label" x="102" y="148">Spectrum / 谱图</text>
                     </g>
 
-                    <text class="instrument-axis-label instrument-axis-label-excitation" x="270" y="342">excitation path</text>
-                    <text class="instrument-axis-label instrument-axis-label-emission-clean" x="612" y="96">90 deg emission arm</text>
-                    <text class="instrument-angle-label instrument-angle-label-clean" x="546" y="300">90 deg</text>
+                    <text class="instrument-axis-label instrument-axis-label-excitation" x="270" y="342">Ex path / 激发光路</text>
+                    <text class="instrument-axis-label instrument-axis-label-emission-clean" x="612" y="96">90 deg Em arm / 90° 发射臂</text>
+                    <text class="instrument-angle-label instrument-angle-label-clean" x="546" y="300">90 deg / 90°</text>
                     <g class="scan-badge scan-badge-excitation" transform="translate(270 234)">
                       <rect width="98" height="24" rx="12"></rect>
-                      <text x="49" y="16" data-badge-excitation>Fixed</text>
+                      <text x="49" y="16" data-badge-excitation>Fixed / 固定</text>
                     </g>
                     <g class="scan-badge scan-badge-emission" transform="translate(460 158)">
                       <rect width="98" height="24" rx="12"></rect>
-                      <text x="49" y="16" data-badge-emission>Scanning</text>
+                      <text x="49" y="16" data-badge-emission>Scanning / 扫描</text>
                     </g>
 
                     <path
@@ -296,22 +302,22 @@
                     </g>
                     <path class="signal-output" d="M706 128L792 300"></path>
 
-                    <g class="instrument-marker" data-part="source" role="button" tabindex="0" aria-label="Light source" aria-pressed="true">
+                    <g class="instrument-marker" data-part="source" role="button" tabindex="0" aria-label="Light source / 光源" aria-pressed="true">
                       <circle cx="140" cy="314" r="10"></circle>
                     </g>
-                    <g class="instrument-marker" data-part="excitation" role="button" tabindex="0" aria-label="Excitation monochromator" aria-pressed="false">
+                    <g class="instrument-marker" data-part="excitation" role="button" tabindex="0" aria-label="Excitation monochromator / 激发单色器" aria-pressed="false">
                       <circle cx="319" cy="314" r="10"></circle>
                     </g>
-                    <g class="instrument-marker" data-part="sample" role="button" tabindex="0" aria-label="Sample cell" aria-pressed="false">
+                    <g class="instrument-marker" data-part="sample" role="button" tabindex="0" aria-label="Sample cell / 样品池" aria-pressed="false">
                       <circle cx="509" cy="314" r="10"></circle>
                     </g>
-                    <g class="instrument-marker" data-part="emission" role="button" tabindex="0" aria-label="Emission monochromator" aria-pressed="false">
+                    <g class="instrument-marker" data-part="emission" role="button" tabindex="0" aria-label="Emission monochromator / 发射单色器" aria-pressed="false">
                       <circle cx="509" cy="116" r="10"></circle>
                     </g>
-                    <g class="instrument-marker" data-part="detector" role="button" tabindex="0" aria-label="Detector" aria-pressed="false">
+                    <g class="instrument-marker" data-part="detector" role="button" tabindex="0" aria-label="Detector / 检测器" aria-pressed="false">
                       <circle cx="706" cy="116" r="10"></circle>
                     </g>
-                    <g class="instrument-marker" data-part="output" role="button" tabindex="0" aria-label="Spectrum display" aria-pressed="false">
+                    <g class="instrument-marker" data-part="output" role="button" tabindex="0" aria-label="Spectrum display / 谱图显示" aria-pressed="false">
                       <circle cx="792" cy="359" r="10"></circle>
                     </g>
                   </svg>
@@ -320,138 +326,146 @@
 
                 <p class="instrument-operability-note" data-scene-hint>
                   Select source, sample, or detector to reveal bounded geometry controls. These teaching controls change intensity and diagnostics, not selected wavelength.
+                  <br>
+                  选择光源、样品池或检测器，可显示受限几何控制；这些教学控制只影响强度和诊断，不改变选通波长。
                 </p>
 
-                <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes">
+                <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes / 概念光路几何说明">
                   <p>
                     <span class="path-key path-key-excitation" aria-hidden="true"></span>
-                    <strong>Blue excitation axis</strong>
+                    <strong>Blue excitation axis / 蓝色激发轴</strong>
                     Light reaches the sample through the excitation monochromator; the remaining incident beam is shown as stopped, not sent to the detector.
+                    <span>光经激发单色器到达样品；剩余入射光被表示为终止，而不是进入检测器。</span>
                   </p>
                   <p>
                     <span class="path-key path-key-emission" aria-hidden="true"></span>
-                    <strong>Cyan 90° collection arm</strong>
+                    <strong>Cyan 90° collection arm / 青色 90° 收集臂</strong>
                     Fluorescence is collected from the side path through the emission monochromator before detection.
+                    <span>荧光从侧向路径被收集，经过发射单色器后再进入检测器。</span>
                   </p>
                   <p>
                     <span class="path-key path-key-residual" aria-hidden="true"></span>
                     <strong>Beam stop / 光束终止器</strong>
                     The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.
+                    <span>直通方向的激发光进入吸收终止块，避免被误解为反射光或检测光路。</span>
                   </p>
                   <p>
                     <span class="path-key path-key-signal" aria-hidden="true"></span>
-                    <strong>Signal output line</strong>
+                    <strong>Signal output line / 信号输出线</strong>
                     The fine line after the detector represents a processed display signal, not another optical beam.
+                    <span>检测器之后的细线表示处理后的显示信号，不是另一束光。</span>
                   </p>
                 </div>
 
-                <div class="instrument-flow-strip" aria-label="Measurement chain">
-                  <button type="button" data-part="source" aria-pressed="true">Light source</button>
-                  <button type="button" data-part="excitation" aria-pressed="false">Excitation mono</button>
-                  <button type="button" data-part="sample" aria-pressed="false">Sample cell</button>
-                  <button type="button" data-part="emission" aria-pressed="false">Emission mono</button>
-                  <button type="button" data-part="detector" aria-pressed="false">Detector</button>
-                  <button type="button" data-part="output" aria-pressed="false">Spectrum</button>
+                <div class="instrument-flow-strip" aria-label="Measurement chain / 测量链路">
+                  <button type="button" data-part="source" aria-pressed="true">Light source / 光源</button>
+                  <button type="button" data-part="excitation" aria-pressed="false">Excitation mono / 激发单色器</button>
+                  <button type="button" data-part="sample" aria-pressed="false">Sample cell / 样品池</button>
+                  <button type="button" data-part="emission" aria-pressed="false">Emission mono / 发射单色器</button>
+                  <button type="button" data-part="detector" aria-pressed="false">Detector / 检测器</button>
+                  <button type="button" data-part="output" aria-pressed="false">Spectrum / 谱图</button>
                 </div>
               </div>
 
               <div class="instrument-side">
                 <section class="surface surface-glass instrument-control-panel" aria-labelledby="instrument-controls-title" data-reveal>
                   <p class="eyebrow">Controls / 控制面板</p>
-                  <h2 class="article-subtitle" id="instrument-controls-title">Explore the scan model</h2>
+                  <h2 class="article-subtitle" id="instrument-controls-title">Explore the scan model / 探索扫描模型</h2>
 
                   <fieldset class="mode-selector" data-mode-selector>
                     <legend>Mode / 模式</legend>
-                    <button type="button" data-mode="emission" aria-pressed="true">Emission scan</button>
-                    <button type="button" data-mode="excitation" aria-pressed="false">Excitation scan</button>
-                    <button type="button" data-mode="time" aria-pressed="false">Time / kinetic scan</button>
-                    <button type="button" data-mode="single" aria-pressed="false">Single-point monitor</button>
+                    <button type="button" data-mode="emission" aria-pressed="true">Emission scan / 发射扫描</button>
+                    <button type="button" data-mode="excitation" aria-pressed="false">Excitation scan / 激发扫描</button>
+                    <button type="button" data-mode="time" aria-pressed="false">Time / kinetic scan / 时间动力学扫描</button>
+                    <button type="button" data-mode="single" aria-pressed="false">Single-point monitor / 单点监测</button>
                   </fieldset>
 
                   <div class="control-stack">
                     <label class="instrument-control">
-                      <span>Excitation grating <strong data-readout="excitation-angle">13.4 deg</strong></span>
+                      <span>Excitation grating / 激发光栅 <strong data-readout="excitation-angle">13.4 deg</strong></span>
                       <input data-control="excitation-angle" type="range" min="9.5" max="21.5" step="0.1" value="13.4">
-                      <small class="control-help">Derived excitation channel: <strong data-readout="excitation">365 nm</strong>.</small>
+                      <small class="control-help">Derived excitation channel / 派生激发通道：<strong data-readout="excitation">365 nm</strong>.</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span><span data-emission-label>Emission grating angle</span> <strong data-readout="emission-angle">19.1 deg</strong></span>
+                      <span><span data-emission-label>Emission grating angle / 发射光栅角</span> <strong data-readout="emission-angle">19.1 deg</strong></span>
                       <input data-control="emission-angle" type="range" min="14" max="27" step="0.1" value="19.1">
-                      <small class="control-help" id="emission-range-help">Derived emission channel: <strong data-readout="emission">520 nm</strong>.</small>
+                      <small class="control-help" id="emission-range-help">Derived emission channel / 派生发射通道：<strong data-readout="emission">520 nm</strong>.</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Slit width <strong data-readout="slit">500 um</strong></span>
+                      <span>Slit width / 狭缝宽度 <strong data-readout="slit">500 um</strong></span>
                       <input data-control="slit" type="range" min="100" max="1000" step="25" value="500">
-                      <small class="control-help"><strong data-readout="bandpass">4.6 nm bandpass</strong>; wider slit increases throughput and broadens features.</small>
+                      <small class="control-help"><strong data-readout="bandpass">4.6 nm bandpass / 4.6 nm 带宽</strong>; wider slit increases throughput and broadens features. 狭缝越宽，通光量越高，谱峰也会变宽。</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Integration time <strong data-readout="integration">200 ms</strong></span>
+                      <span>Integration time / 积分时间 <strong data-readout="integration">200 ms</strong></span>
                       <input data-control="integration" type="range" min="20" max="1000" step="20" value="200">
-                      <small class="control-help">Signal averaging time in this model, not a lifetime measurement.</small>
+                      <small class="control-help">Signal averaging time in this model, not a lifetime measurement. 这里表示信号平均时间，不是荧光寿命测量。</small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Sample preset</span>
+                      <span>Sample preset / 样品预设</span>
                       <select data-control="sample">
-                        <option value="low-background">Low-background sample</option>
-                        <option value="broad-emission">Broad-emission sample</option>
-                        <option value="blank">Blank / background-dominant</option>
-                        <option value="scattering">Scattering sample</option>
+                        <option value="low-background">Low-background sample / 低背景样品</option>
+                        <option value="broad-emission">Broad-emission sample / 宽发射样品</option>
+                        <option value="blank">Blank / background-dominant / 空白或背景主导</option>
+                        <option value="scattering">Scattering sample / 散射样品</option>
                       </select>
-                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum.</small>
+                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum. 仅表示示意行为，不是真实样品谱图。</small>
                     </label>
 
                     <details class="advanced-geometry">
                       <summary>
                         <span>Advanced geometry: detector angle / 高级光路：检测角</span>
-                        <strong>Source/sample offset + 80-100 deg detector arm</strong>
+                        <strong>Source/sample offset + 80-100 deg detector arm / 光源和样品偏移 + 80-100° 检测臂</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
                         Select source or sample in the 3D scene, then drag the blue Z-axis handle for a bounded offset. Select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
+                        <br>
+                        在 3D 场景中选择光源或样品池，可拖动蓝色 Z 轴手柄做受限偏移；选择检测器可显示青色检测臂手柄。这些几何变化只影响强度和诊断，不改变选通波长。
                       </p>
 
                     <label class="instrument-control">
-                      <span>Source offset <strong data-readout="source-offset">0 um</strong></span>
+                      <span>Source offset / 光源偏移 <strong data-readout="source-offset">0 um</strong></span>
                       <input data-control="source-offset" type="range" min="-120" max="120" step="5" value="0">
-                      <small class="control-help">Conceptual entrance alignment; it changes intensity, not wavelength.</small>
+                      <small class="control-help">Conceptual entrance alignment; it changes intensity, not wavelength. 概念入口对准，只改变强度，不改变波长。</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Sample offset <strong data-readout="sample-offset">0 um</strong></span>
+                      <span>Sample offset / 样品偏移 <strong data-readout="sample-offset">0 um</strong></span>
                       <input data-control="sample-offset" type="range" min="-120" max="120" step="5" value="0">
-                      <small class="control-help">Moves overlap at the cell; peak positions stay tied to the sample preset.</small>
+                      <small class="control-help">Moves overlap at the cell; peak positions stay tied to the sample preset. 改变样品池处的重叠程度，峰位仍由样品预设决定。</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Detector arm angle <strong data-readout="detector-angle">90.0 deg</strong></span>
+                      <span>Detector arm angle / 检测臂角度 <strong data-readout="detector-angle">90.0 deg</strong></span>
                       <input data-control="detector-angle" type="range" min="80" max="100" step="0.5" value="90">
-                      <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk.</small>
+                      <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk. 90° 收集是教学默认值，偏离会降低收集效率并提高背景风险。</small>
                     </label>
                     </details>
                   </div>
 
                   <p class="instrument-status" data-mode-summary>
-                    Emission scan: fixed excitation wavelength, scanning emission wavelength.
+                    Emission scan: fixed excitation wavelength, scanning emission wavelength. / 发射扫描：固定激发波长，扫描发射波长。
                   </p>
 
-                  <div class="scan-state-grid" aria-label="Current conceptual scan state">
+                  <div class="scan-state-grid" aria-label="Current conceptual scan state / 当前概念扫描状态">
                     <p>
-                      <span>Scan axis</span>
-                      <strong data-scan-axis-readout>Emission 380-700 nm</strong>
+                      <span>Scan axis / 扫描轴</span>
+                      <strong data-scan-axis-readout>Emission 380-700 nm / 发射 380-700 nm</strong>
                     </p>
                     <p>
-                      <span>Fixed channel</span>
-                      <strong data-fixed-channel-readout>Excitation 365 nm</strong>
+                      <span>Fixed channel / 固定通道</span>
+                      <strong data-fixed-channel-readout>Excitation 365 nm / 激发 365 nm</strong>
                     </p>
                     <p>
-                      <span>Throughput</span>
+                      <span>Throughput / 通光量</span>
                       <strong data-readout="throughput">0%</strong>
                     </p>
                     <p>
-                      <span>Overlap / collection</span>
+                      <span>Overlap / collection / 重叠 / 收集</span>
                       <strong><span data-readout="overlap">100%</span> / <span data-readout="collection">100%</span></strong>
                     </p>
                   </div>
@@ -459,22 +473,24 @@
 
                 <section class="surface surface-glass part-panel" aria-live="polite" data-reveal>
                   <p class="eyebrow">Part note / 部件说明</p>
-                  <h2 class="article-subtitle" data-part-title>Light source</h2>
+                  <h2 class="article-subtitle" data-part-title>Light source / 光源</h2>
                   <p data-part-copy>
                     Provides broadband or selected excitation energy before the path is shaped by the excitation monochromator.
+                    光源提供宽带或选定的激发能量，随后由激发单色器塑造光路。
                   </p>
                   <p class="part-hint" data-part-hint>
                     Select source in the 3D view, then drag the blue Z-axis handle or use Source offset. Alignment changes intensity, not wavelength.
+                    在 3D 视图中选择光源后，可拖动蓝色 Z 轴手柄或使用光源偏移；对准只改变强度，不改变波长。
                   </p>
                 </section>
 
                 <section class="surface surface-glass diagnostics-panel" aria-labelledby="diagnostics-title" data-reveal>
                   <p class="eyebrow">Diagnostics / 物理状态</p>
-                  <h2 class="article-subtitle" id="diagnostics-title">Consequences, not claims</h2>
+                  <h2 class="article-subtitle" id="diagnostics-title">Consequences, not claims / 只说明后果，不声称性能</h2>
                   <ul class="diagnostics-list" data-diagnostics-list>
                     <li class="diagnostic-item diagnostic-item-info">
-                      <strong>Waiting for model</strong>
-                      <span>Derived state will appear here after the simulation loads.</span>
+                      <strong>Waiting for model / 等待模型加载</strong>
+                      <span>Derived state will appear here after the simulation loads. / 模型加载后会在这里显示派生状态。</span>
                     </li>
                   </ul>
                 </section>
@@ -483,33 +499,33 @@
                   <div class="spectrum-panel-head">
                     <div>
                       <p class="eyebrow">Synthetic output / 合成输出</p>
-                      <h2 class="article-subtitle" id="spectrum-title">Conceptual spectrum</h2>
+                      <h2 class="article-subtitle" id="spectrum-title">Conceptual spectrum / 概念谱图</h2>
                     </div>
-                    <p class="spectrum-readout" data-intensity-readout>Peak 0.00 a.u.</p>
+                    <p class="spectrum-readout" data-intensity-readout>Peak / 峰值 0.00 a.u.</p>
                   </div>
 
-                  <div class="spectrum-meta-grid" aria-label="Current synthetic output state">
+                  <div class="spectrum-meta-grid" aria-label="Current synthetic output state / 当前合成输出状态">
                     <p>
-                      <span>Mode</span>
-                      <strong data-chart-mode>Emission scan</strong>
+                      <span>Mode / 模式</span>
+                      <strong data-chart-mode>Emission scan / 发射扫描</strong>
                     </p>
                     <p>
-                      <span>Scan axis</span>
-                      <strong data-chart-axis>Emission 380-700 nm</strong>
+                      <span>Scan axis / 扫描轴</span>
+                      <strong data-chart-axis>Emission 380-700 nm / 发射 380-700 nm</strong>
                     </p>
                     <p>
-                      <span>Fixed</span>
-                      <strong data-chart-fixed>Excitation 365 nm</strong>
+                      <span>Fixed / 固定通道</span>
+                      <strong data-chart-fixed>Excitation 365 nm / 激发 365 nm</strong>
                     </p>
                     <p>
-                      <span>Scale</span>
-                      <strong>fixed synthetic a.u. / not calibrated</strong>
+                      <span>Scale / 标度</span>
+                      <strong>fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准</strong>
                     </p>
                   </div>
 
                   <svg class="spectrum-chart" viewBox="0 0 620 300" role="img" aria-labelledby="spectrum-chart-title spectrum-chart-desc">
-                    <title id="spectrum-chart-title">Synthetic spectrum output</title>
-                    <desc id="spectrum-chart-desc">A simplified synthetic trace that changes when the conceptual controls change.</desc>
+                    <title id="spectrum-chart-title">Synthetic spectrum output / 合成谱图输出</title>
+                    <desc id="spectrum-chart-desc">A simplified synthetic trace that changes when the conceptual controls change. 概念控制改变时同步变化的简化合成谱线。</desc>
                     <g class="spectrum-grid" aria-hidden="true">
                       <path d="M54 34V248H588"></path>
                       <path d="M54 198H588M54 148H588M54 98H588M154 34V248M254 34V248M354 34V248M454 34V248M554 34V248"></path>
@@ -522,11 +538,13 @@
                     <text class="spectrum-axis-label spectrum-y-label" x="18" y="42">a.u.</text>
                     <text class="spectrum-axis-label" x="54" y="282" data-x-axis-start>380 nm</text>
                     <text class="spectrum-axis-label spectrum-axis-end" x="588" y="282" data-x-axis-end>700 nm</text>
-                    <text class="spectrum-mode-label" x="310" y="286" text-anchor="middle" data-spectrum-mode-label>Emission wavelength</text>
+                    <text class="spectrum-mode-label" x="310" y="286" text-anchor="middle" data-spectrum-mode-label>Emission wavelength / 发射波长</text>
                   </svg>
 
                   <p class="instrument-disclaimer instrument-disclaimer-small">
                     Illustrative synthetic traces only. Shapes and intensities do not represent calibrated spectra, real samples, or instrument validation.
+                    <br>
+                    仅为示意性合成谱线；形状和强度不代表校准谱图、真实样品或仪器验证。
                   </p>
                 </section>
               </div>
@@ -539,50 +557,53 @@
               >
                 <div class="source-data-head">
                   <div>
-                    <p class="eyebrow">Source-derived examples / cited data</p>
-                    <h2 class="article-subtitle" id="source-data-title">Small public spectra, displayed carefully</h2>
+                    <p class="eyebrow">Source-derived examples / 引用数据示例</p>
+                    <h2 class="article-subtitle" id="source-data-title">Small public spectra, displayed carefully / 小型公开谱图，谨慎展示</h2>
                   </div>
                   <p class="source-data-intro">
                     These examples are loaded from a local manifest and processed JSON package. They are separate from the synthetic controls above.
+                    <br>
+                    这些示例来自本地 manifest 与处理后的 JSON 数据包，和上方的合成控制项彼此独立。
                   </p>
                 </div>
 
                 <div class="source-data-layout">
                   <div class="source-data-controls">
-                    <div class="source-dataset-cards" data-source-cards aria-label="Source-derived dataset shortcuts"></div>
+                    <div class="source-dataset-cards" data-source-cards aria-label="Source-derived dataset shortcuts / 引用数据快捷选择"></div>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Dataset</span>
+                      <span>Dataset / 数据集</span>
                       <select data-source-dataset>
-                        <option>Loading source-derived examples...</option>
+                        <option>Loading source-derived examples... / 正在加载引用数据示例...</option>
                       </select>
                     </label>
 
                     <p class="source-data-status" data-source-status aria-live="polite">
-                      Loading local source data package.
+                      Loading local source data package. / 正在加载本地数据包。
                     </p>
                   </div>
 
                   <div class="source-chart-wrap">
                     <div class="source-chart-meta">
                       <p>
-                        <span>Kind</span>
-                        <strong data-source-kind>Source-derived</strong>
+                        <span>Kind / 类型</span>
+                        <strong data-source-kind>Source-derived / 引用数据</strong>
                       </p>
                       <p>
-                        <span>Scale</span>
-                        <strong>normalized display a.u.</strong>
+                        <span>Scale / 标度</span>
+                        <strong>normalized display a.u. / 归一化显示 a.u.</strong>
                       </p>
                       <p>
-                        <span>Runtime</span>
-                        <strong>local JSON only</strong>
+                        <span>Runtime / 运行方式</span>
+                        <strong>local JSON only / 仅本地 JSON</strong>
                       </p>
                     </div>
 
                     <svg class="source-chart" viewBox="0 0 620 350" role="img" aria-labelledby="source-chart-title source-chart-desc">
-                      <title id="source-chart-title" data-source-chart-title">Source-derived fluorescence example</title>
+                      <title id="source-chart-title" data-source-chart-title>Source-derived fluorescence example / 引用来源荧光示例</title>
                       <desc id="source-chart-desc" data-source-chart-desc">
                         A cited, normalized, downsampled fluorescence example for educational visualization.
+                        已引用来源、归一化并降采样的荧光教学可视化示例。
                       </desc>
                       <g class="spectrum-grid source-chart-grid" aria-hidden="true">
                         <path d="M54 34V258H588"></path>
@@ -595,42 +616,47 @@
                       <text class="spectrum-axis-label spectrum-axis-end" x="588" y="292" data-source-x-end>--</text>
                       <text class="spectrum-axis-label source-y-start" x="18" y="262" data-source-y-start>0</text>
                       <text class="spectrum-axis-label source-y-end" x="18" y="38" data-source-y-end>1</text>
-                      <text class="spectrum-mode-label" x="310" y="326" text-anchor="middle" data-source-mode-label>Wavelength</text>
+                      <text class="spectrum-mode-label" x="310" y="326" text-anchor="middle" data-source-mode-label>Wavelength / 波长</text>
                     </svg>
 
                     <p class="source-data-caption" data-source-caption>
                       Source-derived examples are display-processed and should not be compared as calibrated intensities.
+                      这些引用示例已为显示处理，不能作为校准强度进行比较。
                     </p>
                   </div>
 
                   <dl class="source-data-facts">
                     <div>
-                      <dt>Source</dt>
-                      <dd data-source-name>Waiting for manifest</dd>
+                      <dt>Source / 来源</dt>
+                      <dd data-source-name>Waiting for manifest / 等待 manifest</dd>
                     </div>
                     <div>
-                      <dt>DOI / link</dt>
+                      <dt>DOI / link / DOI 或链接</dt>
                       <dd>
                         <a data-source-link href="../DATA_SOURCES.md">DATA_SOURCES.md</a>
                       </dd>
                     </div>
                     <div>
-                      <dt>License</dt>
-                      <dd data-source-license>Recorded in manifest</dd>
+                      <dt>License / 许可</dt>
+                      <dd data-source-license>Recorded in manifest / 已记录在 manifest 中</dd>
                     </div>
                     <div>
-                      <dt>Processing</dt>
-                      <dd data-source-processing>Normalized/downsampled for display.</dd>
+                      <dt>Processing / 处理方式</dt>
+                      <dd data-source-processing>Normalized/downsampled for display. / 已归一化并降采样用于显示。</dd>
                     </div>
                   </dl>
                 </div>
 
                 <p class="instrument-disclaimer instrument-disclaimer-small" data-source-disclaimer>
                   Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website and not calibrated by this site.
+                  <br>
+                  页面展示的引用数据已为教学可视化归一化或降采样；它们不是本站测量结果，也未由本站校准。
                 </p>
 
                 <p class="source-reference-note" data-source-reference-note>
                   Calibration references are tracked separately and are not plotted unless an exact public data file and reuse boundary are verified.
+                  <br>
+                  校准参考资料单独记录；只有在确认具体公开数据文件和复用边界后才会绘制。
                 </p>
               </section>
             </section>
@@ -638,6 +664,7 @@
             <noscript>
               <div class="surface surface-glass instrument-noscript">
                 JavaScript is disabled, so the controls cannot update the synthetic trace. The static optical path above remains available as a conceptual fallback.
+                当前浏览器禁用了 JavaScript，控制项无法更新合成谱线；上方静态光路仍可作为概念备用图。
               </div>
             </noscript>
           </div>
@@ -646,7 +673,7 @@
 
       <footer class="site-footer">
         <div class="container footer-inner">
-          <p>HJR / YSCJRH - fluorescence analysis, algorithmic methods, scientific instrumentation, open tools.</p>
+          <p>HJR / YSCJRH - fluorescence analysis, algorithmic methods, scientific instrumentation, open tools. / 荧光分析、算法方法、科学仪器与开放工具。</p>
           <p class="footer-links">
             <a href="../index.html#top">Home / 首页</a>
             <a href="../projects/">Projects / 项目</a>

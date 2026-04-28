@@ -3620,6 +3620,16 @@ section[id] {
   text-transform: uppercase;
 }
 
+.instrument-onboarding span,
+.instrument-principle-strip span {
+  display: block;
+  margin-top: 0.18rem;
+  color: rgba(198, 224, 255, 0.76);
+  font-weight: 560;
+  line-height: 1.55;
+  text-transform: none;
+}
+
 .instrument-model-panel,
 .instrument-control-panel,
 .part-panel,

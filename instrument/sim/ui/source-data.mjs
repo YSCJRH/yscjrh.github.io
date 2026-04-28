@@ -57,25 +57,25 @@ function setSourceLink(elements, dataset) {
   }
 
   link.href = dataset.source.doi ? `https://doi.org/${dataset.source.doi}` : dataset.source.url;
-  link.textContent = dataset.source.doi || "Source link";
+  link.textContent = dataset.source.doi || "Source link / 来源链接";
   link.target = "_blank";
   link.rel = "noopener noreferrer";
 }
 
 function datasetKindLabel(dataset) {
   if (dataset.kind === "eem") {
-    return "Processed EEM display";
+    return "Processed EEM display / 处理后的 EEM 显示";
   }
 
   if (String(dataset.role || "").includes("protein")) {
-    return "Protein emission";
+    return "Protein emission / 蛋白发射谱";
   }
 
   if (String(dataset.role || "").includes("dye")) {
-    return "Dye spectrum";
+    return "Dye spectrum / 染料谱图";
   }
 
-  return dataset.kind || "Spectrum";
+  return dataset.kind ? `${dataset.kind} / 数据类型` : "Spectrum / 谱图";
 }
 
 function updateDatasetCards(elements, datasetId) {
@@ -105,8 +105,8 @@ function createDatasetCard(dataset, onSelect) {
   const note = document.createElement("span");
   note.className = "source-dataset-card__note";
   note.textContent = dataset.kind === "eem"
-    ? "Processed educational EEM heatmap; axes and caveats shown below. Separate from simulator sliders."
-    : "Normalized 1D example; display only.";
+    ? "Processed educational EEM heatmap; axes and caveats shown below. Separate from simulator sliders. / 处理后的教学 EEM 热图；轴与说明见下方，和模拟器滑块分离。"
+    : "Normalized 1D example; display only. / 归一化一维示例，仅用于显示。";
 
   button.append(tag, label, note);
   button.addEventListener("click", () => onSelect(dataset.id));
@@ -150,7 +150,7 @@ function renderSourceLine(elements, dataset, data) {
   setElementText(elements.sourceYStart, "0");
   setElementText(elements.sourceYEnd, "1");
   setElementText(elements.sourceYLabel, "a.u.");
-  setElementText(elements.sourceModeLabel, "Emission wavelength");
+  setElementText(elements.sourceModeLabel, "Emission wavelength / 发射波长");
   setElementText(elements.sourceKind, datasetKindLabel(dataset));
 }
 
@@ -191,7 +191,7 @@ function renderSourceEem(elements, dataset, data) {
   setElementText(elements.sourceYStart, `${formatNumber(emission[0])} nm`);
   setElementText(elements.sourceYEnd, `${formatNumber(emission.at(-1))} nm`);
   setElementText(elements.sourceYLabel, "Em");
-  setElementText(elements.sourceModeLabel, "Excitation wavelength / EEM heatmap");
+  setElementText(elements.sourceModeLabel, "Excitation wavelength / EEM heatmap / 激发波长 / EEM 热图");
   setElementText(elements.sourceKind, datasetKindLabel(dataset));
 }
 
@@ -199,14 +199,22 @@ function updateSourceMetadata(elements, dataset, data) {
   const source = dataset.source || {};
   const processing = dataset.processing || {};
   setElementText(elements.sourceName, source.title || dataset.label);
-  setElementText(elements.sourceLicense, source.license || "Recorded in manifest");
-  setElementText(elements.sourceProcessing, processing.notes || data.notes || "Normalized/downsampled for display.");
+  setElementText(elements.sourceLicense, source.license || "Recorded in manifest / 已记录在 manifest 中");
+  setElementText(
+    elements.sourceProcessing,
+    processing.notes || data.notes || "Normalized/downsampled for display. / 已归一化并降采样用于显示。"
+  );
   setSourceLink(elements, dataset);
-  setElementText(elements.sourceCaption, source.citation || "Source-derived educational example.");
+  setElementText(
+    elements.sourceCaption,
+    source.citation
+      ? `${source.citation} Processed for educational display only. / 仅为教学显示处理。`
+      : "Source-derived educational example. / 引用来源教学示例。"
+  );
   setElementText(elements.sourceChartTitle, dataset.label);
   setElementText(
     elements.sourceChartDesc,
-    `${dataset.label}. ${processing.notes || data.notes || "Normalized and downsampled for educational visualization."}`
+    `${dataset.label}. ${processing.notes || data.notes || "Normalized and downsampled for educational visualization. / 已为教学可视化归一化并降采样。"}`
   );
 }
 
@@ -224,12 +232,12 @@ async function showSourceDataset(elements, datasetId) {
   const dataset = sourceState.datasets.find((entry) => entry.id === datasetId) || sourceState.datasets[0];
 
   if (!dataset) {
-    setElementText(elements.sourceStatus, "No plotted source-derived datasets are available.");
+    setElementText(elements.sourceStatus, "No plotted source-derived datasets are available. / 暂无可绘制的引用数据集。");
     return;
   }
 
   try {
-    setElementText(elements.sourceStatus, `Loading ${dataset.label}...`);
+    setElementText(elements.sourceStatus, `Loading ${dataset.label}... / 正在加载 ${dataset.label}...`);
 
     if (!sourceState.cache.has(dataset.id)) {
       sourceState.cache.set(dataset.id, await fetchJson(`data/${dataset.dataUrl}`));
@@ -245,10 +253,13 @@ async function showSourceDataset(elements, datasetId) {
     }
 
     updateDatasetCards(elements, dataset.id);
-    setElementText(elements.sourceStatus, "Loaded local source-derived example.");
+    setElementText(elements.sourceStatus, "Loaded local source-derived example. / 已加载本地引用数据示例。");
   } catch (error) {
     console.error(error);
-    setElementText(elements.sourceStatus, "Source-derived data could not be loaded. The synthetic model above still works.");
+    setElementText(
+      elements.sourceStatus,
+      "Source-derived data could not be loaded. The synthetic model above still works. / 引用数据无法加载；上方合成模型仍可使用。"
+    );
   }
 }
 
@@ -307,7 +318,7 @@ export async function initializeSourceData(root) {
     if (reference) {
       setElementText(
         elements.sourceReferenceNote,
-        `Reference-only: ${reference.label}. ${reference.processing?.notes || "No reference curve is embedded."}`
+        `Reference-only / 仅作参考：${reference.label}. ${reference.processing?.notes || "No reference curve is embedded. / 未嵌入参考曲线。"}`
       );
     }
 
@@ -316,6 +327,9 @@ export async function initializeSourceData(root) {
   } catch (error) {
     console.error(error);
     sourceSelect.disabled = true;
-    setElementText(elements.sourceStatus, "Source-derived manifest unavailable. Synthetic controls remain available.");
+    setElementText(
+      elements.sourceStatus,
+      "Source-derived manifest unavailable. Synthetic controls remain available. / 引用数据 manifest 不可用；合成控制项仍可使用。"
+    );
   }
 }

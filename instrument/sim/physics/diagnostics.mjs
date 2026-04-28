@@ -4,64 +4,64 @@ export function generateDiagnostics(state, derived) {
   if (state.mode === "emission") {
     diagnostics.push({
       tone: "info",
-      label: "Emission scan",
-      text: `Excitation is fixed at ${Math.round(derived.excitationNm)} nm while the emission arm is scanned.`,
+      label: "Emission scan / 发射扫描",
+      text: `Excitation is fixed at ${Math.round(derived.excitationNm)} nm while the emission arm is scanned. / 激发固定在 ${Math.round(derived.excitationNm)} nm，发射臂正在扫描。`,
     });
   } else if (state.mode === "excitation") {
     diagnostics.push({
       tone: "info",
-      label: "Excitation scan",
-      text: `Emission is fixed at ${Math.round(derived.emissionNm)} nm while the excitation monochromator is scanned.`,
+      label: "Excitation scan / 激发扫描",
+      text: `Emission is fixed at ${Math.round(derived.emissionNm)} nm while the excitation monochromator is scanned. / 发射固定在 ${Math.round(derived.emissionNm)} nm，激发单色器正在扫描。`,
     });
   } else if (state.mode === "time") {
     diagnostics.push({
       tone: "info",
-      label: "Kinetic scan",
-      text: `Both channels are fixed. This is a synthetic intensity-over-time trace, not lifetime decay.`,
+      label: "Kinetic scan / 动力学扫描",
+      text: "Both channels are fixed. This is a synthetic intensity-over-time trace, not lifetime decay. / 两个通道均固定；这里显示的是合成强度随时间变化，不是荧光寿命衰减。",
     });
   } else {
     diagnostics.push({
       tone: "info",
-      label: "Single-point monitor",
-      text: `Both channels are fixed. The readout changes with slit width, alignment, sample preset, and integration time.`,
+      label: "Single-point monitor / 单点监测",
+      text: "Both channels are fixed. The readout changes with slit width, alignment, sample preset, and integration time. / 两个通道均固定；读数会随狭缝宽度、对准、样品预设和积分时间变化。",
     });
   }
 
   if (derived.bandpassNm >= 7) {
     diagnostics.push({
       tone: "warn",
-      label: "Resolution tradeoff",
-      text: "The slit is wide: throughput increases, but spectral features broaden in the teaching model.",
+      label: "Resolution tradeoff / 分辨率权衡",
+      text: "The slit is wide: throughput increases, but spectral features broaden in the teaching model. / 狭缝较宽：通光量增加，但教学模型中的谱峰会变宽。",
     });
   } else if (derived.bandpassNm <= 3) {
     diagnostics.push({
       tone: "info",
-      label: "Narrow bandpass",
-      text: "The slit is narrow: resolution improves, but less light reaches the detector.",
+      label: "Narrow bandpass / 窄带宽",
+      text: "The slit is narrow: resolution improves, but less light reaches the detector. / 狭缝较窄：分辨率提高，但到达检测器的光更少。",
     });
   }
 
   if (derived.alignment.overlapFactor < 0.72) {
     diagnostics.push({
       tone: "warn",
-      label: "Alignment",
-      text: "Source or sample offset lowers overlap and intensity; it does not move the selected wavelength.",
+      label: "Alignment / 对准",
+      text: "Source or sample offset lowers overlap and intensity; it does not move the selected wavelength. / 光源或样品偏移会降低重叠和强度，但不会移动选通波长。",
     });
   }
 
   if (derived.collection.deltaDeg >= 3) {
     diagnostics.push({
       tone: "warn",
-      label: "90 degree geometry",
-      text: "Detector arm offset reduces collection and raises background risk in this conceptual model.",
+      label: "90 degree geometry / 90° 几何",
+      text: "Detector arm offset reduces collection and raises background risk in this conceptual model. / 在这个概念模型中，检测臂偏离会降低收集效率，并提高背景风险。",
     });
   }
 
   if (derived.spectrum.profile.kind === "blank") {
     diagnostics.push({
       tone: "info",
-      label: "Blank preset",
-      text: "The blank/background preset is intentionally weak: mostly baseline plus small scatter/background.",
+      label: "Blank preset / 空白预设",
+      text: "The blank/background preset is intentionally weak: mostly baseline plus small scatter/background. / 空白或背景主导预设被有意设为弱信号，主要是基线和少量散射或背景。",
     });
   }
 

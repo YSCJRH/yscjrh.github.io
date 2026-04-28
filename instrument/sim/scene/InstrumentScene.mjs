@@ -382,7 +382,7 @@ function createDetectorArmControl() {
       depthWrite: false,
     })
   );
-  const angleLabel = createLabel("90 deg collection", { width: 1.55, fontSize: 32 });
+  const angleLabel = createLabel("90 deg / 90° 收集", { width: 1.75, fontSize: 32 });
 
   handle.userData.part = "detector";
   handle.userData.detectorHandle = true;
@@ -458,7 +458,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   if (!host || !WebGL.isWebGL2Available()) {
     return {
       available: false,
-      reason: "WebGL 2 is not available.",
+      reason: "WebGL 2 is not available. / WebGL 2 不可用。",
       update() {},
       selectPart() {},
       resetView() {},
@@ -525,11 +525,11 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   root.add(bench);
 
   const components = {};
-  components.source = makeBoxComponent({ width: 1.0, height: 0.82, depth: 0.9, color: 0x282c4c, label: "Source", part: "source" });
+  components.source = makeBoxComponent({ width: 1.0, height: 0.82, depth: 0.9, color: 0x282c4c, label: "Source / 光源", part: "source" });
   components.source.position.copy(SOURCE_BASE_POSITION);
   root.add(components.source);
 
-  components.excitation = createMonochromator("Ex mono", "excitation");
+  components.excitation = createMonochromator("Ex mono / 激发", "excitation");
   components.excitation.position.set(-2.15, BENCH_Y, 0);
   root.add(components.excitation);
 
@@ -571,7 +571,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   );
   alignmentRing.rotation.x = Math.PI / 2;
   alignmentRing.position.set(0, 0.02, 0);
-  const sampleLabel = createLabel("Sample");
+  const sampleLabel = createLabel("Sample / 样品");
   sampleLabel.position.set(0, -0.9, 0);
   components.sample.add(samplePlume, alignmentRing, sampleGlass, sampleEdges, sampleLabel);
   components.sample.position.copy(SAMPLE_BASE_POSITION);
@@ -585,16 +585,16 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   stopGroup.position.set(1.72, BENCH_Y + 0.04, 0);
   root.add(stopGroup);
 
-  components.emission = createMonochromator("Em mono", "emission");
+  components.emission = createMonochromator("Em mono / 发射", "emission");
   components.emission.position.set(0, BENCH_Y, 2.05);
   components.emission.rotation.y = Math.PI / 2;
   root.add(components.emission);
 
-  components.detector = makeBoxComponent({ width: 0.94, height: 0.86, depth: 0.94, color: 0x2d314f, label: "Detector", part: "detector" });
+  components.detector = makeBoxComponent({ width: 0.94, height: 0.86, depth: 0.94, color: 0x2d314f, label: "Detector / 检测器", part: "detector" });
   components.detector.position.set(0, BENCH_Y, 3.58);
   root.add(components.detector);
 
-  components.output = makeBoxComponent({ width: 1.5, height: 0.86, depth: 0.16, color: 0x162039, label: "Spectrum", part: "output" });
+  components.output = makeBoxComponent({ width: 1.5, height: 0.86, depth: 0.16, color: 0x162039, label: "Spectrum / 谱图", part: "output" });
   components.output.position.set(2.1, BENCH_Y + 0.1, 3.2);
   components.output.rotation.y = -Math.PI / 5;
   root.add(components.output);
