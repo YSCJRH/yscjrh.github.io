@@ -1,4 +1,4 @@
-import { clamp } from "../state.mjs?v=sample-fixed-20260428";
+import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 
 function gaussianOffset(offsetUm, toleranceUm) {
   const normalized = offsetUm / Math.max(toleranceUm, 1);

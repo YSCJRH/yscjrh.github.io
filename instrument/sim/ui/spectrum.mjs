@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=mono-inspector-20260428";
+import { MODES, PARTS } from "../state.mjs?v=wavelength-control-20260429";
 
 const chart = {
   left: 54,
@@ -37,8 +37,8 @@ function pointsToPolyline(series) {
 
 export function collectInstrumentElements(root) {
   const controls = {
-    excitationAngle: root.querySelector('[data-control="excitation-angle"]'),
-    emissionAngle: root.querySelector('[data-control="emission-angle"]'),
+    excitationWavelength: root.querySelector('[data-control="excitation-wavelength"]'),
+    emissionWavelength: root.querySelector('[data-control="emission-wavelength"]'),
     slit: root.querySelector('[data-control="slit"]'),
     integration: root.querySelector('[data-control="integration"]'),
     sample: root.querySelector('[data-control="sample"]'),
@@ -109,7 +109,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.collection, `${Math.round(derived.collection.collectionFactor * 100)}%`);
   setText(elements.sampleNote, derived.spectrum.profile.description);
 
-  setDisabled(controls.emissionAngle, false);
+  setDisabled(controls.emissionWavelength, false);
   setText(elements.emissionLabel, derived.scanMeta.emissionControlLabel);
 }
 

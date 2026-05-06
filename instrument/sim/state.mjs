@@ -1,3 +1,13 @@
+import { clamp } from "./math.mjs?v=wavelength-control-20260429";
+import {
+  MONOCHROMATOR_GRATING_ANGLE_RANGE,
+  MONOCHROMATOR_WAVELENGTH_RANGE,
+  gratingAngleFromWavelength,
+  wavelengthFromGratingAngle,
+} from "./physics/grating.mjs?v=wavelength-control-20260429";
+
+export { clamp };
+
 export const MODES = Object.freeze({
   emission: {
     label: "Emission scan / 发射扫描",
@@ -119,10 +129,6 @@ export const SAMPLE_PROFILES = Object.freeze({
   },
 });
 
-export function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
 export function createInstrumentState() {
   return {
     mode: "emission",
@@ -131,10 +137,10 @@ export function createInstrumentState() {
       offsetUm: 0,
     },
     exMono: {
-      gratingAngleDeg: 13.4,
+      gratingAngleDeg: gratingAngleFromWavelength(365),
     },
     emMono: {
-      gratingAngleDeg: 19.1,
+      gratingAngleDeg: gratingAngleFromWavelength(520),
     },
     slit: {
       widthUm: 500,
@@ -154,6 +160,12 @@ export function applyControlValue(state, controlName, rawValue) {
   const numeric = Number(rawValue);
 
   switch (controlName) {
+    case "excitation-wavelength":
+      setGratingWavelength(state, "excitation", numeric);
+      break;
+    case "emission-wavelength":
+      setGratingWavelength(state, "emission", numeric);
+      break;
     case "excitation-angle":
       setGratingAngle(state, "excitation", numeric);
       break;
@@ -200,10 +212,37 @@ export function setGratingAngle(state, part, angleDeg) {
   }
 
   if (part === "excitation") {
-    state.exMono.gratingAngleDeg = clamp(numeric, 9.5, 21.5);
+    state.exMono.gratingAngleDeg = clamp(
+      numeric,
+      MONOCHROMATOR_GRATING_ANGLE_RANGE.min,
+      MONOCHROMATOR_GRATING_ANGLE_RANGE.max
+    );
   } else if (part === "emission") {
-    state.emMono.gratingAngleDeg = clamp(numeric, 14, 27);
+    state.emMono.gratingAngleDeg = clamp(
+      numeric,
+      MONOCHROMATOR_GRATING_ANGLE_RANGE.min,
+      MONOCHROMATOR_GRATING_ANGLE_RANGE.max
+    );
   }
+}
+
+export function setGratingWavelength(state, part, wavelengthNm) {
+  const numeric = Number(wavelengthNm);
+
+  if (!Number.isFinite(numeric)) {
+    return;
+  }
+
+  const clamped = clamp(numeric, MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm);
+  setGratingAngle(state, part, gratingAngleFromWavelength(clamped));
+}
+
+export function gratingWavelengthForPart(state, part) {
+  const angleDeg = part === "emission"
+    ? state.emMono.gratingAngleDeg
+    : state.exMono.gratingAngleDeg;
+
+  return wavelengthFromGratingAngle(angleDeg);
 }
 
 export function resetGeometry(state) {

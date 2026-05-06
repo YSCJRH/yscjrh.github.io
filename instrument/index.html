@@ -32,7 +32,7 @@
           return;
         }
 
-        import("./instrument.js?v=mono-inspector-20260428").catch((error) => {
+        import("./instrument.js?v=wavelength-control-20260429").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -382,15 +382,15 @@
 
                   <div class="control-stack">
                     <label class="instrument-control">
-                      <span>Excitation grating / 激发光栅 <strong data-readout="excitation-angle">13.4 deg</strong></span>
-                      <input data-control="excitation-angle" type="range" min="9.5" max="21.5" step="0.1" value="13.4">
-                      <small class="control-help">Derived excitation channel / 派生激发通道：<strong data-readout="excitation">365 nm</strong>.</small>
+                      <span>Excitation wavelength / 激发波长 <strong data-readout="excitation">365 nm</strong></span>
+                      <input data-control="excitation-wavelength" type="range" min="200" max="900" step="1" value="365">
+                      <small class="control-help">Grating angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. 200-900 nm teaching range; UV/NIR use false-color hints. 200-900 nm 教学范围；紫外/近红外用伪色提示。</small>
                     </label>
 
                     <label class="instrument-control">
-                      <span><span data-emission-label>Emission grating angle / 发射光栅角</span> <strong data-readout="emission-angle">19.1 deg</strong></span>
-                      <input data-control="emission-angle" type="range" min="14" max="27" step="0.1" value="19.1">
-                      <small class="control-help" id="emission-range-help">Derived emission channel / 派生发射通道：<strong data-readout="emission">520 nm</strong>.</small>
+                      <span><span data-emission-label>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
+                      <input data-control="emission-wavelength" type="range" min="200" max="900" step="1" value="520">
+                      <small class="control-help" id="emission-range-help">Grating angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. Same conceptual 200-900 nm selector range. 使用相同的 200-900 nm 概念选通范围。</small>
                     </label>
 
                     <label class="instrument-control">
@@ -452,7 +452,7 @@
                   <div class="scan-state-grid" aria-label="Current conceptual scan state / 当前概念扫描状态">
                     <p>
                       <span>Scan axis / 扫描轴</span>
-                      <strong data-scan-axis-readout>Emission 380-700 nm / 发射 380-700 nm</strong>
+                      <strong data-scan-axis-readout>Emission 200-900 nm / 发射 200-900 nm</strong>
                     </p>
                     <p>
                       <span>Fixed channel / 固定通道</span>
@@ -509,7 +509,7 @@
                     </p>
                     <p>
                       <span>Scan axis / 扫描轴</span>
-                      <strong data-chart-axis>Emission 380-700 nm / 发射 380-700 nm</strong>
+                      <strong data-chart-axis>Emission 200-900 nm / 发射 200-900 nm</strong>
                     </p>
                     <p>
                       <span>Fixed / 固定通道</span>
@@ -534,8 +534,8 @@
                       points="54,226 98,220 142,214 186,194 230,152 274,82 318,68 362,112 406,172 450,204 494,218 538,224 588,226"
                     ></polyline>
                     <text class="spectrum-axis-label spectrum-y-label" x="18" y="42">a.u.</text>
-                    <text class="spectrum-axis-label" x="54" y="282" data-x-axis-start>380 nm</text>
-                    <text class="spectrum-axis-label spectrum-axis-end" x="588" y="282" data-x-axis-end>700 nm</text>
+                    <text class="spectrum-axis-label" x="54" y="282" data-x-axis-start>200 nm</text>
+                    <text class="spectrum-axis-label spectrum-axis-end" x="588" y="282" data-x-axis-end>900 nm</text>
                     <text class="spectrum-mode-label" x="310" y="286" text-anchor="middle" data-spectrum-mode-label>Emission wavelength / 发射波长</text>
                   </svg>
 

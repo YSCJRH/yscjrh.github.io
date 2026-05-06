@@ -1,9 +1,9 @@
-import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=sample-fixed-20260428";
-import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=sample-fixed-20260428";
-import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=sample-fixed-20260428";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=sample-fixed-20260428";
+import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=wavelength-control-20260429";
+import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
+import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=wavelength-control-20260429";
 import { generateDiagnostics } from "./diagnostics.mjs?v=sample-fixed-20260428";
-import { clamp } from "../state.mjs?v=sample-fixed-20260428";
+import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 
 export function deriveInstrument(state) {
   const excitationNm = wavelengthFromGratingAngle(state.exMono.gratingAngleDeg);

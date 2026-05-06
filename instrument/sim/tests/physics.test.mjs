@@ -1,18 +1,33 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createInstrumentState, setGeometryOffsets } from "../state.mjs";
+import { createInstrumentState, gratingWavelengthForPart, setGeometryOffsets, setGratingWavelength } from "../state.mjs";
 import { deriveInstrument } from "../physics/derive.mjs";
-import { wavelengthFromGratingAngle } from "../physics/grating.mjs";
+import {
+  MONOCHROMATOR_GRATING_ANGLE_RANGE,
+  gratingAngleFromWavelength,
+  wavelengthFromGratingAngle,
+} from "../physics/grating.mjs";
 import { bandpassFromSlit, throughputFromSlit } from "../physics/monochromator.mjs";
 import { deriveAlignment, collectionFromDetectorAngle } from "../physics/alignment.mjs";
 
-test("grating angle derives a monotonic teaching wavelength", () => {
-  const low = wavelengthFromGratingAngle(12);
-  const high = wavelengthFromGratingAngle(20);
+test("grating angle derives a monotonic 200-900 nm teaching wavelength", () => {
+  const minAngle = gratingAngleFromWavelength(200);
+  const maxAngle = gratingAngleFromWavelength(900);
+  const low = wavelengthFromGratingAngle(minAngle);
+  const high = wavelengthFromGratingAngle(maxAngle);
 
-  assert.ok(low > 330 && low < 350);
-  assert.ok(high > 520 && high < 570);
+  assert.ok(Math.abs(low - 200) < 0.001);
+  assert.ok(Math.abs(high - 900) < 0.001);
+  assert.ok(maxAngle > minAngle);
   assert.ok(high > low);
+});
+
+test("default grating wavelengths match the teaching channels", () => {
+  const state = createInstrumentState();
+  const derived = deriveInstrument(state);
+
+  assert.equal(Math.round(derived.excitationNm), 365);
+  assert.equal(Math.round(derived.emissionNm), 520);
 });
 
 test("wider slit increases bandpass and throughput", () => {
@@ -65,11 +80,11 @@ test("mode changes chart axes but keeps source-derived controls separate", () =>
 
   state.mode = "emission";
   const emission = deriveInstrument(state);
-  assert.equal(emission.scanMeta.axisRange, "Emission 380-700 nm / 发射 380-700 nm");
+  assert.equal(emission.scanMeta.axisRange, "Emission 200-900 nm / 发射 200-900 nm");
 
   state.mode = "excitation";
   const excitation = deriveInstrument(state);
-  assert.equal(excitation.scanMeta.axisRange, "Excitation 250-550 nm / 激发 250-550 nm");
+  assert.equal(excitation.scanMeta.axisRange, "Excitation 200-900 nm / 激发 200-900 nm");
 
   state.mode = "time";
   const time = deriveInstrument(state);
@@ -116,13 +131,25 @@ test("3D grating angle updates clamp wavelengths without moving geometry", () =>
   });
   const changed = deriveInstrument(state);
 
-  assert.equal(state.exMono.gratingAngleDeg, 21.5);
-  assert.equal(state.emMono.gratingAngleDeg, 14);
+  assert.equal(state.exMono.gratingAngleDeg, MONOCHROMATOR_GRATING_ANGLE_RANGE.max);
+  assert.equal(state.emMono.gratingAngleDeg, MONOCHROMATOR_GRATING_ANGLE_RANGE.min);
+  assert.equal(Math.round(gratingWavelengthForPart(state, "excitation")), 900);
+  assert.equal(Math.round(gratingWavelengthForPart(state, "emission")), 200);
   assert.notEqual(Math.round(base.excitationNm), Math.round(changed.excitationNm));
   assert.notEqual(Math.round(base.emissionNm), Math.round(changed.emissionNm));
   assert.equal(state.source.offsetUm, 0);
   assert.equal(state.sample.offsetUm, 0);
   assert.equal(state.detector.angleDeg, 90);
+});
+
+test("wavelength controls clamp both monochromators to 200-900 nm", () => {
+  const state = createInstrumentState();
+
+  setGratingWavelength(state, "excitation", 999);
+  setGratingWavelength(state, "emission", 120);
+
+  assert.equal(Math.round(gratingWavelengthForPart(state, "excitation")), 900);
+  assert.equal(Math.round(gratingWavelengthForPart(state, "emission")), 200);
 });
 
 test("sample cell remains fixed when geometry offsets are applied", () => {

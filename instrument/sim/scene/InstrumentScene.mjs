@@ -2,6 +2,7 @@ import * as THREE from "../../vendor/three/three.module.js";
 import { OrbitControls } from "../../vendor/three/addons/controls/OrbitControls.js";
 import { TransformControls } from "../../vendor/three/addons/controls/TransformControls.js";
 import WebGL from "../../vendor/three/addons/capabilities/WebGL.js";
+import { MONOCHROMATOR_GRATING_ANGLE_RANGE } from "../physics/grating.mjs?v=wavelength-control-20260429";
 
 const PART_ORDER = ["source", "excitation", "sample", "emission", "detector", "output"];
 const BENCH_Y = 0.64;
@@ -12,8 +13,8 @@ const DETECTOR_MAX_ANGLE = 100;
 const SOURCE_BASE_POSITION = new THREE.Vector3(-4.0, BENCH_Y, 0);
 const SAMPLE_BASE_POSITION = new THREE.Vector3(0, BENCH_Y + 0.12, 0);
 const GRATING_RANGES = Object.freeze({
-  excitation: { min: 9.5, max: 21.5 },
-  emission: { min: 14, max: 27 },
+  excitation: MONOCHROMATOR_GRATING_ANGLE_RANGE,
+  emission: MONOCHROMATOR_GRATING_ANGLE_RANGE,
 });
 
 function isMonochromatorPart(part) {
@@ -508,7 +509,13 @@ function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selec
   setSlitGap(monochromator.userData.entrySlit, slitWidthUm);
   setSlitGap(monochromator.userData.exitSlit, slitWidthUm);
   const slitProgress = THREE.MathUtils.clamp((slitWidthUm - 100) / 900, 0, 1);
-  const bandShift = THREE.MathUtils.clamp((angleDeg - 18) * 0.012, -0.13, 0.13);
+  const rangeProgress = THREE.MathUtils.clamp(
+    (angleDeg - MONOCHROMATOR_GRATING_ANGLE_RANGE.min) /
+      (MONOCHROMATOR_GRATING_ANGLE_RANGE.max - MONOCHROMATOR_GRATING_ANGLE_RANGE.min),
+    0,
+    1
+  );
+  const bandShift = (rangeProgress - 0.5) * 0.26;
   const incomingStart = new THREE.Vector3(-0.46, 0.16, 0.46);
   const incomingEnd = new THREE.Vector3(-0.04, 0.16, 0.02 + bandShift * 0.25);
   const selectedStart = new THREE.Vector3(-0.02, 0.16, bandShift * 0.35);

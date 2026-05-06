@@ -1,4 +1,6 @@
-import { SAMPLE_PROFILES, clamp } from "../state.mjs?v=sample-fixed-20260428";
+import { MONOCHROMATOR_WAVELENGTH_RANGE } from "./grating.mjs?v=wavelength-control-20260429";
+import { clamp } from "../math.mjs?v=wavelength-control-20260429";
+import { SAMPLE_PROFILES } from "../state.mjs?v=wavelength-control-20260429";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 
@@ -103,8 +105,8 @@ function calculatePoint(mode, x, index, state, physics, profile) {
 export function generateSpectrum(state, physics) {
   const profile = SAMPLE_PROFILES[state.sample.preset] || SAMPLE_PROFILES["low-background"];
   const ranges = {
-    emission: [380, 700],
-    excitation: [250, 550],
+    emission: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
+    excitation: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
     time: [0, 120],
     single: [0, 1],
   };
@@ -139,11 +141,11 @@ export function scanMetaForMode(mode, physics) {
   if (mode === "excitation") {
     return {
       axisLabel: "Excitation wavelength / 激发波长",
-      axisRange: "Excitation 250-550 nm / 激发 250-550 nm",
+      axisRange: "Excitation 200-900 nm / 激发 200-900 nm",
       fixedChannel: `Emission ${Math.round(physics.emissionNm)} nm / 发射 ${Math.round(physics.emissionNm)} nm`,
-      startLabel: "250 nm",
-      endLabel: "550 nm",
-      emissionControlLabel: "Fixed emission channel / 固定发射通道",
+      startLabel: "200 nm",
+      endLabel: "900 nm",
+      emissionControlLabel: "Fixed emission wavelength / 固定发射波长",
       excitationBadge: "Scanning / 扫描",
       emissionBadge: "Fixed / 固定",
     };
@@ -156,7 +158,7 @@ export function scanMetaForMode(mode, physics) {
       fixedChannel: `Ex ${Math.round(physics.excitationNm)} nm / 激发 ${Math.round(physics.excitationNm)} nm · Em ${Math.round(physics.emissionNm)} nm / 发射 ${Math.round(physics.emissionNm)} nm`,
       startLabel: "0 s",
       endLabel: "120 s",
-      emissionControlLabel: "Fixed emission channel / 固定发射通道",
+      emissionControlLabel: "Fixed emission wavelength / 固定发射波长",
       excitationBadge: "Fixed / 固定",
       emissionBadge: "Fixed / 固定",
     };
@@ -169,7 +171,7 @@ export function scanMetaForMode(mode, physics) {
       fixedChannel: `Ex ${Math.round(physics.excitationNm)} nm / 激发 ${Math.round(physics.excitationNm)} nm · Em ${Math.round(physics.emissionNm)} nm / 发射 ${Math.round(physics.emissionNm)} nm`,
       startLabel: "fixed Ex / 固定激发",
       endLabel: "fixed Em / 固定发射",
-      emissionControlLabel: "Fixed emission channel / 固定发射通道",
+      emissionControlLabel: "Fixed emission wavelength / 固定发射波长",
       excitationBadge: "Fixed / 固定",
       emissionBadge: "Fixed / 固定",
     };
@@ -177,11 +179,11 @@ export function scanMetaForMode(mode, physics) {
 
   return {
     axisLabel: "Emission wavelength / 发射波长",
-    axisRange: "Emission 380-700 nm / 发射 380-700 nm",
+    axisRange: "Emission 200-900 nm / 发射 200-900 nm",
     fixedChannel: `Excitation ${Math.round(physics.excitationNm)} nm / 激发 ${Math.round(physics.excitationNm)} nm`,
-    startLabel: "380 nm",
-    endLabel: "700 nm",
-    emissionControlLabel: "Emission grating angle / 发射光栅角",
+    startLabel: "200 nm",
+    endLabel: "900 nm",
+    emissionControlLabel: "Emission wavelength / 发射波长",
     excitationBadge: "Fixed / 固定",
     emissionBadge: "Scanning / 扫描",
   };

@@ -1,20 +1,21 @@
 import {
   applyControlValue,
   createInstrumentState,
+  gratingWavelengthForPart,
   resetGeometry,
   setGeometryOffsets,
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=mono-inspector-20260428";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=sample-fixed-20260428";
-import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=mono-inspector-20260428";
+} from "./sim/state.mjs?v=wavelength-control-20260429";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=wavelength-control-20260429";
+import { createInstrumentScene } from "./sim/scene/InstrumentScene.mjs?v=wavelength-control-20260429";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=mono-inspector-20260428";
+} from "./sim/ui/spectrum.mjs?v=wavelength-control-20260429";
 import { initializeSourceData } from "./sim/ui/source-data.mjs?v=sample-fixed-20260428";
 
 const root = document.querySelector("[data-instrument-lab]");
@@ -30,8 +31,12 @@ if (root) {
   function syncInputsFromState() {
     const { controls } = elements;
 
-    if (controls.excitationAngle) controls.excitationAngle.value = String(state.exMono.gratingAngleDeg);
-    if (controls.emissionAngle) controls.emissionAngle.value = String(state.emMono.gratingAngleDeg);
+    if (controls.excitationWavelength) {
+      controls.excitationWavelength.value = String(Math.round(gratingWavelengthForPart(state, "excitation")));
+    }
+    if (controls.emissionWavelength) {
+      controls.emissionWavelength.value = String(Math.round(gratingWavelengthForPart(state, "emission")));
+    }
     if (controls.slit) controls.slit.value = String(state.slit.widthUm);
     if (controls.integration) controls.integration.value = String(state.integrationTimeMs);
     if (controls.sample) controls.sample.value = state.sample.preset;

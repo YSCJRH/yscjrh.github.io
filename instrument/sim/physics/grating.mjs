@@ -1,9 +1,14 @@
-import { clamp } from "../state.mjs?v=sample-fixed-20260428";
+import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 
 export const TEACHING_GRATING = Object.freeze({
   grooveDensityPerMm: 1200,
   diffractionOrder: 1,
   halfDeviationAngleDeg: 10,
+});
+
+export const MONOCHROMATOR_WAVELENGTH_RANGE = Object.freeze({
+  minNm: 200,
+  maxNm: 900,
 });
 
 function degreesToRadians(degrees) {
@@ -25,18 +30,32 @@ export function wavelengthFromGratingAngle(angleDeg, config = TEACHING_GRATING) 
   const wavelength =
     (2 * dNm * Math.cos(kRad) * Math.sin(phiRad)) / Math.max(config.diffractionOrder, 1);
 
-  return clamp(wavelength, 220, 820);
+  return clamp(wavelength, MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm);
 }
 
 export function gratingAngleFromWavelength(wavelengthNm, config = TEACHING_GRATING) {
   const dNm = gratingSpacingNm(config);
   const kRad = degreesToRadians(config.halfDeviationAngleDeg);
-  const ratio = (wavelengthNm * Math.max(config.diffractionOrder, 1)) / (2 * dNm * Math.cos(kRad));
+  const clampedWavelength = clamp(
+    wavelengthNm,
+    MONOCHROMATOR_WAVELENGTH_RANGE.minNm,
+    MONOCHROMATOR_WAVELENGTH_RANGE.maxNm
+  );
+  const ratio = (clampedWavelength * Math.max(config.diffractionOrder, 1)) / (2 * dNm * Math.cos(kRad));
   return radiansToDegrees(Math.asin(clamp(ratio, -1, 1)));
 }
 
+export const MONOCHROMATOR_GRATING_ANGLE_RANGE = Object.freeze({
+  min: gratingAngleFromWavelength(MONOCHROMATOR_WAVELENGTH_RANGE.minNm),
+  max: gratingAngleFromWavelength(MONOCHROMATOR_WAVELENGTH_RANGE.maxNm),
+});
+
 export function wavelengthToColor(wavelengthNm) {
-  const wavelength = clamp(wavelengthNm, 260, 700);
+  const wavelength = clamp(wavelengthNm, MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm);
+
+  if (wavelength < 260) {
+    return "#8577ff";
+  }
 
   if (wavelength < 380) {
     return "#6f88ff";
@@ -62,5 +81,9 @@ export function wavelengthToColor(wavelengthNm) {
     return "#ffd36a";
   }
 
-  return "#ff7f70";
+  if (wavelength <= 700) {
+    return "#ff7f70";
+  }
+
+  return "#ff6f8f";
 }
