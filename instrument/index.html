@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=site-visual-polish-20260507">
+    <link rel="stylesheet" href="../styles.css?v=grating-visual-20260508">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=wavelength-control-20260429").catch((error) => {
+        import("./instrument.js?v=grating-visual-20260508").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");

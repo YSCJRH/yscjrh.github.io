@@ -71,7 +71,7 @@ if (root) {
   }
 
   function loadSceneModule() {
-    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=wavelength-control-20260429");
+    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=grating-visual-20260508");
     return sceneModulePromise;
   }
 
