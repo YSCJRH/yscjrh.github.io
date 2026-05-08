@@ -283,6 +283,16 @@ function createRealisticGratingAssembly(part) {
   const rightYoke = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.4, 0.08), bracketMaterial);
   const grating = new THREE.Mesh(createCurvedGratingFaceGeometry(), gratingFaceMaterial);
   const grooves = createGratingGrooves();
+  const dragSurface = new THREE.Mesh(
+    new THREE.BoxGeometry(0.86, 0.68, 0.2),
+    new THREE.MeshBasicMaterial({
+      color: 0x7df5df,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      depthTest: false,
+    })
+  );
   const pivotAxis = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.64, 24), screwMaterial);
   const topRim = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.022, 0.035), bracketMaterial);
   const bottomRim = topRim.clone();
@@ -299,6 +309,7 @@ function createRealisticGratingAssembly(part) {
   rightYoke.position.set(0.35, 0.08, 0.02);
   grating.position.set(0, 0.18, 0.02);
   grooves.position.copy(grating.position);
+  dragSurface.position.copy(grating.position);
   pivotAxis.position.set(0, 0.05, 0);
   topRim.position.set(0, 0.43, 0.04);
   bottomRim.position.set(0, -0.07, 0.04);
@@ -307,9 +318,14 @@ function createRealisticGratingAssembly(part) {
   grating.userData.gratingHandle = true;
   grating.userData.gratingPart = part;
   grating.userData.subPart = "grating";
+  dragSurface.userData.part = part;
+  dragSurface.userData.gratingHandle = true;
+  dragSurface.userData.gratingPart = part;
+  dragSurface.userData.subPart = "grating";
   group.userData.grating = grating;
+  group.userData.dragSurface = dragSurface;
   group.userData.subPart = "grating";
-  group.add(turntable, base, leftYoke, rightYoke, grating, grooves, pivotAxis, topRim, bottomRim, wireWarm, wireCool, ...screws);
+  group.add(turntable, base, leftYoke, rightYoke, grating, grooves, dragSurface, pivotAxis, topRim, bottomRim, wireWarm, wireCool, ...screws);
   return group;
 }
 
@@ -335,17 +351,58 @@ function createDispersionFan(color, offsetZ) {
   geometry.setIndex([0, 1, 2]);
   geometry.computeVertexNormals();
 
-  return new THREE.Mesh(
+  const fan = new THREE.Mesh(
     geometry,
     new THREE.MeshBasicMaterial({
       color,
       transparent: true,
-      opacity: 0.11,
+      opacity: 0.16,
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      depthTest: false,
     })
   );
+  fan.renderOrder = 14;
+  return fan;
+}
+
+function createSplitSpectrumRays() {
+  const group = new THREE.Group();
+  const colors = [0x776bff, 0x5f9dff, 0x52f0d3, 0xffd166, 0xff7a90];
+
+  group.userData.rays = colors.map((color, index) => {
+    const ray = createBeam(color, 0.012, 0.48);
+    const glow = createBeam(color, 0.032, 0.13);
+    const offset = (index - (colors.length - 1) / 2) * 0.095;
+    ray.renderOrder = 24;
+    glow.renderOrder = 23;
+    ray.material.depthTest = false;
+    glow.material.depthTest = false;
+    group.add(glow, ray);
+    return { ray, glow, offset };
+  });
+
+  return group;
+}
+
+function updateSplitSpectrumRays(group, bandShift, slitProgress) {
+  const rays = group?.userData?.rays || [];
+  if (!rays.length) {
+    return;
+  }
+
+  const origin = new THREE.Vector3(-0.01, 0.24, 0.01 + bandShift * 0.28);
+  const spread = 1.15 + slitProgress * 0.55;
+  rays.forEach(({ ray, glow, offset }, index) => {
+    const verticalLift = (index - (rays.length - 1) / 2) * 0.052;
+    const selectedBias = index === 2 ? 0.035 : 0;
+    const end = new THREE.Vector3(0.48, 0.2 + verticalLift + selectedBias, -0.43 + bandShift + offset * spread);
+    setCylinderBetween(ray, origin, end);
+    setCylinderBetween(glow, origin, end);
+    ray.material.opacity = index === 2 ? 0.56 + slitProgress * 0.22 : 0.38 + slitProgress * 0.14;
+    glow.material.opacity = index === 2 ? 0.18 + slitProgress * 0.08 : 0.11 + slitProgress * 0.05;
+  });
 }
 
 function createGratingRotationControl(part) {
@@ -460,6 +517,7 @@ function createInternalDispersionRays() {
   const selectedBand = createBeam(0x52f0d3, 0.015, 0.46);
   const selectedBandGlow = createBeam(0x52f0d3, 0.032, 0.14);
   const fan = new THREE.Group();
+  const spectrumRays = createSplitSpectrumRays();
 
   fan.add(
     createDispersionFan(0x6f88ff, -0.14),
@@ -473,10 +531,11 @@ function createInternalDispersionRays() {
   setCylinderBetween(selectedBand, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
   setCylinderBetween(selectedBandGlow, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
 
-  group.add(incomingGlow, incomingBeam, fan, selectedBandGlow, selectedBand);
+  group.add(incomingGlow, incomingBeam, fan, spectrumRays, selectedBandGlow, selectedBand);
   group.userData.incomingBeam = incomingBeam;
   group.userData.incomingGlow = incomingGlow;
   group.userData.fan = fan;
+  group.userData.spectrumRays = spectrumRays;
   group.userData.selectedBand = selectedBand;
   group.userData.selectedBandGlow = selectedBandGlow;
   return group;
@@ -547,6 +606,7 @@ function createMonochromatorInterior(part) {
   group.userData.incomingBeam = rays.userData.incomingBeam;
   group.userData.incomingGlow = rays.userData.incomingGlow;
   group.userData.fan = rays.userData.fan;
+  group.userData.spectrumRays = rays.userData.spectrumRays;
   group.userData.internalRays = rays;
   group.userData.gratingControl = gratingControl;
   group.userData.baffles = [baffleA, baffleB];
@@ -593,6 +653,7 @@ function createMonochromator(label, part) {
   group.userData.incomingBeam = interior.userData.incomingBeam;
   group.userData.incomingGlow = interior.userData.incomingGlow;
   group.userData.fan = interior.userData.fan;
+  group.userData.spectrumRays = interior.userData.spectrumRays;
   group.userData.internalRays = interior.userData.internalRays;
   group.userData.gratingControl = interior.userData.gratingControl;
   group.userData.cutaway = [interior, accessPanel, accessPanelEdges];
@@ -625,6 +686,7 @@ function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selec
   setCylinderBetween(monochromator.userData.incomingGlow, incomingStart, incomingEnd);
   setCylinderBetween(monochromator.userData.selectedBand, selectedStart, selectedEnd);
   setCylinderBetween(monochromator.userData.selectedBandGlow, selectedStart, selectedEnd);
+  updateSplitSpectrumRays(monochromator.userData.spectrumRays, bandShift, slitProgress);
 
   if (monochromator.userData.incomingBeam?.material) {
     monochromator.userData.incomingBeam.material.color.set(selectedColor);
@@ -653,6 +715,9 @@ function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selec
   });
   if (monochromator.userData.fan) {
     monochromator.userData.fan.rotation.y = THREE.MathUtils.degToRad((angleDeg - 18) * 0.45);
+  }
+  if (monochromator.userData.spectrumRays) {
+    monochromator.userData.spectrumRays.rotation.y = THREE.MathUtils.degToRad((angleDeg - 18) * 0.7);
   }
   updateGratingRotationControl(monochromator, angleDeg, wavelengthNm, selectedColor);
 }
@@ -1218,9 +1283,15 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
     selectedSubPart = key;
     ["excitation", "emission"].forEach((monoPart) => {
+      const isGratingSelected = key === `${monoPart}:grating`;
       const handle = components[monoPart]?.userData?.gratingControl?.userData?.handle;
       if (handle) {
-        handle.scale.setScalar(key === `${monoPart}:grating` ? 1.24 : 1);
+        handle.scale.setScalar(isGratingSelected ? 1.24 : 1);
+      }
+      const grating = components[monoPart]?.userData?.grating;
+      if (grating?.material) {
+        grating.material.opacity = isGratingSelected ? 0.96 : 0.78;
+        grating.material.emissiveIntensity = isGratingSelected ? 0.34 : 0.1;
       }
     });
     render();

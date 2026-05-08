@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=grating-visual-20260508").catch((error) => {
+        import("./instrument.js?v=grating-interaction-20260508").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -378,9 +378,9 @@
                 </div>
 
                 <p class="instrument-operability-note" data-scene-hint>
-                  Primary path: click Ex mono or Em mono, drag the internal grating, then watch wavelength, beam color, diagnostics, and the synthetic spectrum update.
+                  Primary path: click Ex mono or Em mono, drag the pale grating face or glowing handle, then watch the split rays, wavelength, beam color, diagnostics, and synthetic spectrum update.
                   <br>
-                  主要路径：点击激发或发射单色器，拖动内部光栅，再观察波长、光束颜色、诊断和合成谱图同步变化。
+                  主要路径：点击激发或发射单色器，拖动浅色光栅面或发光手柄，再观察分光线束、波长、光束颜色、诊断和合成谱图同步变化。
                 </p>
                 <div class="instrument-inline-actions">
                   <button class="instrument-inline-action" type="button" data-action="enable-3d">Enable optional 3D model / 启用可选 3D 模型</button>

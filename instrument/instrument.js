@@ -7,7 +7,7 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=wavelength-control-20260429";
+} from "./sim/state.mjs?v=grating-interaction-20260508";
 import { deriveInstrument } from "./sim/physics/derive.mjs?v=wavelength-control-20260429";
 import {
   collectInstrumentElements,
@@ -71,7 +71,7 @@ if (root) {
   }
 
   function loadSceneModule() {
-    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=grating-visual-20260508");
+    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=grating-interaction-20260508");
     return sceneModulePromise;
   }
 
