@@ -73,7 +73,7 @@
         <div class="container site-header__inner">
           <a class="brand" href="../index.html#top">
             <span class="brand-mark">HJR / YSCJRH</span>
-            <span class="brand-sub">Researcher · Builder · Thinker / 研究者 · 构建者 · 思考者</span>
+            <span class="brand-sub">Fluorescence · Methods · Open tools / 荧光分析 · 方法 · 开放工具</span>
           </a>
 
           <div class="site-header__cluster">
@@ -135,7 +135,8 @@
             <article class="surface surface-glass article-card instrument-hero-card" data-reveal>
               <div>
                 <p class="eyebrow">Instrument Lab / 荧光仪器可视化实验室</p>
-                <h1 class="article-title">Fluorescence instrument teaching skeleton / 荧光仪器教学骨架</h1>
+                <h1 class="article-title">Fluorescence instrument teaching skeleton</h1>
+                <p class="instrument-title-zh" lang="zh-CN">荧光仪器教学骨架</p>
                 <p class="article-lead">
                   Explore a static 3D optical bench, grating-driven monochromators, and a simplified synthetic trace.
                 </p>
@@ -154,16 +155,16 @@
               <div class="instrument-onboarding" aria-label="How to use the concept model / 如何使用概念模型" data-reveal>
                 <p>
                   <strong>1. Choose a mode / 选择模式</strong>
-                  Pick which channel scans.
+                  Pick a scan channel.
                   <span>选择扫描模式，先看哪一路通道在变化。</span>
                 </p>
                 <p>
                   <strong>2. Move one control / 移动控制项</strong>
-                  Watch the synthetic trace respond.
+                  Watch the trace respond.
                   <span>移动一个控制项，观察合成谱线如何响应。</span>
                 </p>
                 <p>
-                  <strong>3. Open a mono / 打开单色器</strong>
+                  <strong>3. Inspect a mono / 查看单色器</strong>
                   Click Ex or Em mono, then drag the grating.
                   <span>点选激发或发射单色器，然后拖动光栅。</span>
                 </p>
@@ -316,21 +317,27 @@
                     <path class="signal-output" d="M706 128L792 300"></path>
 
                     <g class="instrument-marker" data-part="source" role="button" tabindex="0" aria-label="Light source / 光源" aria-pressed="true">
+                      <circle class="instrument-marker-hit" cx="140" cy="314" r="70"></circle>
                       <circle cx="140" cy="314" r="10"></circle>
                     </g>
                     <g class="instrument-marker" data-part="excitation" role="button" tabindex="0" aria-label="Excitation monochromator / 激发单色器" aria-pressed="false">
+                      <circle class="instrument-marker-hit" cx="319" cy="314" r="70"></circle>
                       <circle cx="319" cy="314" r="10"></circle>
                     </g>
                     <g class="instrument-marker" data-part="sample" role="button" tabindex="0" aria-label="Sample cell / 样品池" aria-pressed="false">
+                      <circle class="instrument-marker-hit" cx="509" cy="314" r="70"></circle>
                       <circle cx="509" cy="314" r="10"></circle>
                     </g>
                     <g class="instrument-marker" data-part="emission" role="button" tabindex="0" aria-label="Emission monochromator / 发射单色器" aria-pressed="false">
+                      <circle class="instrument-marker-hit" cx="509" cy="116" r="70"></circle>
                       <circle cx="509" cy="116" r="10"></circle>
                     </g>
                     <g class="instrument-marker" data-part="detector" role="button" tabindex="0" aria-label="Detector / 检测器" aria-pressed="false">
+                      <circle class="instrument-marker-hit" cx="706" cy="116" r="70"></circle>
                       <circle cx="706" cy="116" r="10"></circle>
                     </g>
                     <g class="instrument-marker" data-part="output" role="button" tabindex="0" aria-label="Spectrum display / 谱图显示" aria-pressed="false">
+                      <circle class="instrument-marker-hit" cx="792" cy="359" r="70"></circle>
                       <circle cx="792" cy="359" r="10"></circle>
                     </g>
                   </svg>
@@ -709,7 +716,7 @@
                     <div>
                       <dt>DOI / link / DOI 或链接</dt>
                       <dd>
-                        <a data-source-link href="../DATA_SOURCES.md">DATA_SOURCES.md</a>
+                        <span data-source-link>Source selected after data loads / 数据加载后显示来源</span>
                       </dd>
                     </div>
                     <div>

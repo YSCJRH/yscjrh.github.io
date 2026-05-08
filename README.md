@@ -40,7 +40,7 @@ Use this command from the repository root when doing browser QA in Codex or on W
 python tools/serve.py
 ```
 
-It is still a plain static preview server; it ensures SVG files are served as `image/svg+xml` and uses the next available local port if `4173` is occupied.
+It is still a plain static preview server; it ensures SVG files are served as `image/svg+xml` and uses the next available local port if `4173` is occupied. Use the URL printed by the command; do not assume `4173` if the helper reports another port.
 
 Fallback:
 
@@ -48,13 +48,13 @@ Fallback:
 python -m http.server 4173
 ```
 
-Then open:
+Then open the URL printed by the server, for example:
 
 ```text
 http://127.0.0.1:4173/
 ```
 
-`http://localhost:4173/` is also available as an alias, but `127.0.0.1` is the preferred QA URL for Codex browser checks of local ES modules.
+`http://localhost:<printed-port>/` is also available as an alias, but `127.0.0.1` is the preferred QA URL for Codex browser checks of local ES modules.
 
 ## Validation
 

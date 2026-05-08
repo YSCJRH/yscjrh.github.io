@@ -14,10 +14,10 @@ This checklist is for manual verification of the current public site and local p
 python tools/serve.py
 ```
 
-This helper keeps SVG assets rendering correctly in local browser QA on Windows and falls forward to the next available local port if `4173` is occupied. If it is unavailable, fall back to `python -m http.server 4173` and check whether SVG assets still render.
+This helper keeps SVG assets rendering correctly in local browser QA on Windows and falls forward to the next available local port if `4173` is occupied. Use the URL printed by the command. If it is unavailable, fall back to `python -m http.server 4173` and check whether SVG assets still render.
 
 - Open both:
-  - `http://localhost:4173/`
+  - the printed local preview URL, usually `http://127.0.0.1:4173/`
   - `https://yscjrh.github.io/`
 
 Use the live site for reachability checks and the local server for pre-publish review.

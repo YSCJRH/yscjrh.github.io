@@ -1,5 +1,7 @@
 # Public Surface Verification
 
+> Superseded: this report reflects an earlier language-state and public-surface pass. Current release checks no longer use a language switch or `siteLang` persistence, and the `/review/` route was retired on 2026-05-08. Use `WEBIMPROVE_PROGRESS.md`, `docs/manual-qa-checklist.md`, and `tools/check_site.py` for current validation.
+
 Date: 2026-04-22  
 Scope: static markup verification for the current public surfaces
 
@@ -87,4 +89,3 @@ These still require manual browser QA:
 Live reachability for `/`, `/notes/`, and the first note page was verified in the earlier intake pass and recorded in `docs/handoff-brief.md`.
 
 During this 2026-04-22 pass, direct shell-based live rechecks were unstable at the transport layer, so this report records static verification only and does not claim a fresh live availability check.
-

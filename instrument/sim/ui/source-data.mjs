@@ -141,10 +141,18 @@ export function getEemSlice(data, axis, index) {
 }
 
 function setSourceLink(elements, dataset) {
-  const link = elements.sourceLink;
+  let link = elements.sourceLink;
 
   if (!link || !dataset?.source) {
     return;
+  }
+
+  if (link.tagName.toLowerCase() !== "a") {
+    const anchor = document.createElement("a");
+    anchor.dataset.sourceLink = "";
+    link.replaceWith(anchor);
+    elements.sourceLink = anchor;
+    link = anchor;
   }
 
   link.href = dataset.source.doi ? `https://doi.org/${dataset.source.doi}` : dataset.source.url;

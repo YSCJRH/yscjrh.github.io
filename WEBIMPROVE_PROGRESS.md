@@ -469,3 +469,41 @@
   - `/instrument/` interaction QA passed: initial page uses the 2D fallback and does not load source data before scroll; clicking the optional 3D button creates one WebGL canvas; scrolling to the source-data section loads three dataset cards and the source-derived line data.
 - Notes:
   - The final live browser QA happens after commit and push because it must inspect the deployed GitHub Pages site.
+
+## Aesthetic confidence loop
+- Status: Completed for evidence-backed visual confidence
+- Trigger:
+  - User asked whether the current site had 100% aesthetic and attraction confidence, and asked to find and fix all possible holes until the new site had factual confidence.
+- Review boundary:
+  - Treated "100%" as no remaining actionable, evidence-backed defects under concrete checks: first-viewport clarity, visual hierarchy, mobile/desktop readability, touch targets, small text, horizontal overflow, console errors, Lighthouse scores, and research-builder-open-tools tone.
+  - Did not invent personal facts, affiliations, metrics, contact methods, project claims, or third-party services.
+- Read-only review results:
+  - Copy/brand review found the homepage Hero and section intros too abstract for cold visitors, generic brand subtitle wording, English-only note trail labels, and unclear About naming.
+  - Visual QA found the instrument Hero title too dense, project page mobile first viewport too slow to reach real projects, note article desktop titles too tall, and several small labels/touch targets.
+  - Release-risk review found a public `/instrument/` fallback link to maintainer-only `DATA_SOURCES.md`, and stale QA docs that assumed fixed port `4173` or old `/review/` behavior.
+- Changes:
+  - Made the homepage Hero lead, Research intro, Projects intro, Notes intro, and About copy more explicit about fluorescence analysis, methods, instrumentation, and open tools.
+  - Standardized the brand subtitle to `Fluorescence · Methods · Open tools / 荧光分析 · 方法 · 开放工具`.
+  - Reframed Projects copy around public entry points and moved actual project cards above the workflow explanation on `/projects/`.
+  - Paired note trail labels and section headings with Chinese counterparts on both published note pages.
+  - Reduced the instrument Hero title density by splitting English and Chinese title lines, compacted onboarding copy, and removed the public fallback link to `DATA_SOURCES.md`.
+  - Increased small label sizes and minimum interactive target sizes across project links, note trails, research cards, instrument controls, diagnostic labels, source-data labels, and footer links.
+  - Added larger invisible SVG hit circles to `/instrument/` clickable concept-model markers.
+  - Updated README/manual QA guidance to use the URL printed by `tools/serve.py`, and marked stale public-surface reports as superseded.
+- Validation result:
+  - `python tools/check_site.py` passed.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/ui/source-data.mjs` passed.
+  - `git diff --check` passed with only line-ending warnings for files Git will normalize on next touch.
+  - Playwright aesthetic loop ran across `/`, `/projects/`, `/notes/`, both published note pages, and `/instrument/` at 320px, 390px, 768px, and 1280px.
+  - Final Playwright loop result: `0` failures; no horizontal overflow, no small touch targets, no under-threshold visible text, no console errors, and first project visible in the mobile `/projects/` first viewport.
+  - Final screenshots written under `tmp/aesthetic-loop-6/`.
+  - Lighthouse final local scores:
+    - `/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/projects/`: Performance `98`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/notes/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/instrument/`: Performance `93`, Accessibility `100`, Best Practices `100`, SEO `100`.
+- Remaining non-blocking notes:
+  - Absolute subjective appeal cannot be proven mathematically; the claim supported by this pass is that no actionable, evidence-backed visual/attraction defects remained under the sampled criteria.
+- Blockers:
+  - None.

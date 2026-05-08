@@ -255,8 +255,8 @@ button {
 
 .brand-sub {
   color: var(--color-text-soft);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -957,13 +957,16 @@ button {
 .research-card-kicker {
   color: rgba(236, 241, 251, 0.48);
   font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-  font-size: 0.64rem;
+  font-size: 0.74rem;
   letter-spacing: 0.08em;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .research-card-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
   color: var(--color-text-soft);
   font-size: 0.76rem;
   font-weight: 600;
@@ -973,7 +976,7 @@ button {
 
 .research-card .surface-label {
   color: var(--color-text-soft);
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   letter-spacing: 0.1em;
   opacity: 0.72;
 }
@@ -1347,6 +1350,8 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
+  min-height: 2.5rem;
+  padding: 0.28rem 0;
   color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 600;
@@ -1622,6 +1627,9 @@ button {
 }
 
 .footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
   text-decoration: none;
 }
 
@@ -1678,7 +1686,7 @@ button {
 }
 
 .article-title {
-  max-width: 15ch;
+  max-width: 20ch;
   font-size: clamp(2rem, 4vw, 3.2rem);
 }
 
@@ -1774,7 +1782,7 @@ button {
 
 .note-trail span {
   color: var(--color-accent-strong);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2009,7 +2017,7 @@ button {
 
 @media (max-width: 560px) {
   .brand-sub {
-    font-size: 0.72rem;
+    font-size: 0.74rem;
   }
 
   .hero-title {
@@ -2083,7 +2091,7 @@ button {
   }
 
   .brand-sub {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
   }
 
   .nav-toggle {
@@ -3209,8 +3217,8 @@ body {
 
 .workflow-panel {
   display: grid;
-  gap: 0.8rem;
-  padding: 1.15rem;
+  gap: 0.65rem;
+  padding: 0.95rem;
 }
 
 .workflow-map {
@@ -3230,9 +3238,9 @@ body {
 
 .workflow-step {
   position: relative;
-  min-height: 9rem;
+  min-height: 6.4rem;
   overflow: hidden;
-  padding: 0.86rem;
+  padding: 0.72rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 0.9rem;
   background:
@@ -3257,7 +3265,7 @@ body {
   display: inline-grid;
   width: 1.9rem;
   height: 1.9rem;
-  margin-bottom: 0.72rem;
+  margin-bottom: 0.42rem;
   place-items: center;
   border: 1px solid rgba(123, 132, 232, 0.28);
   border-radius: 50%;
@@ -3959,9 +3967,18 @@ section[id] {
 }
 
 .instrument-page .instrument-hero-card .article-title {
-  max-width: 42rem;
-  font-size: clamp(2.35rem, 4.9vw, 4.4rem);
+  max-width: 30rem;
+  font-size: clamp(2.25rem, 4.2vw, 3.8rem);
   line-height: 1.03;
+}
+
+.instrument-title-zh {
+  max-width: 34rem;
+  margin: 0.14rem 0 0;
+  color: rgba(237, 237, 240, 0.92);
+  font-size: clamp(1.38rem, 2.7vw, 2.35rem);
+  font-weight: 850;
+  line-height: 1.06;
 }
 
 .instrument-page .instrument-hero-card .article-lead {
@@ -4024,7 +4041,7 @@ section[id] {
   display: block;
   margin-bottom: 0.14rem;
   color: #d8fff8;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -4494,16 +4511,27 @@ section[id] {
   outline: none;
 }
 
-.instrument-marker circle {
+.instrument-marker circle:not(.instrument-marker-hit) {
   fill: #d8fff8;
   stroke: rgba(237, 237, 240, 0.84);
   stroke-width: 1.4;
   filter: drop-shadow(0 0 16px rgba(77, 237, 207, 0.78));
 }
 
-.instrument-marker.is-active circle,
-.instrument-marker:hover circle,
-.instrument-marker:focus-visible circle {
+.instrument-marker-hit {
+  fill: rgba(255, 255, 255, 0);
+  stroke: transparent;
+  filter: none;
+  pointer-events: all;
+}
+
+.instrument-marker-hit + circle {
+  pointer-events: none;
+}
+
+.instrument-marker.is-active circle:not(.instrument-marker-hit),
+.instrument-marker:hover circle:not(.instrument-marker-hit),
+.instrument-marker:focus-visible circle:not(.instrument-marker-hit) {
   fill: #ffffff;
   stroke: #7df5df;
   filter:
@@ -4560,7 +4588,7 @@ section[id] {
   display: block;
   margin: 0;
   color: rgba(198, 224, 255, 0.72);
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   font-weight: 650;
   line-height: 1.35;
   text-transform: none;
@@ -4591,7 +4619,7 @@ section[id] {
   display: block;
   margin-bottom: 0.22rem;
   color: #d8fff8;
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -4664,7 +4692,7 @@ section[id] {
   color: var(--color-text-soft);
   background: rgba(255, 255, 255, 0.018);
   cursor: pointer;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 800;
   line-height: 1.2;
   text-align: center;
@@ -4787,7 +4815,7 @@ section[id] {
 
 .source-dataset-card__tag {
   color: rgba(216, 255, 248, 0.74);
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4795,7 +4823,7 @@ section[id] {
 
 .source-dataset-card strong {
   color: rgba(237, 237, 240, 0.9);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   line-height: 1.28;
 }
 
@@ -4825,9 +4853,9 @@ section[id] {
 
 .source-data-facts dt {
   color: var(--color-text-muted);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -4840,6 +4868,9 @@ section[id] {
 }
 
 .source-data-facts a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
   color: #d8fff8;
 }
 
@@ -4902,7 +4933,7 @@ section[id] {
 
 .source-chart-meta span {
   color: var(--color-text-muted);
-  font-size: 0.62rem;
+  font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4911,7 +4942,7 @@ section[id] {
 .source-chart-meta strong {
   margin-top: 0.12rem;
   color: #d8fff8;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
@@ -5001,6 +5032,9 @@ section[id] {
 }
 
 .source-reference-note a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
   color: #d8fff8;
 }
 
@@ -5040,9 +5074,9 @@ section[id] {
 
 .teaching-card span {
   color: rgba(216, 255, 248, 0.74);
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   font-weight: 850;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -5086,7 +5120,7 @@ section[id] {
 
 .diagnostic-item strong {
   color: #d8fff8;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 850;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -5206,7 +5240,7 @@ section[id] {
 
 .advanced-geometry summary strong {
   color: var(--color-text-muted);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
 }
 
 .advanced-geometry[open] {
@@ -5239,6 +5273,7 @@ section[id] {
 
 .instrument-control input[type="range"] {
   width: 100%;
+  min-height: 2.5rem;
   accent-color: #7df5df;
 }
 
@@ -5259,7 +5294,7 @@ section[id] {
 .control-help {
   display: block;
   color: rgba(176, 186, 206, 0.74);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 650;
   line-height: 1.42;
 }
@@ -5304,7 +5339,7 @@ section[id] {
 
 .scan-state-grid span {
   color: var(--color-text-muted);
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -5312,7 +5347,7 @@ section[id] {
 .scan-state-grid strong {
   margin-top: 0.14rem;
   color: #d8fff8;
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 850;
   line-height: 1.25;
 }
@@ -5338,7 +5373,7 @@ section[id] {
 
 .spectrum-meta-grid span {
   color: var(--color-text-muted);
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -5346,7 +5381,7 @@ section[id] {
 .spectrum-meta-grid strong {
   margin-top: 0.12rem;
   color: #d8fff8;
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 850;
   line-height: 1.25;
 }
@@ -5459,16 +5494,31 @@ section[id] {
 @media (max-width: 780px) {
   .instrument-onboarding {
     grid-template-columns: 1fr;
-    gap: 0.42rem;
+    gap: 0.3rem;
   }
 
   .instrument-onboarding p {
-    padding: 0.54rem 0.62rem;
+    padding: 0.46rem 0.58rem;
+    font-size: 0.76rem;
+    line-height: 1.28;
+  }
+
+  .instrument-onboarding strong {
+    margin-bottom: 0.04rem;
+    font-size: 0.74rem;
+  }
+
+  .instrument-onboarding span {
+    display: none;
   }
 
   .instrument-page .instrument-hero-card .article-title {
-    font-size: clamp(1.8rem, 6.2vw, 2.25rem);
+    font-size: clamp(1.68rem, 5.7vw, 2.05rem);
     line-height: 1.06;
+  }
+
+  .instrument-title-zh {
+    font-size: clamp(1.22rem, 4.5vw, 1.58rem);
   }
 
   .instrument-page .instrument-hero-card .article-lead {
@@ -5564,10 +5614,14 @@ section[id] {
   }
 
   .instrument-page .instrument-hero-card .article-title {
-    font-size: clamp(1.66rem, 8vw, 1.95rem);
+    font-size: clamp(1.54rem, 7.4vw, 1.82rem);
     line-height: 1.08;
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+
+  .instrument-title-zh {
+    font-size: clamp(1.08rem, 5.3vw, 1.32rem);
   }
 
   .instrument-hero-card .article-lead,
@@ -5590,12 +5644,12 @@ section[id] {
   }
 
   .instrument-scene-overlay p {
-    font-size: 0.66rem;
+    font-size: 0.74rem;
     line-height: 1.35;
   }
 
   .instrument-scene-overlay p + p {
-    font-size: 0.66rem;
+    font-size: 0.74rem;
   }
 
   .instrument-axis-label,

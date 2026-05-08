@@ -1,5 +1,7 @@
 # Public Surface Verification
 
+> Superseded: this report reflects the April 24 public surface. The `/review/` route was retired on 2026-05-08; use `WEBIMPROVE_PROGRESS.md`, `docs/manual-qa-checklist.md`, and `tools/check_site.py` for current release checks.
+
 Date: 2026-04-24
 Scope: governance sync, static markup verification, and link-target QA for the current public surfaces
 
