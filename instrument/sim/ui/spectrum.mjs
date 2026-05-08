@@ -50,6 +50,7 @@ export function collectInstrumentElements(root) {
     controls,
     modeButtons: Array.from(root.querySelectorAll("[data-mode]")),
     partButtons: Array.from(root.querySelectorAll("[data-part]")),
+    enableSceneButtons: Array.from(root.querySelectorAll('[data-action="enable-3d"]')),
     resetViewButtons: Array.from(root.querySelectorAll('[data-action="reset-view"]')),
     resetGeometryButtons: Array.from(root.querySelectorAll('[data-action="reset-geometry"]')),
     fallbackDiagram: root.querySelector("[data-fallback-diagram]"),

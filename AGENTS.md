@@ -321,6 +321,8 @@ Use this local preview command for browser QA, especially on Windows where the d
 python tools/serve.py
 ```
 
+The helper uses `4173` by default and falls forward to the next available local port if that port is occupied. Set `PORT` to force a specific port.
+
 Fallback for simple reachability checks:
 
 ```bash
@@ -347,6 +349,12 @@ git diff --stat
 git diff
 ```
 
+Run the site sanity checker after scoped HTML, metadata, sitemap, robots, or local-link changes:
+
+```bash
+python tools/check_site.py
+```
+
 Do not add npm, pnpm, yarn, or other tooling unless a plan justifies it.
 
 ---
@@ -363,7 +371,7 @@ Before calling a task complete, check as many of these as apply:
 - navigation links work
 - GitHub links work
 - hero section is immediately understandable
-- Research / Build / Notes feel coherent
+- Research / Projects / Notes feel coherent
 - project cards use real projects only
 - no invented personal claims
 - `<title>` exists and is descriptive
@@ -809,7 +817,7 @@ The first version is shippable when:
 - the site is a working one-page static site
 - the page opens from GitHub Pages
 - the homepage clearly explains the research-builder identity
-- Hero, Research, Build, Notes, and About / Contact exist
+- Hero, Research, Projects / Build, Notes, and About / Contact exist
 - project cards use real GitHub projects
 - mobile layout is acceptable
 - no invented claims are present

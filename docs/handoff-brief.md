@@ -9,8 +9,8 @@ This brief turns the repo state at the intake stage into a practical handoff art
 This section supersedes older status bullets below when they describe the public surface count or next phase.
 
 - The repository is still a static GitHub Pages personal site with no build step.
-- Current public surfaces are `/`, `/projects/`, `/notes/`, `notes/build-logs-homepage-second-pass.html`, `notes/when-a-fluorescence-signal-becomes-usable.html`, and `/review/`.
-- `/review/` is live but marked `noindex, nofollow`; treat it as an internal review surface until the owner decides whether to keep or remove it.
+- Current public surfaces are `/`, `/projects/`, `/notes/`, `notes/build-logs-homepage-second-pass.html`, `notes/when-a-fluorescence-signal-becomes-usable.html`, and `/instrument/`.
+- The former `/review/` internal review route was retired from the deployable tree on 2026-05-08.
 - The project gateway upgrade has landed on the homepage and `/projects/`.
 - A visual depth pass has landed; the homepage, projects hub, and notes hub now use local CSS/HTML visual modules instead of relying on fragile decorative image embeds.
 - The next phase is governance sync, browser QA, GitHub surface alignment, and evidence collection for stronger public claims.
@@ -43,7 +43,7 @@ Treat these as the main public surfaces that must stay aligned:
 3. Notes hub `/notes/`
 4. Build log note `/notes/build-logs-homepage-second-pass.html`
 5. Research reflection note `/notes/when-a-fluorescence-signal-becomes-usable.html`
-6. Review surface `/review/` as a noindex internal review artifact
+6. Instrument Lab `/instrument/`
 7. GitHub profile plus the five featured repository descriptions
 
 Featured repositories currently surfaced on the homepage:
@@ -157,7 +157,7 @@ The correct next question is whether hand-written static HTML still scales after
 - The notes hub is live.
 - Both note pages are live.
 - The projects page is live.
-- The review page is live but noindexed.
+- The former review page has been retired from the deployable tree.
 
 ### Clarified During This Intake
 
@@ -168,7 +168,6 @@ The correct next question is whether hand-written static HTML still scales after
 ### Still Needs Manual Confirmation
 
 - The exact GitHub Pages source setting in repository settings
-- Whether `/review/` should remain a live noindex surface or be removed from the deployed tree
 - Whether the Method Notes draft should become the next public note
 - Pinned repo order on the public GitHub profile
 
@@ -181,11 +180,9 @@ Highest-risk gaps for the next maintainer:
    - The limiting factor is fact-backed content, not layout.
 2. Cross-surface drift
    - Homepage copy, notes copy, GitHub repository descriptions, and future profile wording can diverge unless checked in one pass.
-3. Review surface ambiguity
-   - `/review/` is live and noindexed, but its long-term public/deployed status still needs an owner decision.
-4. Static maintenance overhead
+3. Static maintenance overhead
    - Shared shell and repeated note summaries are still hand-maintained.
-5. Decision log still sparse
+4. Decision log still sparse
    - Use `docs/decisions/` for public-surface and tooling decisions that should not live only in chat or commits.
 
 ## 8. Recommended Next Actions
@@ -237,7 +234,7 @@ Supporting operational docs created during this intake:
 - `docs/github-coordination-checklist.md`
 - `docs/public-surface-verification-2026-04-22.md`
 - `docs/decisions/README.md`
-- `review/index.html` as an internal review artifact rather than a formal public surface
+- `docs/decisions/2026-05-08-retire-review-route.md` records the later release decision to remove the review route from the deployable tree
 
 ## 10. Assumptions
 

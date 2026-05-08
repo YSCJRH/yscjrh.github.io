@@ -1,0 +1,471 @@
+# WEBIMPROVE_PROGRESS.md
+
+## Current milestone
+- Active: Complete
+- Status: M0-M9 completed
+- Last updated: 2026-05-08
+
+## M0 Repository reconnaissance
+- Status: Completed
+- Files changed:
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `git status --short`
+  - `rg --files`
+  - `Get-ChildItem -Force`
+  - `Get-ChildItem -Path . -Recurse -File -Depth 3 | Sort-Object FullName`
+  - `git diff --stat`
+  - `rg -n "^## |^### M[0-9]|验收标准|完成标准|验证命令|修改范围|实施步骤" webimprove.md`
+  - `rg -n "<title|description|canonical|og:|twitter:|<h1|<section|id=|href=|<script|aria-|noindex|robots" ...`
+  - `rg -n "addEventListener|menu|aria-expanded|Escape|querySelector|reduced|IntersectionObserver|localStorage" script.js instrument/instrument.js`
+  - `rg -n "^:root|--|@media|.site-header|.hero|.project|.note|focus|reduced-motion|overflow" styles.css`
+  - `python tools/serve.py` attempted against the expected port `4173`; an existing listener returned `200 /` but `404` for subroutes, so it was not a valid preview of this checkout.
+  - `python -m http.server 4174 --bind 127.0.0.1`
+- Required documents read:
+  - `webimprove.md`
+  - `README.md`
+  - `personalweb.md`
+  - `AGENTS.md`
+  - `PLANS.md`
+  - `CONTENT_GAPS.md`
+  - `docs/manual-qa-checklist.md`
+- Page entries identified:
+  - `/`
+  - `/projects/`
+  - `/notes/`
+  - `/notes/build-logs-homepage-second-pass.html`
+  - `/notes/when-a-fluorescence-signal-becomes-usable.html`
+  - `/review/`
+  - `/instrument/`
+- Technical stack:
+  - Static HTML at the repository root and subdirectories.
+  - Shared `styles.css` and `script.js`.
+  - Local static preview helper at `tools/serve.py`.
+  - No package manager, build step, framework, analytics, backend, form, or deployment config found.
+  - `/instrument/` uses local vendored Three.js ESM and local processed JSON data, but this is route-scoped and does not create a site-wide build stack.
+- Local preview:
+  - Preferred command: `python tools/serve.py`
+  - Fallback command: `python -m http.server 4173`
+  - M0 validation fallback used `http://127.0.0.1:4174/` because port `4173` was already occupied by a listener that did not serve this repository correctly.
+- Metadata baseline:
+  - Core public pages have `<title>`, meta description, canonical, Open Graph title/description/url/site name, Twitter summary card, favicon, and shared CSS/JS.
+  - `/review/` has `meta name="robots" content="noindex, nofollow"` and is treated as an internal review surface.
+  - `robots.txt`, `sitemap.xml`, `feed.xml`, and `reports/` are not present yet.
+- Validation and tooling baseline:
+  - `tools/serve.py` exists.
+  - `tools/check_site.py` and `tools/check_links.py` are not present yet; `webimprove.md` assigns that work to M8 if needed.
+  - Instrument-specific test files exist under `instrument/sim/tests/`, but there is no site-wide lint, format, or package script.
+- JavaScript responsibilities:
+  - `script.js` handles mobile navigation, Escape/outside-click close behavior, reveal animations, pointer spotlight, reduced-motion handling, and hero parallax.
+  - `instrument/instrument.js` handles `/instrument/` state, controls, reduced-motion state, source-derived examples, and Three.js scene integration.
+- CSS baseline:
+  - `styles.css` is the shared stylesheet for public pages and route-specific instrument visuals.
+  - It defines global tokens in `:root`, shared header/nav/hero/project/note/about modules, responsive breakpoints, focus-visible states, reduced-motion rules, and instrument-specific modules.
+  - The stylesheet is large and contains repeated `:root` token definitions, so M2 should improve documentation and organization carefully rather than forcing a broad rewrite.
+- Git baseline:
+  - Current untracked file before this progress log: `webimprove.md`.
+  - No tracked file diff before creating `WEBIMPROVE_PROGRESS.md`.
+- Findings:
+  - The actual site already implements much of the project gateway and note structure described in `webimprove.md`.
+  - The current top navigation still includes `Build / 构建` on public pages, while `webimprove.md` recommends `Projects / 项目` as the stronger cold-visitor label. This is an M1/M5 IA task, not an M0 conflict.
+  - The homepage currently has GitHub and Projects as main CTAs plus several hero shortcuts. M1 should reduce CTA competition without removing useful secondary entries.
+  - The public content already uses bilingual UI heavily; future edits must preserve paired English / Chinese visitor-facing copy.
+  - The repository has temporary review images under `tmp/` and root `.codex_tmp_*` image files. They are outside the webimprove milestone scope unless a later cleanup decision is requested.
+- Validation result:
+  - `http://127.0.0.1:4174/` returned `200`.
+  - `http://127.0.0.1:4174/projects/` returned `200`.
+  - `http://127.0.0.1:4174/notes/` returned `200`.
+  - `http://127.0.0.1:4174/notes/build-logs-homepage-second-pass.html` returned `200`.
+  - `http://127.0.0.1:4174/notes/when-a-fluorescence-signal-becomes-usable.html` returned `200`.
+  - `http://127.0.0.1:4174/review/` returned `200`.
+  - `http://127.0.0.1:4174/instrument/` returned `200`.
+  - No public page, stylesheet, or script was modified in M0.
+- Risks:
+  - Broad CSS refactoring could destabilize multiple pages because the stylesheet is shared and large.
+  - Project descriptions and proof/status copy must stay aligned with public repo descriptions; missing proof should remain a content gap, not be filled with claims.
+  - Lighthouse and axe checks require network access for `npx` packages and may create local `reports/` artifacts.
+- Next:
+  - Proceed to M1 homepage IA and Hero changes.
+
+## Blockers
+- None.
+
+## M1 Homepage information architecture and Hero changes
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `styles.css`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, and `/notes/` on `http://127.0.0.1:4174/`
+  - `Select-String` checks for homepage `<h1>` count and updated CTA text
+  - `git diff --check`
+  - `npx --yes playwright install chromium`
+  - `npx --yes playwright screenshot --viewport-size=360,900 --full-page http://127.0.0.1:4174/ tmp/webimprove-m1-home-360x900.png`
+  - `npx --yes playwright screenshot --viewport-size=768,1000 --full-page http://127.0.0.1:4174/ tmp/webimprove-m1-home-768x1000.png`
+  - `npx --yes playwright screenshot --viewport-size=1280,900 --full-page http://127.0.0.1:4174/ tmp/webimprove-m1-home-1280x900.png`
+- Changes:
+  - Reworked the homepage Hero around the `webimprove.md` option C cross-identity framing: signals, methods, instruments, and open tools.
+  - Replaced the main Hero CTA pair with `Explore projects / 查看项目` and `Read notes / 阅读笔记`.
+  - Moved GitHub into the compact shortcut row beside AnswerLens, Skylattice, and the demoted Instrument Lab concept entry.
+  - Removed the redundant Hero proof row so the first viewport has one primary message, one supporting bilingual sentence pair, two CTAs, secondary shortcuts, and the four direction chips.
+  - Changed the fourth Hero direction chip from `Working Notes / 工作笔记` to `Open Tools / 开放工具` to match the recommended supporting tags.
+  - Fixed a validation-discovered progressive-enhancement issue: `[data-reveal]` content is now visible by default, so homepage sections remain readable in full-page screenshots and when scroll-triggered JS does not reveal them.
+- Validation result:
+  - `http://127.0.0.1:4174/`, `/projects/`, and `/notes/` returned `200`.
+  - Homepage has one `<h1>`.
+  - Primary and secondary Hero CTAs are present.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - Playwright screenshots were generated for 360px, 768px, and 1280px viewports.
+  - 360px and 1280px screenshots show readable Hero content with no obvious first-viewport overlap.
+- Findings carried forward:
+  - Desktop and mobile navigation still use `Build / 构建`; M5 should align navigation labels across public pages if the route structure remains stable.
+  - The homepage Projects section module button is cramped on narrow mobile; handle in M5 with responsive module-head rules.
+  - Project grouping, note category metadata, and About copy compression are still M3/M4 work.
+  - SEO artifacts, mobile menu focus handoff, bilingual language semantics, and site sanity checker remain M6-M8 work.
+- Next:
+  - Proceed to M2 design token documentation and carefully scoped style-system cleanup.
+
+## M2 Design system and global style organization
+- Status: Completed
+- Files changed:
+  - `styles.css`
+  - `DESIGN_SYSTEM.md`
+  - `reports/lighthouse-m2.html`
+  - `reports/lighthouse-m2.json`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, and `/notes/` on `http://127.0.0.1:4174/`
+  - `git diff --check`
+  - `npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=accessibility,best-practices" --output=json --output-path=reports/lighthouse-m2.json --chrome-flags="--headless=new"`
+- Changes:
+  - Added `DESIGN_SYSTEM.md` with the current theme tokens, type stack, layout breakpoints, component classes, accessibility rules, and cleanup notes.
+  - Documented the two-layer token structure in `styles.css`: base tokens plus the active visual-depth override block.
+  - Kept CSS changes intentionally small to avoid destabilizing shared homepage, project, notes, review, and instrument surfaces.
+- Validation result:
+  - `http://127.0.0.1:4174/`, `/projects/`, and `/notes/` returned `200`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - Lighthouse M2 JSON score: Accessibility `100`, Best Practices `100`.
+  - The first Lighthouse HTML attempt wrote `reports/lighthouse-m2.html` but had a PowerShell category-argument warning; a corrected quoted-category JSON run produced the clean score baseline.
+- Findings carried forward:
+  - Do not consolidate the duplicate `:root` token layers until a visual regression pass can compare public pages.
+  - Keep route-specific `/instrument/` CSS scoped during later cleanup.
+- Next:
+  - Proceed to M3 project card fields, homepage project prioritization, `/projects/` grouping, and `CONTENT_MODEL.md`.
+
+## M3 Project card and project entry model
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `projects/index.html`
+  - `styles.css`
+  - `CONTENT_MODEL.md`
+  - `tmp/webimprove-m3-home-360x900.png`
+  - `tmp/webimprove-m3-projects-1280x900.png`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, and `/notes/` on `http://127.0.0.1:4174/`
+  - `git diff --check`
+  - `Select-String` checks for homepage project card count, projects page card count, supporting entries, and project group headings
+  - `npx --yes playwright screenshot "--viewport-size=360,900" --full-page http://127.0.0.1:4174/ tmp/webimprove-m3-home-360x900.png`
+  - `npx --yes playwright screenshot "--viewport-size=1280,900" --full-page http://127.0.0.1:4174/projects/ tmp/webimprove-m3-projects-1280x900.png`
+- Changes:
+  - Added `CONTENT_MODEL.md` with project card fields, note card fields, current project statuses, homepage/project-page rules, and About truthfulness boundaries.
+  - Kept the homepage focused on three first-read project cards: AnswerLens, `codex-via-phone`, and `skylattice`.
+  - Moved `mirror-sim` and `create-double-skill` into a compact homepage supporting-work panel so they remain discoverable without competing with the featured trio.
+  - Grouped `/projects/` into `Featured first / 先看这三项` and `Repo-first and experimental / 仓库优先与实验项目`.
+  - Added scoped CSS for project group headings and supporting project cards.
+  - Fixed the narrow-mobile `All Projects / 全部项目` button clipping observed during M3 screenshot validation.
+- Validation result:
+  - `http://127.0.0.1:4174/`, `/projects/`, and `/notes/` returned `200`.
+  - Homepage project card count is `3`.
+  - `/projects/` project card count is `5`.
+  - Homepage supporting project entry count is `2`.
+  - `/projects/` group heading count is `2`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - 360px homepage screenshot shows project cards stacked cleanly and the compact supporting-work panel readable.
+  - 1280px projects screenshot shows the featured group and supporting group separated clearly.
+- Findings carried forward:
+  - Later public proof improvements still depend on owner-provided inputs in `CONTENT_GAPS.md`; no metrics, users, or maturity claims were added.
+  - Dedicated public proof pages for `codex-via-phone`, `mirror-sim`, and `create-double-skill` remain content gaps.
+- Next:
+  - Proceed to M4 Notes and About content structure.
+
+## M4 Notes and About content structure
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `notes/index.html`
+  - `notes/build-logs-homepage-second-pass.html`
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
+  - `styles.css`
+  - `tmp/webimprove-m4-notes-360x900.png`
+  - `tmp/webimprove-m4-note-1280x900.png`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `rg -n ">Read note<|>Read note</a>|Read note[^/]"` to check for unpaired `Read note` labels in scoped files
+  - `rg -n "Open-source enthusiast|Current entry|article-meta-list|Latest / 最新|Related / 关联" ...`
+  - `Invoke-WebRequest` checks for `/`, `/notes/`, and both public note pages on `http://127.0.0.1:4174/`
+  - `git diff --check`
+  - `npx --yes playwright screenshot "--viewport-size=360,900" --full-page http://127.0.0.1:4174/notes/ tmp/webimprove-m4-notes-360x900.png`
+  - `npx --yes playwright screenshot "--viewport-size=1280,900" --full-page http://127.0.0.1:4174/notes/build-logs-homepage-second-pass.html tmp/webimprove-m4-note-1280x900.png`
+- Changes:
+  - Added latest-note and related-route details to homepage Notes cards.
+  - Added latest-note and related-route details to `/notes/`.
+  - Paired `Read note` labels as `Read note / 阅读笔记` in the edited public UI surfaces.
+  - Added note metadata blocks to both public note pages for published/updated/related context, using existing public-surface verification dates rather than invented article dates.
+  - Compressed About wording by replacing `Open-source enthusiast` with `Research-builder · Open tools` language and changing `Current entry` to `Public entry`.
+  - Added CSS for stream details and article metadata blocks with mobile stacking.
+- Validation result:
+  - `http://127.0.0.1:4174/`, `/notes/`, `/notes/build-logs-homepage-second-pass.html`, and `/notes/when-a-fluorescence-signal-becomes-usable.html` returned `200`.
+  - No remaining unpaired `Read note` labels were found in scoped files.
+  - `Open-source enthusiast` and `Current entry` were removed from scoped About copy.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - 360px notes hub screenshot and 1280px note screenshot show readable cards and metadata blocks.
+- Findings carried forward:
+  - Long-form note bodies remain English-first with bilingual framing. No full bilingual article-body rewrite was attempted because that is a larger editorial decision.
+  - Method Notes remains explicitly draft/repository-only.
+- Next:
+  - Proceed to M5 responsive/mobile navigation optimization, including nav label alignment, mobile menu focus handoff, and narrow viewport checks.
+
+## M5 Responsive and mobile navigation optimization
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `projects/index.html`
+  - `notes/index.html`
+  - `notes/build-logs-homepage-second-pass.html`
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
+  - `instrument/index.html`
+  - `review/index.html`
+  - `script.js`
+  - `styles.css`
+  - `tmp/webimprove-m5-home-320x900.png`
+  - `tmp/webimprove-m5-home-375x900.png`
+  - `tmp/webimprove-m5-projects-414x900.png`
+  - `tmp/webimprove-m5-notes-768x1000.png`
+- Commands:
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, `/notes/`, `/review/`, and `/instrument/` on `http://127.0.0.1:4174/`
+  - `git diff --check`
+  - `rg` checks for `Build / 构建`, `Projects / 项目`, nav ARIA, and mobile menu attributes
+  - `npx --yes playwright screenshot "--viewport-size=320,900" --full-page http://127.0.0.1:4174/ tmp/webimprove-m5-home-320x900.png`
+  - `npx --yes playwright screenshot "--viewport-size=375,900" http://127.0.0.1:4174/ tmp/webimprove-m5-home-375x900.png`
+  - `npx --yes playwright screenshot "--viewport-size=414,900" http://127.0.0.1:4174/projects/ tmp/webimprove-m5-projects-414x900.png`
+  - `npx --yes playwright screenshot "--viewport-size=768,1000" --full-page http://127.0.0.1:4174/notes/ tmp/webimprove-m5-notes-768x1000.png`
+  - Playwright DOM checks through the Node REPL for overflow, visible touch targets, and mobile menu focus behavior.
+- Changes:
+  - Aligned public route headers on `Research / 研究`, `Projects / 项目`, `Notes / 笔记`, and `About / 关于`; desktop navigation also exposes GitHub as the external public entry.
+  - Updated the noindex `/review/` header to match the shared navigation vocabulary without adding it to public promotion paths.
+  - Removed duplicate mobile Build/Projects navigation competition by making `Projects / 项目` the single project gateway label.
+  - Added mobile menu focus handoff: opening the menu focuses the first menu link, and Escape restores focus to the toggle.
+  - Paired shared header ARIA labels where edited, including primary navigation, mobile navigation, toggle labels, and GitHub profile labels.
+  - Increased Notes link touch targets for latest-note and read-note links.
+- Validation result:
+  - `http://127.0.0.1:4174/`, `/projects/`, `/notes/`, `/review/`, and `/instrument/` returned `200`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - No public route header still uses `Build / 构建` as the primary project navigation label.
+  - DOM viewport checks at 320px, 375px, 414px, and 768px showed `documentElement.scrollWidth` and `body.scrollWidth` equal to `innerWidth`; no horizontal overflow detected.
+  - Visible touch-target check found no sub-40px links/buttons in the sampled first viewport after the Notes link fix.
+  - Keyboard focus check: Enter on the mobile toggle opens the menu, focuses `Research / 研究`, Escape closes it, hides the menu, and restores focus to the toggle.
+  - Screenshots at 320px, 375px, 414px, and 768px show readable mobile header, Hero, project gateway, and Notes layouts.
+  - Full-page screenshot capture at 375px and 414px hit a Playwright protocol capture error; viewport screenshots succeeded for those breakpoints and full-page screenshots succeeded at 320px and 768px.
+- Findings carried forward:
+  - `/review/` remains noindex and should stay excluded from sitemap/public promotion in M7.
+  - Bilingual `lang` semantics still need the dedicated M6 audit.
+- Next:
+  - Proceed to M6 accessibility fixes and `ACCESSIBILITY_CHECKLIST.md`.
+
+## M6 Accessibility fixes
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `projects/index.html`
+  - `notes/index.html`
+  - `notes/build-logs-homepage-second-pass.html`
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
+  - `instrument/index.html`
+  - `review/index.html`
+  - `ACCESSIBILITY_CHECKLIST.md`
+  - `reports/lighthouse-a11y-home.json`
+- Commands:
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, `/notes/`, both published note pages, `/review/`, and `/instrument/`
+  - `git diff --check`
+  - `rg --pcre2` check for `*-zh` full-sentence classes without `lang="zh-CN"`
+  - Python heading/skip-link count check across core pages
+  - `npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=accessibility" --output=json --output-path=reports/lighthouse-a11y-home.json --chrome-flags="--headless=new"`
+  - Optional attempted: `npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit`
+- Changes:
+  - Added `ACCESSIBILITY_CHECKLIST.md` with the current audit scope, checklist, validation commands, results, and residual manual checks.
+  - Removed redundant `aria-label` attributes from visible brand/GitHub links where they caused accessible-name mismatches.
+  - Added `lang="zh-CN"` to substantial Chinese full-sentence blocks using existing `*-zh` classes and to the Chinese article leads on the two published note pages.
+  - Preserved compact mixed labels such as `Projects / 项目` as inline bilingual labels to avoid high-churn markup changes.
+- Validation result:
+  - All core pages returned `200` on `http://127.0.0.1:4174/`.
+  - Each core page has one `<h1>` and a skip link targeting `#main`.
+  - No `*-zh` full-sentence class in the checked core pages is missing `lang="zh-CN"`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - Lighthouse accessibility score for `/`: `100`; no score-0 accessibility audits on the final rerun.
+  - The optional axe CLI could not run because ChromeDriver targeted Chrome 148 while local Chrome was 147. Recorded as an environment/tooling mismatch in `ACCESSIBILITY_CHECKLIST.md`, not a site failure.
+- Findings carried forward:
+  - Full screen-reader QA remains a manual release check if bilingual reading quality becomes critical.
+  - Future `/instrument/` interaction changes should re-check keyboard access for custom SVG controls.
+- Next:
+  - Proceed to M7 performance, SEO, sharing metadata, `robots.txt`, `sitemap.xml`, and `PERFORMANCE_CHECKLIST.md`.
+
+## M7 Performance and SEO optimization
+- Status: Completed
+- Files changed:
+  - `index.html`
+  - `projects/index.html`
+  - `notes/index.html`
+  - `notes/build-logs-homepage-second-pass.html`
+  - `notes/when-a-fluorescence-signal-becomes-usable.html`
+  - `instrument/index.html`
+  - `review/index.html`
+  - `assets/og-card.png`
+  - `robots.txt`
+  - `sitemap.xml`
+  - `PERFORMANCE_CHECKLIST.md`
+  - `reports/lighthouse-seo-perf-home.json`
+- Commands:
+  - `Invoke-WebRequest` checks for core routes, `robots.txt`, `sitemap.xml`, and `assets/og-card.png`
+  - `git diff --check`
+  - Python metadata presence check for title, description, canonical, favicon, Open Graph, and Twitter Card fields
+  - `npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=performance,seo,best-practices" --output=json --output-path=reports/lighthouse-seo-perf-home.json --chrome-flags="--headless=new"`
+- Changes:
+  - Added a restrained 1200 x 630 social share image at `assets/og-card.png` using only the existing public site positioning.
+  - Added Open Graph image, image dimensions, image alt text, locale, and Twitter large-image metadata to all checked HTML pages.
+  - Added `robots.txt` with `/review/` disallowed and sitemap location declared.
+  - Added `sitemap.xml` for public routes only; `/review/` is intentionally excluded.
+  - Added `PERFORMANCE_CHECKLIST.md` with SEO baseline, performance baseline, commands, results, and deferred items.
+  - Did not add JSON-LD because encoding personal identity facts should wait until About content is more stable.
+  - Did not add `feed.xml` because the current published notes count is too small to justify the maintenance surface in this milestone.
+- Validation result:
+  - Core routes, `robots.txt`, `sitemap.xml`, and `assets/og-card.png` returned `200` from local preview.
+  - Metadata presence check passed for all checked HTML pages.
+  - `/review/` remains noindex, is excluded from `sitemap.xml`, and is disallowed in `robots.txt`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+  - Lighthouse score for `/`: Performance `99`, Best Practices `100`, SEO `100`.
+  - Lighthouse opportunities for CSS minification, unused CSS, text compression/cache lifetime, and render-blocking CSS are recorded in `PERFORMANCE_CHECKLIST.md`; they are not blockers for the current static no-build site.
+- Findings carried forward:
+  - If a future build step is approved, CSS minification and unused CSS cleanup can move from opportunity to implementation.
+  - If Notes grows, revisit `feed.xml` in a content-structure milestone.
+- Next:
+  - Proceed to M8 documentation, validation script, and maintenance instructions.
+
+## M8 Documentation, validation scripts, and maintenance notes
+- Status: Completed
+- Files changed:
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/manual-qa-checklist.md`
+  - `tools/serve.py`
+  - `tools/check_site.py`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `python tools/check_site.py`
+  - `git diff --check`
+  - `python tools/serve.py`
+  - `Invoke-WebRequest` checks for `/`, `/projects/`, `/notes/`, `/instrument/`, `robots.txt`, and `sitemap.xml`
+  - `rg` checks for stale maintenance wording and new documentation references
+- Changes:
+  - Added `tools/check_site.py`, a stdlib-only sanity checker for required metadata, one-`h1` structure, skip links, local references, no external scripts/forms, noindex `/review/`, sitemap/robots boundaries, and `lang="zh-CN"` on substantial Chinese text blocks.
+  - Updated `README.md` with current public surfaces, maintenance files, validation command, Lighthouse checklist files, and `/review/` public-boundary notes.
+  - Updated `docs/manual-qa-checklist.md` to reflect `Projects / 项目` as the visitor-facing project gateway label.
+  - Added `python tools/check_site.py` to `AGENTS.md` validation guidance and aligned the done criteria wording with Projects / Build.
+  - Improved `tools/serve.py` so the preview helper falls forward from port `4173` to the next available local port, and supports a `PORT` environment override.
+- Validation result:
+  - `python tools/check_site.py` passed.
+  - Initial `python tools/serve.py` failed because port `4173` was blocked by the same external listener identified in M0. After updating the helper, `python tools/serve.py` started successfully and reported `http://127.0.0.1:4174/` in this environment.
+  - `http://127.0.0.1:4174/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml` returned `200`.
+  - `git diff --check` passed with only line-ending warnings for touched files.
+- Findings carried forward:
+  - The validation helper intentionally skips external HTTP links; live GitHub/demo URL checks remain manual or future network-enabled checks.
+  - `/review/` remains present but should stay noindex and excluded from public discovery files.
+- Next:
+  - Proceeded to M9 final review and release-readiness checks.
+
+## M9 Final review and pre-publish checks
+- Status: Completed
+- Files changed:
+  - `styles.css`
+  - `WEBIMPROVE_PROGRESS.md`
+- Commands:
+  - `git status --short`
+  - `git diff --stat`
+  - `python tools/serve.py` through a controlled PowerShell background job with `PORT=4199`
+  - `python tools/check_site.py`
+  - `Invoke-WebRequest` route checks for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/review/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`
+  - External-link check across public HTML pages with Python `urllib`
+  - Browser verification for the two `.gov` source links that fail in the local Windows SSL stack
+  - `npx --yes lighthouse http://127.0.0.1:4174/ --output=json --output=html --output-path=reports/final-home --chrome-flags="--headless=new"`
+  - `npx --yes lighthouse http://127.0.0.1:4174/projects/ --output=json --output=html --output-path=reports/final-projects --chrome-flags="--headless=new"`
+  - `npx --yes lighthouse http://127.0.0.1:4174/notes/ --output=json --output=html --output-path=reports/final-notes --chrome-flags="--headless=new"`
+  - Playwright DOM checks through the Node REPL for `/`, `/projects/`, and `/notes/` at 320px, 375px, 414px, and 768px
+  - Playwright keyboard-only mobile menu check using real keyboard input
+  - `rg` public boundary scan for stale `Build / 构建` labels, forms, analytics/tracking markers, and over-marketing phrases
+  - `git diff --check`
+- Changes:
+  - Fixed the only M9 validation failure found during mobile DOM QA: homepage Hero shortcut links now have a 40px minimum height through `.hero-shortcut { min-height: 2.5rem; }`.
+  - No new feature, design direction, third-party service, backend, form, analytics, framework migration, or personal claim was added during M9.
+- Validation result:
+  - `python tools/check_site.py` passed: 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references checked.
+  - `python tools/serve.py` started successfully on `http://127.0.0.1:4199/` during the final controlled validation run; it reported that default port `4173` was unavailable.
+  - Local preview at `http://127.0.0.1:4174/` returned `200` for all checked public/internal routes and static SEO assets.
+  - Lighthouse final scores:
+    - `/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/projects/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/notes/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+  - Lighthouse final reports were written under `reports/final-home.report.*`, `reports/final-projects.report.*`, and `reports/final-notes.report.*`.
+  - Mobile DOM checks showed no horizontal overflow and no visible sub-40px links/buttons in the sampled first viewport after the Hero shortcut fix.
+  - Keyboard-only mobile menu check passed: Enter opens the menu, focus moves to `Research / 研究`, Escape closes the menu, and focus returns to the toggle.
+  - External GitHub and GitHub Pages links returned `200` in the local link check.
+  - The two external `.gov` source links for the fluorescence note hit local SSL handshake errors through Python/curl on this Windows environment, but both official pages were reachable through browser verification:
+    - `https://www.nist.gov/programs-projects/relative-intensity-correction-standards-fluorescence-and-raman-spectroscopy`
+    - `https://pubs.usgs.gov/publication/tm1D11/full`
+  - `git diff --stat` remained reviewable for the touched tracked files.
+  - `git diff --check` passed with only line-ending warnings for files Git will normalize on next touch.
+- Acceptance criteria status:
+  - Homepage first viewport is focused on the research-builder-open-tools identity.
+  - Homepage shows three featured projects; `/projects/` keeps all five tracked projects with grouped priority.
+  - Mobile navigation, overflow, and touch-target checks passed.
+  - Accessibility, Best Practices, SEO, and Performance Lighthouse targets were met.
+  - SEO metadata, Open Graph/Twitter Card fields, favicon, `robots.txt`, and `sitemap.xml` are present.
+  - `README.md`, checklist docs, and validation tooling were updated.
+  - `/review/` remains noindex, disallowed in `robots.txt`, and excluded from `sitemap.xml`.
+  - No invented personal facts, metrics, affiliations, contact methods, publications, awards, or third-party tracking were added.
+  - Public boundary scan found no stale `Build / 构建` label, no forms/contact collection, no analytics/tracking marker, and no blocked marketing phrases in checked public files.
+- Remaining non-blocking notes:
+  - Port `4173` is occupied in this environment by a listener that is not this checkout; `tools/serve.py` now falls forward and served this site on `4174`.
+  - Lighthouse still reports static-site opportunities for render-blocking CSS, unused/unminified CSS, text compression, and cache lifetime. These are recorded in `PERFORMANCE_CHECKLIST.md` and are not blockers for the current no-build static site.
+  - A future approved build/migration milestone could address minification and cache headers, but M0-M9 intentionally did not introduce that stack.
+- Blockers:
+  - None.
+
+## Release preparation after M9
+- Status: Completed for local release validation
+- Trigger:
+  - User requested release after review and live visual browser QA.
+- Read-only review results:
+  - Release scope reviewer found no analytics, tracking, forms, private contact collection, invented awards/publications/metrics, or unsupported public facts in sampled public copy.
+  - Both release reviewers flagged `/review/` as a publish risk because the route exposed maintainer-facing review framing and repository operating-document links from the deployed tree.
+  - QA evidence reviewer also flagged that `/instrument/` needed final release evidence because it is included in `sitemap.xml`.
+- Decisions and changes:
+  - Added `.gitignore` entry for `reports/` so Lighthouse HTML/JSON artifacts remain local QA output and are not published.
+  - Removed `review/index.html` from the deployable tree.
+  - Added `docs/decisions/2026-05-08-retire-review-route.md`.
+  - Marked `docs/decisions/2026-04-24-review-surface-status.md` as superseded.
+  - Updated `tools/check_site.py` so it checks the six public HTML pages and fails if `review/index.html` is reintroduced.
+  - Updated `README.md`, `PLANS.md`, `docs/handoff-brief.md`, `docs/manual-qa-checklist.md`, `ACCESSIBILITY_CHECKLIST.md`, `PERFORMANCE_CHECKLIST.md`, and `webimprove.md` to reflect the retired review route.
+- Validation result:
+  - `node --check instrument/instrument.js` passed.
+  - `python tools/check_site.py` passed: 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references checked.
+  - Local route checks on `http://127.0.0.1:4199/` returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
+  - Local route check for `/review/` returned `404` after the route retirement.
+  - `git diff --check` passed with only line-ending warnings for files Git will normalize on next touch.
+  - Lighthouse final `/instrument/` score after lazy-loading the optional 3D scene and source-data module: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+  - Chromium/Playwright DOM QA passed for `/`, `/projects/`, `/notes/`, both published note pages, and `/instrument/` at 320px, 375px, 414px, 768px, and 1280px.
+  - Mobile keyboard menu QA passed: Enter opens the menu and Escape closes it.
+  - `/instrument/` interaction QA passed: initial page uses the 2D fallback and does not load source data before scroll; clicking the optional 3D button creates one WebGL canvas; scrolling to the source-data section loads three dataset cards and the source-derived line data.
+- Notes:
+  - The final live browser QA happens after commit and push because it must inspect the deployed GitHub Pages site.

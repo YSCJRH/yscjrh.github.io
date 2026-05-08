@@ -235,7 +235,7 @@
 - Keep the site GitHub Pages friendly: static HTML, shared CSS, and small vanilla JavaScript only.
 
 ## Current Status
-- The homepage, `/projects/`, `/notes/`, two note pages, and `/review/` are live.
+- The homepage, `/projects/`, `/notes/`, two note pages, and `/instrument/` are live.
 - The homepage exposes an Instrument Lab entry point from the hero shortcut area and the Fluorescence Instrumentation research card.
 - The new page is treated as a concept demo rather than a mature open-source project.
 - The current Instrument Lab implementation has passed local syntax, link, responsive, reduced-motion, and 360px overflow checks.
@@ -326,8 +326,8 @@ Status: completed and superseded by the current local Three.js teaching-skeleton
 ## Current Status
 - The project gateway upgrade has landed on the homepage and `/projects/`.
 - The visual depth pass has landed and is live; the next visual work should be targeted QA or small refinements, not another broad redesign.
-- The live/public site surface now includes `/`, `/projects/`, `/notes/`, two note pages, and `/review/`.
-- `/review/` is treated as a live but unindexed internal review surface until the owner decides otherwise.
+- The live/public site surface now includes `/`, `/projects/`, `/notes/`, two note pages, and `/instrument/`.
+- The former `/review/` internal review route was retired from the deployable tree during the 2026-05-08 webimprove release preparation.
 - The main remaining content gap is evidence, not layout: safe research examples, project origin/workflow context, screenshots, and first-run proof.
 
 ## Phase 1: Documentation Baseline Sync
@@ -336,7 +336,7 @@ Status: completed and superseded by the current local Three.js teaching-skeleton
    - projects hub
    - notes hub
    - two published notes
-   - noindex review surface
+   - instrument concept route
 2. Mark older intake notes as historical when they predate the current release surface.
 3. Re-baseline `CONTENT_GAPS.md` so it tracks remaining evidence gaps instead of already-shipped structure.
 
@@ -347,7 +347,7 @@ Status: completed and superseded by the current local Three.js teaching-skeleton
    - `https://yscjrh.github.io/projects/`
    - `https://yscjrh.github.io/notes/`
    - both published note pages
-   - `https://yscjrh.github.io/review/`
+   - `https://yscjrh.github.io/instrument/`
 3. Verify primary project CTAs and record brittle README fragment links as maintenance risks.
 
 ## Phase 3: Browser QA
@@ -368,11 +368,11 @@ Status: completed and superseded by the current local Three.js teaching-skeleton
 ## Deliverables
 - updated maintainer docs
 - dated public surface verification note
-- explicit provisional decision for `/review/`
+- release decision record retiring `/review/` from the deployable tree
 - clear remaining evidence gaps
 
 ## Constraints
 - No framework, package manager, or Pages setting changes.
 - No invented metrics, users, customers, awards, affiliations, research results, or contact methods.
 - No public copy strengthening without a trustworthy source.
-- No removal of `/review/` without an explicit owner decision.
+- Do not reintroduce `/review/` or another internal review surface into the deployable tree without explicit owner approval.

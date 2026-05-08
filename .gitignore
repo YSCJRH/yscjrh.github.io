@@ -2,3 +2,4 @@ __pycache__/
 *.py[cod]
 .codex_tmp_*
 tmp/
+reports/

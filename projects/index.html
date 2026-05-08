@@ -17,7 +17,20 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yscjrh.github.io/projects/">
     <meta property="og:site_name" content="HJR / YSCJRH">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Projects / HJR / YSCJRH">
+    <meta
+      name="twitter:description"
+      content="A focused projects page covering the public repositories currently highlighted by HJR / YSCJRH."
+    >
+    <meta name="twitter:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta name="twitter:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/projects/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -38,17 +51,18 @@
     <div class="site-shell">
       <header class="site-header" id="top">
         <div class="container site-header__inner">
-          <a class="brand" href="../index.html#top" aria-label="HJR homepage">
+          <a class="brand" href="../index.html#top">
             <span class="brand-mark">HJR / YSCJRH</span>
             <span class="brand-sub">Researcher · Builder · Thinker</span>
           </a>
 
           <div class="site-header__cluster">
-            <nav class="site-nav" aria-label="Primary navigation">
+            <nav class="site-nav" aria-label="Primary navigation / 主导航">
               <a href="../index.html#research">Research / 研究</a>
-              <a href="../index.html#build">Build / 构建</a>
-              <a href="../notes/">Notes / 笔记</a>
               <a href="./index.html" aria-current="page">Projects / 项目</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../index.html#about">About / 关于</a>
+              <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
             </nav>
 
             <div class="header-controls">
@@ -58,7 +72,7 @@
                 data-nav-toggle
                 aria-expanded="false"
                 aria-controls="mobile-menu"
-                aria-label="Toggle navigation menu"
+                aria-label="Toggle navigation menu / 开关导航菜单"
               >
                 <span class="nav-toggle__line"></span>
                 <span class="nav-toggle__line"></span>
@@ -70,11 +84,11 @@
 
         <div class="container mobile-menu-wrap">
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
-            <nav class="mobile-nav" aria-label="Mobile navigation">
+            <nav class="mobile-nav" aria-label="Mobile navigation / 移动端导航">
               <a href="../index.html#research">Research / 研究</a>
-              <a href="../index.html#build">Build / 构建</a>
-              <a href="../notes/">Notes / 笔记</a>
               <a href="./index.html" aria-current="page">Projects / 项目</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../index.html#about">About / 关于</a>
             </nav>
 
             <a
@@ -102,7 +116,7 @@
               <p class="article-lead">
                 Start from a live page, public docs, or the repository itself.
               </p>
-              <p class="article-lead article-lead-zh">
+              <p class="article-lead article-lead-zh" lang="zh-CN">
                 这里优先展示每个项目当前最清楚的公开入口：在线页面、公开文档，或仓库本身。
               </p>
             </article>
@@ -134,6 +148,12 @@
               </div>
             </section>
 
+            <div class="project-group-head" data-reveal>
+              <p class="eyebrow">Featured first / 先看这三项</p>
+              <h2 class="article-subtitle">Public entry, setup path, and documentation.</h2>
+              <p class="section-copy section-copy-zh" lang="zh-CN">先从已有公开页面、明确上手路径和完整文档入口开始。</p>
+            </div>
+
             <div class="build-grid">
               <article class="surface surface-interactive project-card project-card-featured" data-reveal data-spotlight>
                 <div class="project-topline">
@@ -150,7 +170,7 @@
                 </div>
                 <h3>AnswerLens / ai-visibility-auditor</h3>
                 <p class="project-copy">CLI-first auditor for how AI systems read and summarize product websites.</p>
-                <p class="project-copy project-copy-zh">
+                <p class="project-copy project-copy-zh" lang="zh-CN">
                   用 CLI 检查 AI 系统如何读取和概括产品网站，并输出可复查的结构证据。
                 </p>
                 <div class="project-why">
@@ -182,7 +202,7 @@
                 </div>
                 <h3>codex-via-phone</h3>
                 <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
-                <p class="project-copy project-copy-zh">强调安全边界、设备信任与手机可达性的远程控制实验。</p>
+                <p class="project-copy project-copy-zh" lang="zh-CN">强调安全边界、设备信任与手机可达性的远程控制实验。</p>
                 <span class="project-status project-status-repo">Repo-first / 当前以仓库为入口</span>
                 <div class="project-why">
                   <p class="project-why-label">What to inspect / 看什么</p>
@@ -213,7 +233,7 @@
                 </div>
                 <h3>skylattice</h3>
                 <p class="project-copy">Local-first agent runtime for persistent memory, governed repository tasks, and Git-native iteration.</p>
-                <p class="project-copy project-copy-zh">围绕本地优先 agent runtime 的长线探索，强调治理、验证与可回退路径。</p>
+                <p class="project-copy project-copy-zh" lang="zh-CN">围绕本地优先 agent runtime 的长线探索，强调治理、验证与可回退路径。</p>
                 <span class="project-status project-status-docs">Public docs / 已有公开文档</span>
                 <div class="project-why">
                   <p class="project-why-label">What to inspect / 看什么</p>
@@ -236,6 +256,15 @@
                 </div>
               </article>
 
+            </div>
+
+            <div class="project-group-head" data-reveal>
+              <p class="eyebrow">Repo-first and experimental / 仓库优先与实验项目</p>
+              <h2 class="article-subtitle">Useful supporting work with narrower boundaries.</h2>
+              <p class="section-copy section-copy-zh" lang="zh-CN">这些项目适合继续深入，但当前成熟度和公开证据路径与前三项不同。</p>
+            </div>
+
+            <div class="build-grid build-grid-secondary">
               <article class="surface surface-interactive project-card project-card-compact" data-reveal>
                 <div class="project-visual project-visual-mirror" aria-hidden="true">
                   <span></span>
@@ -244,7 +273,7 @@
                 </div>
                 <h3>mirror-sim</h3>
                 <p class="project-copy">A constrained scenario simulation project inspired by Liu Cixin's The Mirror.</p>
-                <p class="project-copy project-copy-zh">把场景推演限制在明确语料、可检视主张与证据之中。</p>
+                <p class="project-copy project-copy-zh" lang="zh-CN">把场景推演限制在明确语料、可检视主张与证据之中。</p>
                 <span class="project-status project-status-concept">Concept repo / 概念仓库</span>
                 <div class="project-why">
                   <p class="project-why-label">What to inspect / 看什么</p>
@@ -275,7 +304,7 @@
                 </div>
                 <h3>create-double-skill</h3>
                 <p class="project-copy">Create a private, editable profile of how you think, choose, and present yourself.</p>
-                <p class="project-copy project-copy-zh">把自我建模、语言偏好与技能表达转成可以继续编辑和复用的材料。</p>
+                <p class="project-copy project-copy-zh" lang="zh-CN">把自我建模、语言偏好与技能表达转成可以继续编辑和复用的材料。</p>
                 <span class="project-status project-status-experiment">Tooling experiment / 实验型工具</span>
                 <div class="project-why">
                   <p class="project-why-label">What to inspect / 看什么</p>

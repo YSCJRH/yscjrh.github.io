@@ -1,7 +1,7 @@
 # Review Surface Status
 
 - Date: 2026-04-24
-- Status: Provisional
+- Status: Superseded by `2026-05-08-retire-review-route.md`
 
 ## Context
 
@@ -19,4 +19,4 @@ Keep `/review/` in place for now as a live but unindexed internal review surface
 
 ## Follow-up
 
-- Confirm whether `/review/` should remain live, be moved out of the deployable tree, or be converted into a private/local-only artifact.
+- Superseded on 2026-05-08: `/review/` was removed from the deployable tree for the webimprove release after release review identified it as a public-surface risk.

@@ -1,3 +1,5 @@
+/* Base design tokens. A later visual-depth token block intentionally overrides
+   selected colors and shadows for the current public theme. */
 :root {
   --color-bg: #05070d;
   --color-bg-elevated: #0a0f18;
@@ -462,8 +464,8 @@ button {
 }
 
 [data-reveal] {
-  opacity: 0;
-  transform: translateY(12px);
+  opacity: 1;
+  transform: none;
   transition:
     opacity var(--transition-slow),
     transform var(--transition-slow);
@@ -681,6 +683,7 @@ button {
 .hero-shortcut {
   display: inline-flex;
   align-items: center;
+  min-height: 2.5rem;
   gap: 0.4rem;
   border: 1px solid rgba(138, 166, 255, 0.08);
   border-radius: 999px;
@@ -990,6 +993,20 @@ button {
   gap: 0.64rem;
 }
 
+.build-grid-secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-group-head {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0.72rem;
+}
+
+.project-group-head .article-subtitle {
+  max-width: 24ch;
+}
+
 .project-card {
   display: grid;
   gap: 0.56rem;
@@ -1201,6 +1218,83 @@ button {
   max-width: 35ch;
 }
 
+.supporting-projects {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 0.9rem;
+  margin-top: 0.7rem;
+  padding: 0.96rem;
+}
+
+.supporting-projects-copy,
+.supporting-project-list,
+.supporting-project-card {
+  min-width: 0;
+}
+
+.supporting-projects-copy {
+  display: grid;
+  gap: 0.38rem;
+  align-content: start;
+}
+
+.supporting-projects-copy h3,
+.supporting-projects-copy p {
+  margin: 0;
+}
+
+.supporting-projects-copy h3 {
+  line-height: 1.15;
+}
+
+.supporting-projects-copy p {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.supporting-project-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.58rem;
+}
+
+.supporting-project-card {
+  display: grid;
+  gap: 0.34rem;
+  border: 1px solid rgba(138, 166, 255, 0.1);
+  border-radius: 0.9rem;
+  padding: 0.78rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.012)),
+    rgba(255, 255, 255, 0.018);
+  color: inherit;
+  text-decoration: none;
+}
+
+.supporting-project-card:hover,
+.supporting-project-card:focus-visible {
+  border-color: rgba(138, 166, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.016)),
+    rgba(255, 255, 255, 0.028);
+  transform: translateY(-1px);
+}
+
+.supporting-project-card strong,
+.supporting-project-card span {
+  display: block;
+}
+
+.supporting-project-card strong {
+  color: var(--color-text);
+}
+
+.supporting-project-card > span:last-child {
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
 .project-cta-group {
   display: flex;
   flex-wrap: wrap;
@@ -1316,6 +1410,28 @@ button {
   gap: 0.18rem;
 }
 
+.stream-detail {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.stream-detail a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  color: var(--color-text);
+  font-weight: 700;
+  text-decoration-color: rgba(123, 132, 232, 0.48);
+  text-underline-offset: 0.2em;
+}
+
+.stream-detail a:hover,
+.stream-detail a:focus-visible {
+  color: var(--color-accent-strong);
+}
+
 .stream-meta {
   display: grid;
   min-width: 10.8rem;
@@ -1330,6 +1446,7 @@ button {
 
 .stream-link {
   margin-top: 0;
+  min-height: 2.5rem;
 }
 
 .module-footer {
@@ -1578,6 +1695,41 @@ button {
   margin-top: 0.05rem;
 }
 
+.article-meta-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.52rem;
+  margin: 0.2rem 0 0.3rem;
+}
+
+.article-meta-list div {
+  min-width: 0;
+  border: 1px solid rgba(138, 166, 255, 0.1);
+  border-radius: 0.8rem;
+  padding: 0.68rem;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.article-meta-list dt,
+.article-meta-list dd {
+  margin: 0;
+}
+
+.article-meta-list dt {
+  color: var(--color-accent-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.article-meta-list dd {
+  margin-top: 0.24rem;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .note-trail {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1813,6 +1965,11 @@ button {
     min-height: 0;
   }
 
+  .supporting-projects,
+  .supporting-project-list {
+    grid-template-columns: 1fr;
+  }
+
   .hero-actions {
     flex-direction: column;
   }
@@ -1975,7 +2132,8 @@ button {
   }
 }
 
-/* Visual depth pass: local CSS visuals replace fragile external SVG imagery. */
+/* Active public theme tokens from the visual depth pass. Keep these overrides
+   synchronized with DESIGN_SYSTEM.md before changing the site-wide palette. */
 :root {
   --color-bg: #050506;
   --color-bg-elevated: #0a0a0c;
@@ -2100,7 +2258,7 @@ body {
 }
 
 .hero-title {
-  max-width: min(100%, 10.8ch);
+  max-width: min(100%, 12.8ch);
   font-size: 4.35rem;
   line-height: 0.98;
   background: linear-gradient(180deg, #ffffff 0%, #ededf0 58%, rgba(237, 237, 240, 0.72) 100%);
@@ -3488,6 +3646,11 @@ section[id] {
     gap: 0.48rem;
   }
 
+  .article-meta-list {
+    grid-template-columns: 1fr;
+    gap: 0.48rem;
+  }
+
   .note-trail li {
     min-height: 0;
     padding: 0.68rem;
@@ -3502,8 +3665,18 @@ section[id] {
     padding: 0.72rem;
   }
 
+  .module-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .module-button {
+    justify-content: center;
+    width: 100%;
+  }
+
   .hero-title {
-    max-width: 12ch;
+    max-width: 12.5ch;
     font-size: 2.65rem;
   }
 
@@ -3534,49 +3707,13 @@ section[id] {
     order: 2;
   }
 
-  .hero-focus-line {
-    order: 3;
-    gap: 0.36rem;
-  }
-
-  .hero-focus-line span {
-    min-height: 1.8rem;
-    padding: 0.32rem 0.5rem;
-    font-size: 0.7rem;
-  }
-
   .hero-title-zh {
-    order: 6;
-  }
-
-  .hero-proof-row {
-    order: 7;
-    grid-template-columns: 1fr;
-    gap: 0.56rem;
-  }
-
-  .hero-proof-row li {
-    min-height: 0;
-    padding: 0.82rem 0.9rem;
-  }
-
-  .hero-proof-row span {
-    margin-bottom: 0.34rem;
-  }
-
-  .hero-proof-row strong {
-    font-size: 0.92rem;
-    line-height: 1.28;
-  }
-
-  .hero-proof-row em {
-    font-size: 0.82rem;
-    line-height: 1.5;
+    order: 3;
   }
 
   .hero-mobile-visual {
     position: relative;
-    order: 5;
+    order: 7;
     display: block;
     min-height: 6.6rem;
     overflow: hidden;
@@ -3650,19 +3787,19 @@ section[id] {
   }
 
   .hero-actions {
-    order: 4;
+    order: 6;
   }
 
   .hero-lead {
-    order: 8;
+    order: 4;
   }
 
   .hero-lead-zh {
-    order: 9;
+    order: 5;
   }
 
   .hero-shortcuts {
-    order: 10;
+    order: 8;
   }
 
   .hero-actions {
@@ -4445,7 +4582,7 @@ section[id] {
   padding: 0.62rem 0.68rem 0.62rem 0.78rem;
   color: var(--color-text-muted);
   background: rgba(255, 255, 255, 0.018);
-  font-size: 0.73rem;
+  font-size: 0.76rem;
   font-weight: 650;
   line-height: 1.45;
 }
@@ -4457,6 +4594,36 @@ section[id] {
   font-size: 0.7rem;
   font-weight: 850;
   text-transform: uppercase;
+}
+
+.instrument-inline-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  margin-top: 0.75rem;
+  border: 1px solid rgba(139, 226, 214, 0.22);
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  color: var(--color-text);
+  background: rgba(139, 226, 214, 0.08);
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.instrument-inline-actions {
+  margin-top: -0.35rem;
+}
+
+.instrument-inline-action:hover,
+.instrument-inline-action:focus-visible {
+  border-color: rgba(139, 226, 214, 0.42);
+  background: rgba(139, 226, 214, 0.14);
+}
+
+.instrument-inline-action:disabled {
+  cursor: wait;
+  opacity: 0.72;
 }
 
 .path-key {
@@ -4490,9 +4657,10 @@ section[id] {
 
 .instrument-flow-strip button {
   min-width: 0;
+  min-height: 2.6rem;
   border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 0.72rem;
-  padding: 0.48rem 0.42rem;
+  padding: 0.56rem 0.42rem;
   color: var(--color-text-soft);
   background: rgba(255, 255, 255, 0.018);
   cursor: pointer;
@@ -5455,7 +5623,7 @@ section[id] {
   .source-data-caption,
   .source-reference-note,
   .source-data-facts dd {
-    font-size: 0.74rem;
+    font-size: 0.78rem;
   }
 
   .spectrum-axis-label,

@@ -14,7 +14,7 @@ This checklist is for manual verification of the current public site and local p
 python tools/serve.py
 ```
 
-This helper keeps SVG assets rendering correctly in local browser QA on Windows. If it is unavailable, fall back to `python -m http.server 4173` and check whether SVG assets still render.
+This helper keeps SVG assets rendering correctly in local browser QA on Windows and falls forward to the next available local port if `4173` is occupied. If it is unavailable, fall back to `python -m http.server 4173` and check whether SVG assets still render.
 
 - Open both:
   - `http://localhost:4173/`
@@ -31,7 +31,7 @@ Check these pages at minimum:
 3. Notes hub `/notes/`
 4. Build log note `/notes/build-logs-homepage-second-pass.html`
 5. Research reflection note `/notes/when-a-fluorescence-signal-becomes-usable.html`
-6. Review surface `/review/`
+6. Instrument Lab `/instrument/`
 
 Expected baseline:
 
@@ -39,7 +39,7 @@ Expected baseline:
 - title and top navigation render correctly
 - GitHub links are intentional
 - no broken image placeholders or exposed decorative alt text appear
-- `/review/` remains noindex unless a later decision removes it from the public tree
+- `/review/` remains absent from the deployable page tree, excluded from `sitemap.xml`, and disallowed in `robots.txt`
 - no private contact details appear
 
 ## 3. Desktop Checks
@@ -47,7 +47,7 @@ Expected baseline:
 On a desktop-width viewport:
 
 - homepage header stays readable when sticky
-- anchor navigation to `Research`, `Build`, `Notes`, and `About` lands cleanly
+- anchor/navigation routes to `Research`, `Projects`, `Notes`, and `About` land cleanly
 - hero section remains readable without visual overlap
 - hero and project visual modules render as intended
 - build cards remain scan-friendly and do not collapse awkwardly
@@ -64,7 +64,7 @@ Use a narrow viewport around `360px` wide.
 - mobile menu closes after selecting a link
 - scrolling does not feel locked after menu close
 - hero text wraps cleanly
-- research, build, and notes cards stack without clipping
+- research, project, and notes cards stack without clipping
 - project card CTAs wrap cleanly without overlapping
 - note pages remain readable without horizontal scrolling
 - sticky header does not hide too much of the anchor target area

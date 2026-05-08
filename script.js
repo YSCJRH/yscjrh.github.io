@@ -26,6 +26,9 @@
 
     window.requestAnimationFrame(() => {
       mobileMenu.classList.add("is-open");
+      if (mobileMenuLinks.length) {
+        mobileMenuLinks[0].focus();
+      }
     });
 
     setScrollLock(true);

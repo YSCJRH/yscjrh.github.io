@@ -17,7 +17,20 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yscjrh.github.io/instrument/">
     <meta property="og:site_name" content="HJR / YSCJRH">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Instrument Lab / HJR / YSCJRH">
+    <meta
+      name="twitter:description"
+      content="A calm conceptual model of the fluorescence spectrophotometer path with right-angle excitation and emission geometry."
+    >
+    <meta name="twitter:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta name="twitter:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -58,7 +71,7 @@
     <div class="site-shell">
       <header class="site-header" id="top">
         <div class="container site-header__inner">
-          <a class="brand" href="../index.html#top" aria-label="HJR homepage / HJR 首页">
+          <a class="brand" href="../index.html#top">
             <span class="brand-mark">HJR / YSCJRH</span>
             <span class="brand-sub">Researcher · Builder · Thinker / 研究者 · 构建者 · 思考者</span>
           </a>
@@ -66,10 +79,11 @@
           <div class="site-header__cluster">
             <nav class="site-nav" aria-label="Primary navigation / 主导航">
               <a href="../index.html#research">Research / 研究</a>
-              <a href="../index.html#build">Build / 构建</a>
-              <a href="../notes/">Notes / 笔记</a>
               <a href="../projects/">Projects / 项目</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../index.html#about">About / 关于</a>
               <a href="./index.html" aria-current="page">Instrument / 仪器</a>
+              <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
             </nav>
 
             <div class="header-controls">
@@ -93,9 +107,9 @@
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
             <nav class="mobile-nav" aria-label="Mobile navigation / 移动端导航">
               <a href="../index.html#research">Research / 研究</a>
-              <a href="../index.html#build">Build / 构建</a>
-              <a href="../notes/">Notes / 笔记</a>
               <a href="../projects/">Projects / 项目</a>
+              <a href="../notes/">Notes / 笔记</a>
+              <a href="../index.html#about">About / 关于</a>
               <a href="./index.html" aria-current="page">Instrument / 仪器</a>
             </nav>
 
@@ -104,7 +118,6 @@
               href="https://github.com/YSCJRH"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit the YSCJRH GitHub profile / 查看 YSCJRH 的 GitHub 主页"
             >
               Visit GitHub / 查看 GitHub
             </a>
@@ -126,7 +139,7 @@
                 <p class="article-lead">
                   Explore a static 3D optical bench, grating-driven monochromators, and a simplified synthetic trace.
                 </p>
-                <p class="article-lead article-lead-zh">
+                <p class="article-lead article-lead-zh" lang="zh-CN">
                   从激发单色器、样品池、90° 发射收集到检测输出，用一个克制的教学骨架理解荧光分光光度计的工作链路。
                 </p>
               </div>
@@ -329,6 +342,9 @@
                   <br>
                   主要路径：点击激发或发射单色器，拖动内部光栅，再观察波长、光束颜色、诊断和合成谱图同步变化。
                 </p>
+                <div class="instrument-inline-actions">
+                  <button class="instrument-inline-action" type="button" data-action="enable-3d">Enable optional 3D model / 启用可选 3D 模型</button>
+                </div>
 
                 <details class="instrument-principle-details">
                   <summary>
@@ -573,7 +589,7 @@
 
                 <div class="source-data-layout">
                   <div class="source-data-controls">
-                    <div class="source-dataset-cards" data-source-cards aria-label="Source-derived dataset shortcuts / 引用数据快捷选择"></div>
+                    <div class="source-dataset-cards" data-source-cards role="group" aria-label="Source-derived dataset shortcuts / 引用数据快捷选择"></div>
 
                     <label class="instrument-control instrument-select-control">
                       <span>Dataset / 数据集</span>

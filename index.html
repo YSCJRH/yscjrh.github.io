@@ -17,7 +17,20 @@
     <meta property="og:site_name" content="HJR / YSCJRH">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yscjrh.github.io/">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HJR / YSCJRH - Fluorescence Research, Open Tools, Notes">
+    <meta
+      name="twitter:description"
+      content="A research-oriented personal website connecting fluorescence analysis, open tools, and note-driven work."
+    >
+    <meta name="twitter:image" content="https://yscjrh.github.io/assets/og-card.png">
+    <meta name="twitter:image:alt" content="HJR / YSCJRH share card: signals, methods, instruments, and open tools.">
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -38,17 +51,18 @@
     <div class="site-shell">
       <header class="site-header" id="top">
         <div class="container site-header__inner">
-          <a class="brand" href="#top" aria-label="HJR homepage">
+          <a class="brand" href="#top">
             <span class="brand-mark">HJR / YSCJRH</span>
             <span class="brand-sub">Researcher · Builder · Thinker</span>
           </a>
 
           <div class="site-header__cluster">
-            <nav class="site-nav" aria-label="Primary navigation">
+            <nav class="site-nav" aria-label="Primary navigation / 主导航">
               <a href="#research">Research / 研究</a>
-              <a href="#build">Build / 构建</a>
+              <a href="projects/">Projects / 项目</a>
               <a href="#notes">Notes / 笔记</a>
               <a href="#about">About / 关于</a>
+              <a href="https://github.com/YSCJRH" target="_blank" rel="noopener noreferrer">GitHub</a>
             </nav>
 
             <div class="header-controls">
@@ -58,7 +72,7 @@
                 data-nav-toggle
                 aria-expanded="false"
                 aria-controls="mobile-menu"
-                aria-label="Toggle navigation menu"
+                aria-label="Toggle navigation menu / 开关导航菜单"
               >
                 <span class="nav-toggle__line"></span>
                 <span class="nav-toggle__line"></span>
@@ -70,12 +84,11 @@
 
         <div class="container mobile-menu-wrap">
           <div class="mobile-menu surface surface-glass" id="mobile-menu" data-mobile-menu hidden>
-            <nav class="mobile-nav" aria-label="Mobile navigation">
+            <nav class="mobile-nav" aria-label="Mobile navigation / 移动端导航">
               <a href="#research">Research / 研究</a>
-              <a href="#build">Build / 构建</a>
+              <a href="projects/">Projects / 项目</a>
               <a href="#notes">Notes / 笔记</a>
               <a href="#about">About / 关于</a>
-              <a href="projects/">Projects / 项目</a>
             </nav>
 
             <a
@@ -83,7 +96,6 @@
               href="https://github.com/YSCJRH"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit the YSCJRH GitHub profile"
             >
               Visit GitHub / 查看 GitHub
             </a>
@@ -105,113 +117,60 @@
               </div>
               <div class="hero-grid">
                 <article class="hero-copy" data-reveal>
-                  <p class="eyebrow">Researcher · Builder · Thinker</p>
+                  <p class="eyebrow">HJR / YSCJRH · Researcher &amp; Builder</p>
                   <h1 class="hero-title">
-                    <span>Fluorescence</span>
+                    <span>Signals.</span>
                     <span>Methods.</span>
-                    <span>Open Tools.</span>
+                    <span>Instruments.</span>
+                    <span>Open tools.</span>
                   </h1>
-                  <p class="hero-focus-line" aria-label="Core visitor signal">
-                    <span>Fluorescence analysis</span>
-                    <span>Open methods</span>
-                    <span>Working notes</span>
-                  </p>
+                  <p class="hero-title-zh" lang="zh-CN">信号、方法、仪器，与开放工具。</p>
                   <div class="hero-mobile-visual" aria-hidden="true">
                     <span></span>
                     <span></span>
                     <span></span>
                   </div>
-                  <p class="hero-title-zh">探索荧光世界，构建开放工具。</p>
-                  <ul class="hero-proof-row" aria-label="Visitor highlights">
-                    <li>
-                      <span>Research / 研究</span>
-                      <strong>Signals into judgment</strong>
-                      <em>把荧光信号转化为分析判断</em>
-                    </li>
-                    <li>
-                      <span>Build / 构建</span>
-                      <strong>Methods into tools</strong>
-                      <em>把方法沉淀成可检查的工具</em>
-                    </li>
-                    <li>
-                      <span>Notes / 记录</span>
-                      <strong>Decisions stay visible</strong>
-                      <em>让决策与约束保持可见</em>
-                    </li>
-                  </ul>
                   <p class="hero-lead">
-                    HJR works across fluorescence analysis, scientific instrumentation, algorithmic methods,
-                    and open tools for making analytical work easier to inspect and revisit.
+                    I work where fluorescence analysis, intelligent algorithms, scientific instrumentation,
+                    and working notes inform one another.
                   </p>
-                  <p class="hero-lead hero-lead-zh">
-                    围绕荧光分析、科学仪器、算法方法与开放工具持续展开研究与构建，
-                    让方法、判断与工具保持可见、可检视、可复用。
+                  <p class="hero-lead hero-lead-zh" lang="zh-CN">
+                    我的工作位于荧光分析、智能算法、科学仪器与工作笔记的交叉处；
+                    我也把一部分方法做成可检视、可复用的开源工具。
                   </p>
 
                   <div class="hero-actions">
-                    <a
-                      class="button button-primary"
-                      href="https://github.com/YSCJRH"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Visit the YSCJRH GitHub profile"
-                    >
-                      Visit GitHub / 查看 GitHub
+                    <a class="button button-primary" href="projects/">
+                      Explore projects / 查看项目
                     </a>
-                    <a class="button button-secondary" href="projects/">
-                      View Projects / 查看项目
+                    <a class="button button-secondary" href="notes/">
+                      Read notes / 阅读笔记
                     </a>
                   </div>
 
                   <div class="hero-shortcuts" aria-label="Project shortcuts">
                     <a class="hero-shortcut" href="https://yscjrh.github.io/ai-visibility-auditor/">
                       <span class="hero-shortcut-label">AnswerLens demo / AnswerLens 演示</span>
-                      <span class="hero-shortcut-note">Live entry / 在线入口</span>
+                      <span class="hero-shortcut-note">Public report / 公开报告</span>
                     </a>
                     <a class="hero-shortcut" href="https://yscjrh.github.io/skylattice/">
                       <span class="hero-shortcut-label">Skylattice docs / Skylattice 文档</span>
-                      <span class="hero-shortcut-note">Public docs / 公开文档</span>
+                      <span class="hero-shortcut-note">Docs path / 文档路径</span>
                     </a>
-                    <a class="hero-shortcut" href="projects/">
-                      <span class="hero-shortcut-label">All projects / 全部项目</span>
-                      <span class="hero-shortcut-note">Gateway / 项目入口</span>
+                    <a
+                      class="hero-shortcut"
+                      href="https://github.com/YSCJRH"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span class="hero-shortcut-label">GitHub profile / GitHub 主页</span>
+                      <span class="hero-shortcut-note">Repositories / 仓库</span>
                     </a>
                     <a class="hero-shortcut hero-shortcut--lab" href="instrument/">
                       <span class="hero-shortcut-label">Instrument Lab / 仪器可视化</span>
                       <span class="hero-shortcut-note">Concept model / 概念模型</span>
                     </a>
                   </div>
-
-                  <ul class="hero-strip" aria-label="Core directions" aria-hidden="true" hidden>
-                    <li class="hero-strip-item">
-                      <span class="visual-token visual-token-signal" aria-hidden="true"></span>
-                      <div>
-                        <strong>Fluorescence Analysis</strong>
-                        <span>荧光分析</span>
-                      </div>
-                    </li>
-                    <li class="hero-strip-item">
-                      <span class="visual-token visual-token-network" aria-hidden="true"></span>
-                      <div>
-                        <strong>Intelligent Algorithms</strong>
-                        <span>智能算法</span>
-                      </div>
-                    </li>
-                    <li class="hero-strip-item">
-                      <span class="visual-token visual-token-instrument" aria-hidden="true"></span>
-                      <div>
-                        <strong>Scientific Instrumentation</strong>
-                        <span>科学仪器</span>
-                      </div>
-                    </li>
-                    <li class="hero-strip-item">
-                      <span class="visual-token visual-token-notes" aria-hidden="true"></span>
-                      <div>
-                        <strong>Working Notes</strong>
-                        <span>工作笔记</span>
-                      </div>
-                    </li>
-                  </ul>
                 </article>
 
                 <aside class="hero-visual" data-reveal>
@@ -290,8 +249,8 @@
                 <li class="hero-strip-item">
                   <span class="visual-token visual-token-notes" aria-hidden="true"></span>
                   <div>
-                    <strong>Working Notes</strong>
-                    <span>工作笔记</span>
+                    <strong>Open Tools</strong>
+                    <span>开放工具</span>
                   </div>
                 </li>
               </ul>
@@ -315,7 +274,7 @@
                   <p class="eyebrow">Research / 研究</p>
                   <h2 class="section-title">Three directions shaped by signals, methods, and instruments.</h2>
                   <p class="section-copy">Long-term curiosity. Systematic exploration.</p>
-                  <p class="section-copy section-copy-zh">长期的好奇，系统性的探索。</p>
+                  <p class="section-copy section-copy-zh" lang="zh-CN">长期的好奇，系统性的探索。</p>
                 </div>
               </div>
 
@@ -331,7 +290,7 @@
                   <p class="card-copy">
                     Working on how fluorescence signals become information strong enough for analytical judgment.
                   </p>
-                  <p class="card-copy card-copy-zh">
+                  <p class="card-copy card-copy-zh" lang="zh-CN">
                     关注荧光信号如何转化为足以支撑分析判断的信息。
                   </p>
                   <div class="research-card-footer">
@@ -351,7 +310,7 @@
                   <p class="card-copy">
                     Using algorithmic methods with domain constraints so comparison and interpretation remain inspectable in practice.
                   </p>
-                  <p class="card-copy card-copy-zh">
+                  <p class="card-copy card-copy-zh" lang="zh-CN">
                     把算法方法与领域约束放在一起，让比较、解释与使用过程保持可检查。
                   </p>
                   <div class="research-card-footer">
@@ -371,7 +330,7 @@
                   <p class="card-copy">
                     Treating sensing, control, method design, and instrument behavior as one connected working system.
                   </p>
-                  <p class="card-copy card-copy-zh">
+                  <p class="card-copy card-copy-zh" lang="zh-CN">
                     把感知、控制、方法设计与仪器行为视作一个连贯的工作系统。
                   </p>
                   <div class="research-card-footer">
@@ -405,7 +364,7 @@
                   <p class="section-copy">
                     Start from a live page, public docs, or the repository itself.
                   </p>
-                  <p class="section-copy section-copy-zh">
+                  <p class="section-copy section-copy-zh" lang="zh-CN">
                     从在线页面、公开文档，或仓库本身开始阅读。
                   </p>
                 </div>
@@ -451,7 +410,7 @@
                   </div>
                   <h3>AnswerLens / ai-visibility-auditor</h3>
                   <p class="project-copy">CLI-first auditor for how AI systems read and summarize product websites.</p>
-                  <p class="project-copy project-copy-zh">
+                  <p class="project-copy project-copy-zh" lang="zh-CN">
                     一个 CLI 优先的检查工具，用来观察 AI 系统如何读取和概括产品网站，并输出可复查的结构证据。
                   </p>
                   <div class="project-why">
@@ -483,7 +442,7 @@
                   </div>
                   <h3>codex-via-phone</h3>
                   <p class="project-copy">Phone-friendly private control layer for local Codex sessions on Windows.</p>
-                  <p class="project-copy project-copy-zh">面向本地 Codex 会话的手机友好控制层，强调私有、安全与可达性。</p>
+                  <p class="project-copy project-copy-zh" lang="zh-CN">面向本地 Codex 会话的手机友好控制层，强调私有、安全与可达性。</p>
                   <span class="project-status project-status-repo">Repo-first / 当前以仓库为入口</span>
                   <div class="project-why">
                     <p class="project-why-label">What to inspect / 看什么</p>
@@ -514,7 +473,7 @@
                   </div>
                   <h3>skylattice</h3>
                   <p class="project-copy">Local-first agent runtime for persistent memory, governed repository tasks, and Git-native iteration.</p>
-                  <p class="project-copy project-copy-zh">一个本地优先的 agent runtime，围绕长期记忆、仓库任务治理和 Git 原生迭代展开。</p>
+                  <p class="project-copy project-copy-zh" lang="zh-CN">一个本地优先的 agent runtime，围绕长期记忆、仓库任务治理和 Git 原生迭代展开。</p>
                   <span class="project-status project-status-docs">Public docs / 已有公开文档</span>
                   <div class="project-why">
                     <p class="project-why-label">What to inspect / 看什么</p>
@@ -537,67 +496,31 @@
                   </div>
                 </article>
 
-                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                  <div class="project-visual project-visual-mirror" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <h3>mirror-sim</h3>
-                  <p class="project-copy">A constrained scenario simulation project inspired by Liu Cixin's The Mirror.</p>
-                  <p class="project-copy project-copy-zh">一个受约束的情景推演项目，偏向可检视的场景工作，而不是开放世界预言。</p>
-                  <span class="project-status project-status-concept">Concept repo / 概念仓库</span>
-                  <div class="project-why">
-                    <p class="project-why-label">What to inspect / 看什么</p>
-                    <p class="project-why-copy">It keeps scenario simulation bounded and inspectable instead of presenting open-ended prediction as evidence.</p>
-                  </div>
-                  <ol class="project-flow" aria-label="mirror-sim workflow">
-                    <li>Scenario boundary</li>
-                    <li>Constrained run</li>
-                    <li>Evidence review</li>
-                  </ol>
-                  <ul class="tag-list" aria-label="Project tags">
-                    <li>Simulation</li>
-                    <li>Scenario</li>
-                    <li>Evidence</li>
-                  </ul>
-                  <div class="project-cta-group">
-                    <a class="button button-primary button-compact" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">Read concept / 阅读概念</a>
-                    <a class="button button-secondary button-compact" href="https://github.com/YSCJRH/mirror-sim#3-minute-demo-path--3-分钟上手路径" target="_blank" rel="noopener noreferrer">3-minute demo path / 三分钟上手</a>
-                    <a class="project-repo-link" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
-                  </div>
-                </article>
+              </div>
 
-                <article class="surface surface-interactive project-card project-card-compact" data-reveal>
-                  <div class="project-visual project-visual-double" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <h3>create-double-skill</h3>
-                  <p class="project-copy">Create a private, editable profile of how you think, choose, and present yourself.</p>
-                  <p class="project-copy project-copy-zh">围绕可编辑自我建模展开的小型工具集，把语言、偏好与判断整理成可持续材料。</p>
-                  <span class="project-status project-status-experiment">Tooling experiment / 实验型工具</span>
-                  <div class="project-why">
-                    <p class="project-why-label">What to inspect / 看什么</p>
-                    <p class="project-why-copy">It turns reflective self-modeling into editable local material that can be revised over time.</p>
-                  </div>
-                  <ol class="project-flow" aria-label="create-double-skill workflow">
-                    <li>Private profile</li>
-                    <li>First run</li>
-                    <li>Editable skill</li>
-                  </ol>
-                  <ul class="tag-list" aria-label="Project tags">
-                    <li>Identity Tools</li>
-                    <li>Profiles</li>
-                    <li>Skills</li>
-                  </ul>
-                  <div class="project-cta-group">
-                    <a class="button button-primary button-compact" href="https://github.com/YSCJRH/create-double-skill#三分钟跑通第一次" target="_blank" rel="noopener noreferrer">Run first double / 跑通第一次</a>
-                    <a class="button button-secondary button-compact" href="https://github.com/YSCJRH/create-double-skill#示例" target="_blank" rel="noopener noreferrer">Examples / 示例</a>
-                    <a class="project-repo-link" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">GitHub repo / 仓库</a>
-                  </div>
-                </article>
+              <div class="supporting-projects surface surface-glass" aria-labelledby="supporting-projects-title" data-reveal>
+                <div class="supporting-projects-copy">
+                  <p class="eyebrow">Supporting work / 支撑项目</p>
+                  <h3 id="supporting-projects-title">Repo-first and experimental work.</h3>
+                  <p>
+                    These remain available from the full project gateway without competing with the three first-read entries.
+                  </p>
+                  <p class="section-copy-zh" lang="zh-CN">
+                    这些项目仍然可以从完整项目入口继续阅读，但不与首页前三个入口争夺优先级。
+                  </p>
+                </div>
+                <div class="supporting-project-list" aria-label="Supporting project links">
+                  <a class="supporting-project-card" href="https://github.com/YSCJRH/mirror-sim" target="_blank" rel="noopener noreferrer">
+                    <span class="project-status project-status-concept">Concept repo / 概念仓库</span>
+                    <strong>mirror-sim</strong>
+                    <span>Constrained scenario simulation / 受约束的情景推演</span>
+                  </a>
+                  <a class="supporting-project-card" href="https://github.com/YSCJRH/create-double-skill" target="_blank" rel="noopener noreferrer">
+                    <span class="project-status project-status-experiment">Tooling experiment / 实验型工具</span>
+                    <strong>create-double-skill</strong>
+                    <span>Private editable self-modeling / 私有可编辑自我建模</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -619,7 +542,7 @@
                   <p class="eyebrow">Notes / 笔记</p>
                   <h2 class="section-title">A deliberate note system for build logs, research reflections, and working methods.</h2>
                   <p class="section-copy">Structured thinking. Continuous accumulation.</p>
-                  <p class="section-copy section-copy-zh">让研究、构建与方法的演化保持可见，但不过度包装。</p>
+                  <p class="section-copy section-copy-zh" lang="zh-CN">让研究、构建与方法的演化保持可见，但不过度包装。</p>
                 </div>
               </div>
 
@@ -629,12 +552,16 @@
                   <div class="stream-main">
                     <h3>Build Logs / 构建日志</h3>
                     <p class="stream-copy">Short notes on the choices, constraints, and tradeoffs behind the site and selected tools.</p>
-                    <p class="stream-copy stream-copy-zh">记录站点与工具为何长成现在的样子，以及背后的设计取舍。</p>
+                    <p class="stream-copy stream-copy-zh" lang="zh-CN">记录站点与工具为何长成现在的样子，以及背后的设计取舍。</p>
+                    <p class="stream-detail">
+                      Latest / 最新：<a href="notes/build-logs-homepage-second-pass.html">Why The Homepage Needed A Second Pass</a>
+                    </p>
+                    <p class="stream-detail">Related / 关联：Homepage IA, project storytelling / 首页结构、项目叙事</p>
                   </div>
                   <div class="stream-meta">
                     <span class="stream-count">1 published / 1 篇已公开</span>
                     <span class="note-status">Live / 已上线</span>
-                    <a class="project-link stream-link" href="notes/build-logs-homepage-second-pass.html">Read note</a>
+                    <a class="project-link stream-link" href="notes/build-logs-homepage-second-pass.html">Read note / 阅读笔记</a>
                   </div>
                 </article>
 
@@ -643,12 +570,16 @@
                   <div class="stream-main">
                     <h3>Research Reflections / 研究反思</h3>
                     <p class="stream-copy">Notes on ambiguity, signal quality, and how a research question becomes clearer over time.</p>
-                    <p class="stream-copy stream-copy-zh">围绕信号质量、问题澄清与研究判断的简短反思。</p>
+                    <p class="stream-copy stream-copy-zh" lang="zh-CN">围绕信号质量、问题澄清与研究判断的简短反思。</p>
+                    <p class="stream-detail">
+                      Latest / 最新：<a href="notes/when-a-fluorescence-signal-becomes-usable.html">When A Fluorescence Signal Becomes Usable</a>
+                    </p>
+                    <p class="stream-detail">Related / 关联：Fluorescence analysis / 荧光分析</p>
                   </div>
                   <div class="stream-meta">
                     <span class="stream-count">1 published / 1 篇已公开</span>
                     <span class="note-status">Live / 已上线</span>
-                    <a class="project-link stream-link" href="notes/when-a-fluorescence-signal-becomes-usable.html">Read note</a>
+                    <a class="project-link stream-link" href="notes/when-a-fluorescence-signal-becomes-usable.html">Read note / 阅读笔记</a>
                   </div>
                 </article>
 
@@ -657,7 +588,9 @@
                   <div class="stream-main">
                     <h3>Method Notes / 方法备忘</h3>
                     <p class="stream-copy">Compact records of reusable methods, heuristics, and small rules worth keeping nearby.</p>
-                    <p class="stream-copy stream-copy-zh">记录可复用的方法、启发式判断与值得长期保留的小规则。</p>
+                    <p class="stream-copy stream-copy-zh" lang="zh-CN">记录可复用的方法、启发式判断与值得长期保留的小规则。</p>
+                    <p class="stream-detail">Latest / 最新：Draft only in repository / 仅仓库草稿</p>
+                    <p class="stream-detail">Related / 关联：Evidence-first project storytelling / 证据优先的项目叙事</p>
                   </div>
                   <div class="stream-meta">
                     <span class="stream-count">1 draft / 1 篇草稿</span>
@@ -689,7 +622,7 @@
                   <p class="eyebrow">About / 关于</p>
                   <h2 class="section-title">A compact public record of research directions, tools, and working notes.</h2>
                   <p class="section-copy">Less volume. More clarity.</p>
-                  <p class="section-copy section-copy-zh">不追求堆满信息，而是让交叉身份更清晰可见。</p>
+                  <p class="section-copy section-copy-zh" lang="zh-CN">不追求堆满信息，而是让交叉身份更清晰可见。</p>
                 </div>
               </div>
 
@@ -705,15 +638,15 @@
                 <article class="surface surface-glass about-panel about-panel-copy" data-reveal>
                   <h3>HJR / YSCJRH</h3>
                   <p class="about-summary">
-                    Fluorescence analysis researcher · Builder · Open-source enthusiast
+                    Fluorescence analysis researcher · Research-builder · Open tools
                   </p>
-                  <p class="about-summary about-summary-zh">
-                    围绕荧光分析、算法方法、科学仪器与开放工具持续构建的研究者。
+                  <p class="about-summary about-summary-zh" lang="zh-CN">
+                    围绕荧光分析、算法方法、科学仪器与开放工具持续研究和构建。
                   </p>
                   <p class="card-copy">
                     I work where fluorescence analysis, algorithmic methods, instrumentation, and working notes can inform one another.
                   </p>
-                  <p class="card-copy card-copy-zh">
+                  <p class="card-copy card-copy-zh" lang="zh-CN">
                     我的工作位于荧光分析、算法方法、科学仪器与工作笔记的交叉处。
                   </p>
                 </article>
@@ -730,7 +663,7 @@
                       <span>Fluorescence analysis · Intelligent algorithms · Scientific instrumentation</span>
                     </li>
                     <li>
-                      <strong>Current entry</strong>
+                      <strong>Public entry</strong>
                       <span>GitHub</span>
                     </li>
                   </ul>
