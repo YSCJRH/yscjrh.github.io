@@ -198,6 +198,121 @@ function createMirrorPlate() {
   return mirror;
 }
 
+function gratingFaceZAt(x, width, curve) {
+  const normalized = THREE.MathUtils.clamp(x / (width * 0.5), -1, 1);
+  return curve * (1 - normalized * normalized);
+}
+
+function createCurvedGratingFaceGeometry(width = 0.62, height = 0.48, curve = 0.055, segments = 16) {
+  const vertices = [];
+  const indices = [];
+
+  for (let index = 0; index <= segments; index += 1) {
+    const progress = index / segments;
+    const x = THREE.MathUtils.lerp(-width * 0.5, width * 0.5, progress);
+    const z = gratingFaceZAt(x, width, curve);
+    vertices.push(x, -height * 0.5, z, x, height * 0.5, z);
+  }
+
+  for (let index = 0; index < segments; index += 1) {
+    const current = index * 2;
+    const next = current + 2;
+    indices.push(current, next, current + 1, current + 1, next, next + 1);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function createGratingGrooves(width = 0.62, height = 0.48, curve = 0.055) {
+  const points = [];
+
+  for (let x = -width * 0.42; x <= width * 0.42; x += 0.026) {
+    const z = gratingFaceZAt(x, width, curve) + 0.006;
+    points.push(new THREE.Vector3(x, -height * 0.43, z), new THREE.Vector3(x, height * 0.43, z));
+  }
+
+  return new THREE.LineSegments(
+    new THREE.BufferGeometry().setFromPoints(points),
+    new THREE.LineBasicMaterial({
+      color: 0x213833,
+      transparent: true,
+      opacity: 0.42,
+      depthWrite: false,
+    })
+  );
+}
+
+function createScrewHead(material, x, z) {
+  const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.014, 18), material);
+  screw.position.set(x, -0.065, z);
+  return screw;
+}
+
+function createRealisticGratingAssembly(part) {
+  const group = new THREE.Group();
+  const gratingFaceMaterial = new THREE.MeshStandardMaterial({
+    color: 0xbfffe8,
+    roughness: 0.2,
+    metalness: 0.34,
+    transparent: true,
+    opacity: 0.78,
+    emissive: 0x52f0d3,
+    emissiveIntensity: 0.1,
+    side: THREE.DoubleSide,
+  });
+  const baseMaterial = makeMaterial(0x121722, { roughness: 0.82, metalness: 0.18, transparent: true, opacity: 0.9 });
+  const bracketMaterial = makeMaterial(0x2a3136, { roughness: 0.52, metalness: 0.32, transparent: true, opacity: 0.82 });
+  const screwMaterial = makeMaterial(0xc6cbd3, { roughness: 0.26, metalness: 0.48, transparent: true, opacity: 0.78 });
+  const wireWarm = createLine(
+    [new THREE.Vector3(0.34, -0.07, 0.22), new THREE.Vector3(0.48, 0.02, 0.18), new THREE.Vector3(0.45, 0.14, 0.02)],
+    0xffb77a,
+    0.58
+  );
+  const wireCool = createLine(
+    [new THREE.Vector3(0.3, -0.07, 0.25), new THREE.Vector3(0.43, 0.02, 0.24), new THREE.Vector3(0.41, 0.16, 0.08)],
+    0xff6f9d,
+    0.46
+  );
+  const turntable = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.36, 0.04, 48), baseMaterial);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.045, 0.55), baseMaterial);
+  const leftYoke = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.4, 0.08), bracketMaterial);
+  const rightYoke = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.4, 0.08), bracketMaterial);
+  const grating = new THREE.Mesh(createCurvedGratingFaceGeometry(), gratingFaceMaterial);
+  const grooves = createGratingGrooves();
+  const pivotAxis = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.64, 24), screwMaterial);
+  const topRim = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.022, 0.035), bracketMaterial);
+  const bottomRim = topRim.clone();
+  const screws = [
+    createScrewHead(screwMaterial, -0.29, 0.2),
+    createScrewHead(screwMaterial, 0.29, 0.2),
+    createScrewHead(screwMaterial, -0.29, -0.2),
+    createScrewHead(screwMaterial, 0.29, -0.2),
+  ];
+
+  turntable.position.set(0, -0.13, 0);
+  base.position.set(0, -0.1, 0);
+  leftYoke.position.set(-0.35, 0.08, 0.02);
+  rightYoke.position.set(0.35, 0.08, 0.02);
+  grating.position.set(0, 0.18, 0.02);
+  grooves.position.copy(grating.position);
+  pivotAxis.position.set(0, 0.05, 0);
+  topRim.position.set(0, 0.43, 0.04);
+  bottomRim.position.set(0, -0.07, 0.04);
+
+  grating.userData.part = part;
+  grating.userData.gratingHandle = true;
+  grating.userData.gratingPart = part;
+  grating.userData.subPart = "grating";
+  group.userData.grating = grating;
+  group.userData.subPart = "grating";
+  group.add(turntable, base, leftYoke, rightYoke, grating, grooves, pivotAxis, topRim, bottomRim, wireWarm, wireCool, ...screws);
+  return group;
+}
+
 function createDispersionFan(color, offsetZ) {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute(
@@ -370,7 +485,6 @@ function createInternalDispersionRays() {
 function createMonochromatorInterior(part) {
   const group = new THREE.Group();
   const slitMaterial = makeMaterial(0xdde7ff, { transparent: true, opacity: 0.62, emissive: 0x6f88ff, emissiveIntensity: 0.16 });
-  const gratingMaterial = makeMaterial(0x86fff0, { transparent: true, opacity: 0.7, emissive: 0x52f0d3, emissiveIntensity: 0.2 });
   const liner = new THREE.Mesh(
     new THREE.BoxGeometry(1.18, 0.72, 0.92),
     new THREE.MeshBasicMaterial({
@@ -387,17 +501,8 @@ function createMonochromatorInterior(part) {
   );
   const entrySlit = createSlitAssembly(slitMaterial);
   const exitSlit = createSlitAssembly(slitMaterial);
-  const gratingPivot = new THREE.Group();
-  const grating = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.04, 0.42), gratingMaterial);
-  const groovePoints = [];
-  for (let x = -0.25; x <= 0.25; x += 0.05) {
-    groovePoints.push(new THREE.Vector3(x, 0.026, -0.18), new THREE.Vector3(x, 0.026, 0.18));
-  }
-  const gratingGrooves = new THREE.LineSegments(
-    new THREE.BufferGeometry().setFromPoints(groovePoints),
-    new THREE.LineBasicMaterial({ color: 0xd8fff8, transparent: true, opacity: 0.32 })
-  );
-  const pivotAxis = createLine([new THREE.Vector3(0, -0.23, 0), new THREE.Vector3(0, 0.28, 0)], 0xd8fff8, 0.36);
+  const gratingPivot = createRealisticGratingAssembly(part);
+  const grating = gratingPivot.userData.grating;
   const collimatingMirror = createMirrorPlate();
   const focusingMirror = createMirrorPlate();
   const baffleA = createBafflePlate(part);
@@ -414,12 +519,7 @@ function createMonochromatorInterior(part) {
   entrySlit.position.set(-0.46, 0.03, 0.46);
   exitSlit.position.set(0.46, 0.03, -0.46);
   gratingPivot.position.set(0, 0.04, 0);
-  grating.userData.part = part;
-  grating.userData.gratingHandle = true;
-  grating.userData.gratingPart = part;
-  grating.userData.subPart = "grating";
   gratingPivot.userData.subPart = "grating";
-  gratingPivot.add(grating, gratingGrooves, pivotAxis);
   collimatingMirror.position.set(-0.25, 0.2, -0.2);
   collimatingMirror.rotation.y = -Math.PI / 5;
   collimatingMirror.userData.subPart = "collimating-mirror";

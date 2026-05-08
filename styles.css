@@ -4293,6 +4293,79 @@ section[id] {
   stroke-width: 3;
 }
 
+.instrument-monochromator .mono-turntable {
+  fill: rgba(12, 15, 22, 0.82);
+  stroke: rgba(176, 186, 206, 0.24);
+  stroke-width: 1.4;
+}
+
+.instrument-monochromator .mono-base-plate {
+  fill: rgba(15, 19, 28, 0.92);
+  stroke: rgba(176, 186, 206, 0.22);
+  stroke-width: 1.4;
+}
+
+.instrument-monochromator .mono-yoke {
+  fill: none;
+  stroke: rgba(216, 255, 248, 0.42);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.instrument-monochromator .mono-grating-face {
+  fill: url("#monoGratingFace");
+  stroke: rgba(237, 237, 240, 0.58);
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 12px rgba(77, 237, 207, 0.22));
+}
+
+.instrument-monochromator .mono-grating-edge {
+  fill: rgba(72, 85, 82, 0.84);
+  stroke: rgba(237, 237, 240, 0.32);
+  stroke-width: 1.1;
+}
+
+.instrument-monochromator .mono-grooves {
+  fill: none;
+  stroke: rgba(20, 34, 34, 0.38);
+  stroke-linecap: round;
+  stroke-width: 1.1;
+}
+
+.instrument-monochromator .mono-pivot {
+  fill: rgba(237, 237, 240, 0.7);
+  stroke: rgba(5, 7, 13, 0.7);
+  stroke-width: 1.2;
+}
+
+.instrument-monochromator .mono-pivot-cross {
+  fill: none;
+  stroke: rgba(5, 7, 13, 0.66);
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.instrument-monochromator .mono-screw {
+  fill: rgba(204, 211, 219, 0.7);
+  stroke: rgba(5, 7, 13, 0.74);
+  stroke-width: 1;
+}
+
+.instrument-monochromator .mono-cable {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 2.1;
+  opacity: 0.72;
+}
+
+.instrument-monochromator .mono-cable-warm {
+  stroke: rgba(255, 185, 128, 0.72);
+}
+
+.instrument-monochromator .mono-cable-cool {
+  stroke: rgba(255, 128, 166, 0.6);
+}
+
 .instrument-sample rect:nth-child(2) {
   fill: rgba(77, 237, 207, 0.08);
   stroke: rgba(77, 237, 207, 0.34);

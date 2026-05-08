@@ -219,6 +219,11 @@
                         <stop offset="0%" stop-color="#52f0d3"></stop>
                         <stop offset="100%" stop-color="#9af26f"></stop>
                       </linearGradient>
+                      <linearGradient id="monoGratingFace" x1="0%" x2="100%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="#e1fff3"></stop>
+                        <stop offset="45%" stop-color="#a9d8c2"></stop>
+                        <stop offset="100%" stop-color="#627a72"></stop>
+                      </linearGradient>
                       <filter id="beamGlow" x="-40%" y="-40%" width="180%" height="180%">
                         <feGaussianBlur stdDeviation="7" result="blur"></feGaussianBlur>
                         <feMerge>
@@ -240,10 +245,24 @@
                       <text class="component-label" x="64" y="184">Light source / 光源</text>
                     </g>
 
-                    <g class="instrument-node instrument-node-excitation" transform="translate(248 252)">
+                    <g class="instrument-node instrument-node-excitation instrument-monochromator" transform="translate(248 252)">
                       <rect width="142" height="150" rx="24"></rect>
-                      <path d="M36 52h70l-22 42H52z"></path>
-                      <path d="M34 110h74"></path>
+                      <g class="mono-real-assembly" aria-hidden="true">
+                        <circle class="mono-turntable" cx="72" cy="98" r="36"></circle>
+                        <path class="mono-base-plate" d="M28 82H114L105 120H38Z"></path>
+                        <path class="mono-yoke" d="M36 85C48 72 58 65 72 62C88 58 102 61 114 72"></path>
+                        <path class="mono-grating-face" d="M50 40C70 34 96 38 114 50L98 105C78 101 55 92 38 78Z"></path>
+                        <path class="mono-grating-edge" d="M114 50L122 57L105 112L98 105Z"></path>
+                        <path class="mono-grooves" d="M57 41C52 55 47 69 43 82M64 39C59 55 54 72 49 87M71 38C66 56 61 75 56 91M78 38C73 58 68 78 63 94M85 39C80 59 75 81 70 97M92 41C87 61 82 82 77 99M99 44C94 63 89 83 84 101M106 47C101 65 96 84 91 103"></path>
+                        <circle class="mono-pivot" cx="72" cy="96" r="7"></circle>
+                        <path class="mono-pivot-cross" d="M66 96H78M72 90V102"></path>
+                        <circle class="mono-screw" cx="38" cy="86" r="4"></circle>
+                        <circle class="mono-screw" cx="108" cy="86" r="4"></circle>
+                        <circle class="mono-screw" cx="48" cy="116" r="4"></circle>
+                        <circle class="mono-screw" cx="98" cy="116" r="4"></circle>
+                        <path class="mono-cable mono-cable-warm" d="M106 72C123 78 125 97 113 112"></path>
+                        <path class="mono-cable mono-cable-cool" d="M101 78C116 84 116 98 107 108"></path>
+                      </g>
                       <text class="component-label" x="71" y="184">Ex mono / 激发单色器</text>
                     </g>
 
@@ -263,10 +282,24 @@
                       <text x="40" y="88">beam stop / 光束终止</text>
                     </g>
 
-                    <g class="instrument-node instrument-node-emission" transform="translate(438 36)">
+                    <g class="instrument-node instrument-node-emission instrument-monochromator" transform="translate(438 36)">
                       <rect width="142" height="150" rx="24"></rect>
-                      <path d="M36 52h70l-22 42H52z"></path>
-                      <path d="M34 110h74"></path>
+                      <g class="mono-real-assembly" aria-hidden="true">
+                        <circle class="mono-turntable" cx="72" cy="98" r="36"></circle>
+                        <path class="mono-base-plate" d="M28 82H114L105 120H38Z"></path>
+                        <path class="mono-yoke" d="M36 85C48 72 58 65 72 62C88 58 102 61 114 72"></path>
+                        <path class="mono-grating-face" d="M50 40C70 34 96 38 114 50L98 105C78 101 55 92 38 78Z"></path>
+                        <path class="mono-grating-edge" d="M114 50L122 57L105 112L98 105Z"></path>
+                        <path class="mono-grooves" d="M57 41C52 55 47 69 43 82M64 39C59 55 54 72 49 87M71 38C66 56 61 75 56 91M78 38C73 58 68 78 63 94M85 39C80 59 75 81 70 97M92 41C87 61 82 82 77 99M99 44C94 63 89 83 84 101M106 47C101 65 96 84 91 103"></path>
+                        <circle class="mono-pivot" cx="72" cy="96" r="7"></circle>
+                        <path class="mono-pivot-cross" d="M66 96H78M72 90V102"></path>
+                        <circle class="mono-screw" cx="38" cy="86" r="4"></circle>
+                        <circle class="mono-screw" cx="108" cy="86" r="4"></circle>
+                        <circle class="mono-screw" cx="48" cy="116" r="4"></circle>
+                        <circle class="mono-screw" cx="98" cy="116" r="4"></circle>
+                        <path class="mono-cable mono-cable-warm" d="M106 72C123 78 125 97 113 112"></path>
+                        <path class="mono-cable mono-cable-cool" d="M101 78C116 84 116 98 107 108"></path>
+                      </g>
                       <text class="component-label component-label-emission" x="71" y="-10">Em mono / 发射单色器</text>
                     </g>
 
