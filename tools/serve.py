@@ -19,6 +19,12 @@ class StaticHandler(SimpleHTTPRequestHandler):
         ".svg": "image/svg+xml",
     }
 
+    def guess_type(self, path):
+        suffix = Path(path).suffix.lower()
+        if suffix in self.extensions_map:
+            return self.extensions_map[suffix]
+        return super().guess_type(path)
+
 
 def main():
     mimetypes.add_type("image/svg+xml", ".svg")
