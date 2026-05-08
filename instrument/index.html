@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=sample-fixed-20260428">
+    <link rel="stylesheet" href="../styles.css?v=site-visual-polish-20260507">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -151,8 +151,8 @@
                 </p>
                 <p>
                   <strong>3. Open a mono / 打开单色器</strong>
-                  Click Ex or Em mono to inspect the grating.
-                  <span>点选激发或发射单色器，查看内部光栅。</span>
+                  Click Ex or Em mono, then drag the grating.
+                  <span>点选激发或发射单色器，然后拖动光栅。</span>
                 </p>
               </div>
 
@@ -170,8 +170,8 @@
                   <div class="instrument-scene-host" data-scene-host></div>
                   <div class="instrument-scene-overlay" aria-hidden="true">
                     <p>Open optical bench / 3D teaching skeleton / 开放式光学台 / 3D 教学骨架</p>
-                    <p>Blue Ex path terminates at the beam stop; cyan Em path turns 90 deg to the detector.</p>
-                    <p>蓝色激发光在光束终止器处结束；青色发射光以 90° 方向进入检测器。</p>
+                    <p>Ex ends at the beam stop; Em turns 90 deg to the detector.</p>
+                    <p>激发光在终止器处结束；发射光以 90° 进入检测器。</p>
                   </div>
                   <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
                     <button type="button" data-action="reset-view">Reset view / 重置视角</button>
@@ -325,37 +325,43 @@
                 </div>
 
                 <p class="instrument-operability-note" data-scene-hint>
-                  Select Ex or Em mono to open the housing and drag the internal grating; select source or detector for bounded geometry controls.
+                  Primary path: click Ex mono or Em mono, drag the internal grating, then watch wavelength, beam color, diagnostics, and the synthetic spectrum update.
                   <br>
-                  选择激发或发射单色器可打开外壳并拖动内部光栅；选择光源或检测器可显示受限几何控制。
+                  主要路径：点击激发或发射单色器，拖动内部光栅，再观察波长、光束颜色、诊断和合成谱图同步变化。
                 </p>
 
-                <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes / 概念光路几何说明">
-                  <p>
-                    <span class="path-key path-key-excitation" aria-hidden="true"></span>
-                    <strong>Blue excitation axis / 蓝色激发轴</strong>
-                    Light reaches the sample through the excitation monochromator; the remaining incident beam is shown as stopped, not sent to the detector.
-                    <span>光经激发单色器到达样品；剩余入射光被表示为终止，而不是进入检测器。</span>
-                  </p>
-                  <p>
-                    <span class="path-key path-key-emission" aria-hidden="true"></span>
-                    <strong>Cyan 90° collection arm / 青色 90° 收集臂</strong>
-                    Fluorescence is collected from the side path through the emission monochromator before detection.
-                    <span>荧光从侧向路径被收集，经过发射单色器后再进入检测器。</span>
-                  </p>
-                  <p>
-                    <span class="path-key path-key-residual" aria-hidden="true"></span>
-                    <strong>Beam stop / 光束终止器</strong>
-                    The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.
-                    <span>直通方向的激发光进入吸收终止块，避免被误解为反射光或检测光路。</span>
-                  </p>
-                  <p>
-                    <span class="path-key path-key-signal" aria-hidden="true"></span>
-                    <strong>Signal output line / 信号输出线</strong>
-                    The fine line after the detector represents a processed display signal, not another optical beam.
-                    <span>检测器之后的细线表示处理后的显示信号，不是另一束光。</span>
-                  </p>
-                </div>
+                <details class="instrument-principle-details">
+                  <summary>
+                    Optical path notes / 光路说明
+                    <span>Keep the main view focused; open for geometry caveats. / 保持主视图聚焦，需要时展开几何边界。</span>
+                  </summary>
+                  <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes / 概念光路几何说明">
+                    <p>
+                      <span class="path-key path-key-excitation" aria-hidden="true"></span>
+                      <strong>Blue excitation axis / 蓝色激发轴</strong>
+                      Light reaches the sample through the excitation monochromator; the remaining incident beam is shown as stopped, not sent to the detector.
+                      <span>光经激发单色器到达样品；剩余入射光被表示为终止，而不是进入检测器。</span>
+                    </p>
+                    <p>
+                      <span class="path-key path-key-emission" aria-hidden="true"></span>
+                      <strong>Cyan 90° collection arm / 青色 90° 收集臂</strong>
+                      Fluorescence is collected from the side path through the emission monochromator before detection.
+                      <span>荧光从侧向路径被收集，经过发射单色器后再进入检测器。</span>
+                    </p>
+                    <p>
+                      <span class="path-key path-key-residual" aria-hidden="true"></span>
+                      <strong>Beam stop / 光束终止器</strong>
+                      The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.
+                      <span>直通方向的激发光进入吸收终止块，避免被误解为反射光或检测光路。</span>
+                    </p>
+                    <p>
+                      <span class="path-key path-key-signal" aria-hidden="true"></span>
+                      <strong>Signal output line / 信号输出线</strong>
+                      The fine line after the detector represents a processed display signal, not another optical beam.
+                      <span>检测器之后的细线表示处理后的显示信号，不是另一束光。</span>
+                    </p>
+                  </div>
+                </details>
 
                 <div class="instrument-flow-strip" aria-label="Measurement chain / 测量链路">
                   <button type="button" data-part="source" aria-pressed="true">Light source / 光源</button>
