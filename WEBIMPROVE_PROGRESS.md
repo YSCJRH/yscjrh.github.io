@@ -532,6 +532,7 @@
   - Increased split-ray/glow visibility when a monochromator is open.
   - Compacted mobile 3D toolbar styling and hid the redundant WebGL status pill on narrow screens.
   - Reduced instrument Hero title scale and tightened several instrument-specific radii for a calmer, less bulky first viewport.
+  - Bumped `/instrument/` CSS and route-local ESM cache keys so live visitors receive the updated optical copy and 3D visuals.
 - Validation result:
   - `node --check instrument/sim/scene/InstrumentScene.mjs` passed.
   - `node --check instrument/sim/state.mjs` passed.

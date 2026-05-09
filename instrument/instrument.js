@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=grating-interaction-20260508";
+} from "./sim/state.mjs?v=optical-confidence-20260509";
 import { deriveInstrument } from "./sim/physics/derive.mjs?v=wavelength-control-20260429";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=wavelength-control-20260429";
+} from "./sim/ui/spectrum.mjs?v=optical-confidence-20260509";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -71,7 +71,7 @@ if (root) {
   }
 
   function loadSceneModule() {
-    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=grating-interaction-20260508");
+    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=optical-confidence-20260509");
     return sceneModulePromise;
   }
 
