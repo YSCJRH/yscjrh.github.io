@@ -184,8 +184,8 @@
                   <div class="instrument-scene-host" data-scene-host></div>
                   <div class="instrument-scene-overlay" aria-hidden="true">
                     <p>Open optical bench / 3D teaching skeleton / 开放式光学台 / 3D 教学骨架</p>
-                    <p>Ex ends at the beam stop; Em turns 90 deg to the detector.</p>
-                    <p>激发光在终止器处结束；发射光以 90° 进入检测器。</p>
+                    <p>Residual Ex is stopped; fluorescence is collected at 90 deg.</p>
+                    <p>剩余激发光进入终止器；荧光以 90° 侧向收集。</p>
                   </div>
                   <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
                     <button type="button" data-action="reset-view">Reset view / 重置视角</button>
@@ -395,8 +395,8 @@
                     <p>
                       <span class="path-key path-key-excitation" aria-hidden="true"></span>
                       <strong>Blue excitation axis / 蓝色激发轴</strong>
-                      Light reaches the sample through the excitation monochromator; the remaining incident beam is shown as stopped, not sent to the detector.
-                      <span>光经激发单色器到达样品；剩余入射光被表示为终止，而不是进入检测器。</span>
+                      Light reaches the sample through the excitation monochromator; the straight-through residual excitation is shown entering a beam stop, not the detector.
+                      <span>光经激发单色器到达样品；直通方向的剩余激发光进入光束终止器，而不是进入检测器。</span>
                     </p>
                     <p>
                       <span class="path-key path-key-emission" aria-hidden="true"></span>
@@ -446,19 +446,19 @@
                     <label class="instrument-control">
                       <span>Excitation wavelength / 激发波长 <strong data-readout="excitation">365 nm</strong></span>
                       <input data-control="excitation-wavelength" type="range" min="200" max="900" step="1" value="365">
-                      <small class="control-help">Grating angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. 200-900 nm teaching range; UV/NIR use false-color hints. 200-900 nm 教学范围；紫外/近红外用伪色提示。</small>
+                      <small class="control-help">Grating angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. Constant-deviation teaching selector; 200-900 nm is not a calibrated instrument range. 恒偏向教学选通；200-900 nm 不是校准仪器量程。</small>
                     </label>
 
                     <label class="instrument-control">
                       <span><span data-emission-label>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
                       <input data-control="emission-wavelength" type="range" min="200" max="900" step="1" value="520">
-                      <small class="control-help" id="emission-range-help">Grating angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. Same conceptual 200-900 nm selector range. 使用相同的 200-900 nm 概念选通范围。</small>
+                      <small class="control-help" id="emission-range-help">Grating angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. Same conceptual selector; UV/NIR colors are false-color cues. 同一概念选通器；紫外/近红外颜色仅作伪色提示。</small>
                     </label>
 
                     <label class="instrument-control">
                       <span>Slit width / 狭缝宽度 <strong data-readout="slit">500 um</strong></span>
                       <input data-control="slit" type="range" min="100" max="1000" step="25" value="500">
-                      <small class="control-help"><strong data-readout="bandpass">4.6 nm bandpass / 4.6 nm 带宽</strong>; wider slit increases throughput and broadens features. 狭缝越宽，通光量越高，谱峰也会变宽。</small>
+                      <small class="control-help"><strong data-readout="bandpass">~4.6 nm teaching bandpass / 约 4.6 nm 教学带宽</strong>; wider slit increases throughput and broadens features. 狭缝越宽，通光量越高，谱峰也会变宽。</small>
                     </label>
 
                     <label class="instrument-control">

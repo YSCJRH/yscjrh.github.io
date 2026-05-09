@@ -42,9 +42,9 @@ export const PARTS = Object.freeze({
   excitation: {
     title: "Excitation monochromator / 激发单色器",
     copy:
-      "Uses slits, mirrors, and a teaching grating angle to choose a conceptual excitation band. Rotating the grating changes the selected wavelength. / 通过狭缝、反射镜和教学化的光栅角选择概念激发带；旋转光栅会改变选通波长。",
+      "Uses slits, mirrors, and a constant-deviation teaching grating angle to choose a conceptual excitation band. Rotating the grating changes the selected wavelength. / 通过狭缝、反射镜和恒偏向教学光栅角选择概念激发带；旋转光栅会改变选通波长。",
     hint:
-      "Click the excitation monochromator to open the blackened housing, then drag the pale grating face or glowing handle. The grating rotates and split rays update with the wavelength. / 点击激发单色器打开黑化外壳，然后拖动浅色光栅面或发光手柄；光栅会转动，分光线束和波长同步变化。",
+      "Click the excitation monochromator to open the blackened housing, then drag the pale grating face or glowing handle. The split rays are a visual cue for dispersion, not calibrated ray tracing. / 点击激发单色器打开黑化外壳，然后拖动浅色光栅面或发光手柄；分光线束用于提示色散，不是校准光线追迹。",
   },
   sample: {
     title: "Sample cell / 样品池",
@@ -56,9 +56,9 @@ export const PARTS = Object.freeze({
   emission: {
     title: "Emission monochromator / 发射单色器",
     copy:
-      "Sits on the 90-degree collection arm and selects the emission-side wavelength band before detection. / 位于 90° 收集臂上，在检测前选择发射侧波长带。",
+      "Sits on the 90-degree collection arm and uses the same teaching grating selector before detection. / 位于 90° 收集臂上，在检测前使用同一类教学光栅选通器。",
     hint:
-      "Click the emission monochromator to open the blackened housing, then drag the pale grating face or glowing handle. The grating rotates and split rays update with the wavelength. / 点击发射单色器打开黑化外壳，然后拖动浅色光栅面或发光手柄；光栅会转动，分光线束和波长同步变化。",
+      "Click the emission monochromator to open the blackened housing, then drag the pale grating face or glowing handle. Wavelength, beam color, diagnostics, and spectrum update together. / 点击发射单色器打开黑化外壳，然后拖动浅色光栅面或发光手柄；波长、光束颜色、诊断和谱图会同步变化。",
   },
   detector: {
     title: "Detector / 检测器",

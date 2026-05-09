@@ -507,3 +507,48 @@
   - Absolute subjective appeal cannot be proven mathematically; the claim supported by this pass is that no actionable, evidence-backed visual/attraction defects remained under the sampled criteria.
 - Blockers:
   - None.
+
+## Instrument optical principle and visual confidence loop
+- Status: Completed locally; ready for release validation
+- Trigger:
+  - User asked whether the instrument system has 100% confidence for optical principles and user-facing aesthetics, with a loop to find and fix defects.
+- Review boundary:
+  - Treated "100%" as no remaining actionable defect for the public conceptual simulator under source-checked optical principles, code tests, and browser visual QA.
+  - The page remains a teaching model, not real instrument control, calibrated ray tracing, or a manufacturer-specific mechanical replica.
+- Source checks:
+  - JASCO spectrofluorometer configuration notes support excitation monochromator selection and 90° fluorescence detection relative to incident excitation.
+  - HORIBA grating guidance supports fixed entrance/exit monochromator geometry where grating rotation scans wavelength, and emphasizes that real bandpass/resolution depends on slit width and system geometry.
+- Defects found:
+  - The overlay wording implied that all excitation "ends" at the beam stop; this could confuse incident excitation with residual straight-through excitation.
+  - Control readouts used precise-looking `bandpass` and `200-900 nm` language without enough teaching-model boundary text.
+  - The default 3D view had too many bright labels competing with the monochromator internals.
+  - Dragging an opened monochromator worked, but the grating face and split rays were not visually dominant enough.
+  - Mobile 3D toolbar/status pills occupied too much of the model area.
+- Changes:
+  - Reworded optical path copy to say residual straight-through excitation enters the beam stop while fluorescence is collected at 90°.
+  - Marked the wavelength selector as a constant-deviation teaching selector, not a calibrated instrument range.
+  - Changed slit readout to `~... nm teaching bandpass`.
+  - Dimmed non-focused 3D labels, reduced detector/beam-stop label weight, and made grating focus visuals stronger.
+  - Increased split-ray/glow visibility when a monochromator is open.
+  - Compacted mobile 3D toolbar styling and hid the redundant WebGL status pill on narrow screens.
+  - Reduced instrument Hero title scale and tightened several instrument-specific radii for a calmer, less bulky first viewport.
+- Validation result:
+  - `node --check instrument/sim/scene/InstrumentScene.mjs` passed.
+  - `node --check instrument/sim/state.mjs` passed.
+  - `node --check instrument/sim/ui/spectrum.mjs` passed.
+  - `node instrument/sim/tests/physics.test.mjs` passed: 12 tests.
+  - `python tools/check_site.py` passed: 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references checked.
+  - `git diff --check` passed with only line-ending warnings for files Git will normalize on next touch.
+  - Playwright Chromium local QA passed on `http://127.0.0.1:4174/instrument/`: WebGL canvas loaded, no console errors, desktop/mobile screenshots captured, and real pointer dragging changed emission grating angle from `18.5 deg` to `23.5 deg`.
+  - Playwright DOM QA passed at 390px, 768px, and 1366px: no horizontal overflow, no visible sub-40px controls, one `h1`, one WebGL canvas.
+  - Lighthouse `/instrument/` local scores: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+  - Visual screenshots reviewed:
+    - `tmp/visual-loop2-desktop-top-local.png`
+    - `tmp/visual-loop2-3d-default-local.png`
+    - `tmp/visual-loop2-3d-drag-local.png`
+    - `tmp/visual-loop2-mobile-top-local.png`
+    - `tmp/visual-loop2-mobile-3d-local.png`
+- Remaining non-blocking notes:
+  - Exact physical fidelity to a specific real monochromator mechanism still requires manufacturer/model-specific dimensions or human confirmation. The public page now avoids claiming that level of fidelity.
+- Blockers:
+  - None.

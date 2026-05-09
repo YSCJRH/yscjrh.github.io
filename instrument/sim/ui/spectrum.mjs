@@ -101,7 +101,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.excitation, `${Math.round(derived.excitationNm)} nm`);
   setText(readouts.emission, `${Math.round(derived.emissionNm)} nm`);
   setText(readouts.slit, `${state.slit.widthUm} um`);
-  setText(readouts.bandpass, `${derived.bandpassNm.toFixed(1)} nm bandpass / 带宽`);
+  setText(readouts.bandpass, `~${derived.bandpassNm.toFixed(1)} nm teaching bandpass / 教学带宽`);
   setText(readouts.integration, `${state.integrationTimeMs} ms`);
   setText(readouts.sourceOffset, `${state.source.offsetUm} um`);
   setText(readouts.detectorAngle, `${state.detector.angleDeg.toFixed(1)} deg`);

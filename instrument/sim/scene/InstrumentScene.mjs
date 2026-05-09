@@ -92,6 +92,7 @@ function createLabel(text, options = {}) {
   );
   sprite.scale.set(options.width || 1.55, options.height || 0.38, 1);
   sprite.userData.baseScale = sprite.scale.clone();
+  sprite.userData.baseOpacity = options.opacity ?? 0.92;
   sprite.renderOrder = options.renderOrder || 32;
   sprite.userData.updateText = (nextText) => {
     drawLabel(nextText);
@@ -104,6 +105,7 @@ function createLeaderLine(start, end, color = 0x7df5df, opacity = 0.24) {
   const line = createLine([start, end], color, opacity);
   line.material.depthTest = false;
   line.renderOrder = 28;
+  line.userData.baseOpacity = opacity;
   return line;
 }
 
@@ -372,8 +374,8 @@ function createSplitSpectrumRays() {
   const colors = [0x776bff, 0x5f9dff, 0x52f0d3, 0xffd166, 0xff7a90];
 
   group.userData.rays = colors.map((color, index) => {
-    const ray = createBeam(color, 0.012, 0.48);
-    const glow = createBeam(color, 0.032, 0.13);
+    const ray = createBeam(color, 0.016, 0.58);
+    const glow = createBeam(color, 0.042, 0.18);
     const offset = (index - (colors.length - 1) / 2) * 0.095;
     ray.renderOrder = 24;
     glow.renderOrder = 23;
@@ -400,8 +402,8 @@ function updateSplitSpectrumRays(group, bandShift, slitProgress) {
     const end = new THREE.Vector3(0.48, 0.2 + verticalLift + selectedBias, -0.43 + bandShift + offset * spread);
     setCylinderBetween(ray, origin, end);
     setCylinderBetween(glow, origin, end);
-    ray.material.opacity = index === 2 ? 0.56 + slitProgress * 0.22 : 0.38 + slitProgress * 0.14;
-    glow.material.opacity = index === 2 ? 0.18 + slitProgress * 0.08 : 0.11 + slitProgress * 0.05;
+    ray.material.opacity = index === 2 ? 0.7 + slitProgress * 0.24 : 0.5 + slitProgress * 0.16;
+    glow.material.opacity = index === 2 ? 0.25 + slitProgress * 0.12 : 0.16 + slitProgress * 0.08;
   });
 }
 
@@ -431,7 +433,7 @@ function createGratingRotationControl(part) {
       depthTest: false,
     })
   );
-  const label = createLabel("Grating angle / 光栅角", { width: 2.1, height: 0.34, fontSize: 28 });
+  const label = createLabel("Grating / 光栅", { width: 1.85, height: 0.34, fontSize: 28 });
 
   group.position.set(0.03, 0.52, 0.04);
   group.visible = false;
@@ -440,7 +442,7 @@ function createGratingRotationControl(part) {
   arc.material.depthTest = false;
   stem.material.depthTest = false;
   handle.renderOrder = 31;
-  label.position.set(0, 0.26, 0.62);
+  label.position.set(0.04, 0.34, 0.74);
   handle.userData.part = part;
   handle.userData.gratingHandle = true;
   handle.userData.gratingPart = part;
@@ -490,7 +492,7 @@ function updateGratingRotationControl(monochromator, angleDeg, wavelengthNm, col
     control.userData.handle.position.clone().multiplyScalar(0.78),
   ]);
   control.userData.stem.material.color.set(color);
-  control.userData.label.userData.updateText?.(`Drag / 拖动 ${angleDeg.toFixed(1)} deg / ${Math.round(wavelengthNm)} nm`);
+  control.userData.label.userData.updateText?.(`Grating / 光栅 ${angleDeg.toFixed(1)}° · ${Math.round(wavelengthNm)} nm`);
 }
 
 function createBafflePlate(part, width = 0.045) {
@@ -710,7 +712,7 @@ function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selec
 
   monochromator.userData.fan?.traverse((object) => {
     if (object.material) {
-      object.material.opacity = 0.08 + slitProgress * 0.08;
+      object.material.opacity = 0.12 + slitProgress * 0.1;
     }
   });
   if (monochromator.userData.fan) {
@@ -773,7 +775,7 @@ function createBeamStop() {
   const cavity = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.34, 0.34), cavityMaterial);
   const grooveA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.43, 0.025), makeMaterial(0x151a25, { roughness: 0.9 }));
   const grooveB = grooveA.clone();
-  const label = createLabel("Beam stop / 光束终止器", { width: 2.25, fontSize: 34 });
+  const label = createLabel("Beam stop / 光束终止器", { width: 1.85, fontSize: 30 });
   const leader = createLeaderLine(new THREE.Vector3(0, 0.33, 0), new THREE.Vector3(0, 0.72, 0.08), 0x8490a8, 0.3);
 
   base.position.y = -0.34;
@@ -790,6 +792,9 @@ function createBeamStop() {
   edges.position.copy(block.position);
 
   group.add(base, block, edges, cavity, grooveA, grooveB, leader, label);
+  group.userData.label = label;
+  group.userData.labelLeader = leader;
+  group.userData.part = "beam-stop";
   return group;
 }
 
@@ -1188,6 +1193,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   components.sample.userData.plume = samplePlume;
   components.sample.userData.alignmentRing = alignmentRing;
   components.sample.userData.label = sampleLabel;
+  components.sample.userData.labelLeader = sampleLeader;
   markSelectable(components.sample, "sample");
   root.add(components.sample);
 
@@ -1200,7 +1206,15 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   components.emission.rotation.y = Math.PI / 2;
   root.add(components.emission);
 
-  components.detector = makeBoxComponent({ width: 0.94, height: 0.86, depth: 0.94, color: 0x2d314f, label: "Detector / 检测器", part: "detector" });
+  components.detector = makeBoxComponent({
+    width: 0.94,
+    height: 0.86,
+    depth: 0.94,
+    color: 0x2d314f,
+    label: "Detector / 检测器",
+    part: "detector",
+    labelScale: 0.82,
+  });
   components.detector.position.set(0, BENCH_Y, 3.58);
   root.add(components.detector);
 
@@ -1239,6 +1253,73 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     hotspots[part].userData.part = part;
     root.add(hotspots[part]);
   });
+
+  const annotations = [
+    { name: "source", group: components.source },
+    { name: "excitation", group: components.excitation },
+    { name: "sample", group: components.sample },
+    { name: "beam-stop", group: stopGroup },
+    { name: "emission", group: components.emission },
+    { name: "detector", group: components.detector },
+    { name: "output", group: components.output },
+  ];
+
+  function setAnnotationOpacity(group, labelOpacity, leaderOpacity) {
+    const label = group?.userData?.label;
+    const leader = group?.userData?.labelLeader;
+    if (label?.material) {
+      label.material.opacity = labelOpacity;
+    }
+    if (leader?.material) {
+      leader.material.opacity = leaderOpacity;
+    }
+  }
+
+  function updateAnnotationFocus(part) {
+    const monoFocus = isMonochromatorPart(part);
+    annotations.forEach(({ name, group }) => {
+      let labelOpacity = name === part ? 0.92 : 0.32;
+      let leaderOpacity = name === part ? 0.28 : 0.08;
+
+      if (monoFocus) {
+        const isFocus = name === part;
+        const isContextAnchor =
+          name === "sample" ||
+          (part === "excitation" && name === "beam-stop") ||
+          (part === "emission" && name === "detector");
+        labelOpacity = isFocus ? 0.96 : isContextAnchor ? 0.28 : 0.08;
+        leaderOpacity = isFocus ? 0.34 : isContextAnchor ? 0.09 : 0.025;
+      } else if (name === "beam-stop" && part !== "sample") {
+        labelOpacity = 0.2;
+        leaderOpacity = 0.06;
+      }
+
+      setAnnotationOpacity(group, labelOpacity, leaderOpacity);
+    });
+  }
+
+  function updateGratingFocusVisuals() {
+    ["excitation", "emission"].forEach((monoPart) => {
+      const isGratingSelected = selectedSubPart === `${monoPart}:grating`;
+      const isOpen = Boolean(components[monoPart]?.userData?.open);
+      const control = components[monoPart]?.userData?.gratingControl;
+      const handle = control?.userData?.handle;
+      if (handle) {
+        handle.scale.setScalar(isGratingSelected ? 1.24 : isOpen ? 1.08 : 1);
+      }
+
+      const controlLabel = control?.userData?.label;
+      if (controlLabel?.material) {
+        controlLabel.material.opacity = isOpen ? (isGratingSelected ? 0.95 : 0.78) : 0;
+      }
+
+      const grating = components[monoPart]?.userData?.grating;
+      if (grating?.material) {
+        grating.material.opacity = isGratingSelected ? 0.98 : isOpen ? 0.9 : 0.78;
+        grating.material.emissiveIntensity = isGratingSelected ? 0.36 : isOpen ? 0.22 : 0.1;
+      }
+    });
+  }
 
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
@@ -1282,18 +1363,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     }
 
     selectedSubPart = key;
-    ["excitation", "emission"].forEach((monoPart) => {
-      const isGratingSelected = key === `${monoPart}:grating`;
-      const handle = components[monoPart]?.userData?.gratingControl?.userData?.handle;
-      if (handle) {
-        handle.scale.setScalar(isGratingSelected ? 1.24 : 1);
-      }
-      const grating = components[monoPart]?.userData?.grating;
-      if (grating?.material) {
-        grating.material.opacity = isGratingSelected ? 0.96 : 0.78;
-        grating.material.emissiveIntensity = isGratingSelected ? 0.34 : 0.1;
-      }
-    });
+    updateGratingFocusVisuals();
     render();
   }
 
@@ -1355,6 +1425,9 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
       mesh.material.opacity = name === part ? 1 : 0.46;
       mesh.scale.setScalar(name === part ? 1.45 : 1);
     });
+
+    updateAnnotationFocus(part);
+    updateGratingFocusVisuals();
 
     if (components.sample.userData.alignmentRing?.material) {
       components.sample.userData.alignmentRing.material.opacity = part === "sample" ? 0.22 : 0.1;
