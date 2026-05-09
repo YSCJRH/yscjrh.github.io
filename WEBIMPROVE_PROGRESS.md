@@ -509,7 +509,7 @@
   - None.
 
 ## Instrument optical principle and visual confidence loop
-- Status: Completed locally; ready for release validation
+- Status: Completed and published
 - Trigger:
   - User asked whether the instrument system has 100% confidence for optical principles and user-facing aesthetics, with a loop to find and fix defects.
 - Review boundary:
@@ -543,6 +543,8 @@
   - Playwright Chromium local QA passed on `http://127.0.0.1:4174/instrument/`: WebGL canvas loaded, no console errors, desktop/mobile screenshots captured, and real pointer dragging changed emission grating angle from `18.5 deg` to `23.5 deg`.
   - Playwright DOM QA passed at 390px, 768px, and 1366px: no horizontal overflow, no visible sub-40px controls, one `h1`, one WebGL canvas.
   - Lighthouse `/instrument/` local scores: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+  - Published to `main` in commits `cbecaf0` and `4266935`.
+  - Live GitHub Pages QA on `https://yscjrh.github.io/instrument/` passed: updated cache key present, no console errors, WebGL canvas loaded, desktop/mobile screenshots captured, mobile horizontal overflow `0`, and real pointer dragging changed emission grating angle from `18.5 deg` to `23.5 deg`.
   - Visual screenshots reviewed:
     - `tmp/visual-loop2-desktop-top-local.png`
     - `tmp/visual-loop2-3d-default-local.png`
