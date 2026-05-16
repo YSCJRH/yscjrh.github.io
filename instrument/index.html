@@ -220,20 +220,13 @@
                         <stop offset="100%" stop-color="#9af26f"></stop>
                       </linearGradient>
                       <linearGradient id="monoGratingFace" x1="0%" x2="100%" y1="0%" y2="100%">
-                        <stop offset="0%" stop-color="#effff8"></stop>
-                        <stop offset="38%" stop-color="#bff5dc"></stop>
-                        <stop offset="72%" stop-color="#83a99a"></stop>
-                        <stop offset="100%" stop-color="#4e625e"></stop>
-                      </linearGradient>
-                      <linearGradient id="monoGratingRim" x1="0%" x2="100%" y1="0%" y2="100%">
                         <stop offset="0%" stop-color="#d8fff8"></stop>
-                        <stop offset="100%" stop-color="#53615f"></stop>
+                        <stop offset="100%" stop-color="#73e5cf"></stop>
                       </linearGradient>
                       <linearGradient id="monoDispersionFan" x1="0%" x2="100%">
-                        <stop offset="0%" stop-color="rgba(216,255,248,0.52)"></stop>
-                        <stop offset="42%" stop-color="rgba(82,240,211,0.28)"></stop>
-                        <stop offset="72%" stop-color="rgba(255,209,102,0.22)"></stop>
-                        <stop offset="100%" stop-color="rgba(255,122,144,0.16)"></stop>
+                        <stop offset="0%" stop-color="rgba(119,107,255,0.22)"></stop>
+                        <stop offset="46%" stop-color="rgba(82,240,211,0.2)"></stop>
+                        <stop offset="100%" stop-color="rgba(255,209,102,0.16)"></stop>
                       </linearGradient>
                       <filter id="beamGlow" x="-40%" y="-40%" width="180%" height="180%">
                         <feGaussianBlur stdDeviation="7" result="blur"></feGaussianBlur>
@@ -250,33 +243,24 @@
                         </feMerge>
                       </filter>
                       <symbol id="monoAssembly" viewBox="0 0 142 150">
-                        <path class="mono-cavity-back" d="M18 32H118C126 32 132 39 131 47L122 128C121 135 115 140 108 140H26C18 140 12 134 13 126L21 43C22 36 12 32 18 32Z"></path>
-                        <path class="mono-cavity-lip" d="M22 38H122M17 126H113"></path>
-                        <rect class="mono-slit mono-slit-entry" x="20" y="83" width="8" height="34" rx="3"></rect>
-                        <rect class="mono-slit mono-slit-exit" x="114" y="82" width="8" height="34" rx="3"></rect>
-                        <path class="mono-internal-ray mono-ray-in" d="M25 100C39 94 48 87 59 73"></path>
-                        <path class="mono-dispersion-fan" d="M60 72L118 55L118 111Z"></path>
-                        <path class="mono-spectrum-ray mono-spectrum-violet" d="M64 71C80 61 96 56 118 54"></path>
-                        <path class="mono-spectrum-ray mono-spectrum-cyan" d="M64 75C82 73 99 76 119 84"></path>
-                        <path class="mono-spectrum-ray mono-spectrum-amber" d="M63 78C82 86 99 99 116 112"></path>
-                        <path class="mono-selected-band" d="M66 75C83 74 99 79 118 91"></path>
-                        <circle class="mono-turntable" cx="72" cy="102" r="34"></circle>
-                        <path class="mono-base-plate" d="M28 88H114L106 124H38Z"></path>
-                        <path class="mono-yoke mono-yoke-left" d="M38 91C43 78 54 68 68 63"></path>
-                        <path class="mono-yoke mono-yoke-right" d="M76 61C93 58 108 64 119 78"></path>
-                        <path class="mono-grating-rim" d="M53 38C70 29 96 33 116 48L99 113C80 108 58 96 40 80Z"></path>
-                        <path class="mono-grating-face" d="M56 40C72 33 96 36 112 50L97 106C80 101 60 91 44 78Z"></path>
-                        <path class="mono-grating-highlight" d="M61 42C73 38 88 38 102 44"></path>
-                        <path class="mono-grooves" d="M62 41C57 55 52 69 47 82M68 39C63 56 58 73 53 87M74 38C69 56 64 76 59 91M80 38C75 59 70 80 65 95M86 39C81 60 76 82 71 98M92 41C87 62 82 84 77 101M98 43C93 63 88 84 83 102M104 46C99 64 94 84 89 104"></path>
-                        <path class="mono-groove-shimmer" d="M70 39C66 55 61 74 56 90M82 38C77 58 72 80 67 96M94 42C89 62 84 83 79 101"></path>
-                        <circle class="mono-pivot" cx="72" cy="100" r="7"></circle>
-                        <path class="mono-pivot-cross" d="M66 100H78M72 94V106"></path>
-                        <circle class="mono-screw" cx="38" cy="92" r="4"></circle>
-                        <circle class="mono-screw" cx="108" cy="92" r="4"></circle>
-                        <circle class="mono-screw" cx="48" cy="121" r="4"></circle>
-                        <circle class="mono-screw" cx="98" cy="121" r="4"></circle>
-                        <path class="mono-cable mono-cable-warm" d="M108 77C125 84 127 101 114 116"></path>
-                        <path class="mono-cable mono-cable-cool" d="M102 82C117 88 118 101 108 112"></path>
+                        <rect class="mono-module-plane" x="18" y="30" width="106" height="96" rx="14"></rect>
+                        <path class="mono-axis-line" d="M27 76H116"></path>
+                        <path class="mono-normal-line" d="M68 38V114"></path>
+                        <rect class="mono-slit mono-slit-entry" x="24" y="60" width="7" height="32" rx="2"></rect>
+                        <rect class="mono-slit mono-slit-exit" x="112" y="60" width="7" height="32" rx="2"></rect>
+                        <path class="mono-internal-ray mono-ray-in" d="M31 76H54"></path>
+                        <path class="mono-dispersion-fan" d="M70 76L113 56L113 96Z"></path>
+                        <path class="mono-spectrum-ray mono-spectrum-violet" d="M72 70L113 56"></path>
+                        <path class="mono-spectrum-ray mono-spectrum-cyan" d="M72 76H113"></path>
+                        <path class="mono-spectrum-ray mono-spectrum-amber" d="M72 82L113 96"></path>
+                        <path class="mono-selected-band" d="M72 76H113"></path>
+                        <g class="mono-grating-symbol" transform="rotate(12 64 76)">
+                          <rect class="mono-grating-face" x="50" y="42" width="31" height="68" rx="4"></rect>
+                          <path class="mono-grooves" d="M55 47V105M60 47V105M65 47V105M70 47V105M75 47V105"></path>
+                        </g>
+                        <circle class="mono-pivot" cx="64" cy="76" r="5"></circle>
+                        <path class="mono-pivot-cross" d="M59 76H69M64 71V81"></path>
+                        <path class="mono-rotation-arc" d="M46 113A37 37 0 0 0 92 111"></path>
                       </symbol>
                     </defs>
 
