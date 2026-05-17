@@ -451,25 +451,25 @@
                     <label class="instrument-control">
                       <span>Excitation wavelength / 激发波长 <strong data-readout="excitation">365 nm</strong></span>
                       <input data-control="excitation-wavelength" type="range" min="200" max="900" step="1" value="365">
-                      <small class="control-help">Grating angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. Constant-deviation teaching selector; 200-900 nm is not a calibrated instrument range. 恒偏向教学选通；200-900 nm 不是校准仪器量程。</small>
+                      <small class="control-help">Angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. Teaching selector; not a calibrated range. 教学选通，非校准量程。</small>
                     </label>
 
                     <label class="instrument-control">
                       <span><span data-emission-label>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
                       <input data-control="emission-wavelength" type="range" min="200" max="900" step="1" value="520">
-                      <small class="control-help" id="emission-range-help">Grating angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. Same conceptual selector; UV/NIR colors are false-color cues. 同一概念选通器；紫外/近红外颜色仅作伪色提示。</small>
+                      <small class="control-help" id="emission-range-help">Angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. UV/NIR use false-color cues. 紫外/近红外为伪色提示。</small>
                     </label>
 
                     <label class="instrument-control">
                       <span>Slit width / 狭缝宽度 <strong data-readout="slit">500 um</strong></span>
                       <input data-control="slit" type="range" min="100" max="1000" step="25" value="500">
-                      <small class="control-help"><strong data-readout="bandpass">~4.6 nm teaching bandpass / 约 4.6 nm 教学带宽</strong>; wider slit increases throughput and broadens features. 狭缝越宽，通光量越高，谱峰也会变宽。</small>
+                      <small class="control-help"><strong data-readout="bandpass">~4.6 nm teaching bandpass / 约 4.6 nm 教学带宽</strong>; wider slit raises throughput and broadens peaks. 狭缝越宽，通光量越高，峰越宽。</small>
                     </label>
 
                     <label class="instrument-control">
                       <span>Integration time / 积分时间 <strong data-readout="integration">200 ms</strong></span>
                       <input data-control="integration" type="range" min="20" max="1000" step="20" value="200">
-                      <small class="control-help">Signal averaging time in this model, not a lifetime measurement. 这里表示信号平均时间，不是荧光寿命测量。</small>
+                      <small class="control-help">Signal averaging time, not fluorescence lifetime. 信号平均时间，不是荧光寿命。</small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">

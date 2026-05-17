@@ -7,7 +7,7 @@
   const parallaxHero = document.querySelector("[data-parallax-hero]");
   const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll("a")) : [];
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const desktopNavQuery = window.matchMedia("(min-width: 901px)");
+  const desktopNavQuery = window.matchMedia("(min-width: 1101px)");
   const finePointerQuery = window.matchMedia("(pointer: fine)");
   let prefersReducedMotion = reduceMotionQuery.matches;
 

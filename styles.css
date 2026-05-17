@@ -28,7 +28,7 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-10: 2.5rem;
-  --space-section: clamp(3rem, 6vw, 5rem);
+  --space-section: clamp(2.65rem, 5.2vw, 4.35rem);
   --container: min(1180px, calc(100vw - 2rem));
   --shadow-panel:
     0 0 0 1px rgba(122, 154, 255, 0.12),
@@ -230,7 +230,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-5);
+  gap: clamp(0.85rem, 2vw, var(--space-5));
   min-height: 4.35rem;
 }
 
@@ -238,12 +238,13 @@ button {
 .header-controls {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: clamp(0.55rem, 1.25vw, var(--space-4));
 }
 
 .brand {
   display: inline-grid;
   gap: 0.18rem;
+  min-width: 0;
   text-decoration: none;
 }
 
@@ -255,23 +256,24 @@ button {
 
 .brand-sub {
   color: var(--color-text-soft);
-  font-size: 0.8rem;
+  font-size: clamp(0.72rem, 0.78vw, 0.8rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .site-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  flex-wrap: nowrap;
+  gap: 0.16rem;
+  white-space: nowrap;
 }
 
 .site-nav a {
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
-  padding: 0.62rem 0.86rem;
+  padding: 0.54rem 0.68rem;
   color: var(--color-text-muted);
-  font-size: 0.94rem;
+  font-size: clamp(0.82rem, 0.88vw, 0.94rem);
   text-decoration: none;
 }
 
@@ -1871,6 +1873,14 @@ button {
 }
 
 @media (max-width: 1100px) {
+  .site-nav {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
   .hero-grid,
   .about-grid {
     grid-template-columns: 1fr;
@@ -1924,14 +1934,6 @@ button {
 }
 
 @media (max-width: 900px) {
-  .site-nav {
-    display: none;
-  }
-
-  .nav-toggle {
-    display: inline-flex;
-  }
-
   .research-grid {
     grid-template-columns: 1fr;
   }
@@ -4011,8 +4013,8 @@ section[id] {
 
 .instrument-workstation {
   display: grid;
-  grid-template-columns: minmax(0, 1.32fr) minmax(20rem, 0.68fr);
-  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1.16fr) minmax(22.5rem, 0.84fr);
+  gap: 0.72rem;
   align-items: start;
 }
 
@@ -4066,6 +4068,9 @@ section[id] {
 }
 
 .instrument-model-panel {
+  position: sticky;
+  top: 5.15rem;
+  align-self: start;
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 44%, rgba(94, 106, 210, 0.18), transparent 24rem),
@@ -4851,7 +4856,7 @@ section[id] {
 
 .instrument-side {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.68rem;
 }
 
 .source-data-panel {
@@ -5239,7 +5244,7 @@ section[id] {
 .diagnostics-panel,
 .spectrum-panel {
   display: grid;
-  gap: 0.72rem;
+  gap: 0.62rem;
 }
 
 .diagnostics-list {
@@ -5328,7 +5333,7 @@ section[id] {
 
 .control-stack {
   display: grid;
-  gap: 0.68rem;
+  gap: 0.56rem;
 }
 
 .advanced-geometry {
@@ -5394,7 +5399,7 @@ section[id] {
 
 .instrument-control {
   display: grid;
-  gap: 0.36rem;
+  gap: 0.28rem;
   color: var(--color-text-muted);
   font-size: 0.8rem;
   font-weight: 700;
@@ -5414,7 +5419,7 @@ section[id] {
 
 .instrument-control input[type="range"] {
   width: 100%;
-  min-height: 2.5rem;
+  min-height: 2.15rem;
   accent-color: #7df5df;
 }
 
@@ -5435,9 +5440,9 @@ section[id] {
 .control-help {
   display: block;
   color: rgba(176, 186, 206, 0.74);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 650;
-  line-height: 1.42;
+  line-height: 1.32;
 }
 
 .instrument-status,
@@ -5495,7 +5500,7 @@ section[id] {
 
 .spectrum-meta-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.42rem;
 }
 
@@ -5608,6 +5613,10 @@ section[id] {
   .instrument-hero-card,
   .instrument-workstation {
     grid-template-columns: 1fr;
+  }
+
+  .instrument-model-panel {
+    position: static;
   }
 
   .instrument-stage {
