@@ -1,9 +1,174 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: Complete
-- Status: M0-M9 completed
-- Last updated: 2026-05-08
+- Active: 2026-06-08 homepage/project positioning publication
+- Status: Visual review passed; ready for direct GitHub Pages publication
+- Last updated: 2026-06-08
+
+## 2026-06-08 Visual review and publication preparation
+- Status: Visual review passed; ready to publish
+- Trigger:
+  - User asked for visual review, then push and publish.
+- Checkpoint - visual review:
+  - Restarted the local preview using `python tools/serve.py`; default port `4173` was occupied, so the helper served the site at `http://127.0.0.1:4210/`.
+  - Re-captured homepage and `/projects/` screenshots at desktop and narrow mobile widths.
+  - Reviewed the rendered homepage and `/projects/` page for first-screen clarity, card hierarchy, bilingual pairing, text overflow, and obvious overlap.
+  - Visual read: the homepage remains calm and routing-focused; the Projects page is longer after adding proof and boundary fields, but the evidence-first model stays readable in single-column mobile layout and desktop grids.
+- Checkpoint - public-readiness boundary:
+  - No new personal facts, affiliations, contact methods, user counts, stars, or adoption claims were added.
+  - `WinChronicle` remains a Projects-page system with privacy/boundary copy, not a homepage featured project.
+  - `Instrument Lab` remains a research route and source entry, not a top-level homepage project priority.
+  - Temporary screenshot and server-log files were kept outside the repository and not staged.
+- Checkpoint - validation before publish:
+  - `python tools/check_site.py` passed before this publication checkpoint.
+  - `git diff --check` passed with LF-to-CRLF warnings only.
+  - Local routes returned `200` for `/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml`.
+  - Edited external project links and README anchors were checked; the brittle `ai-visibility-auditor#readme` URL was replaced with the repository root.
+- Next:
+  - Run final validation, stage only intended files, commit, push `main`, and verify the live GitHub Pages site reflects the update.
+
+## 2026-06-08 Homepage/project positioning implementation
+- Status: Complete
+- Trigger:
+  - User said `continue` after the 2026-06-05 decision record accepted defaults for the next implementation pass.
+  - Scope: implement the accepted project-positioning defaults without changing `script.js`, `sitemap.xml`, or `robots.txt`.
+- Checkpoint 1 - content model and gaps:
+  - Updated `CONTENT_MODEL.md` so the homepage featured order is `AnswerLens / ai-visibility-auditor -> skylattice -> codex-via-phone`.
+  - Added `WinChronicle` as a Projects-page `Featured System / 重点系统`, with homepage supporting-only treatment.
+  - Added `encourage-loop`, `Instrument Lab`, and `yscjrh.github.io` to the Projects-page inventory model.
+  - Updated `CONTENT_GAPS.md` with WinChronicle and encourage-loop story/proof gaps, privacy/boundary requirements, screenshot gaps, first-run proof gaps, and possible future notes.
+- Checkpoint 2 - homepage implementation:
+  - Reordered the homepage featured project cards to `AnswerLens -> skylattice -> codex-via-phone`.
+  - Removed the first-screen GitHub and Instrument Lab hero shortcuts, keeping GitHub in navigation/footer and Instrument Lab under Research.
+  - Added compact supporting homepage links for `WinChronicle` and `encourage-loop`, labeled so they do not compete with the featured trio.
+  - Paired newly edited visitor-facing project tags with English / Chinese labels where applicable.
+- Checkpoint 3 - `/projects/` implementation:
+  - Reordered the featured trio to `AnswerLens -> skylattice -> codex-via-phone`.
+  - Added a visible Project Card schema on `/projects/`: `Best for / 适合谁`, `Proof path / 可检视证据`, and `Boundary / 边界`.
+  - Added `WinChronicle` and `encourage-loop` under `Local-first agent and workflow tools / 本地优先的 agent 与工作流工具`.
+  - Kept `mirror-sim` and `create-double-skill` as `Concept and reflective experiments / 概念与反思型实验`.
+  - Added `Instrument Lab` and `yscjrh.github.io` as `Research route and site source / 研究路线与站点源码`, not as homepage featured projects.
+  - Added small CSS support for project evidence fields, `Featured System` / route status chips, and new card visual motifs.
+- Files changed in this checkpoint:
+  - `CONTENT_MODEL.md`
+  - `CONTENT_GAPS.md`
+  - `index.html`
+  - `projects/index.html`
+  - `styles.css`
+  - `WEBIMPROVE_PROGRESS.md`
+- Files intentionally unchanged in this checkpoint:
+  - `script.js`
+  - `sitemap.xml`
+  - `robots.txt`
+- Validation so far:
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with LF-to-CRLF warnings only.
+- Browser / local preview QA:
+  - Started local preview at `http://127.0.0.1:4199/`.
+  - Core routes returned `200`: `/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml`.
+  - Captured Playwright screenshots:
+    - `output/playwright/home-1366x900.png`
+    - `output/playwright/home-390x900.png`
+    - `output/playwright/projects-1366x900.png`
+    - `output/playwright/projects-390x1200.png`
+  - Visual read: homepage and Projects page are readable on desktop and mobile; Projects page is longer but the evidence-first card model stays within card boundaries.
+- External link checks:
+  - Base external URLs returned `200` for AnswerLens demo, Skylattice docs and quick start, and all GitHub repository roots used by the edited pages.
+  - GitHub README fragments validated in fetched HTML for `codex-via-phone`, `mirror-sim`, and `create-double-skill`.
+  - Replaced the brittle `ai-visibility-auditor#readme` link with the repository root after the fragment check missed `id="readme"`.
+- Next:
+  - Stop here unless the owner asks for commit/staging or another implementation pass.
+
+## 2026-06-05 Benchmark and homepage/project positioning decision
+- Status: Complete
+- Trigger:
+  - User asked to continue from `docs/project-inventory-ia-proposal-2026-06-04.md` and `WEBIMPROVE_PROGRESS.md`.
+  - Required pass: use Chrome and Product Design before visual redesign, benchmark 6-8 strong personal brand / research-builder websites, create a decision record for WinChronicle, featured order, and Instrument Lab navigation, and stop before editing public visual files.
+- Checkpoint 1 - source and progress review:
+  - Re-read the current inventory/IA proposal and progress log.
+  - Re-checked the current site/source anchors for project order, Instrument Lab routing, and Project Card model guidance.
+  - Confirmed the only pre-existing worktree changes were `WEBIMPROVE_PROGRESS.md` and the untracked `docs/project-inventory-ia-proposal-2026-06-04.md`.
+- Checkpoint 2 - benchmark pass:
+  - Used the Chrome-controlled browser runtime to collect a focused benchmark set of eight sites:
+    - Simon Willison: developer-writer / open-source maintainer.
+    - Julia Evans: developer-writer / explainer.
+    - Maggie Appleton: digital garden / designer-researcher.
+    - Andy Matuschak: digital garden / research-builder.
+    - Gwern Branwen: digital garden / longform research.
+    - Red Blob Games / Amit Patel: research-builder / explorable explanations.
+    - Bret Victor: research-builder / interactive essays.
+    - Mike Bostock: open-source maintainer / research-builder.
+  - Product Design framing applied: benchmark and positioning before any visual redesign; no saved Product Design project context was available for this site.
+  - Read-only subagent reviews completed for benchmark fit and positioning risk. The parent agent synthesized the results and wrote the decision record.
+- Checkpoint 3 - decision record:
+  - Added `docs/decisions/2026-06-05-homepage-project-positioning.md`.
+  - Recommended default: `WinChronicle` becomes a `Featured System / 重点系统` on `/projects/`, but not one of the homepage featured three yet.
+  - Recommended default: next featured order becomes `AnswerLens / ai-visibility-auditor -> skylattice -> codex-via-phone`.
+  - Recommended default: Instrument Lab remains route-only under Research and is not promoted to global navigation or a standard Build project card.
+  - Recorded tradeoffs, required boundaries, benchmark implications, and exact next-pass file implications.
+- Files changed in this checkpoint:
+  - `WEBIMPROVE_PROGRESS.md`
+  - `docs/decisions/2026-06-05-homepage-project-positioning.md`
+- Public visual files intentionally not edited:
+  - `index.html`
+  - `projects/index.html`
+  - `styles.css`
+  - `script.js`
+  - `sitemap.xml`
+  - `robots.txt`
+- Next:
+  - Stop here until the owner proceeds to implementation or changes the proposed defaults.
+
+## 2026-06-04 Project inventory and IA redesign research
+- Status: Complete
+- Trigger:
+  - User requested `@chrome`, `@product-design`, and `@github` research before redesigning the personal website.
+  - Required first outputs: a public project inventory classified by audience, maturity, proof, public entry, and homepage priority; then a homepage and Projects IA proposal grounded in `webimprove.md` and the updated inventory.
+- Checkpoint 1 - repository and brief read:
+  - Read `personalweb.md`, `AGENTS.md`, `PLANS.md`, `webimprove.md`, `WEBIMPROVE_PROGRESS.md`, current source files, and project/note surfaces.
+  - Confirmed the current public site already includes `/`, `/projects/`, `/notes/`, two public note pages, and `/instrument/`.
+  - Confirmed current public project surfaces still center on AnswerLens / `ai-visibility-auditor`, `codex-via-phone`, `skylattice`, `mirror-sim`, and `create-double-skill`, with Instrument Lab present as a concept route rather than a mature project card.
+  - Confirmed the Product Design saved-context preflight script referenced by the plugin package was unavailable locally, so this pass proceeds from the explicit user brief and repository evidence.
+  - Spawned three read-only subagents for bounded project inventory, current-site structure, and positioning/IA risk review. The parent agent remains the writer and final integrator.
+- Commands:
+  - `git status --short`
+  - `Get-ChildItem -Force`
+  - `rg --files`
+  - `Get-Content -Raw personalweb.md`
+  - `Get-Content -Raw AGENTS.md`
+  - `Get-Content -Raw PLANS.md`
+  - `Get-Content -Raw webimprove.md`
+  - `Get-Content -Raw WEBIMPROVE_PROGRESS.md`
+  - `rg -n "project|Project|Build|AnswerLens|ai-visibility|codex-via-phone|skylattice|mirror|create-double|instrument|Notes|Homepage|home|IA|information architecture|audience|maturity|proof|entry|priority" ...`
+  - `rg -n "<section|id=|project|note|Research|Build|Projects|Notes|About|Contact|Instrument|AnswerLens|skylattice|mirror|create-double|codex-via-phone|ai-visibility" index.html projects/index.html notes/index.html instrument/index.html script.js`
+- Current findings:
+  - No visual files or public page copy have been changed in this checkpoint.
+  - `PLANS.md` is currently focused on Instrument Lab work, so this research pass needs its own dated progress section rather than overwriting the active instrument plan.
+  - The next write should be a project inventory and IA proposal document, not visual implementation.
+- Checkpoint 2 - project inventory:
+  - Added `docs/project-inventory-ia-proposal-2026-06-04.md`.
+  - Classified the current five featured/supporting projects, the newer public GitHub-visible `WinChronicle` and `encourage-loop` repos, the `yscjrh.github.io` site repo, and the public `/instrument/` route.
+  - Kept the current featured homepage set as defensible: `AnswerLens / ai-visibility-auditor`, `codex-via-phone`, and `skylattice`.
+  - Marked `WinChronicle` as a Projects-page candidate but not an automatic homepage promotion, because that would materially change public project positioning.
+  - Kept Instrument Lab as `route-only` by default, not a Build card, because current docs and public copy frame it as a conceptual research/instrumentation route.
+  - Recorded GitHub metadata limitation: `gh` GraphQL and unauthenticated REST checks failed, while public GitHub HTML pages were readable.
+- Checkpoint 3 - homepage and Projects IA proposal:
+  - Completed the IA proposal in `docs/project-inventory-ia-proposal-2026-06-04.md`.
+  - Recommended keeping the homepage identity-first and preserving the global `Hero -> Research -> Projects/Build -> Notes -> About` spine.
+  - Recommended splitting the current homepage `Projects / Build` area internally into `Featured Projects` followed by `Build Method / Open Tools`, so visitors see concrete public entries before the workflow explanation.
+  - Recommended using `/projects/` as the complete evidence-first reading index with groups for featured projects, local-first agent/workflow tools, concept/reflective experiments, and route/source appendix entries.
+  - Identified required boundary fields before visual/card implementation: `not_for` / `Boundary` copy for AnswerLens, `codex-via-phone`, `skylattice`, `mirror-sim`, `create-double-skill`, `WinChronicle`, `encourage-loop`, and Instrument Lab.
+  - Stopped before visual implementation.
+- Human positioning decisions before implementation:
+  - Whether `WinChronicle` should enter `/projects/` in the next redesign pass.
+  - Whether `WinChronicle` should remain Projects-only or later compete for homepage featured status.
+  - Whether the featured homepage order should remain the shipped `AnswerLens -> codex-via-phone -> skylattice` order or move to the `webimprove.md` strategic `AnswerLens -> skylattice -> codex-via-phone` order.
+  - Whether Instrument Lab should remain Research route-only or become a project-like entry.
+- Validation:
+  - Local site was inspected in Chrome at `http://127.0.0.1:4207/` and `http://127.0.0.1:4207/projects/`.
+  - `git diff --check` passed with only the existing line-ending warning for `WEBIMPROVE_PROGRESS.md`.
+- Next:
+  - Stop here until the owner chooses the positioning decisions above for the next implementation pass.
 
 ## M0 Repository reconnaissance
 - Status: Completed

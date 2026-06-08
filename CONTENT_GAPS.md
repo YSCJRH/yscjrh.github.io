@@ -13,7 +13,7 @@ These are the missing inputs that would make the homepage more credible without 
 
 ## Priority Order
 1. add one public-facing example for each research direction
-2. collect creator-side story inputs for the five featured repositories
+2. collect creator-side story inputs for the featured trio and Projects-page Featured System
 3. validate project CTA durability and public proof paths
 4. decide whether the Method Notes draft should become the next public note
 5. align homepage wording with GitHub profile and pinned repositories
@@ -191,6 +191,38 @@ What is still missing is mostly creator-side context: origin, representative val
   - `Why it exists:`
   - `Role on homepage:`
 
+### WinChronicle
+- Current role:
+  - Projects-page `Featured System / 重点系统`
+  - homepage supporting link only
+- Needed:
+  - why local-first workflow memory belongs beside the research-builder identity
+  - which public proof path should be treated as the first reader entry
+  - owner-reviewed boundary wording for privacy-sensitive behavior
+- Boundary to preserve:
+  - not official OpenAI Chronicle
+  - not default screen recording, OCR, keylogging, cloud memory, or desktop control
+  - not a promise of broad unattended agent operation
+- Good input format:
+  - `Why this system belongs here:`
+  - `First public proof path:`
+  - `Privacy boundary wording:`
+
+### encourage-loop
+- Current role:
+  - supporting local-agent workflow tool on `/projects/`
+  - homepage supporting link only
+- Needed:
+  - what long-running-agent handoff problem it is meant to solve
+  - which CLI or packaging path is the clearest current proof
+  - whether it should stay supporting or later merge into a broader local-first tools story
+- Boundary to preserve:
+  - not an autonomous framework, daemon, command injector, judge, or replacement for tests/review
+- Good input format:
+  - `Workflow problem:`
+  - `Proof path:`
+  - `Role later:`
+
 ## Project Gateway Gaps
 
 This section tracks which projects still need stronger public proof beyond the current gateway.
@@ -208,6 +240,12 @@ Some repo-first cards now use README deep links, but they still do not count as 
   - still needs a dedicated public page if it should move beyond repo-first entry
 - `create-double-skill`
   - still needs a dedicated public page if it should move beyond repo-first entry
+- `WinChronicle`
+  - public repository exists; still needs an owner-approved first proof path if it becomes more prominent than a Projects-page Featured System
+- `encourage-loop`
+  - public repository exists; still needs a stable public proof path if it moves beyond supporting tooling
+- `Instrument Lab`
+  - route exists; keep it as a concept route unless a later decision creates a separate public project or repository
 
 ### Screenshots
 - `ai-visibility-auditor`
@@ -220,6 +258,10 @@ Some repo-first cards now use README deep links, but they still do not count as 
   - needs first public screenshots or visual proof
 - `create-double-skill`
   - needs first public screenshots or generated-output visuals
+- `WinChronicle`
+  - needs a safe screenshot/proof set before any homepage featured promotion
+- `encourage-loop`
+  - needs CLI/session proof screenshots only if they can be shown without exposing private workflow data
 
 ### First-Run Proof
 - `codex-via-phone`
@@ -230,6 +272,10 @@ Some repo-first cards now use README deep links, but they still do not count as 
   - README first-run and examples sections are linkable, but a cleaner public example path is still missing
 - `skylattice`
   - quick start exists, but stronger proof artifacts would make the gateway more persuasive
+- `WinChronicle`
+  - README and architecture material are useful, but a public first-run proof path should be owner-reviewed before stronger promotion
+- `encourage-loop`
+  - CLI/test proof is currently repo-bound; a short public handoff example would make the card easier to assess
 
 ### Build Logs Or Notes Worth Adding
 - `ai-visibility-auditor`
@@ -242,6 +288,10 @@ Some repo-first cards now use README deep links, but they still do not count as 
   - first-run note or example-output note
 - `skylattice`
   - note on quick-start reasoning or governance model
+- `WinChronicle`
+  - build note on why local workflow memory needs privacy boundaries
+- `encourage-loop`
+  - method note on plan cursors, evidence gates, and long-running agent handoff
 
 ## Notes Starter Topics
 
