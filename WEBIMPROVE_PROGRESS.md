@@ -2,11 +2,11 @@
 
 ## Current milestone
 - Active: 2026-06-08 homepage/project positioning publication
-- Status: Visual review passed; ready for direct GitHub Pages publication
+- Status: Published and live-verified on GitHub Pages
 - Last updated: 2026-06-08
 
 ## 2026-06-08 Visual review and publication preparation
-- Status: Visual review passed; ready to publish
+- Status: Published and live-verified
 - Trigger:
   - User asked for visual review, then push and publish.
 - Checkpoint - visual review:
@@ -24,8 +24,12 @@
   - `git diff --check` passed with LF-to-CRLF warnings only.
   - Local routes returned `200` for `/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml`.
   - Edited external project links and README anchors were checked; the brittle `ai-visibility-auditor#readme` URL was replaced with the repository root.
+- Checkpoint - publication:
+  - Published the homepage/project-positioning update to `main` in commit `a76ef0d`.
+  - Live GitHub Pages verification passed for `https://yscjrh.github.io/`: homepage content includes the updated project gateway markers.
+  - Live GitHub Pages verification passed for `https://yscjrh.github.io/projects/`: `/projects/` includes `Best for / 适合谁`, `Proof path / 可检视证据`, `Boundary / 边界`, `WinChronicle`, and `encourage-loop`.
 - Next:
-  - Run final validation, stage only intended files, commit, push `main`, and verify the live GitHub Pages site reflects the update.
+  - No immediate blocker. Future visual work should start from the published inventory and IA rather than changing project priority blindly.
 
 ## 2026-06-08 Homepage/project positioning implementation
 - Status: Complete
