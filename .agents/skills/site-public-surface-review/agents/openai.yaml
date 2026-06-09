@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Public Surface Review"
+  short_description: "Review public site pages, links, layout, and claim boundaries."
+  default_prompt: "Review the current public site surface and recommend the smallest evidence-backed improvement checkpoint."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Accessibility Bilingual Review"
+  short_description: "Check bilingual UI, ARIA, focus, and dynamic public labels."
+  default_prompt: "Review the affected site changes for bilingual public UI and accessibility regressions."

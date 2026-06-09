@@ -1,9 +1,97 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-08 homepage/project positioning publication
-- Status: Published and live-verified on GitHub Pages
-- Last updated: 2026-06-08
+- Active: 2026-06-10 final pre-publish visual review
+- Status: Local pre-publish review passed after small accessibility/metadata fixes; not published in this checkpoint
+- Last updated: 2026-06-10
+
+## 2026-06-10 Final pre-publish visual review
+- Status: Local go for publish after fixes; not staged, pushed, or published in this checkpoint
+- Trigger:
+  - User asked for a final visual review before online publication.
+- Checkpoint 1 - local render review:
+  - Started the local preview with `python tools/serve.py`; port `4173` was occupied, so the helper served the current working tree at `http://127.0.0.1:4174/`.
+  - Captured and reviewed fresh Chrome headless screenshots for `/`, `/projects/`, `/notes/`, and `/instrument/` at desktop and mobile widths:
+    - `tmp/prepublish-visual-2026-06-10/home-1366.png`
+    - `tmp/prepublish-visual-2026-06-10/home-390.png`
+    - `tmp/prepublish-visual-2026-06-10/projects-1366.png`
+    - `tmp/prepublish-visual-2026-06-10/projects-390.png`
+    - `tmp/prepublish-visual-2026-06-10/notes-1366.png`
+    - `tmp/prepublish-visual-2026-06-10/notes-390.png`
+    - `tmp/prepublish-visual-2026-06-10/instrument-1366.png`
+    - `tmp/prepublish-visual-2026-06-10/instrument-390.png`
+  - Visual read: the homepage now leads with `Fluorescence. Methods. Instruments. Open tools.`; project and notes cards remain readable; the Instrument route no longer wraps the desktop primary nav and keeps local orientation through the route chip.
+- Checkpoint 2 - release-risk and bilingual accessibility review:
+  - Used two bounded read-only subagents for release-risk and bilingual/accessibility review.
+  - Release-risk review found no public-claim blocker; it flagged share-card alt text that still used old `signals` wording.
+  - Bilingual/accessibility review found a publish blocker: homepage visitor-facing `aria-label` values were still English-only on several public UI regions.
+- Checkpoint 3 - fixes made during review:
+  - Paired homepage `aria-label` values with Chinese counterparts for project shortcuts, conceptual lab visual, core directions, project workflow, project flows, project tags, supporting project links, public-profile visual, and visitor routes.
+  - Updated share-card `og:image:alt` and `twitter:image:alt` on `/`, `/projects/`, `/notes/`, and `/instrument/` from `signals` to `fluorescence / 荧光`.
+  - Unified the Instrument mobile nav toggle label to `Toggle navigation menu / 开关导航菜单`.
+- Checkpoint 4 - validation after fixes:
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with LF-to-CRLF warnings only.
+  - `node --check script.js` passed.
+  - `node --check instrument/instrument.js` passed.
+  - Both repo-local skills passed `quick_validate.py`.
+  - Local routes returned `200` for `/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml`.
+  - Mobile browser structure pass at 390px confirmed one `h1`, a skip link to `#main`, mobile menu open/Escape close/focus return, and no page-level horizontal overflow on `/`, `/projects/`, and `/notes/`.
+  - `/instrument/` reported a 1px mobile horizontal-overflow reading tied to the intentionally scrollable onboarding strip; treated as polish debt, not a release blocker.
+  - `aria-label` bilingual scan returned no unpaired public labels after the fix.
+  - Lighthouse default-category local scores:
+    - `/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/projects/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/notes/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/instrument/`: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+- Remaining non-blocking notes:
+  - This checkpoint is local only; live GitHub Pages still needs a post-push spot check.
+  - `/instrument/` mobile first view keeps a visible horizontal onboarding scroller and a 1px overflow reading; improve only in a separate visual-polish pass to avoid broadening this release checkpoint.
+- Blockers:
+  - None after the bilingual `aria-label` and share-card alt fixes.
+
+## 2026-06-09 Front-end aesthetic and repo-local skill pass
+- Status: Complete locally; not published
+- Trigger:
+  - Active thread goal asked for autonomous front-end aesthetics and quality improvements, plus repo-local Codex skills when repeated workflows appear.
+- Checkpoint 1 - rendered review and homepage identity hierarchy:
+  - Re-read `AGENTS.md`, `personalweb.md`, `DESIGN_SYSTEM.md`, `PLANS.md`, `ACCESSIBILITY_CHECKLIST.md`, `PERFORMANCE_CHECKLIST.md`, `CONTENT_MODEL.md`, and the current progress log.
+  - Used bounded read-only subagents for visual quality review and skill-gardening review; the parent agent integrated only non-blocking, source-backed findings.
+  - Captured local Playwright screenshots for `/`, `/projects/`, `/notes/`, and `/instrument/` at desktop and mobile widths from `http://127.0.0.1:4174/`.
+  - Changed the homepage headline lead term from `Signals.` to `Fluorescence.` and raised the concrete positioning sentence with a quiet left rule.
+- Checkpoint 2 - Projects and Notes rhythm:
+  - Added `stream-card-draft` treatment so draft Method Notes read lower-priority than published note categories on the homepage and Notes hub.
+  - Tightened the `/projects/` mobile reading-path cards into a compact two-column internal layout so the final guide reads less like compressed desktop cards.
+- Checkpoint 3 - Instrument route orientation:
+  - Removed the route-only `Instrument / 仪器` item from the desktop/mobile primary nav to prevent desktop header wrapping.
+  - Added a local `Instrument Lab / 仪器实验室` route chip beside the return link for page orientation without restoring the header wrap risk.
+- Checkpoint 4 - repo-local skills:
+  - Audited `.agents/skills/`; it did not exist before this pass.
+  - Created `.agents/skills/site-public-surface-review/SKILL.md` for repeated public-surface visual, responsive, link, and claim-boundary review.
+  - Created `.agents/skills/site-accessibility-bilingual-review/SKILL.md` for repeated bilingual UI, ARIA, focus, dynamic-label, and mobile-menu review.
+  - Forward-tested both skills with a read-only subagent; added explicit read-only reviewer branches and navigation-orientation guidance based on the findings.
+  - Both repo-local skills passed `quick_validate.py`.
+- Checkpoint 5 - validation:
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with LF-to-CRLF warnings only.
+  - Local routes returned `200` for `/`, `/projects/`, `/notes/`, and `/instrument/`.
+  - Playwright CLI screenshots were reviewed after the changes:
+    - `tmp/goal-aesthetic-2026-06-09/after-home-1366.png`
+    - `tmp/goal-aesthetic-2026-06-09/after-fix-home-390.png`
+    - `tmp/goal-aesthetic-2026-06-09/after-projects-390.png`
+    - `tmp/goal-aesthetic-2026-06-09/after-fix-notes-390.png`
+    - `tmp/goal-aesthetic-2026-06-09/after-fix-notes-1366.png`
+    - `tmp/goal-aesthetic-2026-06-09/after-route-chip-instrument-1366.png`
+  - Lighthouse default-category local scores:
+    - `/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/projects/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/notes/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
+    - `/instrument/`: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+  - Temporary Playwright DOM automation attempts under `tmp/goal-aesthetic-2026-06-09/` were not counted as passing evidence: `playwright test` did not discover the temporary spec, and npm did not inject Playwright modules for a temporary Node script in this Windows environment.
+- Remaining risks / next:
+  - This checkpoint is local only; it has not been staged, committed, pushed, or published.
+  - The global ambient glow still leans somewhat dark-AI; reduce it only in a separate visual checkpoint with before/after screenshots.
+  - `/instrument/` mobile first view still carries a lot of explanation before interaction; treat as the next high-impact aesthetic candidate.
 
 ## 2026-06-08 Visual review and publication preparation
 - Status: Published and live-verified

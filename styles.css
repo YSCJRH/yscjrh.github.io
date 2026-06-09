@@ -1449,6 +1449,28 @@ button {
     rgba(10, 16, 28, 0.94);
 }
 
+.stream-card-draft {
+  border-color: rgba(255, 255, 255, 0.055);
+  background:
+    radial-gradient(circle at 94% 72%, rgba(123, 132, 232, 0.07), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.012)),
+    rgba(8, 9, 13, 0.88);
+}
+
+.stream-card-draft .stream-thumb {
+  opacity: 0.58;
+  filter: saturate(0.72);
+}
+
+.stream-card-draft .article-subtitle,
+.stream-card-draft h3 {
+  color: rgba(237, 237, 240, 0.76);
+}
+
+.stream-card-draft .stream-meta {
+  opacity: 0.82;
+}
+
 .stream-icon-wrap {
   display: flex;
   align-items: center;
@@ -1709,9 +1731,13 @@ button {
 
 .article-nav {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.48rem;
+  align-items: center;
 }
 
-.article-back {
+.article-back,
+.article-route-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -1721,6 +1747,14 @@ button {
   background: rgba(255, 255, 255, 0.025);
   color: var(--color-text-muted);
   text-decoration: none;
+}
+
+.article-route-chip {
+  border-color: rgba(139, 226, 214, 0.14);
+  background: rgba(139, 226, 214, 0.055);
+  color: rgba(196, 245, 239, 0.84);
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .article-back::before {
@@ -2321,8 +2355,8 @@ body {
 }
 
 .hero-title {
-  max-width: min(100%, 12.8ch);
-  font-size: 4.35rem;
+  max-width: min(100%, 13.8ch);
+  font-size: 4.05rem;
   line-height: 0.98;
   background: linear-gradient(180deg, #ffffff 0%, #ededf0 58%, rgba(237, 237, 240, 0.72) 100%);
   -webkit-background-clip: text;
@@ -2332,6 +2366,15 @@ body {
 
 .hero-title span {
   display: block;
+}
+
+.hero-positioning {
+  max-width: 49ch;
+  padding-left: 0.78rem;
+  border-left: 1px solid rgba(123, 132, 232, 0.34);
+  color: rgba(237, 237, 240, 0.9);
+  font-size: clamp(1rem, 1.18vw, 1.12rem);
+  line-height: 1.54;
 }
 
 .hero-focus-line {
@@ -4001,6 +4044,40 @@ section[id] {
   .workflow-step {
     min-height: 0;
     padding: 0.78rem;
+  }
+
+  .workflow-map-compact {
+    gap: 0.46rem;
+  }
+
+  .workflow-map-compact .workflow-step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.68rem;
+    row-gap: 0.16rem;
+    align-items: start;
+    padding: 0.68rem;
+  }
+
+  .workflow-map-compact .workflow-index {
+    grid-row: 1 / span 2;
+    margin: 0.08rem 0 0;
+  }
+
+  .workflow-map-compact .workflow-step h3 {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .workflow-map-compact .workflow-step p {
+    font-size: 0.8rem;
+    line-height: 1.48;
+  }
+
+  .workflow-map-compact .workflow-step::after {
+    right: -2.8rem;
+    bottom: -2.9rem;
+    opacity: 0.44;
   }
 
   .hero-shortcut,
