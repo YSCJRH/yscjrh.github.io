@@ -2,11 +2,11 @@
 
 ## Current milestone
 - Active: 2026-06-10 final pre-publish visual review
-- Status: Local pre-publish review passed after small accessibility/metadata fixes; not published in this checkpoint
+- Status: Published and live-verified on GitHub Pages
 - Last updated: 2026-06-10
 
 ## 2026-06-10 Final pre-publish visual review
-- Status: Local go for publish after fixes; not staged, pushed, or published in this checkpoint
+- Status: Published and live-verified
 - Trigger:
   - User asked for a final visual review before online publication.
 - Checkpoint 1 - local render review:
@@ -44,8 +44,12 @@
     - `/projects/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
     - `/notes/`: Performance `99`, Accessibility `100`, Best Practices `100`, SEO `100`.
     - `/instrument/`: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
+- Checkpoint 5 - publication:
+  - Published the visual hierarchy, bilingual accessibility, metadata, and repo-local skill updates to `main` in commit `b564caa`.
+  - Live GitHub Pages verification passed for `https://yscjrh.github.io/`, `/projects/`, `/notes/`, and `/instrument/`: each route returned `200` and contained the expected updated markers.
+  - Follow-up progress-log-only commit records this publication state.
 - Remaining non-blocking notes:
-  - This checkpoint is local only; live GitHub Pages still needs a post-push spot check.
+  - The live site is updated; keep the next post-publish spot check focused on real browser rendering rather than changing content priority again.
   - `/instrument/` mobile first view keeps a visible horizontal onboarding scroller and a 1px overflow reading; improve only in a separate visual-polish pass to avoid broadening this release checkpoint.
 - Blockers:
   - None after the bilingual `aria-label` and share-card alt fixes.
@@ -89,7 +93,7 @@
     - `/instrument/`: Performance `94`, Accessibility `100`, Best Practices `100`, SEO `100`.
   - Temporary Playwright DOM automation attempts under `tmp/goal-aesthetic-2026-06-09/` were not counted as passing evidence: `playwright test` did not discover the temporary spec, and npm did not inject Playwright modules for a temporary Node script in this Windows environment.
 - Remaining risks / next:
-  - This checkpoint is local only; it has not been staged, committed, pushed, or published.
+  - Published in the 2026-06-10 final pre-publish visual review checkpoint.
   - The global ambient glow still leans somewhat dark-AI; reduce it only in a separate visual checkpoint with before/after screenshots.
   - `/instrument/` mobile first view still carries a lot of explanation before interaction; treat as the next high-impact aesthetic candidate.
 
