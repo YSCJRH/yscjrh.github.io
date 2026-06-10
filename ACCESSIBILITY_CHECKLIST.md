@@ -1,10 +1,10 @@
 # Accessibility Checklist
 
-Status: M6 baseline complete  
-Last updated: 2026-05-08  
-Local preview used: `http://127.0.0.1:4174/`
+Status: 2026-06-10 refreshed baseline complete
+Last updated: 2026-06-10
+Latest local preview used: `http://127.0.0.1:4180/`
 
-This checklist records the current accessibility baseline for the static personal site. It is not a replacement for assistive-technology testing, but it gives future Codex passes a concrete set of checks.
+This checklist records the current accessibility baseline for the static personal site. It is not a replacement for assistive-technology testing, but it gives future Codex passes a concrete set of checks. The 2026-06-10 refresh includes the published Instrument Lab scroll-boundary fix and note metadata bilingual cleanup.
 
 ## Scope
 
@@ -41,13 +41,16 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 
 ## Results
 
-- `git diff --check` passed with line-ending warnings only.
-- Lighthouse accessibility score for `/`: `100`.
-- The initial Lighthouse run exposed accessible-name mismatches caused by redundant `aria-label` attributes on visible brand/GitHub links; those labels were removed and the rerun had no score-0 accessibility audits.
-- Optional axe CLI could not run in this environment because ChromeDriver targeted Chrome 148 while local Chrome was 147. This is recorded as an environment/tooling mismatch, not a site failure.
+- 2026-06-10 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-10 `git diff --check` passed.
+- 2026-06-10 syntax checks passed for shared and Instrument Lab JavaScript modules.
+- 2026-06-10 Chrome CDP checks covered the six public HTML pages at 390px, 768px, and 1366px: each page had one `h1`, a skip link to `#main`, no document/body horizontal overflow, no sampled sub-32px visible controls, and no console errors.
+- 2026-06-10 note article metadata ARIA labels were paired as `Note metadata / 笔记元信息`, `Reader path / 阅读路径`, and `Continue exploring / 继续阅读`.
+- Earlier M6 Lighthouse accessibility score for `/`: `100`.
+- Earlier optional axe CLI could not run in this environment because ChromeDriver targeted Chrome 148 while local Chrome was 147. This remains an environment/tooling mismatch, not a confirmed site failure.
 
 ## Remaining Manual Checks
 
 - Test with an actual screen reader before a public release if article-level bilingual reading quality becomes important.
-- Recheck `/instrument/` with keyboard-only interaction after any future changes to custom SVG controls or Three.js controls. The 2026-05-08 release pass included mobile menu keyboard flow and route-level Lighthouse coverage for `/instrument/`.
+- Recheck `/instrument/` with keyboard-only interaction after any future changes to custom SVG controls or Three.js controls. The 2026-05-08 release pass included mobile menu keyboard flow and route-level Lighthouse coverage for `/instrument/`; the 2026-06-10 refresh covered route-level DOM, overflow, and console behavior.
 - If compact slash labels become longer, consider replacing them with separate language spans and explicit `lang` attributes.

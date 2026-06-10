@@ -1,8 +1,8 @@
 # Performance And SEO Checklist
 
-Status: M7 baseline complete  
-Last updated: 2026-05-08  
-Local preview used: `http://127.0.0.1:4174/`
+Status: 2026-06-10 refreshed baseline complete
+Last updated: 2026-06-10
+Latest local preview used: `http://127.0.0.1:4180/`
 
 ## Scope
 
@@ -26,6 +26,7 @@ Core public pages:
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `sitemap.xml` exists and excludes `/review/`.
+- `sitemap.xml` `lastmod` values were refreshed to `2026-06-10` after the published visual, metadata, and Instrument Lab fixes.
 - The former `/review/` internal review route is retired from the deployable tree.
 - JSON-LD was intentionally not added because encoding personal identity facts should wait until About content is more stable.
 - `feed.xml` was intentionally deferred; current published notes are few enough that a feed maintenance flow would add more overhead than value.
@@ -50,11 +51,14 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 
 ## Results
 
-- `git diff --check` passed with line-ending warnings only.
-- `robots.txt`, `sitemap.xml`, and `assets/og-card.png` returned `200` from local preview.
-- Metadata presence check passed for title, description, canonical, favicon, Open Graph, and Twitter Card fields on all checked HTML pages.
-- `/review/` is not present as an HTML page in the deployable tree; it remains excluded from `sitemap.xml` and disallowed in `robots.txt`.
-- Lighthouse score for `/`:
+- 2026-06-10 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-10 `git diff --check` passed.
+- 2026-06-10 local and live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
+- 2026-06-10 local and live `/review/` checks returned `404`; the former internal review route remains absent from the deployable tree, excluded from `sitemap.xml`, and disallowed in `robots.txt`.
+- 2026-06-10 external link check returned `200` for 20 checked GitHub, GitHub Pages, NIST, and USGS URLs.
+- 2026-06-10 metadata presence check passed for title, description, canonical, favicon, Open Graph, and Twitter Card fields on all checked HTML pages.
+- 2026-06-10 note article share-card alt metadata was updated to the current bilingual `fluorescence, methods, instruments, and open tools / 荧光、方法、仪器与开放工具` wording.
+- Earlier M7 Lighthouse score for `/`:
   - Performance: `99`
   - Best Practices: `100`
   - SEO: `100`

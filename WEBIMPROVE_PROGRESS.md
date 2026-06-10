@@ -1,9 +1,45 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-10 final pre-publish visual review
-- Status: Published and live-verified on GitHub Pages
+- Active: 2026-06-10 final convergence metadata and maintenance cleanup
+- Status: Locally validated; pending publication
 - Last updated: 2026-06-10
+
+## 2026-06-10 Final convergence metadata and maintenance cleanup
+- Status: Locally validated; pending publication
+- Trigger:
+  - User asked to push and publish the latest version after the Instrument Lab overlap repair and publication pass.
+- Checkpoint - remaining machine-detectable issues:
+  - Bounded read-only reviewers found that the two published note pages still used stale share-card alt metadata from the older `signals, methods, instruments, and open tools` wording.
+  - The note article landmark labels for metadata, reader path, and continuation navigation were still English-only in `aria-label` values.
+  - `sitemap.xml`, `ACCESSIBILITY_CHECKLIST.md`, and `PERFORMANCE_CHECKLIST.md` still carried stale 2026-05-08 baseline values after the 2026-06-10 visual and Instrument Lab fixes.
+- Changes:
+  - Updated both published note pages to use bilingual share-card alt metadata: `fluorescence, methods, instruments, and open tools / 荧光、方法、仪器与开放工具`.
+  - Paired note article `aria-label` values as `Note metadata / 笔记元信息`, `Reader path / 阅读路径`, and `Continue exploring / 继续阅读`.
+  - Refreshed all public `sitemap.xml` `lastmod` values to `2026-06-10`.
+  - Refreshed `ACCESSIBILITY_CHECKLIST.md` and `PERFORMANCE_CHECKLIST.md` so the recorded baseline matches the current route set, local preview, metadata cleanup, and Instrument Lab scroll-boundary repair.
+- Validation result:
+  - `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - `git diff --check` passed after removing trailing whitespace.
+  - JavaScript syntax checks passed for `script.js`, `instrument/instrument.js`, `instrument/sim/ui/source-data.mjs`, `instrument/sim/scene/InstrumentScene.mjs`, and `instrument/sim/state.mjs`.
+  - Instrument tests passed: `node instrument/sim/tests/physics.test.mjs` reported 12/12 tests and `node instrument/sim/tests/source-data.test.mjs` reported 5/5 tests.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - Local route checks on `http://127.0.0.1:4180/` returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`; local `/review/` returned `404`.
+  - Chrome DevTools Protocol QA passed for the six public HTML pages at 390px, 768px, and 1366px: one `h1`, skip link to `#main`, no document/body horizontal overflow, no sampled sub-32px visible controls, no console errors, and current bilingual note metadata.
+  - Instrument source-data geometry QA passed after forced scroll at 390px, 768px, and 1366px: source panel top reached the viewport, model/source overlap stayed `0`, desktop sticky remained `sticky`, and optional 3D mode created one canvas.
+  - Chrome extension backend spot check passed on the build-log note page: one `h1`, skip link, `#main`, current bilingual `og:image:alt`, paired note `aria-label` values, zero horizontal overflow, and no error logs.
+- Evidence:
+  - Fresh screenshots and machine-readable records are under `tmp/final-convergence/`, including:
+    - `home-390.png`
+    - `projects-390.png`
+    - `note-build-390.png`
+    - `instrument-390-source.png`
+    - `instrument-1366-source.png`
+    - `instrument-1366-3d.png`
+- Remaining non-blocking notes:
+  - Human taste review, real screen-reader reading quality, and future external-link drift remain outside machine-detectable completion.
+- Blockers:
+  - None.
 
 ## 2026-06-10 Final pre-publish visual review
 - Status: Published and live-verified
