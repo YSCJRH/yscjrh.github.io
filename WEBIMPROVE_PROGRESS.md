@@ -2,11 +2,11 @@
 
 ## Current milestone
 - Active: 2026-06-10 final convergence external-link repair
-- Status: Local external-link repair validated; pending publication
+- Status: Published and live-verified on GitHub Pages
 - Last updated: 2026-06-10
 
 ## 2026-06-10 Final convergence external-link repair
-- Status: Local fix validated; pending publication
+- Status: Published and live-verified
 - Trigger:
   - Final machine-detectable completion audit found one public external source link that was brittle for local HTTP clients.
 - Finding:
@@ -19,6 +19,10 @@
   - `git diff --check` passed with line-ending warnings only.
   - Python external-link audit passed for 19 unique public external links after switching the USGS source link to DOI.
   - Local `/instrument/` route returned `200` from `http://127.0.0.1:4180/instrument/`.
+- Checkpoint - publication:
+  - Published the DOI link repair to `main` in commit `6857f64`.
+  - Live GitHub Pages verification confirmed `/instrument/` contains `https://doi.org/10.3133/tm1D11`.
+  - Live external-link audit passed for 19 unique public links across `/`, `/projects/`, `/notes/`, both published note pages, and `/instrument/`.
 - Blockers:
   - None.
 
