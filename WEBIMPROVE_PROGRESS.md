@@ -1,9 +1,26 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-10 final convergence metadata and maintenance cleanup
-- Status: Published and live-verified on GitHub Pages
+- Active: 2026-06-10 final convergence external-link repair
+- Status: Local external-link repair validated; pending publication
 - Last updated: 2026-06-10
+
+## 2026-06-10 Final convergence external-link repair
+- Status: Local fix validated; pending publication
+- Trigger:
+  - Final machine-detectable completion audit found one public external source link that was brittle for local HTTP clients.
+- Finding:
+  - `https://pubs.usgs.gov/publication/tm1D11/full` is indexed and public, but local `Invoke-WebRequest` failed with a transport EOF and the Python link checker could not verify it reliably.
+  - The canonical DOI entry `https://doi.org/10.3133/tm1D11` returned `200` and resolved to the same USGS report landing page.
+- Change:
+  - Updated the Instrument Lab `USGS fluorescence field guidance` source link to the DOI entry.
+- Validation result:
+  - `python tools/check_site.py` passed for the six public HTML pages and deployable metadata files.
+  - `git diff --check` passed with line-ending warnings only.
+  - Python external-link audit passed for 19 unique public external links after switching the USGS source link to DOI.
+  - Local `/instrument/` route returned `200` from `http://127.0.0.1:4180/instrument/`.
+- Blockers:
+  - None.
 
 ## 2026-06-10 Final convergence metadata and maintenance cleanup
 - Status: Published and live-verified
