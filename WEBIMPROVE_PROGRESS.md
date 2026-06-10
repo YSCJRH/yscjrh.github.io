@@ -816,3 +816,42 @@
   - Exact physical fidelity to a specific real monochromator mechanism still requires manufacturer/model-specific dimensions or human confirmation. The public page now avoids claiming that level of fidelity.
 - Blockers:
   - None.
+
+## Instrument scroll-boundary repair and final local QA
+- Status: Completed and published
+- Trigger:
+  - User reported that `/instrument/` visually overlapped while scrolling: the sticky concept-model area remained visible behind the source-derived examples panel.
+- Root cause:
+  - `.source-data-panel` and the teaching panels were still inside `.instrument-workstation`.
+  - `.instrument-model-panel` is sticky inside that workstation, while `.source-data-panel` spans the full grid. On desktop, the sticky model could remain in the viewport as the translucent source-derived section scrolled into the same area.
+- Changes:
+  - Closed `.instrument-workstation` before the source-derived examples.
+  - Added `.instrument-evidence-stack` to hold source-derived examples and teaching panels after the workstation.
+  - Added `.site-shell { overflow-x: clip; }` to remove the mobile 1px document overflow without using root `html` overflow clipping.
+  - Removed the attempted `html { overflow-x: hidden; }` approach because CDP testing showed it breaks desktop sticky behavior.
+- Review results:
+  - Visual/layout subagent found the overlap fixed but flagged sticky behavior loss under root overflow clipping. This was reproduced and corrected.
+  - Public-trust/bilingual subagent found no claim, privacy, dependency, form, analytics, calibration, or bilingual/accessibility regression in the narrow diff.
+  - Browser/Chrome plugin CUA scroll check passed after the final CSS approach: `docOverflow = 0`, `bodyOverflow = 0`, `modelPosition = sticky`, `siteOverflow = clip/visible`, and model/source `overlapHeight = 0`.
+- Validation result:
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only LF-to-CRLF working-copy warnings.
+  - `node --check script.js` passed.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/ui/source-data.mjs` passed.
+  - `node instrument/sim/tests/physics.test.mjs` passed: 12/12.
+  - `node instrument/sim/tests/source-data.test.mjs` passed: 5/5.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - Local route checks returned `200` for `/`, `/projects/`, `/notes/`, `/instrument/`, `/robots.txt`, and `/sitemap.xml`.
+  - Chrome CDP route QA passed for all 6 public HTML pages at 390px, 768px, and 1366px: one `h1`, skip link/main target present, no document/body horizontal overflow, no small visible controls under the sampled threshold, and no console errors.
+  - Chrome CDP instrument geometry QA passed at 390px, 768px, 1100px, 1366px, and 2048px: model/source overlap stayed `0`; desktop sticky behavior remained active at 1366px and 2048px; optional 3D mode created one canvas and still had overlap `0`.
+- Evidence:
+  - Screenshots saved under `tmp/instrument-overlap-fix-2026-06-10/`, including:
+    - `final-instrument-2048-source.png`
+    - `final-instrument-390-source.png`
+    - `final-instrument-1366-3d-source.png`
+    - `browser-plugin-final-cua-source.png`
+- Remaining non-blocking notes:
+  - GitHub Pages publication is verified after the commit is pushed because the live site updates asynchronously.
+- Blockers:
+  - None.

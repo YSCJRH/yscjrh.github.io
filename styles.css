@@ -197,6 +197,7 @@ button {
 .site-shell {
   position: relative;
   z-index: 1;
+  overflow-x: clip;
 }
 
 .container {
@@ -4259,6 +4260,12 @@ section[id] {
   grid-template-columns: minmax(0, 1.16fr) minmax(22.5rem, 0.84fr);
   gap: 0.72rem;
   align-items: start;
+}
+
+.instrument-evidence-stack {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
 }
 
 .instrument-onboarding {
