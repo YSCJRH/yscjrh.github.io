@@ -2,11 +2,11 @@
 
 ## Current milestone
 - Active: 2026-06-10 final convergence metadata and maintenance cleanup
-- Status: Locally validated; pending publication
+- Status: Published and live-verified on GitHub Pages
 - Last updated: 2026-06-10
 
 ## 2026-06-10 Final convergence metadata and maintenance cleanup
-- Status: Locally validated; pending publication
+- Status: Published and live-verified
 - Trigger:
   - User asked to push and publish the latest version after the Instrument Lab overlap repair and publication pass.
 - Checkpoint - remaining machine-detectable issues:
@@ -28,6 +28,10 @@
   - Chrome DevTools Protocol QA passed for the six public HTML pages at 390px, 768px, and 1366px: one `h1`, skip link to `#main`, no document/body horizontal overflow, no sampled sub-32px visible controls, no console errors, and current bilingual note metadata.
   - Instrument source-data geometry QA passed after forced scroll at 390px, 768px, and 1366px: source panel top reached the viewport, model/source overlap stayed `0`, desktop sticky remained `sticky`, and optional 3D mode created one canvas.
   - Chrome extension backend spot check passed on the build-log note page: one `h1`, skip link, `#main`, current bilingual `og:image:alt`, paired note `aria-label` values, zero horizontal overflow, and no error logs.
+- Checkpoint - publication:
+  - Published metadata, sitemap, and baseline documentation cleanup to `main` in commit `11db88b`.
+  - Live GitHub Pages verification passed for `sitemap.xml`, both published note pages, and the updated bilingual metadata/ARIA markers.
+  - Live Chrome DevTools Protocol QA passed against `https://yscjrh.github.io` for the six public HTML pages at 390px, 768px, and 1366px with `0` failures.
 - Evidence:
   - Fresh screenshots and machine-readable records are under `tmp/final-convergence/`, including:
     - `home-390.png`
