@@ -1,4 +1,36 @@
-# Current Phase: Instrument Lab Source-derived Teaching Layer
+# Current Phase: Instrument Lab Refine Reconstruction
+
+## Goal
+- Execute `refine.md` as the active long-cycle specification for `/instrument/`.
+- Move the page from a text-heavy concept demo toward a static, interaction-first fluorescence instrument teaching simulator with explicit science boundaries.
+- Preserve the current static-site constraints, local Three.js route scope, no runtime public data fetches, and no real control/calibration claims.
+
+## Current Phase 0 Baseline
+- `refine.md` is the active reconstruction spec and should be tracked with this work unless a later decision says otherwise.
+- `docs/instrument-research-log.md` is the authority for new scientific claims and model-boundary evidence.
+- `instrument/MODEL.md` records the current model chain and target response-chain direction.
+- `docs/decisions/2026-06-11-instrument-lab-refine-scope.md` records the staged evidence-first reconstruction decision.
+
+## Immediate Implementation Notes
+1. Do not expand public science copy without a research-log claim ID.
+2. Keep source-derived examples display-only and governed by `instrument/data/manifest.json`.
+3. Add model-invariant tests before replacing synthetic spectrum behavior.
+4. Move toward pure `physics/*` modules for source, detector, sample, geometry, artifacts, instrument function, radiometry, and scan composition.
+5. Phase 1 UI work should reduce first-screen explanation density without deleting truth boundaries.
+
+## Validation
+1. Baseline commands:
+   - `node --check instrument/instrument.js`
+   - `node --test instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`
+   - `node tools/preprocess-instrument-data.js --validate`
+   - `python tools/check_site.py`
+   - `git diff --check`
+2. Browser QA must cover `/instrument/` first viewport, controls, diagnostics, source-derived examples, 2D fallback, console logs, keyboard path, mobile width, and reduced motion.
+3. Completion requires requirement-by-requirement proof against `refine.md` section 9, not just green tests.
+
+---
+
+# Previous Phase: Instrument Lab Source-derived Teaching Layer
 
 ## Goal
 - Strengthen `/instrument/` with trusted fluorescence-material and instrumentation context without turning it into a material optimizer, calibrated simulator, or real instrument controller.
