@@ -21,6 +21,26 @@ function setDisabled(element, disabled) {
   element.disabled = disabled;
 }
 
+function percentText(value) {
+  const numeric = Number(value);
+
+  if (!Number.isFinite(numeric)) {
+    return "--";
+  }
+
+  return `${Math.round(Math.min(Math.max(numeric, 0), 1) * 100)}%`;
+}
+
+function headroomText(saturationRatio) {
+  const numeric = Number(saturationRatio);
+
+  if (!Number.isFinite(numeric)) {
+    return "--";
+  }
+
+  return percentText(1 - numeric);
+}
+
 function pointsToPolyline(series) {
   const width = chart.right - chart.left;
   const height = chart.bottom - chart.top;
@@ -72,6 +92,10 @@ export function collectInstrumentElements(root) {
       throughput: root.querySelector('[data-readout="throughput"]'),
       overlap: root.querySelector('[data-readout="overlap"]'),
       collection: root.querySelector('[data-readout="collection"]'),
+      responseSource: root.querySelector('[data-readout="response-source"]'),
+      responseSample: root.querySelector('[data-readout="response-sample"]'),
+      responseDetector: root.querySelector('[data-readout="response-detector"]'),
+      signalHeadroom: root.querySelector('[data-readout="signal-headroom"]'),
     },
     emissionLabel: root.querySelector("[data-emission-label]"),
     modeSummary: root.querySelector("[data-mode-summary]"),
@@ -111,6 +135,10 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.throughput, `${Math.round(derived.throughput * 100)}%`);
   setText(readouts.overlap, `${Math.round(derived.alignment.overlapFactor * 100)}%`);
   setText(readouts.collection, `${Math.round(derived.collection.collectionFactor * 100)}%`);
+  setText(readouts.responseSource, percentText(derived.responseChain?.source?.atExcitation));
+  setText(readouts.responseSample, percentText(derived.responseChain?.sample?.absorptionAtExcitation));
+  setText(readouts.responseDetector, percentText(derived.responseChain?.detector?.atEmission));
+  setText(readouts.signalHeadroom, headroomText(derived.responseChain?.signal?.saturationRatio));
   setText(elements.sampleNote, derived.spectrum.profile.description);
 
   setDisabled(controls.emissionWavelength, false);

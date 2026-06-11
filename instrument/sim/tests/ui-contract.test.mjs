@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { collectInstrumentElements, updateDiagnostics } from "../ui/spectrum.mjs";
+import { collectInstrumentElements, updateControlsFromState, updateDiagnostics } from "../ui/spectrum.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
@@ -163,4 +163,74 @@ test("diagnostic cards expose machine-readable evidence keys", () => {
   assert.equal(diagnosticsList.children.length, 1);
   assert.equal(diagnosticsList.children[0].attributes["data-evidence-key"], "ILAB-004");
   assert.match(diagnosticsList.children[0].attributes["aria-label"], /ILAB-004/);
+});
+
+test("workbench exposes response-chain factor readouts", () => {
+  for (const readout of ["response-source", "response-sample", "response-detector", "signal-headroom"]) {
+    assert.match(
+      instrumentHtml,
+      new RegExp(`data-readout="${readout}"`),
+      `${readout} should be visible in the main workbench`
+    );
+  }
+
+  const textNode = () => ({ textContent: "" });
+  const elements = {
+    controls: {
+      emissionWavelength: { disabled: true },
+    },
+    readouts: {
+      excitationAngle: textNode(),
+      emissionAngle: textNode(),
+      excitation: textNode(),
+      emission: textNode(),
+      slit: textNode(),
+      bandpass: textNode(),
+      integration: textNode(),
+      sourceOffset: textNode(),
+      detectorAngle: textNode(),
+      throughput: textNode(),
+      overlap: textNode(),
+      collection: textNode(),
+      responseSource: textNode(),
+      responseSample: textNode(),
+      responseDetector: textNode(),
+      signalHeadroom: textNode(),
+    },
+    sampleNote: textNode(),
+    emissionLabel: textNode(),
+  };
+
+  updateControlsFromState(
+    elements,
+    {
+      exMono: { gratingAngleDeg: 12.9 },
+      emMono: { gratingAngleDeg: 18.5 },
+      slit: { widthUm: 500 },
+      integrationTimeMs: 200,
+      source: { offsetUm: 0 },
+      detector: { angleDeg: 90 },
+    },
+    {
+      excitationNm: 365,
+      emissionNm: 520,
+      bandpassNm: 4.6,
+      throughput: 0.75,
+      alignment: { overlapFactor: 0.8 },
+      collection: { collectionFactor: 0.9 },
+      scanMeta: { emissionControlLabel: "Emission wavelength / 发射波长" },
+      spectrum: { profile: { description: "Synthetic teaching preset. / 合成教学预设。" } },
+      responseChain: {
+        source: { atExcitation: 0.64 },
+        sample: { absorptionAtExcitation: 0.72 },
+        detector: { atEmission: 0.58 },
+        signal: { saturationRatio: 0.31 },
+      },
+    }
+  );
+
+  assert.equal(elements.readouts.responseSource.textContent, "64%");
+  assert.equal(elements.readouts.responseSample.textContent, "72%");
+  assert.equal(elements.readouts.responseDetector.textContent, "58%");
+  assert.equal(elements.readouts.signalHeadroom.textContent, "69%");
 });
