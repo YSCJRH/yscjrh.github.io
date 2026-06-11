@@ -8,6 +8,7 @@ import { collectInstrumentElements, updateControlsFromState, updateDiagnostics }
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
 const instrumentScript = readFileSync(resolve(here, "../../instrument.js"), "utf8");
+const siteStyles = readFileSync(resolve(here, "../../../styles.css"), "utf8");
 
 function blocksForClass(className) {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -35,6 +36,20 @@ test("advanced geometry copy separates geometry mode from detector arm offset", 
 
   assert.match(advancedCopy, /Geometry mode \/ 几何模式/);
   assert.match(advancedCopy, /Detector arm offset \/ 检测臂偏离/);
+});
+
+test("mobile onboarding stays stacked and keeps explanatory copy visible", () => {
+  const instrumentOnboardingIndex = siteStyles.indexOf(".instrument-onboarding {", siteStyles.indexOf("@media (max-width: 780px)", siteStyles.indexOf(".teaching-card-grid")));
+  const nextMobileBlockIndex = siteStyles.indexOf("@media (max-width: 560px)", instrumentOnboardingIndex);
+  assert.ok(instrumentOnboardingIndex > 0, "expected mobile instrument onboarding CSS");
+  assert.ok(nextMobileBlockIndex > instrumentOnboardingIndex, "expected next mobile CSS block");
+  const mobileBlock = siteStyles.slice(instrumentOnboardingIndex, nextMobileBlockIndex);
+  const onboardingRule = mobileBlock.match(/\.instrument-onboarding\s*\{[\s\S]*?\}/)?.[0] || "";
+  const onboardingSpanRule = mobileBlock.match(/\.instrument-onboarding span\s*\{[\s\S]*?\}/)?.[0] || "";
+
+  assert.match(mobileBlock, /\.instrument-onboarding\s*\{[\s\S]*grid-template-columns:\s*1fr/);
+  assert.doesNotMatch(onboardingRule, /overflow-x:\s*auto/);
+  assert.doesNotMatch(onboardingSpanRule, /display:\s*none/);
 });
 
 test("instrument element collection includes advanced response-chain controls", () => {

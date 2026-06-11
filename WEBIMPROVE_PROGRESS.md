@@ -2,8 +2,34 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest model slice locally verified
+- Status: In progress; latest browser QA slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Browser QA and mobile onboarding slice
+- Status: Local Chrome headless QA passed for the checked `/instrument/` paths; full human visual review and final DoD audit remain open.
+- Trigger:
+  - DoD audit identified missing browser/visual evidence for first viewport, console errors, mobile, reduced motion, source-derived examples, optional 3D, and fallback behavior.
+  - Chrome headless screenshots showed the mobile onboarding cards were horizontally clipped at 390px even though the page had no global horizontal overflow.
+- Changes:
+  - Added a UI contract test requiring mobile onboarding to stack and keep explanatory copy visible.
+  - Changed the Instrument Lab mobile onboarding CSS from horizontal scroll cards to a single-column readable stack under 780px.
+- Browser QA evidence:
+  - Local preview: `http://127.0.0.1:4173/instrument/` returned 200 with `geometry-readout-20260611`.
+  - Desktop Chrome headless 1366x900: first viewport includes the interactive workbench; no horizontal overflow; console issue count 0.
+  - Desktop interaction: setting geometry mode to `transmission` and detector arm to `82.0 deg` changed geometry readout to `16%` and showed both `Geometry mode / 几何模式` and `Detector arm offset / 检测臂偏离`; old `90 degree geometry / 90° 几何` label absent.
+  - Desktop source-derived section: local source example loaded, 3 dataset cards rendered, manifest boundary text displayed.
+  - Desktop optional 3D: enabling the 3D model produced 1 canvas and status `3D teaching skeleton active...`.
+  - Mobile Chrome headless 390x900 with `prefers-reduced-motion: reduce`: no horizontal overflow; workbench remains visible in the first viewport; onboarding cards are full-width, stacked, and their explanatory spans remain visible.
+  - Screenshot evidence written to `tmp/instrument-desktop-qa.png` and `tmp/instrument-mobile-reduced-qa-fixed.png`.
+- Validation result:
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/ui/spectrum.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 50/50.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+- Remaining notes:
+  - Browser/Chrome connector tools were not exposed in this turn, so QA used local Chrome headless through DevTools Protocol instead of the Codex Browser extension backend.
+  - This is automated browser evidence, not a human comprehension study for the 30-second criterion.
 
 ## 2026-06-11 Geometry readout semantics slice
 - Status: Local UI-contract verification passed; full browser QA remains pending for the overall `refine.md` closeout.
