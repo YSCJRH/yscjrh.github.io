@@ -138,5 +138,5 @@ Rules:
 - Detector response presets: `ideal-flat`, `pmt-like-visible`, and `silicon-like` now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured/not-calibrated boundary. Add evidence before using real detector responsivity curves.
 - Noise model: ILAB-010 covers the current deterministic teaching perturbation and headroom boundary. Add a new evidence entry before introducing real shot/read/dark-noise formulas, SNR, detection-limit, or detector-linearity claims.
 - Instrument function: ILAB-011 covers the current Gaussian teaching convolution. Add a new evidence entry before claiming a measured slit function, wavelength accuracy, or manufacturer-specific bandpass mapping.
-- Sample presets: migrate hard-coded profiles to data files and avoid real material names unless source support is sufficient.
+- Sample presets: JSON-backed teaching presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and a bilingual not-measured sample boundary. Continue avoiding real material names unless source support is sufficient.
 - Source-derived data: keep `instrument/data/manifest.json` as the authority for DOI, license, processing, axes, claim boundaries, `claimLevel`, and display-only control binding.

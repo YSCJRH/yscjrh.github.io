@@ -54,8 +54,11 @@ test("sample presets are backed by static JSON data with teaching boundaries", (
 
     assert.equal(sample.id, expectedId);
     assert.equal(sample.claimLevel, "synthetic-teaching");
+    assert.equal(sample.controlBinding, "simulator-control");
+    assert.equal(sample.evidenceKey, "ILAB-008");
     assertLocalizedText(sample.label, `${sample.id}.label`);
     assertLocalizedText(sample.notes, `${sample.id}.notes`);
+    assertLocalizedText(sample.boundary, `${sample.id}.boundary`);
     assertGaussianMixture(sample.absorption, `${sample.id}.absorption`);
     assertGaussianMixture(sample.emission, `${sample.id}.emission`);
     assert.equal(Number.isFinite(sample.quantumYieldTeaching), true);
@@ -85,6 +88,9 @@ test("runtime sample profiles are derived from sample preset data", () => {
     assert.equal(profile.emissionPeak, preset.emission.peaks[0].centerNm);
     assert.equal(profile.amplitude, preset.quantumYieldTeaching);
     assert.equal(profile.claimLevel, "synthetic-teaching");
+    assert.equal(profile.controlBinding, "simulator-control");
+    assert.equal(profile.evidenceKey, "ILAB-008");
+    assert.equal(profile.boundary, `${preset.boundary.en} / ${preset.boundary.zh}`);
     assert.equal(option.label, profile.name);
   }
 });

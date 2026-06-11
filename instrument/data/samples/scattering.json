@@ -5,6 +5,12 @@
     "zh": "散射样品"
   },
   "claimLevel": "synthetic-teaching",
+  "controlBinding": "simulator-control",
+  "evidenceKey": "ILAB-008",
+  "boundary": {
+    "en": "Synthetic teaching preset controlled only by the simulator; not a measured sample spectrum.",
+    "zh": "仅由模拟器控制的合成教学预设，不是实测样品谱图。"
+  },
   "absorption": {
     "type": "gaussian-mixture",
     "peaks": [

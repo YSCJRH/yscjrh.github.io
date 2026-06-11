@@ -1,7 +1,7 @@
 import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=wavelength-control-20260429";
 import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
 import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=detector-arm-20260611";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=sample-boundary-20260611";
 import { generateDiagnostics } from "./diagnostics.mjs?v=detector-arm-20260611";
 import { deriveArtifactRisks } from "./artifacts.mjs?v=response-chain-20260611";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
@@ -10,7 +10,7 @@ import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { evaluateGaussianMixture } from "./sample.mjs?v=response-chain-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=sample-data-20260611";
+import { SAMPLE_PROFILES } from "../state.mjs?v=sample-boundary-20260611";
 
 const DEFAULT_SOURCE_ID = "xenon-like";
 const DEFAULT_DETECTOR_ID = "pmt-like-visible";

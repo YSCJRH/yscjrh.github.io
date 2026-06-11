@@ -5,7 +5,7 @@ import {
   gratingAngleFromWavelength,
   wavelengthFromGratingAngle,
 } from "./physics/grating.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES } from "./data/samplePresets.mjs?v=sample-data-20260611";
+import { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES } from "./data/samplePresets.mjs?v=sample-boundary-20260611";
 
 export { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES };
 

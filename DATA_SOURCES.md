@@ -28,6 +28,9 @@ Use these statuses before any new public data or material example is embedded:
 `instrument/data/samples/*.json` stores the simulator's synthetic sample presets. These files are not source-derived spectra and do not claim to represent calibrated materials.
 
 - `claimLevel` is `synthetic-teaching`.
+- `controlBinding` is `simulator-control`, so these presets are explicitly controlled by the simulator rather than by source-derived data.
+- `evidenceKey` points to the current research-log boundary for normalized teaching placeholders.
+- `boundary` is bilingual and states that the preset is synthetic, simulator-controlled, and not a measured sample spectrum.
 - `sources` remains an empty array unless a future preset is backed by reviewed source data and a decision record.
 - The runtime module `instrument/sim/data/samplePresets.mjs` derives compact legacy profile fields from those teaching presets for the current static ES module simulator.
 - Source-derived examples remain indexed by `instrument/data/manifest.json` and stay separate from these simulator controls.

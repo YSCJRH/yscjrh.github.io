@@ -2,8 +2,32 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest sample preset option sync slice locally verified
+- Status: In progress; latest sample preset boundary metadata slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Sample preset boundary metadata slice
+- Status: Local tests, data validation, site check, diff check, and Chrome headless smoke passed; full final `refine.md` DoD audit remains open.
+- Trigger:
+  - `refine.md` requires synthetic controls and source-derived examples to stay visibly and mechanically separate.
+  - Source and detector presets already carried machine-readable teaching boundaries, but sample presets only carried `claimLevel` and empty `sources`.
+- Changes:
+  - Added a TDD contract requiring every synthetic sample JSON preset to declare `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and bilingual not-measured boundary copy.
+  - Propagated the same boundary metadata into runtime `SAMPLE_PROFILES`.
+  - Bumped `/instrument/` route-local ESM cache keys to `sample-boundary-20260611`.
+  - Updated `DATA_SOURCES.md`, `docs/instrument-research-log.md`, and `instrument/MODEL.md` to record that sample presets are synthetic simulator controls, not measured sample spectra.
+- Validation result:
+  - TDD RED confirmed `node --test instrument/sim/tests/sample-data.test.mjs` failed because sample presets lacked `simulator-control` metadata.
+  - `node --test instrument/sim/tests/sample-data.test.mjs` passed: 2/2.
+  - `node --check instrument/instrument.js; node --check instrument/sim/state.mjs; node --check instrument/sim/data/samplePresets.mjs; node --check instrument/sim/physics/derive.mjs; node --check instrument/sim/physics/spectrum.mjs; node --check instrument/sim/ui/spectrum.mjs; node --check instrument/sim/tests/sample-data.test.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 54/54.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Local preview `http://127.0.0.1:4173/instrument/?qa=sample-boundary` returned 200 and contained `sample-boundary-20260611`.
+  - Chrome headless CDP smoke passed: runtime sample option count was 4, selected sample stayed `low-background`, console error/exception list was empty, and horizontal overflow was 0.
+- Remaining notes:
+  - This does not introduce real material presets or public source-derived sample spectra.
+  - The runtime module still mirrors compact sample records for the static ES module simulator; future work can reduce duplication if it becomes a real maintenance burden.
 
 ## 2026-06-11 Sample preset option sync slice
 - Status: Local tests, data validation, site check, diff check, and Chrome headless smoke passed; full final `refine.md` DoD audit remains open.

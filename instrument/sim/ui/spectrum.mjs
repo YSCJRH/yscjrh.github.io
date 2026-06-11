@@ -1,4 +1,4 @@
-import { MODES, PARTS, SAMPLE_PRESET_OPTIONS } from "../state.mjs?v=sample-data-20260611";
+import { MODES, PARTS, SAMPLE_PRESET_OPTIONS } from "../state.mjs?v=sample-boundary-20260611";
 
 const chart = {
   left: 54,

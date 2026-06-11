@@ -1,3 +1,8 @@
+const SAMPLE_PRESET_BOUNDARY = Object.freeze({
+  en: "Synthetic teaching preset controlled only by the simulator; not a measured sample spectrum.",
+  zh: "仅由模拟器控制的合成教学预设，不是实测样品谱图。",
+});
+
 export const TEACHING_SAMPLE_PRESETS = Object.freeze({
   "low-background": {
     id: "low-background",
@@ -6,6 +11,9 @@ export const TEACHING_SAMPLE_PRESETS = Object.freeze({
       zh: "低背景样品",
     },
     claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-008",
+    boundary: SAMPLE_PRESET_BOUNDARY,
     absorption: {
       type: "gaussian-mixture",
       peaks: [{ centerNm: 365, fwhmNm: 84, amplitude: 1 }],
@@ -35,6 +43,9 @@ export const TEACHING_SAMPLE_PRESETS = Object.freeze({
       zh: "宽发射样品",
     },
     claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-008",
+    boundary: SAMPLE_PRESET_BOUNDARY,
     absorption: {
       type: "gaussian-mixture",
       peaks: [{ centerNm: 405, fwhmNm: 144, amplitude: 1 }],
@@ -64,6 +75,9 @@ export const TEACHING_SAMPLE_PRESETS = Object.freeze({
       zh: "空白或背景主导",
     },
     claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-008",
+    boundary: SAMPLE_PRESET_BOUNDARY,
     absorption: {
       type: "gaussian-mixture",
       peaks: [{ centerNm: 330, fwhmNm: 120, amplitude: 1 }],
@@ -94,6 +108,9 @@ export const TEACHING_SAMPLE_PRESETS = Object.freeze({
       zh: "散射样品",
     },
     claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-008",
+    boundary: SAMPLE_PRESET_BOUNDARY,
     absorption: {
       type: "gaussian-mixture",
       peaks: [{ centerNm: 320, fwhmNm: 112, amplitude: 1 }],
@@ -132,6 +149,9 @@ function toProfile(preset) {
     description: `${preset.notes.en} / ${preset.notes.zh}`,
     kind: preset.model.kind,
     claimLevel: preset.claimLevel,
+    controlBinding: preset.controlBinding,
+    evidenceKey: preset.evidenceKey,
+    boundary: `${preset.boundary.en} / ${preset.boundary.zh}`,
     excitationPeak: absorptionPeak.centerNm,
     excitationWidth: absorptionPeak.fwhmNm / 2,
     emissionPeak: emissionPeak.centerNm,
