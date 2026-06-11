@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=sample-data-20260611";
+import { MODES, PARTS, SAMPLE_PRESET_OPTIONS } from "../state.mjs?v=sample-data-20260611";
 
 const chart = {
   left: 54,
@@ -19,6 +19,39 @@ function setDisabled(element, disabled) {
   }
 
   element.disabled = disabled;
+}
+
+function sampleOptionPairs(select) {
+  return Array.from(select?.options || []).map((option) => [option.value, option.textContent]);
+}
+
+export function syncSamplePresetOptions(elements, documentRef = globalThis.document) {
+  const sampleSelect = elements?.controls?.sample;
+  if (!sampleSelect || !documentRef?.createElement) {
+    return;
+  }
+
+  const desiredPairs = SAMPLE_PRESET_OPTIONS.map((option) => [option.id, option.label]);
+  if (JSON.stringify(sampleOptionPairs(sampleSelect)) === JSON.stringify(desiredPairs)) {
+    return;
+  }
+
+  const previousValue = sampleSelect.value;
+  if (Array.isArray(sampleSelect.options)) {
+    sampleSelect.options.length = 0;
+  }
+  sampleSelect.textContent = "";
+
+  SAMPLE_PRESET_OPTIONS.forEach((option) => {
+    const node = documentRef.createElement("option");
+    node.value = option.id;
+    node.textContent = option.label;
+    sampleSelect.append(node);
+  });
+
+  sampleSelect.value = SAMPLE_PRESET_OPTIONS.some((option) => option.id === previousValue)
+    ? previousValue
+    : SAMPLE_PRESET_OPTIONS[0]?.id || "";
 }
 
 function percentText(value) {
@@ -122,6 +155,7 @@ export function collectInstrumentElements(root) {
 
 export function updateControlsFromState(elements, state, derived) {
   const { controls, readouts } = elements;
+  syncSamplePresetOptions(elements);
 
   setText(readouts.excitationAngle, `${state.exMono.gratingAngleDeg.toFixed(1)} deg`);
   setText(readouts.emissionAngle, `${state.emMono.gratingAngleDeg.toFixed(1)} deg`);

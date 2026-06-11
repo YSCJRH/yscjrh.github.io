@@ -105,10 +105,11 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 47 tests passed after the time-scan response-chain baseline slice.
 - `node --test instrument/sim/tests/physics.test.mjs`: 24 tests passed after separating detector-arm offset diagnostics from geometry-mode diagnostics.
 - `node --test instrument/sim/tests/ui-contract.test.mjs`: 9 tests passed after routing the compact workbench geometry readout through `responseChain.geometry.collectionFactor` and separating advanced geometry copy.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs`: 54 tests passed after synchronizing public sample preset options from shared runtime data while preserving the no-JS fallback.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
 
 ## Next Model Slices
 
-1. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.
+1. Continue decomposing hard-coded teaching sample profiles only if future source or governance needs justify moving more runtime sample data into separate data records.

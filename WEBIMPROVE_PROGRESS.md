@@ -2,8 +2,31 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest detector-arm naming slice locally verified
+- Status: In progress; latest sample preset option sync slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Sample preset option sync slice
+- Status: Local tests, data validation, site check, diff check, and Chrome headless smoke passed; full final `refine.md` DoD audit remains open.
+- Trigger:
+  - The public no-JS sample `<select>` fallback and runtime `SAMPLE_PRESET_OPTIONS` could drift as teaching presets change.
+  - `instrument/MODEL.md` listed this as the next model-maintenance slice after detector-arm naming cleanup.
+- Changes:
+  - Added a UI contract for generating sample `<option>` nodes from shared `SAMPLE_PRESET_OPTIONS`.
+  - Added a static fallback parity contract requiring the HTML no-JS sample options to match shared preset option ids and labels.
+  - Added `syncSamplePresetOptions()` in the spectrum UI module and call it from `updateControlsFromState()` so JS startup keeps the control synchronized.
+  - Preserved the static HTML fallback options for no-JS visitors.
+  - Bumped `/instrument/` route-local ESM cache keys to `sample-options-20260611`.
+- Remaining notes:
+  - This syncs the public control options; it does not claim that all teaching sample profile logic has been externalized from runtime modules.
+  - It does not change source-derived examples or make synthetic controls affect source-derived datasets.
+- Validation result:
+  - `node --check instrument/instrument.js; node --check instrument/sim/ui/spectrum.mjs; node --check instrument/sim/tests/ui-contract.test.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 54/54.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Local preview `http://127.0.0.1:4173/instrument/?qa=sample-options` returned 200 and contained `sample-options-20260611`.
+  - Chrome headless CDP smoke passed: runtime sample options were `low-background`, `broad-emission`, `blank`, and `scattering`; console error/exception list was empty; horizontal overflow was 0.
 
 ## 2026-06-11 Detector-arm naming cleanup slice
 - Status: Focused physics and UI contract tests passed; full final DoD audit remains open.

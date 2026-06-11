@@ -14,7 +14,7 @@ import {
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=detector-arm-20260611";
+} from "./sim/ui/spectrum.mjs?v=sample-options-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;

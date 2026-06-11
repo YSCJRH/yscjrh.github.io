@@ -3,7 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { collectInstrumentElements, updateControlsFromState, updateDiagnostics } from "../ui/spectrum.mjs";
+import * as spectrumUi from "../ui/spectrum.mjs";
+import { SAMPLE_PRESET_OPTIONS } from "../data/samplePresets.mjs";
+
+const { collectInstrumentElements, updateControlsFromState, updateDiagnostics } = spectrumUi;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
@@ -13,6 +16,15 @@ const siteStyles = readFileSync(resolve(here, "../../../styles.css"), "utf8");
 function blocksForClass(className) {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return instrumentHtml.match(new RegExp(`<([a-z]+)[^>]+class="[^"]*${escaped}[^"]*"[^>]*>[\\s\\S]*?<\\/\\1>`, "g")) || [];
+}
+
+function sampleSelectOptionsFromHtml() {
+  const selectMatch = instrumentHtml.match(/<select data-control="sample">([\s\S]*?)<\/select>/);
+  assert.ok(selectMatch, "sample preset select should exist");
+  return Array.from(selectMatch[1].matchAll(/<option value="([^"]+)">([\s\S]*?)<\/option>/g)).map((match) => [
+    match[1],
+    match[2].trim(),
+  ]);
 }
 
 test("advanced response-chain controls live in the simulator workbench", () => {
@@ -72,6 +84,41 @@ test("instrument element collection includes advanced response-chain controls", 
   assert.ok(selectors.includes('[data-control="source-type"]'));
   assert.ok(selectors.includes('[data-control="detector-type"]'));
   assert.ok(selectors.includes('[data-control="geometry-mode"]'));
+});
+
+test("sample preset select can be synchronized from the shared preset options", () => {
+  assert.equal(typeof spectrumUi.syncSamplePresetOptions, "function");
+  const sampleSelect = {
+    options: [],
+    value: "",
+    textContent: "stale fallback",
+    append(...nodes) {
+      this.options.push(...nodes);
+    },
+  };
+  const fakeDocument = {
+    createElement(tagName) {
+      assert.equal(tagName, "option");
+      return {
+        value: "",
+        textContent: "",
+      };
+    },
+  };
+
+  spectrumUi.syncSamplePresetOptions({ controls: { sample: sampleSelect } }, fakeDocument);
+
+  assert.deepEqual(
+    sampleSelect.options.map((option) => [option.value, option.textContent]),
+    SAMPLE_PRESET_OPTIONS.map((option) => [option.id, option.label])
+  );
+});
+
+test("sample preset no-JS fallback options match the shared preset options", () => {
+  assert.deepEqual(
+    sampleSelectOptionsFromHtml(),
+    SAMPLE_PRESET_OPTIONS.map((option) => [option.id, option.label])
+  );
 });
 
 test("3D scene is optional with an honest initial fallback state", () => {
