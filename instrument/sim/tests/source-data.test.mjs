@@ -8,6 +8,7 @@ import {
   findEemPeak,
   getEemSlice,
   isPlottableSourceDataset,
+  setLanguagePair,
   sourceDatasetBoundaryNote,
 } from "../ui/source-data.mjs";
 
@@ -176,4 +177,41 @@ test("runtime only treats source-derived display-only datasets as plottable", ()
   assert.equal(isPlottableSourceDataset({ ...plotted, claimLevel: "reference-only" }), false);
   assert.equal(isPlottableSourceDataset({ ...plotted, controlBinding: "simulator-control" }), false);
   assert.equal(isPlottableSourceDataset({ ...plotted, dataUrl: null }), false);
+});
+
+test("runtime source-data copy can preserve language mode structure", () => {
+  const created = [];
+  const fakeDocument = {
+    createElement(tagName) {
+      const node = {
+        tagName,
+        dataset: {},
+        attributes: {},
+        textContent: "",
+        setAttribute(name, value) {
+          this.attributes[name] = value;
+        },
+      };
+      created.push(node);
+      return node;
+    },
+  };
+  const fakeElement = {
+    ownerDocument: fakeDocument,
+    textContent: "stale mixed copy",
+    children: [],
+    append(...nodes) {
+      this.children.push(...nodes);
+    },
+  };
+
+  setLanguagePair(fakeElement, { en: "Display-only runtime copy.", zh: "仅显示的运行时文案。" });
+
+  assert.equal(fakeElement.textContent, "");
+  assert.equal(fakeElement.children.length, 2);
+  assert.equal(fakeElement.children[0].dataset.language, "en");
+  assert.equal(fakeElement.children[0].textContent, "Display-only runtime copy.");
+  assert.equal(fakeElement.children[1].dataset.language, "zh");
+  assert.equal(fakeElement.children[1].attributes.lang, "zh-CN");
+  assert.equal(fakeElement.children[1].textContent, "仅显示的运行时文案。");
 });

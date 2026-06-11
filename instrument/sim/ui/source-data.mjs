@@ -35,6 +35,45 @@ function setElementText(element, text) {
   }
 }
 
+function splitLanguagePair(text) {
+  const value = String(text || "");
+  const separator = " / ";
+  const separatorIndex = value.indexOf(separator);
+
+  if (separatorIndex === -1) {
+    return { en: value, zh: value };
+  }
+
+  return {
+    en: value.slice(0, separatorIndex).trim(),
+    zh: value.slice(separatorIndex + separator.length).trim(),
+  };
+}
+
+export function setLanguagePair(element, pair) {
+  if (!element) {
+    return;
+  }
+
+  const documentRef = element.ownerDocument;
+  if (!documentRef?.createElement) {
+    setElementText(element, `${pair.en} / ${pair.zh}`);
+    return;
+  }
+
+  const en = documentRef.createElement("span");
+  en.dataset.language = "en";
+  en.textContent = pair.en;
+
+  const zh = documentRef.createElement("span");
+  zh.dataset.language = "zh";
+  zh.setAttribute("lang", "zh-CN");
+  zh.textContent = pair.zh;
+
+  element.textContent = "";
+  element.append(en, zh);
+}
+
 function formatNumber(value, digits = 0) {
   if (!Number.isFinite(value)) {
     return "--";
@@ -452,6 +491,7 @@ function updateSourceMetadata(elements, dataset, data) {
   const source = dataset.source || {};
   const processing = dataset.processing || {};
   const boundary = dataset.claimBoundary || "Display-only educational example. / 仅作教学显示。";
+  const boundaryPair = splitLanguagePair(boundary);
   setElementText(elements.sourceName, source.title || dataset.label);
   setElementText(elements.sourceLicense, source.license || "Recorded in manifest / 已记录在 manifest 中");
   setElementText(
@@ -461,12 +501,10 @@ function updateSourceMetadata(elements, dataset, data) {
   setElementText(elements.sourceFile, source.sourceFile || "Reference-only or recorded in manifest / 仅作参考或已记录在 manifest 中");
   setElementText(elements.sourceBoundary, boundary);
   setSourceLink(elements, dataset);
-  setElementText(
-    elements.sourceCaption,
-    source.citation
-      ? `${source.citation} ${boundary}`
-      : `Source-derived educational example. / 引用来源教学示例。 ${boundary}`
-  );
+  setLanguagePair(elements.sourceCaption, {
+    en: source.citation ? `${source.citation} ${boundaryPair.en}` : `Source-derived educational example. ${boundaryPair.en}`,
+    zh: source.citation ? `${source.citation} ${boundaryPair.zh}` : `引用来源教学示例。${boundaryPair.zh}`,
+  });
   setElementText(elements.sourceChartTitle, dataset.label);
   setElementText(
     elements.sourceChartDesc,
@@ -599,13 +637,14 @@ export async function initializeSourceData(root) {
     });
 
     const reference = sourceState.manifest.datasets.find((dataset) => dataset.kind === "reference");
-    setElementText(elements.sourceDisclaimer, sourceState.manifest.disclaimer);
+    setLanguagePair(elements.sourceDisclaimer, splitLanguagePair(sourceState.manifest.disclaimer));
 
     if (reference) {
-      setElementText(
-        elements.sourceReferenceNote,
-        `Reference-only / 仅作参考：${reference.label}. ${reference.processing?.notes || "No reference curve is embedded. / 未嵌入参考曲线。"}`
-      );
+      const referenceNotes = splitLanguagePair(reference.processing?.notes || "No reference curve is embedded. / 未嵌入参考曲线。");
+      setLanguagePair(elements.sourceReferenceNote, {
+        en: `Reference-only: ${reference.label}. ${referenceNotes.en}`,
+        zh: `仅作参考：${reference.label}. ${referenceNotes.zh}`,
+      });
     }
 
     sourceSelect.addEventListener("change", () => showSourceDataset(elements, sourceSelect.value));

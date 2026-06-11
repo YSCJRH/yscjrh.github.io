@@ -4260,6 +4260,27 @@ section[id] {
   background: rgba(77, 237, 207, 0.12);
 }
 
+.instrument-disclaimer [data-language],
+.source-data-intro [data-language],
+.source-data-caption [data-language],
+.source-reference-note [data-language],
+.control-help [data-language],
+.instrument-noscript [data-language],
+.teaching-card strong [data-language],
+.teaching-card p [data-language] {
+  display: block;
+}
+
+.source-data-intro [data-language] + [data-language],
+.source-data-caption [data-language] + [data-language],
+.source-reference-note [data-language] + [data-language],
+.control-help [data-language] + [data-language],
+.instrument-noscript [data-language] + [data-language],
+.teaching-card strong [data-language] + [data-language],
+.teaching-card p [data-language] + [data-language] {
+  margin-top: 0.18rem;
+}
+
 .instrument-page .instrument-hero-card .article-title {
   max-width: 30rem;
   font-size: clamp(2rem, 3.45vw, 3.1rem);

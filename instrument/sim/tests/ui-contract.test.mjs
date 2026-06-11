@@ -9,6 +9,11 @@ const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
 const instrumentScript = readFileSync(resolve(here, "../../instrument.js"), "utf8");
 
+function blocksForClass(className) {
+  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return instrumentHtml.match(new RegExp(`<([a-z]+)[^>]+class="[^"]*${escaped}[^"]*"[^>]*>[\\s\\S]*?<\\/\\1>`, "g")) || [];
+}
+
 test("advanced response-chain controls live in the simulator workbench", () => {
   const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
   const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
@@ -79,4 +84,32 @@ test("instrument page exposes a persistent language display framework", () => {
   assert.match(instrumentHtml, /data-language="zh"/, "Chinese long-form copy should be structurally marked");
   assert.match(instrumentScript, /instrumentLanguageMode/, "language mode should use a stable localStorage key");
   assert.match(instrumentScript, /localStorage/, "language mode should persist locally");
+});
+
+test("long explanatory panels expose language-separable copy", () => {
+  const introBlocks = blocksForClass("source-data-intro");
+  assert.ok(introBlocks.length >= 3, "expected source/correction/geometry intro copy");
+  introBlocks.forEach((block) => {
+    assert.match(block, /data-language="en"/);
+    assert.match(block, /data-language="zh"/);
+  });
+
+  const smallDisclaimers = blocksForClass("instrument-disclaimer-small");
+  assert.ok(smallDisclaimers.length >= 2, "expected small boundary disclaimers");
+  smallDisclaimers.forEach((block) => {
+    assert.match(block, /data-language="en"/);
+    assert.match(block, /data-language="zh"/);
+  });
+
+  const teachingCards = instrumentHtml.match(/<article class="teaching-card">[\s\S]*?<\/article>/g) || [];
+  assert.ok(teachingCards.length >= 10, "expected corrections and geometry teaching cards");
+  teachingCards.forEach((card) => {
+    assert.match(card, /data-language="en"/);
+    assert.match(card, /data-language="zh"/);
+  });
+
+  const noscriptMatch = instrumentHtml.match(/<noscript>[\s\S]*?<\/noscript>/);
+  assert.ok(noscriptMatch, "expected no-JS fallback copy");
+  assert.match(noscriptMatch[0], /data-language="en"/);
+  assert.match(noscriptMatch[0], /data-language="zh"/);
 });
