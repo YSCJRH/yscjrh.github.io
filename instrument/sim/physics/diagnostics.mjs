@@ -60,8 +60,8 @@ export function generateDiagnostics(state, derived) {
     diagnostics.push({
       tone: "warn",
       evidenceKey: "ILAB-006",
-      label: "90 degree geometry / 90° 几何",
-      text: "Detector arm offset reduces collection and raises background risk in this conceptual model. / 在这个概念模型中，检测臂偏离会降低收集效率，并提高背景风险。",
+      label: "Detector arm offset / 检测臂偏离",
+      text: "The detector arm is away from the 90 degree teaching position, reducing collection and raising background risk without moving selected wavelengths. / 检测臂偏离 90° 教学位置，会降低收集效率并提高背景风险，但不会移动选通波长。",
     });
   }
 

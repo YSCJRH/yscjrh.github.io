@@ -184,6 +184,18 @@ test("diagnostics surface response-chain consequences", () => {
   assert.ok(highTraceLabels.includes("Signal headroom / 信号余量"));
 });
 
+test("diagnostics separate geometry mode from detector arm offset", () => {
+  const state = createInstrumentState();
+  state.geometry.id = "transmission";
+  state.detector.angleDeg = 82;
+
+  const labels = deriveInstrument(state).diagnostics.map((diagnostic) => diagnostic.label);
+
+  assert.ok(labels.includes("Geometry mode / 几何模式"));
+  assert.ok(labels.includes("Detector arm offset / 检测臂偏离"));
+  assert.ok(!labels.includes("90 degree geometry / 90° 几何"));
+});
+
 test("wider slit increases bandpass and throughput", () => {
   const narrowBandpass = bandpassFromSlit(150);
   const wideBandpass = bandpassFromSlit(900);

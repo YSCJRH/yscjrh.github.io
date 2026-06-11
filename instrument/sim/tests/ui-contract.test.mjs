@@ -28,6 +28,15 @@ test("advanced response-chain controls live in the simulator workbench", () => {
   }
 });
 
+test("advanced geometry copy separates geometry mode from detector arm offset", () => {
+  const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
+  const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
+  const advancedCopy = instrumentHtml.slice(advancedStart, sourceDataStart);
+
+  assert.match(advancedCopy, /Geometry mode \/ 几何模式/);
+  assert.match(advancedCopy, /Detector arm offset \/ 检测臂偏离/);
+});
+
 test("instrument element collection includes advanced response-chain controls", () => {
   const selectors = [];
   const fakeRoot = {
@@ -166,6 +175,8 @@ test("diagnostic cards expose machine-readable evidence keys", () => {
 });
 
 test("workbench exposes response-chain factor readouts", () => {
+  assert.match(instrumentHtml, /Alignment \/ geometry \/ 对准 \/ 几何/);
+
   for (const readout of ["response-source", "response-sample", "response-detector", "signal-headroom"]) {
     assert.match(
       instrumentHtml,
@@ -224,11 +235,13 @@ test("workbench exposes response-chain factor readouts", () => {
         source: { atExcitation: 0.64 },
         sample: { absorptionAtExcitation: 0.72 },
         detector: { atEmission: 0.58 },
+        geometry: { collectionFactor: 0.42 },
         signal: { saturationRatio: 0.31 },
       },
     }
   );
 
+  assert.equal(elements.readouts.collection.textContent, "42%");
   assert.equal(elements.readouts.responseSource.textContent, "64%");
   assert.equal(elements.readouts.responseSample.textContent, "72%");
   assert.equal(elements.readouts.responseDetector.textContent, "58%");

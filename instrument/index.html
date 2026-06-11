@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=time-chain-20260611").catch((error) => {
+        import("./instrument.js?v=geometry-readout-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -491,13 +491,13 @@
 
                     <details class="advanced-geometry">
                       <summary>
-                        <span>Advanced geometry: detector angle / 高级光路：检测角</span>
-                        <strong>Source offset + 80-100 deg detector arm / 光源偏移 + 80-100° 检测臂</strong>
+                        <span>Advanced geometry and offsets / 高级几何与偏移</span>
+                        <strong>Geometry mode + detector arm offset / 几何模式 + 检测臂偏离</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
-                        Select source in the 3D scene, then drag the blue Z-axis handle for a bounded entrance offset. The sample cell stays fixed in the holder; select detector to reveal the cyan arm handle. These geometry changes affect intensity and diagnostics, not selected wavelength.
+                        Geometry mode changes conceptual collection/background behavior. Source offset and detector arm offset are bounded local perturbations; they affect intensity and diagnostics, not selected wavelength.
                         <br>
-                        在 3D 场景中选择光源，可拖动蓝色 Z 轴手柄做受限入口偏移；样品池固定在样品架中。选择检测器可显示青色检测臂手柄。这些几何变化只影响强度和诊断，不改变选通波长。
+                        几何模式改变概念性的收集与背景行为。光源偏移和检测臂偏离是受限的局部扰动；它们只影响强度和诊断，不改变选通波长。
                       </p>
 
                     <label class="instrument-control instrument-select-control">
@@ -542,7 +542,7 @@
                     </p>
 
                     <label class="instrument-control">
-                      <span>Detector arm angle / 检测臂角度 <strong data-readout="detector-angle">90.0 deg</strong></span>
+                      <span>Detector arm offset / 检测臂偏离 <strong data-readout="detector-angle">90.0 deg</strong></span>
                       <input data-control="detector-angle" type="range" min="80" max="100" step="0.5" value="90">
                       <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk. 90° 收集是教学默认值，偏离会降低收集效率并提高背景风险。</small>
                     </label>
@@ -567,7 +567,7 @@
                       <strong data-readout="throughput">--</strong>
                     </p>
                     <p>
-                      <span>Overlap / collection / 重叠 / 收集</span>
+                      <span>Alignment / geometry / 对准 / 几何</span>
                       <strong><span data-readout="overlap">100%</span> / <span data-readout="collection">100%</span></strong>
                     </p>
                     <p>

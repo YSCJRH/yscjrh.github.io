@@ -134,7 +134,10 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.detectorAngle, `${state.detector.angleDeg.toFixed(1)} deg`);
   setText(readouts.throughput, `${Math.round(derived.throughput * 100)}%`);
   setText(readouts.overlap, `${Math.round(derived.alignment.overlapFactor * 100)}%`);
-  setText(readouts.collection, `${Math.round(derived.collection.collectionFactor * 100)}%`);
+  setText(
+    readouts.collection,
+    `${Math.round((derived.responseChain?.geometry?.collectionFactor ?? derived.collection.collectionFactor) * 100)}%`
+  );
   setText(readouts.responseSource, percentText(derived.responseChain?.source?.atExcitation));
   setText(readouts.responseSample, percentText(derived.responseChain?.sample?.absorptionAtExcitation));
   setText(readouts.responseDetector, percentText(derived.responseChain?.detector?.atEmission));

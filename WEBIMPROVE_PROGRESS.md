@@ -5,6 +5,36 @@
 - Status: In progress; latest model slice locally verified
 - Last updated: 2026-06-11
 
+## 2026-06-11 Geometry readout semantics slice
+- Status: Local UI-contract verification passed; full browser QA remains pending for the overall `refine.md` closeout.
+- Trigger:
+  - The workbench grouped overlap and collection into one compact readout, but the collection value came from the legacy detector-arm angle helper rather than the response-chain geometry factor.
+  - After adding geometry modes, this could hide front-face/transmission collection changes from the main readout and blur the distinction between geometry mode and detector-arm offset.
+- Changes:
+  - Added a TDD regression requiring the workbench collection/geometry readout to use `responseChain.geometry.collectionFactor` when available.
+  - Added a TDD regression requiring detector-arm offset diagnostics to stay separate from geometry-mode diagnostics.
+  - Changed the compact label from `Overlap / collection / 重叠 / 收集` to `Alignment / geometry / 对准 / 几何`.
+  - Renamed the detector-arm diagnostic from `90 degree geometry / 90° 几何` to `Detector arm offset / 检测臂偏离`.
+  - Updated the advanced-control copy to distinguish `Geometry mode / 几何模式` from `Detector arm offset / 检测臂偏离`.
+  - Updated `updateControlsFromState()` so the second value reflects response-chain geometry collection, falling back to the legacy detector-arm value only if the response chain is absent.
+  - Bumped the `/instrument/` route-local UI/diagnostics module cache keys to `geometry-readout-20260611`.
+- Validation result:
+  - TDD RED confirmed the old HTML/logic did not satisfy the response-chain geometry readout contract.
+  - TDD RED confirmed the old diagnostic label did not expose `Detector arm offset / 检测臂偏离`.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/physics/derive.mjs` passed.
+  - `node --check instrument/sim/physics/diagnostics.mjs` passed.
+  - `node --check instrument/sim/ui/spectrum.mjs` passed.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 24/24.
+  - `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 9/9.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 49/49.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Windows line-ending warnings.
+- Remaining notes:
+  - This slice does not rename the internal legacy `derived.collection` object; it only prevents the main workbench readout from presenting detector-arm-only collection as geometry-mode collection.
+  - Full browser, keyboard, mobile, reduced-motion, and fallback QA remain required before the overall DoD can be claimed.
+
 ## 2026-06-11 Time scan response-chain baseline slice
 - Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
 - Trigger:
