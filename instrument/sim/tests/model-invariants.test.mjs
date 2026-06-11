@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { deriveArtifactRisks } from "../physics/artifacts.mjs";
 import { DETECTOR_PRESETS, evaluateDetectorResponse } from "../physics/detector.mjs";
-import { deriveGeometryResponse } from "../physics/geometry.mjs";
+import { GEOMETRY_PRESETS, deriveGeometryResponse } from "../physics/geometry.mjs";
 import { convolveLineShape } from "../physics/instrumentFunction.mjs";
 import { composeRawSignal } from "../physics/radiometry.mjs";
 import { buildScanAxis } from "../physics/scan.mjs";
@@ -41,6 +41,16 @@ test("teaching source and detector presets declare placeholder boundaries", () =
     assert.equal(preset.controlBinding, "simulator-control", `${id} detector should be simulator-only`);
     assert.equal(preset.evidenceKey, "ILAB-008", `${id} detector should cite the placeholder boundary`);
     assert.match(preset.boundary, /not.*measured|not.*real|not.*calibrated/i, `${id} detector should not imply measured hardware response`);
+  }
+});
+
+test("geometry presets declare conceptual teaching boundaries", () => {
+  for (const [id, preset] of Object.entries(GEOMETRY_PRESETS)) {
+    assert.equal(preset.claimLevel, "conceptual-teaching", `${id} geometry should stay conceptual`);
+    assert.equal(preset.controlBinding, "simulator-control", `${id} geometry should be simulator-only`);
+    assert.equal(preset.evidenceKey, "ILAB-006", `${id} geometry should cite the geometry boundary`);
+    assert.match(preset.boundary, /conceptual teaching geometry/i, `${id} geometry should not imply measured optical performance`);
+    assert.match(preset.boundary, /not selected wavelength/i, `${id} geometry should not move selected wavelength`);
   }
 });
 

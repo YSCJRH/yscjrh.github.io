@@ -15,8 +15,10 @@ const MARKERS = [
   "mobile overflow",
   "prefers-reduced-motion",
   "keyboard",
+  "no-JS fallback",
   "optional 3D scene",
   "geometry mode",
+  "response-normalized view",
   "source-derived",
   "source-derived language",
   "module failure",
@@ -304,6 +306,56 @@ async function main() {
     assertCheck(keyboard.modePressed === "true" && keyboard.scanMode === "excitation" && keyboard.selectedMarker === "true", "keyboard activation failed", keyboard);
     record("keyboard");
 
+    progress("checking no-JS fallback");
+    const noJs = runCode(
+      SESSION,
+      `async (page) => {
+        const browser = page.context().browser();
+        const context = await browser.newContext({
+          javaScriptEnabled: false,
+          viewport: { width: 390, height: 900 },
+        });
+        try {
+          const noJsPage = await context.newPage();
+          await noJsPage.goto('${baseUrl}instrument/?qa=no-js', { waitUntil: 'domcontentloaded' });
+          await noJsPage.waitForTimeout(300);
+          const bodyText = await noJsPage.locator('body').textContent();
+          const statusText = (await noJsPage.locator('[data-webgl-status]').allTextContents())
+            .map((text) => text.trim())
+            .join(" ");
+          const languageButtons = noJsPage.locator('[data-language-mode-option]');
+          const languageButtonCount = await languageButtons.count();
+          let languageButtonsDisabled = languageButtonCount > 0;
+          for (let index = 0; index < languageButtonCount; index += 1) {
+            languageButtonsDisabled = languageButtonsDisabled && await languageButtons.nth(index).isDisabled();
+          }
+          return {
+            hasNoscript: bodyText.includes('JavaScript is disabled') &&
+              bodyText.includes('当前浏览器禁用了 JavaScript'),
+            hasFallbackDiagram: await noJsPage.locator('[data-fallback-diagram] svg').count() > 0,
+            canvasCount: await noJsPage.locator('[data-scene-host] canvas').count(),
+            languageButtonsDisabled,
+            hasCoreControls: await noJsPage.locator('[data-control="excitation-wavelength"]').count() > 0 &&
+              await noJsPage.locator('[data-control="emission-wavelength"]').count() > 0,
+            statusText,
+          };
+        } finally {
+          await context.close();
+        }
+      }`
+    );
+    assertCheck(
+      noJs?.hasNoscript &&
+        noJs.hasFallbackDiagram &&
+        noJs.canvasCount === 0 &&
+        noJs.languageButtonsDisabled &&
+        noJs.hasCoreControls &&
+        /2D fallback active|二维备用图已启用/.test(noJs.statusText),
+      "no-JS fallback did not preserve the static teaching route",
+      noJs
+    );
+    record("no-JS fallback");
+
     progress("checking geometry mode visuals");
     const geometryMode = evalInPage(
       SESSION,
@@ -342,6 +394,46 @@ async function main() {
       geometryMode
     );
     record("geometry mode");
+
+    progress("checking response-normalized teaching view");
+    const responseNormalized = evalInPage(
+      SESSION,
+      `async () => {
+        const select = document.querySelector('[data-control="spectrum-view"]');
+        const trace = () => document.querySelector('[data-spectrum-trace]')?.getAttribute('points') || "";
+        const diagnostics = () => document.querySelector('[data-diagnostics-list]')?.textContent.trim() || "";
+        const helper = select?.closest('label')?.textContent.trim() || "";
+        const before = {
+          value: select?.value || "",
+          trace: trace(),
+          diagnostics: diagnostics(),
+          helper,
+        };
+        select.value = "response-normalized";
+        select.dispatchEvent(new Event('input', { bubbles: true }));
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        await new Promise((resolve) => setTimeout(resolve, 120));
+        const after = {
+          value: select?.value || "",
+          trace: trace(),
+          diagnostics: diagnostics(),
+          helper,
+        };
+        return { before, after };
+      }`
+    );
+    assertCheck(
+      responseNormalized?.before?.value === "raw" &&
+        responseNormalized?.after?.value === "response-normalized" &&
+        responseNormalized.before.trace &&
+        responseNormalized.after.trace &&
+        responseNormalized.before.trace !== responseNormalized.after.trace &&
+        /Response-normalized view|响应归一化视图/.test(responseNormalized.after.diagnostics) &&
+        /not a calibrated correction|不是校准校正/.test(responseNormalized.after.helper),
+      "response-normalized view did not update the trace, diagnostic, and correction boundary",
+      responseNormalized
+    );
+    record("response-normalized view");
 
     progress("checking optional 3D scene");
     const optional3d = runCode(

@@ -1,17 +1,29 @@
 import { clamp } from "../math.mjs?v=response-chain-20260611";
 
+const GEOMETRY_PRESET_BOUNDARY =
+  "Conceptual teaching geometry; changes collection/background cues, not selected wavelength or real optical performance.";
+
 export const GEOMETRY_PRESETS = Object.freeze({
   "right-angle-90": {
     label: "Right-angle 90 degree / 90° 直角收集",
     claimLevel: "conceptual-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-006",
+    boundary: GEOMETRY_PRESET_BOUNDARY,
   },
   "front-face": {
     label: "Front-face teaching geometry / 前表面教学几何",
     claimLevel: "conceptual-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-006",
+    boundary: GEOMETRY_PRESET_BOUNDARY,
   },
   transmission: {
     label: "Transmission teaching geometry / 透射教学几何",
     claimLevel: "conceptual-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-006",
+    boundary: GEOMETRY_PRESET_BOUNDARY,
   },
 });
 

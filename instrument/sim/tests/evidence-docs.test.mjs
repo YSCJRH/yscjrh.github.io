@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { applyControlValue, createInstrumentState, setGratingWavelength } from "../state.mjs";
+import { deriveInstrument } from "../physics/derive.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const researchLog = readFileSync(resolve(here, "../../../docs/instrument-research-log.md"), "utf8");
@@ -17,6 +19,10 @@ function assertTeachingCardEvidence(label, evidenceKey) {
   const card = teachingCards().find((entry) => entry.includes(label));
   assert.ok(card, `expected teaching card for ${label}`);
   assert.match(card, new RegExp(`data-evidence-key="${evidenceKey}"`));
+}
+
+function assertEvidenceKeyExists(evidenceKey) {
+  assert.match(researchLog, new RegExp(`Claim ${evidenceKey}:`), `${evidenceKey} should exist in the research log`);
 }
 
 test("research log covers noise and instrument-function teaching boundaries", () => {
@@ -67,6 +73,46 @@ test("static teaching cards are machine-linked to recorded ILAB evidence", () =>
   assertTeachingCardEvidence("Transmission", "ILAB-006");
   assertTeachingCardEvidence("Sample environment", "ILAB-012");
   assertTeachingCardEvidence("Future data gate", "ILAB-009");
+});
+
+test("dynamic diagnostic evidence keys exist in the research log", () => {
+  const scenarios = [];
+
+  scenarios.push(createInstrumentState());
+
+  const normalized = createInstrumentState();
+  applyControlValue(normalized, "spectrum-view", "response-normalized");
+  scenarios.push(normalized);
+
+  const hiddenNoise = createInstrumentState();
+  applyControlValue(hiddenNoise, "show-noise", false);
+  scenarios.push(hiddenNoise);
+
+  const busyWarning = createInstrumentState();
+  busyWarning.slit.widthUm = 1000;
+  busyWarning.detector.angleDeg = 82;
+  busyWarning.sample.preset = "blank";
+  scenarios.push(busyWarning);
+
+  const geometryAndArtifacts = createInstrumentState();
+  geometryAndArtifacts.geometry.id = "transmission";
+  geometryAndArtifacts.sample.preset = "scattering";
+  setGratingWavelength(geometryAndArtifacts, "emission", 730);
+  scenarios.push(geometryAndArtifacts);
+
+  const highTrace = createInstrumentState();
+  highTrace.integrationTimeMs = 1000;
+  highTrace.slit.widthUm = 1000;
+  highTrace.source.id = "ideal-flat";
+  highTrace.detector.id = "ideal-flat";
+  scenarios.push(highTrace);
+
+  const evidenceKeys = new Set(
+    scenarios.flatMap((state) => deriveInstrument(state).diagnostics.map((diagnostic) => diagnostic.evidenceKey))
+  );
+
+  assert.ok(evidenceKeys.has("ILAB-010"), "expected headroom/noise evidence to be exercised");
+  evidenceKeys.forEach(assertEvidenceKeyExists);
 });
 
 test("sample environment evidence covers environmental fluorescence effects", () => {

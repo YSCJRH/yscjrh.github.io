@@ -18,8 +18,10 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     "mobile overflow",
     "prefers-reduced-motion",
     "keyboard",
+    "no-JS fallback",
     "optional 3D scene",
     "geometry mode",
+    "response-normalized view",
     "source-derived",
     "source-derived language",
     "module failure",
@@ -33,6 +35,11 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     script,
     /page\.keyboard\.press/,
     "keyboard QA should use browser-level key presses, not synthetic KeyboardEvent dispatch"
+  );
+  assert.match(
+    script,
+    /javaScriptEnabled:\s*false/,
+    "no-JS fallback QA should disable JavaScript in a separate browser context before loading the page"
   );
   assert.doesNotMatch(
     script,

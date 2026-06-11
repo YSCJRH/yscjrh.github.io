@@ -74,6 +74,18 @@ test("advanced response-chain controls live in the simulator workbench", () => {
   }
 });
 
+test("response-normalized teaching view is not framed as geometry-only", () => {
+  const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
+  const advancedEnd = instrumentHtml.indexOf("</details>", advancedStart);
+  const block = instrumentHtml.slice(advancedStart, advancedEnd);
+  const summary = block.match(/<summary>[\s\S]*?<\/summary>/)?.[0] || "";
+
+  assert.match(block, /Spectrum view \/ 谱图视图/);
+  assert.match(block, /not a calibrated correction/);
+  assert.match(summary, /Response|响应/);
+  assert.doesNotMatch(summary, /Advanced geometry and offsets \/ 高级几何与偏移/);
+});
+
 test("advanced geometry copy separates geometry mode from detector arm offset", () => {
   const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
   const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");

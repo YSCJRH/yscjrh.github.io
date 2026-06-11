@@ -1450,3 +1450,45 @@
   - This slice does not implement real front-face optics or inline transmission optics. Those remain explicit model boundaries under `ILAB-006`.
 - Blockers:
   - None.
+
+## Instrument diagnostic evidence-key hardening
+- Status: Completed and validated in this changeset
+- Trigger:
+  - Continue `refine.md` DoD work on source-backed scientific caveats and machine-checkable truth boundaries.
+  - Dynamic diagnostics had evidence keys, but the suite did not yet require every exercised key to exist in the research log.
+- Root cause:
+  - Signal-headroom diagnostics pointed at the broad display-only source-data evidence key rather than the more specific headroom/noise boundary.
+  - Geometry presets carried conceptual labels but did not expose the same machine-readable boundary fields used by other teaching presets.
+- Changes:
+  - Mapped `Signal headroom / 信号余量` diagnostics to `ILAB-010`.
+  - Added `controlBinding`, `evidenceKey`, and explicit conceptual boundary text to geometry presets.
+  - Added tests that exercise dynamic diagnostics across raw, response-normalized, hidden-noise, transmission/scattering, and high-trace states, then require every emitted evidence key to exist in `docs/instrument-research-log.md`.
+  - Added a geometry preset invariant test so geometry modes remain simulator-only and do not imply selected-wavelength movement or measured optical performance.
+- Validation result:
+  - Green: `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed as part of the full 93/93 test run.
+- Remaining non-blocking notes:
+  - This slice changes metadata and diagnostic provenance only. It does not add new geometry physics or real performance claims.
+- Blockers:
+  - None.
+
+## Instrument response-normalized view discoverability
+- Status: Completed and validated in this changeset
+- Trigger:
+  - Continue `refine.md` DoD work on correction literacy and make the response-normalized teaching view easier to discover from the main simulator workbench.
+  - Read-only review found that the control existed but was visually framed as a geometry-only advanced panel.
+- Root cause:
+  - The advanced panel summary emphasized geometry and offsets, even though the first control inside it is the raw/response-normalized spectrum view.
+  - Browser QA listed broad simulator gates but did not exercise the response-normalized view as a visible correction-literacy interaction.
+- Changes:
+  - Renamed the advanced panel summary to `Response, geometry, and offsets / 响应、几何与偏移`.
+  - Added paired English/Chinese copy that states response-normalized view is for correction literacy and is not a calibrated correction.
+  - Extended browser QA to switch from raw to response-normalized, verify the trace changes, verify the diagnostic appears, and verify the correction boundary remains visible.
+  - Hardened the no-JS browser QA check by using a temporary Playwright context with `javaScriptEnabled: false`.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` failed before implementation because the panel summary was still geometry-only and the browser QA marker was missing.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` passed: 30/30.
+  - Green: `node tools/check-instrument-browser.js` passed with `response-normalized view` and `no-JS fallback` included in the real browser checks.
+- Remaining non-blocking notes:
+  - This slice does not add calibrated correction, real instrument response correction, or new source-derived dataset behavior.
+- Blockers:
+  - None.

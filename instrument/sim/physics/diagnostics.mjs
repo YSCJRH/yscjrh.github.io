@@ -148,7 +148,7 @@ export function generateDiagnostics(state, derived) {
   if (headroomPeak / Math.max(derived.spectrum.yScaleMax, 0.001) >= 0.85) {
     diagnostics.push({
       tone: "warn",
-      evidenceKey: "ILAB-008",
+      evidenceKey: "ILAB-010",
       label: "Signal headroom / 信号余量",
       text: "The synthetic trace is close to the fixed display scale, so headroom is limited in this teaching view. It is not a real detector saturation claim. / 合成谱线接近固定显示量程，因此此教学视图中的余量有限；这不是真实检测器饱和声明。",
     });
