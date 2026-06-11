@@ -2,8 +2,35 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest evidence-docs slice locally verified
+- Status: In progress; latest detector-arm naming slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Detector-arm naming cleanup slice
+- Status: Focused physics and UI contract tests passed; full final DoD audit remains open.
+- Trigger:
+  - `instrument/MODEL.md` still recorded `derived.collection` as a legacy detector-arm helper that could be confused with `responseChain.geometry.collectionFactor`.
+  - `refine.md` requires geometry collection and detector-arm perturbation to stay scientifically and architecturally clear.
+- Changes:
+  - Added a TDD regression requiring detector angle changes to use `derived.detectorArm` and requiring the old top-level `derived.collection` field to be absent.
+  - Renamed the derived local detector-arm helper from `collection` to `detectorArm` in `derive.mjs`.
+  - Updated diagnostics, synthetic spectrum fallbacks, and workbench readout fallback code to use `detectorArm`.
+  - Updated route-local ESM cache keys to `detector-arm-20260611` for changed `/instrument/` modules.
+  - Updated `instrument/MODEL.md` to remove the completed `derived.collection` cleanup from the next-slice list.
+- Validation result:
+  - TDD RED confirmed `node --test instrument/sim/tests/physics.test.mjs` failed because `detectorArm` was missing.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 24/24.
+  - `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 10/10.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 52/52.
+  - `node --check instrument/instrument.js; node --check instrument/sim/physics/derive.mjs; node --check instrument/sim/physics/spectrum.mjs; node --check instrument/sim/physics/diagnostics.mjs; node --check instrument/sim/ui/spectrum.mjs` passed.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - Local preview: `http://127.0.0.1:4173/instrument/?qa=detector-arm` returned 200 and contained `detector-arm-20260611`.
+  - Chrome headless desktop QA at 1366x900 passed: no console/runtime errors, no horizontal overflow, optional 3D enabled to one canvas, status changed to active, and geometry/detector-arm diagnostics stayed separate.
+  - Chrome headless mobile QA at 390x844 passed: no console/runtime errors, no horizontal overflow, bilingual hero/workbench remained readable, and reduced-motion emulation reported active when requested.
+  - Chrome headless no-JS QA at 390x844 passed: static fallback diagram remained present with `role="img"`, bilingual `<noscript>` copy remained visible, and there was no horizontal overflow.
+  - Chrome headless keyboard/source QA passed: Space activated native mode buttons, Enter activated SVG part markers, source-derived examples lazy-loaded after scroll with 3 display-only datasets, and source copy still stated separation from simulator controls.
+- Remaining notes:
+  - This is an internal naming and maintainability cleanup; it does not change the public geometry-mode behavior or add calibrated optical claims.
 
 ## 2026-06-11 Noise and instrument-function evidence-docs slice
 - Status: Local documentation contract verification passed; full final DoD audit remains open.

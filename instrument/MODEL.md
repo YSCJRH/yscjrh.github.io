@@ -45,7 +45,7 @@ This is useful as a conceptual skeleton. As of 2026-06-11, `deriveInstrument()` 
 
 The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, the synthetic trace, and the single-point monitor. The single-point mode is anchored directly to `responseChain.signal.raw`. The emission scan now composes its main fluorescence term through `composeRawSignal()` at each scanned emission wavelength, while keeping the existing teaching emission shape, scattering, blank/background, deterministic noise, and fixed y-scale behavior. The excitation scan now composes its main fluorescence term through `composeRawSignal()` at each scanned excitation wavelength, while keeping the existing teaching excitation shape, fixed emission channel, scattering, blank/background, deterministic noise, and fixed y-scale behavior. Time scan now takes its fixed-channel signal amplitude from `composeRawSignal()` and applies the existing settle, decay, ripple, and deterministic-noise teaching dynamics on top. It remains a synthetic fixed-channel kinetic-style trace, not a fluorescence lifetime model. Source and detector presets now carry machine-readable synthetic-teaching boundaries so they cannot be mistaken for measured lamp or hardware response curves.
 
-The main workbench now labels the compact alignment/geometry readout explicitly and uses `responseChain.geometry.collectionFactor` for the geometry value when the response chain is available. Detector-arm offset diagnostics are separately labeled as local arm perturbations rather than as the geometry mode itself. The older `derived.collection` detector-arm helper remains for detector-offset diagnostics and scene behavior, so future cleanup should rename or separate that internal object rather than present it as the geometry-mode collection factor.
+The main workbench now labels the compact alignment/geometry readout explicitly and uses `responseChain.geometry.collectionFactor` for the geometry value when the response chain is available. Detector-arm offset diagnostics are separately labeled as local arm perturbations rather than as the geometry mode itself. The remaining detector-arm helper is exposed as `derived.detectorArm`, so code-level naming no longer presents the local arm response as the geometry-mode collection factor.
 
 ## Noise, Headroom, And Instrument Function Boundaries
 
@@ -111,5 +111,4 @@ Fresh baseline from 2026-06-11:
 
 ## Next Model Slices
 
-1. Rename or separate the remaining internal `derived.collection` detector-arm helper so code-level naming cannot be confused with geometry-mode collection.
-2. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.
+1. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.

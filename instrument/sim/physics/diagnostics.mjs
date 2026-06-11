@@ -56,7 +56,7 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
-  if (derived.collection.deltaDeg >= 3) {
+  if (derived.detectorArm.deltaDeg >= 3) {
     diagnostics.push({
       tone: "warn",
       evidenceKey: "ILAB-006",

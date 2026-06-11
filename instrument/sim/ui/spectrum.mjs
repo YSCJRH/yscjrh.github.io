@@ -136,7 +136,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.overlap, `${Math.round(derived.alignment.overlapFactor * 100)}%`);
   setText(
     readouts.collection,
-    `${Math.round((derived.responseChain?.geometry?.collectionFactor ?? derived.collection.collectionFactor) * 100)}%`
+    `${Math.round((derived.responseChain?.geometry?.collectionFactor ?? derived.detectorArm.collectionFactor) * 100)}%`
   );
   setText(readouts.responseSource, percentText(derived.responseChain?.source?.atExcitation));
   setText(readouts.responseSample, percentText(derived.responseChain?.sample?.absorptionAtExcitation));

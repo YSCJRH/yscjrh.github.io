@@ -8,13 +8,13 @@ import {
   setMode,
   setSelectedPart,
 } from "./sim/state.mjs?v=sample-data-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=time-chain-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=detector-arm-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=geometry-readout-20260611";
+} from "./sim/ui/spectrum.mjs?v=detector-arm-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;

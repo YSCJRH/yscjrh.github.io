@@ -228,7 +228,7 @@ test("detector arm is best near 90 degrees", () => {
   assert.ok(tilted.backgroundRisk > centered.backgroundRisk);
 });
 
-test("detector angle changes collection without moving selected wavelengths", () => {
+test("detector angle changes detector-arm response without moving selected wavelengths", () => {
   const state = createInstrumentState();
   const base = deriveInstrument(state);
 
@@ -237,8 +237,9 @@ test("detector angle changes collection without moving selected wavelengths", ()
 
   assert.equal(Math.round(base.excitationNm), Math.round(tilted.excitationNm));
   assert.equal(Math.round(base.emissionNm), Math.round(tilted.emissionNm));
-  assert.ok(tilted.collection.collectionFactor < base.collection.collectionFactor);
-  assert.ok(tilted.collection.backgroundRisk > base.collection.backgroundRisk);
+  assert.ok(tilted.detectorArm.collectionFactor < base.detectorArm.collectionFactor);
+  assert.ok(tilted.detectorArm.backgroundRisk > base.detectorArm.backgroundRisk);
+  assert.equal(Object.hasOwn(tilted, "collection"), false);
 });
 
 test("mode changes chart axes but keeps source-derived controls separate", () => {

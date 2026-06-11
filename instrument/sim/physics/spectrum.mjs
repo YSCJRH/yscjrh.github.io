@@ -36,7 +36,7 @@ function spectralResponseForPoint(mode, x, state, physics) {
 function gainForState(mode, x, state, physics, profile, responseChain) {
   const integrationGain = 0.72 + Math.sqrt(state.integrationTimeMs / 1000) * 0.5;
   const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
-  const collectionFactor = responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor;
+  const collectionFactor = responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor;
 
   return (
     profile.amplitude *
@@ -56,7 +56,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
     physics.bandpassNm +
     state.integrationTimeMs * 0.001;
   const noise = pointNoise(index, seed, profile);
-  const backgroundRisk = responseChain?.geometry?.backgroundRisk ?? physics.collection.backgroundRisk;
+  const backgroundRisk = responseChain?.geometry?.backgroundRisk ?? physics.detectorArm.backgroundRisk;
   const baseline =
     profile.baseline +
     physics.bandpassNm * 0.002 +
@@ -94,7 +94,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
       emissionShapeAtWavelength: fluorescence,
       emissionBandpassTransmission: physics.throughput,
       detectorResponseAtEmission: spectralResponse.detector,
-      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor,
       integrationMs: state.integrationTimeMs,
       darkBaseline: baseline,
       background: 0,
@@ -123,7 +123,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
       emissionShapeAtWavelength: emissionFit,
       emissionBandpassTransmission: physics.throughput,
       detectorResponseAtEmission: responseChain?.detector?.atEmission ?? spectralResponse.detector,
-      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor,
       integrationMs: state.integrationTimeMs,
       darkBaseline: baseline,
       background: 0,
@@ -151,7 +151,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
     emissionShapeAtWavelength: responseChain?.sample?.emissionAtEmission ?? emissionFit,
     emissionBandpassTransmission: physics.throughput,
     detectorResponseAtEmission: responseChain?.detector?.atEmission ?? spectralResponse.detector,
-    collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+    collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor,
     integrationMs: state.integrationTimeMs,
     darkBaseline: baseline,
     background: 0,

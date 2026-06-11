@@ -1,8 +1,8 @@
 import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=wavelength-control-20260429";
 import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
 import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=time-chain-20260611";
-import { generateDiagnostics } from "./diagnostics.mjs?v=geometry-readout-20260611";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=detector-arm-20260611";
+import { generateDiagnostics } from "./diagnostics.mjs?v=detector-arm-20260611";
 import { deriveArtifactRisks } from "./artifacts.mjs?v=response-chain-20260611";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { deriveGeometryResponse } from "./geometry.mjs?v=response-chain-20260611";
@@ -101,7 +101,7 @@ export function deriveInstrument(state) {
   const bandpassNm = bandpassFromSlit(state.slit.widthUm);
   const throughput = throughputFromSlit(state.slit.widthUm);
   const alignment = deriveAlignment(state.source.offsetUm);
-  const collection = collectionFromDetectorAngle(state.detector.angleDeg);
+  const detectorArm = collectionFromDetectorAngle(state.detector.angleDeg);
 
   const physics = {
     excitationNm,
@@ -109,7 +109,7 @@ export function deriveInstrument(state) {
     bandpassNm,
     throughput,
     alignment,
-    collection,
+    detectorArm,
   };
   const responseChain = deriveResponseChain(state, physics);
   const spectrum = generateSpectrum(state, physics, responseChain);

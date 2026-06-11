@@ -243,7 +243,7 @@ test("workbench exposes response-chain factor readouts", () => {
       bandpassNm: 4.6,
       throughput: 0.75,
       alignment: { overlapFactor: 0.8 },
-      collection: { collectionFactor: 0.9 },
+      detectorArm: { collectionFactor: 0.9 },
       scanMeta: { emissionControlLabel: "Emission wavelength / 发射波长" },
       spectrum: { profile: { description: "Synthetic teaching preset. / 合成教学预设。" } },
       responseChain: {
