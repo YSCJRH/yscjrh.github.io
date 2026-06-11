@@ -8,7 +8,7 @@ import {
   setMode,
   setSelectedPart,
 } from "./sim/state.mjs?v=display-toggles-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=display-toggles-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=instrument-function-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,

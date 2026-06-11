@@ -1,7 +1,7 @@
 import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=wavelength-control-20260429";
 import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
 import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=display-toggles-20260611";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=instrument-function-20260611";
 import { generateDiagnostics } from "./diagnostics.mjs?v=display-toggles-20260611";
 import { deriveArtifactRisks } from "./artifacts.mjs?v=response-chain-20260611";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
