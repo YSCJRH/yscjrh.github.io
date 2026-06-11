@@ -1,6 +1,7 @@
 import { MONOCHROMATOR_WAVELENGTH_RANGE } from "./grating.mjs?v=wavelength-control-20260429";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
+import { convolveLineShape } from "./instrumentFunction.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=display-toggles-20260611";
@@ -77,7 +78,26 @@ function gainForState(mode, x, state, physics, profile, responseChain) {
   );
 }
 
-function calculatePoint(mode, x, index, state, physics, profile, responseChain) {
+function createComponents({ baselineY = 0, sampleRawY = 0, scatterY = 0, noiseY = 0 } = {}) {
+  const safeBaseline = Math.max(Number(baselineY) || 0, 0);
+  const safeSample = Math.max(Number(sampleRawY) || 0, 0);
+  const safeScatter = Math.max(Number(scatterY) || 0, 0);
+  const safeNoise = Number(noiseY) || 0;
+
+  return {
+    baselineY: safeBaseline,
+    sampleRawY: safeSample,
+    sampleInstrumentY: safeSample,
+    scatterY: safeScatter,
+    noiseY: safeNoise,
+  };
+}
+
+function sumComponents(components) {
+  return components.baselineY + components.sampleInstrumentY + components.scatterY + components.noiseY;
+}
+
+function calculatePointComponents(mode, x, index, state, physics, profile, responseChain) {
   const showNoise = isNoiseVisible(state);
   const showArtifacts = areArtifactCuesVisible(state);
   const seed =
@@ -97,25 +117,25 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
   if (profile.kind === "blank") {
     if (mode === "emission") {
       const scatter = showArtifacts ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * 0.032 : 0;
-      return baseline + scatter + noise * 0.7;
+      return createComponents({ baselineY: baseline, scatterY: scatter, noiseY: noise * 0.7 });
     }
 
     if (mode === "excitation") {
       const scatter = showArtifacts ? gaussian(x, physics.emissionNm - 28, 32 + physics.bandpassNm) * 0.024 : 0;
-      return baseline + scatter + noise * 0.7;
+      return createComponents({ baselineY: baseline, scatterY: scatter, noiseY: noise * 0.7 });
     }
 
     if (mode === "single") {
-      return baseline;
+      return createComponents({ baselineY: baseline });
     }
 
     const drift = showArtifacts ? Math.sin(x / 34) * 0.004 + (x / 120) * 0.006 : 0;
-    return baseline + drift + noise * 0.6;
+    return createComponents({ baselineY: baseline, scatterY: drift, noiseY: noise * 0.6 });
   }
 
   if (mode === "emission") {
     const shiftedPeak = profile.emissionPeak + (physics.excitationNm - profile.excitationPeak) * 0.05;
-    const fluorescence = gaussian(x, shiftedPeak, profile.emissionWidth + physics.bandpassNm * 2.2);
+    const fluorescence = gaussian(x, shiftedPeak, profile.emissionWidth);
     const scatter =
       showArtifacts && profile.kind === "scattering"
         ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * (0.13 + backgroundRisk * 0.25)
@@ -131,11 +151,11 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
       detectorResponseAtEmission: spectralResponse.detector,
       collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor,
       integrationMs: state.integrationTimeMs,
-      darkBaseline: baseline,
+      darkBaseline: 0,
       background: 0,
       saturationThreshold: 1.15,
     });
-    return signal.raw + scatter + noise;
+    return createComponents({ baselineY: baseline, sampleRawY: signal.raw, scatterY: scatter, noiseY: noise });
   }
 
   if (mode === "excitation") {
@@ -164,14 +184,19 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
       background: 0,
       saturationThreshold: 1.15,
     });
-    return signal.raw + scatter + noise;
+    return createComponents({
+      baselineY: baseline,
+      sampleRawY: signal.raw - baseline,
+      scatterY: scatter,
+      noiseY: noise,
+    });
   }
 
   if (mode === "single") {
     const gain = gainForState(mode, x, state, physics, profile, responseChain);
     const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
     const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
-    return baseline + gain * excitationFit * emissionFit;
+    return createComponents({ baselineY: baseline, sampleRawY: gain * excitationFit * emissionFit });
   }
 
   const time = x;
@@ -195,7 +220,12 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
   const settle = 1 - Math.exp(-time / 16);
   const decay = 1 - profile.decay * (1 - Math.exp(-time / 72));
   const ripple = Math.sin(time / 9 + physics.bandpassNm * 0.4) * 0.025;
-  return baseline + (steadySignal.raw - baseline) * settle * decay + ripple + noise;
+  return createComponents({
+    baselineY: baseline,
+    sampleRawY: (steadySignal.raw - baseline) * settle * decay,
+    scatterY: ripple,
+    noiseY: noise,
+  });
 }
 
 export function generateSpectrum(state, physics, responseChain = null) {
@@ -213,26 +243,46 @@ export function generateSpectrum(state, physics, responseChain = null) {
   };
   const [min, max] = ranges[state.mode] || ranges.emission;
   const count = state.mode === "single" ? 12 : 96;
-  const points = [];
   const singlePointRawSignal = Number(responseChain?.signal?.raw);
   const singlePointRawY = state.mode === "single" && Number.isFinite(singlePointRawSignal)
     ? clamp(singlePointRawSignal, 0, FIXED_Y_SCALE_MAX)
     : null;
+  const componentRows = [];
 
   for (let index = 0; index < count; index += 1) {
     const progress = index / (count - 1);
     const x = min + (max - min) * progress;
-    const rawY = singlePointRawY ?? clamp(calculatePoint(state.mode, x, index, state, physics, profile, responseChain), 0, FIXED_Y_SCALE_MAX);
+    const components = singlePointRawY === null
+      ? calculatePointComponents(state.mode, x, index, state, physics, profile, responseChain)
+      : createComponents({ sampleRawY: singlePointRawY });
+    componentRows.push({ x, components });
+  }
+
+  if (state.mode === "emission") {
+    const broadenedSample = convolveLineShape(
+      componentRows.map((row) => row.x),
+      componentRows.map((row) => row.components.sampleRawY),
+      { fwhmNm: physics.bandpassNm }
+    );
+
+    componentRows.forEach((row, index) => {
+      row.components.sampleInstrumentY = Math.max(Number(broadenedSample[index]) || 0, 0);
+    });
+  }
+
+  const points = componentRows.map(({ x, components }) => {
+    const rawY = clamp(sumComponents(components), 0, FIXED_Y_SCALE_MAX);
     const responseNormalizer = responseNormalizerForPoint(state.mode, x, state, physics, responseChain);
     const responseNormalizedY = clamp(rawY / responseNormalizer, 0, FIXED_Y_SCALE_MAX);
     const displayY = view.id === "response-normalized" ? responseNormalizedY : rawY;
-    points.push({
+    return {
       x,
       y: displayY / FIXED_Y_SCALE_MAX,
       rawY,
       responseNormalizedY,
-    });
-  }
+      components,
+    };
+  });
 
   const rawPeak = Math.max(...points.map((point) => point.rawY), 0);
   const responseNormalizedPeak = Math.max(...points.map((point) => point.responseNormalizedY), 0);

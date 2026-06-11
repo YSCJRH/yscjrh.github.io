@@ -29,6 +29,13 @@ function deterministicNoise(index, seed) {
   return value - Math.floor(value) - 0.5;
 }
 
+function componentVariance(points, componentKey) {
+  const values = points.map((point) => Number(point.components?.[componentKey]) || 0);
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const mean = points.reduce((sum, point, index) => sum + point.x * values[index], 0) / total;
+  return points.reduce((sum, point, index) => sum + (point.x - mean) ** 2 * values[index], 0) / total;
+}
+
 test("grating angle derives a monotonic 200-900 nm teaching wavelength", () => {
   const minAngle = gratingAngleFromWavelength(200);
   const maxAngle = gratingAngleFromWavelength(900);
@@ -410,6 +417,68 @@ test("single-point monitor is anchored to the response-chain signal", () => {
   });
 });
 
+test("emission scan exposes an instrument-function broadened sample component", () => {
+  const state = createInstrumentState();
+  state.mode = "emission";
+  state.source.id = "ideal-flat";
+  state.detector.id = "ideal-flat";
+  applyControlValue(state, "show-noise", false);
+  applyControlValue(state, "show-artifacts", false);
+
+  const derived = deriveInstrument(state);
+
+  assert.ok(
+    derived.spectrum.points.some((point) => point.components?.sampleInstrumentY !== point.components?.sampleRawY),
+    "at least one emission point should differ after teaching instrument-function broadening"
+  );
+
+  derived.spectrum.points.forEach((point) => {
+    assert.ok(Number.isFinite(point.components.sampleRawY));
+    assert.ok(Number.isFinite(point.components.sampleInstrumentY));
+    assert.ok(point.components.sampleRawY >= 0);
+    assert.ok(point.components.sampleInstrumentY >= 0);
+    assert.equal(point.components.noiseY, 0);
+    assert.equal(point.components.scatterY, 0);
+    assert.ok(
+      Math.abs(point.rawY - (point.components.baselineY + point.components.sampleInstrumentY)) < 1e-12,
+      "raw point should be composed from baseline plus instrument-broadened sample component when cues are hidden"
+    );
+  });
+});
+
+test("wider slit broadens the instrument-function sample component without moving wavelengths", () => {
+  const narrow = createInstrumentState();
+  narrow.mode = "emission";
+  narrow.source.id = "ideal-flat";
+  narrow.detector.id = "ideal-flat";
+  narrow.slit.widthUm = 150;
+  applyControlValue(narrow, "show-noise", false);
+  applyControlValue(narrow, "show-artifacts", false);
+  const narrowDerived = deriveInstrument(narrow);
+
+  const wide = createInstrumentState();
+  wide.mode = "emission";
+  wide.source.id = "ideal-flat";
+  wide.detector.id = "ideal-flat";
+  wide.slit.widthUm = 1000;
+  applyControlValue(wide, "show-noise", false);
+  applyControlValue(wide, "show-artifacts", false);
+  const wideDerived = deriveInstrument(wide);
+
+  assert.equal(Math.round(narrowDerived.excitationNm), Math.round(wideDerived.excitationNm));
+  assert.equal(Math.round(narrowDerived.emissionNm), Math.round(wideDerived.emissionNm));
+  assert.ok(
+    componentVariance(wideDerived.spectrum.points, "sampleInstrumentY") >
+      componentVariance(narrowDerived.spectrum.points, "sampleInstrumentY")
+  );
+  assert.ok(
+    Math.abs(
+      componentVariance(wideDerived.spectrum.points, "sampleRawY") -
+        componentVariance(narrowDerived.spectrum.points, "sampleRawY")
+    ) < 1e-9
+  );
+});
+
 test("emission scan main fluorescence term is composed from response-chain factors per scanned wavelength", () => {
   const state = createInstrumentState();
   state.mode = "emission";
@@ -434,7 +503,7 @@ test("emission scan main fluorescence term is composed from response-chain facto
   const emissionShapeAtWavelength = gaussian(
     point.x,
     shiftedPeak,
-    profile.emissionWidth + derived.bandpassNm * 2.2
+    profile.emissionWidth
   );
   const signal = composeRawSignal({
     sourceAtExcitation: derived.responseChain.source.atExcitation,
@@ -446,14 +515,26 @@ test("emission scan main fluorescence term is composed from response-chain facto
     detectorResponseAtEmission: evaluateDetectorResponse(state.detector.id, point.x),
     collectionFactor: derived.responseChain.geometry.collectionFactor,
     integrationMs: state.integrationTimeMs,
-    darkBaseline: baseline,
+    darkBaseline: 0,
     background: 0,
     saturationThreshold: 1.15,
   });
 
   assert.equal(point.x, scannedEmissionNm);
-  assert.ok(signal.raw > baseline);
-  assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
+  assert.ok(signal.raw > 0);
+  assert.ok(Math.abs(point.components.baselineY - baseline) < 1e-12);
+  assert.ok(Math.abs(point.components.sampleRawY - signal.raw) < 1e-12);
+  assert.ok(
+    Math.abs(
+      point.rawY -
+        (point.components.baselineY +
+          point.components.sampleInstrumentY +
+          point.components.scatterY +
+          point.components.noiseY)
+    ) < 1e-12
+  );
+  assert.equal(point.components.scatterY, 0);
+  assert.ok(Math.abs(point.components.noiseY - noise) < 1e-12);
 });
 
 test("excitation scan main fluorescence term is composed from response-chain factors per scanned wavelength", () => {
@@ -501,7 +582,11 @@ test("excitation scan main fluorescence term is composed from response-chain fac
 
   assert.ok(Math.abs(point.x - 362.1052631578947) < 1e-12);
   assert.ok(signal.raw > baseline);
+  assert.ok(Math.abs(point.components.baselineY - baseline) < 1e-12);
+  assert.ok(Math.abs(point.components.sampleRawY - (signal.raw - baseline)) < 1e-12);
   assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
+  assert.equal(point.components.scatterY, 0);
+  assert.ok(Math.abs(point.components.noiseY - noise) < 1e-12);
 });
 
 test("time scan uses response-chain fixed-channel signal while preserving teaching dynamics", () => {
