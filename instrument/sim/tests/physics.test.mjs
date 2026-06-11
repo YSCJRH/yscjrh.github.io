@@ -9,6 +9,18 @@ import {
 } from "../physics/grating.mjs";
 import { bandpassFromSlit, throughputFromSlit } from "../physics/monochromator.mjs";
 import { deriveAlignment, collectionFromDetectorAngle } from "../physics/alignment.mjs";
+import { evaluateDetectorResponse } from "../physics/detector.mjs";
+import { composeRawSignal } from "../physics/radiometry.mjs";
+
+function gaussian(value, center, width) {
+  const normalized = (value - center) / Math.max(width, 1);
+  return Math.exp(-0.5 * normalized * normalized);
+}
+
+function deterministicNoise(index, seed) {
+  const value = Math.sin(index * 12.9898 + seed * 78.233) * 43758.5453;
+  return value - Math.floor(value) - 0.5;
+}
 
 test("grating angle derives a monotonic 200-900 nm teaching wavelength", () => {
   const minAngle = gratingAngleFromWavelength(200);
@@ -266,6 +278,52 @@ test("single-point monitor is anchored to the response-chain signal", () => {
     assert.equal(point.rawY, expectedRaw);
     assert.equal(point.y, expectedRaw / derived.spectrum.yScaleMax);
   });
+});
+
+test("emission scan main fluorescence term is composed from response-chain factors per scanned wavelength", () => {
+  const state = createInstrumentState();
+  state.mode = "emission";
+  const emissionPointIndex = 44;
+  const scannedEmissionNm = 200 + ((900 - 200) * emissionPointIndex) / 95;
+  setGratingWavelength(state, "emission", scannedEmissionNm);
+
+  const derived = deriveInstrument(state);
+  const point = derived.spectrum.points[emissionPointIndex];
+  const profile = derived.spectrum.profile;
+  const seed =
+    derived.excitationNm * 0.011 +
+    derived.emissionNm * 0.017 +
+    derived.bandpassNm +
+    state.integrationTimeMs * 0.001;
+  const noise = deterministicNoise(emissionPointIndex, seed) * profile.noise;
+  const baseline =
+    profile.baseline +
+    derived.bandpassNm * 0.002 +
+    derived.responseChain.geometry.backgroundRisk * 0.028;
+  const shiftedPeak = profile.emissionPeak + (derived.excitationNm - profile.excitationPeak) * 0.05;
+  const emissionShapeAtWavelength = gaussian(
+    point.x,
+    shiftedPeak,
+    profile.emissionWidth + derived.bandpassNm * 2.2
+  );
+  const signal = composeRawSignal({
+    sourceAtExcitation: derived.responseChain.source.atExcitation,
+    excitationBandpassTransmission: derived.throughput * derived.alignment.overlapFactor,
+    absorptionAtExcitation: derived.responseChain.sample.absorptionAtExcitation,
+    quantumYield: profile.amplitude,
+    emissionShapeAtWavelength,
+    emissionBandpassTransmission: derived.throughput,
+    detectorResponseAtEmission: evaluateDetectorResponse(state.detector.id, point.x),
+    collectionFactor: derived.responseChain.geometry.collectionFactor,
+    integrationMs: state.integrationTimeMs,
+    darkBaseline: baseline,
+    background: 0,
+    saturationThreshold: 1.15,
+  });
+
+  assert.equal(point.x, scannedEmissionNm);
+  assert.ok(signal.raw > baseline);
+  assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
 });
 
 test("blank/background preset stays weak on fixed y scale", () => {

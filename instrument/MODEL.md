@@ -43,7 +43,7 @@ state
 
 This is useful as a conceptual skeleton. As of 2026-06-11, `deriveInstrument()` exposes a bounded `responseChain`, and source/detector teaching response factors affect the synthetic trace. The chain is still teaching-level and partly parallel to the legacy chart calculation, so it must not be presented as a calibrated radiometric model.
 
-The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, the synthetic trace, and the single-point monitor. The single-point mode is anchored directly to `responseChain.signal.raw`; wavelength scans still retain compact chart-shape calculations while using response-chain source, detector, geometry, and integration factors. Source and detector presets now carry machine-readable synthetic-teaching boundaries so they cannot be mistaken for measured lamp or hardware response curves. This incremental split must stay visible until the remaining scan paths are migrated or explicitly retained as teaching chart-shape logic.
+The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, the synthetic trace, and the single-point monitor. The single-point mode is anchored directly to `responseChain.signal.raw`. The emission scan now composes its main fluorescence term through `composeRawSignal()` at each scanned emission wavelength, while keeping the existing teaching emission shape, scattering, blank/background, deterministic noise, and fixed y-scale behavior. Excitation and time scans still retain compact chart-shape calculations while using response-chain source, detector, geometry, and integration factors where already wired. Source and detector presets now carry machine-readable synthetic-teaching boundaries so they cannot be mistaken for measured lamp or hardware response curves. This incremental split must stay visible until the remaining scan paths are migrated or explicitly retained as teaching chart-shape logic.
 
 ## Target Response Chain
 
@@ -87,12 +87,14 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/sample-data.test.mjs`: 31 tests passed after moving teaching sample presets into static JSON plus a runtime data module.
 - `node --test instrument/sim/tests/physics.test.mjs`: 20 tests passed after anchoring the single-point monitor to `responseChain.signal.raw`.
 - `node --test instrument/sim/tests/model-invariants.test.mjs`: 4 tests passed after adding source/detector preset boundary metadata for `claimLevel`, `controlBinding`, `evidenceKey`, and placeholder wording.
+- `node --test instrument/sim/tests/physics.test.mjs`: 21 tests passed after routing the emission scan main fluorescence term through `composeRawSignal()` per scanned emission wavelength.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 45 tests passed after the emission-scan response-chain slice.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
 
 ## Next Model Slices
 
-1. Replace or explicitly document the remaining emission, excitation, and time scan chart-shape math while preserving response-chain factors and current teaching behavior.
+1. Replace or explicitly document the remaining excitation and time scan chart-shape math while preserving response-chain factors and current teaching behavior.
 2. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
 3. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.

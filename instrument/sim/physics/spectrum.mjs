@@ -1,6 +1,7 @@
 import { MONOCHROMATOR_WAVELENGTH_RANGE } from "./grating.mjs?v=wavelength-control-20260429";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
+import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 import { SAMPLE_PROFILES } from "../state.mjs?v=sample-data-20260611";
 
@@ -79,18 +80,28 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
   }
 
   if (mode === "emission") {
-    const excitationFit = gaussian(
-      physics.excitationNm,
-      profile.excitationPeak,
-      profile.excitationWidth + physics.bandpassNm
-    );
     const shiftedPeak = profile.emissionPeak + (physics.excitationNm - profile.excitationPeak) * 0.05;
     const fluorescence = gaussian(x, shiftedPeak, profile.emissionWidth + physics.bandpassNm * 2.2);
     const scatter =
       profile.kind === "scattering"
         ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * (0.13 + backgroundRisk * 0.25)
         : 0;
-    return baseline + gain * excitationFit * fluorescence + scatter + noise;
+    const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+    const signal = composeRawSignal({
+      sourceAtExcitation: responseChain?.source?.atExcitation ?? spectralResponse.source,
+      excitationBandpassTransmission: physics.throughput * physics.alignment.overlapFactor,
+      absorptionAtExcitation: responseChain?.sample?.absorptionAtExcitation ?? 0,
+      quantumYield: profile.amplitude,
+      emissionShapeAtWavelength: fluorescence,
+      emissionBandpassTransmission: physics.throughput,
+      detectorResponseAtEmission: spectralResponse.detector,
+      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+      integrationMs: state.integrationTimeMs,
+      darkBaseline: baseline,
+      background: 0,
+      saturationThreshold: 1.15,
+    });
+    return signal.raw + scatter + noise;
   }
 
   if (mode === "excitation") {
