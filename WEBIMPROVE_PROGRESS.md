@@ -1,9 +1,34 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-11 Instrument Lab default 3D workbench
-- Status: Full local validation and browser QA passed; ready for commit and publish
-- Last updated: 2026-06-11
+- Active: 2026-06-12 Instrument Lab emission monochromator ray direction hotfix
+- Status: Full local validation and browser QA passed; not yet committed or published
+- Last updated: 2026-06-12
+
+## 2026-06-12 Instrument Lab emission monochromator ray direction hotfix
+- Status: Full local validation and browser QA passed; not yet committed or published.
+- Trigger:
+  - User screenshot showed the emission monochromator internal dispersed/selected ray pointing back toward the sample instead of toward the detector.
+- Root cause:
+  - The excitation and emission monochromator interiors reused the same local ray vectors.
+  - Because the emission monochromator is rotated 90 degrees in the scene, the shared local selected-ray direction mapped toward the sample side in world space.
+- Changes:
+  - Added part-aware internal path helpers for excitation and emission monochromators.
+  - Routed emission-side incoming rays from the sample side and selected/split spectrum rays toward local `-x`, which maps to the detector side after the scene rotation.
+  - Kept the excitation-side internal ray orientation unchanged.
+  - Added a geometry regression test proving the emission monochromator exits toward the detector side.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/scene-geometry.test.mjs` failed before implementation because the scene module did not expose part-aware internal path helpers.
+  - Green: `node --test instrument/sim/tests/scene-geometry.test.mjs` passed: 1/1.
+  - Green: `node --check instrument/sim/scene/InstrumentScene.mjs`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 102/102.
+  - Green: `python tools/check_site.py`; `node tools/preprocess-instrument-data.js --validate`; `git diff --check`.
+  - Green: `node tools/check-instrument-browser.js` passed with default 3D, language density, keyboard, mobile, no-JS fallback, WebGL fallback, and module-failure checks.
+  - Visual QA screenshot confirmed that opening Em mono now routes the internal dispersed/selected ray toward the detector side.
+- Remaining notes:
+  - This is a visual geometry hotfix only. It does not change wavelength derivation, synthetic spectra, diagnostics, or source-derived examples.
+- Blockers:
+  - None.
 
 ## 2026-06-11 Instrument Lab default 3D workbench
 - Status: Full local validation and browser QA passed; ready for commit and publish.

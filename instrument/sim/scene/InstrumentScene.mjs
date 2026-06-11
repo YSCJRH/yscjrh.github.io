@@ -23,6 +23,28 @@ function isMonochromatorPart(part) {
   return part === "excitation" || part === "emission";
 }
 
+export function resolveInternalSpectrumOutputDirection(part) {
+  return part === "emission" ? -1 : 1;
+}
+
+export function resolveMonochromatorInternalPath(part, bandShift = 0) {
+  if (part === "emission") {
+    return {
+      incomingStart: new THREE.Vector3(0.46, 0.16, 0.04),
+      incomingEnd: new THREE.Vector3(0.04, 0.16, 0.02 + bandShift * 0.25),
+      selectedStart: new THREE.Vector3(0.02, 0.16, bandShift * 0.35),
+      selectedEnd: new THREE.Vector3(-0.46, 0.16, -0.04 + bandShift),
+    };
+  }
+
+  return {
+    incomingStart: new THREE.Vector3(-0.46, 0.16, 0.46),
+    incomingEnd: new THREE.Vector3(-0.04, 0.16, 0.02 + bandShift * 0.25),
+    selectedStart: new THREE.Vector3(-0.02, 0.16, bandShift * 0.35),
+    selectedEnd: new THREE.Vector3(0.46, 0.16, -0.46 + bandShift),
+  };
+}
+
 function applyDefaultCameraView(camera, controls) {
   camera.position.set(DEFAULT_CAMERA_POSITION.x, DEFAULT_CAMERA_POSITION.y, DEFAULT_CAMERA_POSITION.z);
   controls.target.set(DEFAULT_CAMERA_TARGET.x, DEFAULT_CAMERA_TARGET.y, DEFAULT_CAMERA_TARGET.z);
@@ -401,12 +423,14 @@ function updateSplitSpectrumRays(group, bandShift, slitProgress) {
     return;
   }
 
-  const origin = new THREE.Vector3(-0.01, 0.24, 0.01 + bandShift * 0.28);
+  const outputDirection = group.userData.outputDirection || 1;
+  const origin = new THREE.Vector3(-0.01 * outputDirection, 0.24, 0.01 + bandShift * 0.28);
   const spread = 1.15 + slitProgress * 0.55;
   rays.forEach(({ ray, glow, offset }, index) => {
     const verticalLift = (index - (rays.length - 1) / 2) * 0.052;
     const selectedBias = index === 2 ? 0.035 : 0;
-    const end = new THREE.Vector3(0.48, 0.2 + verticalLift + selectedBias, -0.43 + bandShift + offset * spread);
+    const baseZ = outputDirection > 0 ? -0.43 : -0.04;
+    const end = new THREE.Vector3(0.48 * outputDirection, 0.2 + verticalLift + selectedBias, baseZ + bandShift + offset * spread);
     setCylinderBetween(ray, origin, end);
     setCylinderBetween(glow, origin, end);
     ray.material.opacity = index === 2 ? 0.7 + slitProgress * 0.24 : 0.5 + slitProgress * 0.16;
@@ -519,7 +543,7 @@ function createBafflePlate(part, width = 0.045) {
   return baffle;
 }
 
-function createInternalDispersionRays() {
+function createInternalDispersionRays(part) {
   const group = new THREE.Group();
   const incomingBeam = createBeam(0x6f88ff, 0.012, 0.34);
   const incomingGlow = createBeam(0x6f88ff, 0.028, 0.09);
@@ -527,18 +551,22 @@ function createInternalDispersionRays() {
   const selectedBandGlow = createBeam(0x52f0d3, 0.032, 0.14);
   const fan = new THREE.Group();
   const spectrumRays = createSplitSpectrumRays();
+  const outputDirection = resolveInternalSpectrumOutputDirection(part);
+  const path = resolveMonochromatorInternalPath(part, 0);
 
   fan.add(
     createDispersionFan(0x6f88ff, -0.14),
     createDispersionFan(0x52f0d3, 0),
     createDispersionFan(0xffd166, 0.14)
   );
-  fan.position.set(0.02, 0, -0.02);
+  fan.position.set(0.02 * outputDirection, 0, -0.02);
+  fan.scale.x = outputDirection;
+  spectrumRays.userData.outputDirection = outputDirection;
 
-  setCylinderBetween(incomingBeam, new THREE.Vector3(-0.46, 0.16, 0.46), new THREE.Vector3(-0.03, 0.16, 0.02));
-  setCylinderBetween(incomingGlow, new THREE.Vector3(-0.46, 0.16, 0.46), new THREE.Vector3(-0.03, 0.16, 0.02));
-  setCylinderBetween(selectedBand, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
-  setCylinderBetween(selectedBandGlow, new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(0.46, 0.16, -0.46));
+  setCylinderBetween(incomingBeam, path.incomingStart, path.incomingEnd);
+  setCylinderBetween(incomingGlow, path.incomingStart, path.incomingEnd);
+  setCylinderBetween(selectedBand, path.selectedStart, path.selectedEnd);
+  setCylinderBetween(selectedBandGlow, path.selectedStart, path.selectedEnd);
 
   group.add(incomingGlow, incomingBeam, fan, spectrumRays, selectedBandGlow, selectedBand);
   group.userData.incomingBeam = incomingBeam;
@@ -579,7 +607,7 @@ function createMonochromatorInterior(part) {
     new THREE.BoxGeometry(0.035, 0.42, 0.34),
     makeMaterial(0x2c3a52, { transparent: true, opacity: 0.34, emissive: 0x52f0d3, emissiveIntensity: 0.04 })
   );
-  const rays = createInternalDispersionRays();
+  const rays = createInternalDispersionRays(part);
   const gratingControl = createGratingRotationControl(part);
 
   liner.position.set(0, 0.03, 0);
@@ -686,15 +714,12 @@ function updateMonochromatorCutaway(monochromator, angleDeg, wavelengthNm, selec
     1
   );
   const bandShift = (rangeProgress - 0.5) * 0.26;
-  const incomingStart = new THREE.Vector3(-0.46, 0.16, 0.46);
-  const incomingEnd = new THREE.Vector3(-0.04, 0.16, 0.02 + bandShift * 0.25);
-  const selectedStart = new THREE.Vector3(-0.02, 0.16, bandShift * 0.35);
-  const selectedEnd = new THREE.Vector3(0.46, 0.16, -0.46 + bandShift);
+  const path = resolveMonochromatorInternalPath(monochromator.userData.part, bandShift);
 
-  setCylinderBetween(monochromator.userData.incomingBeam, incomingStart, incomingEnd);
-  setCylinderBetween(monochromator.userData.incomingGlow, incomingStart, incomingEnd);
-  setCylinderBetween(monochromator.userData.selectedBand, selectedStart, selectedEnd);
-  setCylinderBetween(monochromator.userData.selectedBandGlow, selectedStart, selectedEnd);
+  setCylinderBetween(monochromator.userData.incomingBeam, path.incomingStart, path.incomingEnd);
+  setCylinderBetween(monochromator.userData.incomingGlow, path.incomingStart, path.incomingEnd);
+  setCylinderBetween(monochromator.userData.selectedBand, path.selectedStart, path.selectedEnd);
+  setCylinderBetween(monochromator.userData.selectedBandGlow, path.selectedStart, path.selectedEnd);
   updateSplitSpectrumRays(monochromator.userData.spectrumRays, bandShift, slitProgress);
 
   if (monochromator.userData.incomingBeam?.material) {
