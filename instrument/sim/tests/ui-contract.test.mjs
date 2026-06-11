@@ -313,6 +313,14 @@ test("instrument page exposes a persistent language display framework", () => {
   assert.match(instrumentScript, /localStorage/, "language mode should persist locally");
 });
 
+test("instrument route cache key changes with the browser QA hardening slice", () => {
+  assert.match(
+    instrumentHtml,
+    /instrument\.js\?v=browser-qa-20260611/,
+    "instrument.js cache key should be bumped when runtime language switch behavior changes"
+  );
+});
+
 test("language switch is touch-sized and non-misleading without JavaScript", () => {
   const languageButtons = Array.from(
     instrumentHtml.matchAll(/<button type="button"[^>]*data-language-mode-option="[^"]+"[^>]*>/g)

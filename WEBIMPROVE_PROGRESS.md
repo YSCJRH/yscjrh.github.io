@@ -1340,10 +1340,12 @@
   - Added a UI contract test for no-JS language switch behavior and touch target sizing.
   - Disabled language switch buttons in static HTML until `instrument/instrument.js` enables them after JavaScript loads.
   - Increased language switch button height to `2.5rem` and added a disabled visual state.
+  - Bumped the route-local `instrument.js` cache key to `browser-qa-20260611` so live visitors do not pair the new HTML with stale runtime JavaScript.
   - Documented the browser QA command in `README.md` and ignored `.playwright-cli/` session artifacts.
 - Validation result:
   - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation because language switch buttons were not disabled in no-JS HTML.
-  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 25/25.
+  - TDD red: the route cache-key contract failed while `instrument/index.html` still loaded `instrument.js?v=inner-filter-risk-20260611`.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 26/26.
   - `node --test instrument/sim/tests/browser-qa-tool.test.mjs` passed: 1/1.
   - `node tools/check-instrument-browser.js` passed: first viewport workbench, WebGL fallback status, console errors, mobile overflow/touch target, prefers-reduced-motion page state, language switch, keyboard activation, source-derived panel, and module failure fallback.
 - Remaining non-blocking notes:
