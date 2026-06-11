@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=language-density-20260611").catch((error) => {
+        import("./instrument.js?v=default-3d-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
@@ -137,10 +137,10 @@
                 <h1 class="article-title" data-language="en">Fluorescence instrument teaching skeleton</h1>
                 <p class="instrument-title-zh" lang="zh-CN" data-language="zh">荧光仪器教学骨架</p>
                 <p class="article-lead" data-language="en">
-                  Use the 2D fallback first, then enable the optional 3D bench when you want draggable monochromator handles.
+                  The 3D bench loads by default when WebGL is available; the 2D optical path remains as a fallback.
                 </p>
                 <p class="article-lead article-lead-zh" lang="zh-CN" data-language="zh">
-                  先使用 2D 备用光路与控制面板，再按需启用可选 3D 光学平台拖动单色器手柄。
+                  支持 WebGL 时默认加载 3D 光学平台；二维光路仍作为备用方案保留。
                 </p>
               </div>
               <div class="instrument-hero-tools">
@@ -171,8 +171,8 @@
                 </p>
                 <p>
                   <strong data-localize-text>3. Inspect a mono / 查看单色器</strong>
-                  <span data-language="en">Use part buttons in the 2D fallback; enable optional 3D to drag grating handles.</span>
-                  <span data-language="zh" lang="zh-CN">在 2D 备用图中使用部件按钮；启用可选 3D 后再拖动光栅手柄。</span>
+                  <span data-language="en">Use the default 3D bench when available; drag grating handles after selecting Ex mono or Em mono.</span>
+                  <span data-language="zh" lang="zh-CN">优先使用默认 3D 光学平台；选择激发或发射单色器后拖动光栅手柄。</span>
                 </p>
               </div>
 
@@ -406,11 +406,11 @@
                 </div>
 
                 <p class="instrument-operability-note" data-scene-hint>
-                  <span data-language="en">Primary path: use the visible controls and part buttons in the 2D fallback. Enable optional 3D, then click Ex mono or Em mono and drag the pale grating face or glowing handle to watch rays, wavelength, beam color, diagnostics, and spectrum update.</span>
-                  <span data-language="zh" lang="zh-CN">主要路径：先使用 2D 备用图中的可见控制项和部件按钮。启用可选 3D 后，再点击激发或发射单色器并拖动浅色光栅面或发光手柄，观察线束、波长、光束颜色、诊断和谱图同步变化。</span>
+                  <span data-language="en">Primary path: use the default 3D bench when available, then click Ex mono or Em mono and drag the pale grating face or glowing handle to watch rays, wavelength, beam color, diagnostics, and spectrum update.</span>
+                  <span data-language="zh" lang="zh-CN">主要路径：优先使用默认 3D 光学平台，再点击激发或发射单色器并拖动浅色光栅面或发光手柄，观察线束、波长、光束颜色、诊断和谱图同步变化。</span>
                 </p>
                 <div class="instrument-inline-actions">
-                  <button class="instrument-inline-action" type="button" data-action="enable-3d" data-localize-text>Enable optional 3D model / 启用可选 3D 模型</button>
+                  <button class="instrument-inline-action" type="button" data-action="enable-3d" data-localize-text hidden>Retry 3D model / 重试 3D 模型</button>
                 </div>
 
                 <details class="instrument-principle-details">

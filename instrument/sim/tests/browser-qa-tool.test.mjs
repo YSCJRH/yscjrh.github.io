@@ -20,7 +20,7 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     "prefers-reduced-motion",
     "keyboard",
     "no-JS fallback",
-    "optional 3D scene",
+    "default 3D scene",
     "geometry mode",
     "response-normalized view",
     "source-derived",

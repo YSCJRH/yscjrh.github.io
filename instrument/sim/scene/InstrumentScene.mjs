@@ -12,6 +12,8 @@ const DETECTOR_MIN_ANGLE = 80;
 const DETECTOR_MAX_ANGLE = 100;
 const SOURCE_BASE_POSITION = new THREE.Vector3(-4.0, BENCH_Y, 0);
 const SAMPLE_BASE_POSITION = new THREE.Vector3(0, BENCH_Y + 0.12, 0);
+const DEFAULT_CAMERA_POSITION = Object.freeze({ x: 5.8, y: 4.35, z: 6.15 });
+const DEFAULT_CAMERA_TARGET = Object.freeze({ x: -0.85, y: -0.28, z: 1.75 });
 const GRATING_RANGES = Object.freeze({
   excitation: MONOCHROMATOR_GRATING_ANGLE_RANGE,
   emission: MONOCHROMATOR_GRATING_ANGLE_RANGE,
@@ -19,6 +21,11 @@ const GRATING_RANGES = Object.freeze({
 
 function isMonochromatorPart(part) {
   return part === "excitation" || part === "emission";
+}
+
+function applyDefaultCameraView(camera, controls) {
+  camera.position.set(DEFAULT_CAMERA_POSITION.x, DEFAULT_CAMERA_POSITION.y, DEFAULT_CAMERA_POSITION.z);
+  controls.target.set(DEFAULT_CAMERA_TARGET.x, DEFAULT_CAMERA_TARGET.y, DEFAULT_CAMERA_TARGET.z);
 }
 
 function makeMaterial(color, options = {}) {
@@ -1187,7 +1194,6 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 80);
-  camera.position.set(5.8, 4.35, 5.55);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = !reducedMotion;
@@ -1195,7 +1201,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   controls.minDistance = 4.2;
   controls.maxDistance = 10.5;
   controls.maxPolarAngle = Math.PI * 0.47;
-  controls.target.set(-0.85, 0.72, 1.15);
+  applyDefaultCameraView(camera, controls);
 
   const transformControls = new TransformControls(camera, renderer.domElement);
   transformControls.setMode("translate");
@@ -1826,8 +1832,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   });
 
   function resetView() {
-    camera.position.set(5.8, 4.35, 5.55);
-    controls.target.set(-0.85, 0.72, 1.15);
+    applyDefaultCameraView(camera, controls);
     controls.update();
     render();
   }

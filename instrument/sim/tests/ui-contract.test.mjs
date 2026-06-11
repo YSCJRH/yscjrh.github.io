@@ -273,9 +273,9 @@ test("source, detector, and geometry no-JS fallback options match the shared pre
   );
 });
 
-test("3D scene is optional with an honest initial fallback state", () => {
+test("3D scene auto-starts with an honest no-JS fallback state", () => {
   const enableMatches = instrumentHtml.match(/data-action="enable-3d"/g) || [];
-  assert.equal(enableMatches.length, 1, "instrument page should expose one explicit 3D enable button");
+  assert.equal(enableMatches.length, 1, "instrument page should keep one retry/enable control for fallback recovery");
 
   const statusMatch = instrumentHtml.match(/<span[^>]*data-webgl-status[^>]*>([\s\S]*?)<\/span>/);
   assert.ok(statusMatch, "instrument page should include a WebGL status element");
@@ -283,6 +283,14 @@ test("3D scene is optional with an honest initial fallback state", () => {
   assert.match(statusMatch[0], /aria-atomic="true"/);
   assert.doesNotMatch(statusMatch[1], /Loading|正在加载/);
   assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
+
+  const defaultFallbackIndex = instrumentScript.lastIndexOf('root.classList.add("has-2d-fallback")');
+  const applyStateIndex = instrumentScript.indexOf("applyState();", defaultFallbackIndex);
+  const autoStartIndex = instrumentScript.indexOf("createScene();", applyStateIndex);
+  const sourceDataIndex = instrumentScript.indexOf("initializeSourceDataWhenNeeded();", applyStateIndex);
+  assert.ok(defaultFallbackIndex > 0, "runtime should preserve default fallback before JavaScript scene load");
+  assert.ok(autoStartIndex > applyStateIndex, "runtime should auto-start the 3D scene after initial state is applied");
+  assert.ok(sourceDataIndex > autoStartIndex, "3D scene should be started before deferred source-derived examples");
 });
 
 test("3D scene exposes geometry-mode teaching cues", () => {
@@ -355,6 +363,42 @@ test("fallback diagram reserves space around status and scan labels", () => {
   assert.ok(
     Math.abs(scanBadgeTextY - rightAngleLabelY) >= 30,
     `emission scan badge and right-angle geometry label are too close: ${scanBadgeTextY} vs ${rightAngleLabelY}`
+  );
+});
+
+test("primary instrument model spans the desktop workbench", () => {
+  assert.match(
+    siteStyles,
+    /\.instrument-model-panel\s*{[\s\S]*?grid-column:\s*1\s*\/\s*-1;/,
+    "desktop model panel should span the full workstation width"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-side\s*{[\s\S]*?grid-column:\s*1\s*\/\s*-1;/,
+    "secondary controls should sit below the full-width model panel"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-stage-3d\s*{[\s\S]*?min-height:\s*clamp\(/,
+    "primary 3D stage should use a viewport-aware height instead of the old half-page panel height"
+  );
+});
+
+test("default 3D model leads the workbench visual order", () => {
+  assert.match(
+    siteStyles,
+    /\.instrument-model-panel\s*{[\s\S]*?order:\s*1;/,
+    "default 3D model should be the first visual item inside the workbench"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-onboarding\s*{[\s\S]*?order:\s*2;/,
+    "onboarding tips should follow the primary model instead of pushing it below the first workbench screen"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-side\s*{[\s\S]*?order:\s*3;/,
+    "secondary controls should remain after the primary model and onboarding tips in the workbench flow"
   );
 });
 
@@ -436,7 +480,7 @@ test("single-language mode can collapse dense static workbench labels", () => {
 test("instrument route cache key changes with the browser QA hardening slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=language-density-20260611/,
+    /instrument\.js\?v=default-3d-20260611/,
     "instrument.js cache key should be bumped when runtime language switch behavior changes"
   );
 });
@@ -503,16 +547,17 @@ test("long explanatory panels expose language-separable copy", () => {
   assert.match(noscriptMatch[0], /data-language="zh"/);
 });
 
-test("first-screen operation copy separates default 2D controls from optional 3D dragging", () => {
+test("first-screen operation copy presents 3D as the default path with 2D fallback", () => {
   const onboardingStart = instrumentHtml.indexOf('<div class="instrument-onboarding"');
   const onboardingEnd = instrumentHtml.indexOf("</div>", onboardingStart);
   const onboarding = instrumentHtml.slice(onboardingStart, onboardingEnd);
   const sceneHintMatch = instrumentHtml.match(/<p class="instrument-operability-note"[\s\S]*?<\/p>/);
   const sceneHint = sceneHintMatch?.[0] || "";
 
-  assert.match(onboarding, /2D fallback|2D 备用|optional 3D|可选 3D/);
+  assert.match(instrumentHtml, /3D bench loads by default|默认加载 3D 光学平台/);
+  assert.match(onboarding, /default 3D bench|默认 3D 光学平台/);
   assert.doesNotMatch(onboarding, /then drag the grating/);
-  assert.match(sceneHint, /Enable optional 3D|启用可选 3D/);
+  assert.match(sceneHint, /default 3D bench|默认 3D 光学平台/);
   assert.match(sceneHint, /drag .*grating|拖动.*光栅/);
 });
 

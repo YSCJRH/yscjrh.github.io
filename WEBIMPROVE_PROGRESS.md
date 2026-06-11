@@ -1,9 +1,32 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-11 Instrument Lab fallback label overlap hotfix
-- Status: Focused overlap regression and browser QA passed locally; ready for commit and publish
+- Active: 2026-06-11 Instrument Lab default 3D workbench
+- Status: Full local validation and browser QA passed; ready for commit and publish
 - Last updated: 2026-06-11
+
+## 2026-06-11 Instrument Lab default 3D workbench
+- Status: Full local validation and browser QA passed; ready for commit and publish.
+- Trigger:
+  - User requested the instrument model default to the 3D model and occupy the full main workbench area instead of sharing half the desktop layout.
+- Changes:
+  - Auto-started the 3D scene when WebGL is available while preserving the 2D optical path as no-JS and WebGL-unavailable fallback.
+  - Changed the model panel to span the full desktop workbench width and moved controls/diagnostics/spectrum into the secondary grid below the primary model.
+  - Moved the primary 3D model ahead of onboarding tips in the workbench visual order and tightened the page header so the model enters the first viewport.
+  - Added a shared default camera view for initial load and reset so the full-width 3D bench is framed around the optical platform.
+  - Reworded public bilingual copy from optional 3D to default 3D with 2D fallback.
+  - Kept the hidden retry button for module/WebGL recovery and exposed it only on scene failure.
+  - Updated UI contract and browser QA checks for default 3D startup and full-width model layout.
+- Validation result:
+  - Green: `node --check instrument/instrument.js`; `node --check instrument/sim/scene/InstrumentScene.mjs`; `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 101/101.
+  - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+  - Green: `node tools/check-instrument-browser.js` passed with `default 3D scene`, language density, keyboard, mobile overflow, no-JS fallback, WebGL fallback, and module-failure checks.
+  - Visual QA screenshot confirmed the default 3D model is visible in the first desktop viewport and the model panel spans the workbench width.
+- Remaining notes:
+  - This is a layout/runtime-default change only. It does not change the simulator physics, source-derived examples, or calibration boundary.
+- Blockers:
+  - None.
 
 ## 2026-06-11 Instrument Lab fallback label overlap hotfix
 - Status: Focused regression and browser QA passed locally; ready for commit and publish

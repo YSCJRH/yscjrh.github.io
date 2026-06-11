@@ -17,7 +17,7 @@ const MARKERS = [
   "prefers-reduced-motion",
   "keyboard",
   "no-JS fallback",
-  "optional 3D scene",
+  "default 3D scene",
   "geometry mode",
   "response-normalized view",
   "source-derived",
@@ -186,9 +186,11 @@ async function main() {
         return {
           title: document.title,
           hasWorkbench: Boolean(rect),
+          workbenchWidth: rect ? rect.width : null,
           workbenchTop: rect ? rect.top : null,
           workbenchBottom: rect ? rect.bottom : null,
           viewportHeight: window.innerHeight,
+          modelPanelWidth: document.querySelector('.instrument-model-panel')?.getBoundingClientRect().width || null,
           hasControls: Boolean(document.querySelector('[data-control="excitation-wavelength"]')),
           hasDiagnostics: Boolean(document.querySelector('[data-diagnostics-list]')),
           hasSpectrum: Boolean(document.querySelector('[data-spectrum-trace]')),
@@ -201,6 +203,13 @@ async function main() {
     );
     assertCheck(normal.hasWorkbench && normal.hasControls && normal.hasDiagnostics && normal.hasSpectrum, "first viewport workbench pieces are missing", normal);
     assertCheck(normal.workbenchTop < normal.viewportHeight && normal.workbenchBottom > 0, "first viewport does not expose the interactive workbench", normal);
+    assertCheck(
+      normal.workbenchWidth > 0 &&
+        normal.modelPanelWidth > 0 &&
+        normal.modelPanelWidth / normal.workbenchWidth >= 0.92,
+      "primary model panel does not occupy the full workbench width",
+      normal
+    );
     assertCheck(normal.hasTransmissionBoundary && normal.hasSourceBoundary, "boundary copy missing on normal load", normal);
     assertCheck(normal.hasFallbackStatus, "WebGL fallback status regions missing", normal);
     assertCheck(normal.overflowX === 0, "desktop horizontal overflow detected", normal);
@@ -439,6 +448,11 @@ async function main() {
     const geometryMode = evalInPage(
       SESSION,
       `async () => {
+        const root = document.querySelector('[data-instrument-lab]');
+        const hadWebglScene = root?.classList.contains('has-webgl-scene') || false;
+        const hadFallback = root?.classList.contains('has-2d-fallback') || false;
+        root?.classList.remove('has-webgl-scene');
+        root?.classList.add('has-2d-fallback');
         const select = document.querySelector('[data-control="geometry-mode"]');
         const modes = ["right-angle-90", "front-face", "transmission"];
         const results = [];
@@ -462,6 +476,8 @@ async function main() {
             collection: document.querySelector('[data-readout="collection"]')?.textContent.trim(),
           });
         }
+        root?.classList.toggle('has-webgl-scene', hadWebglScene);
+        root?.classList.toggle('has-2d-fallback', hadFallback);
         return results;
       }`
     );
@@ -514,12 +530,11 @@ async function main() {
     );
     record("response-normalized view");
 
-    progress("checking optional 3D scene");
-    const optional3d = runCode(
+    progress("checking default 3D scene");
+    const default3d = runCode(
       SESSION,
       `async (page) => {
         await page.setViewportSize({ width: 1100, height: 820 });
-        await page.locator('[data-action="enable-3d"]').click();
         await page.waitForTimeout(1400);
         return await page.evaluate(() => {
           const root = document.querySelector('[data-instrument-lab]');
@@ -537,15 +552,15 @@ async function main() {
       }`
     );
     assertCheck(
-      optional3d.overflowX === 0 &&
+      default3d.overflowX === 0 &&
         (
-          (optional3d.hasWebglScene && optional3d.canvasCount === 1 && /3D teaching skeleton active/.test(optional3d.statusText)) ||
-          (optional3d.hasFallback && optional3d.canvasCount === 0 && /unavailable|fallback|备用|不可用/i.test(optional3d.statusText))
+          (default3d.hasWebglScene && default3d.canvasCount === 1 && /3D teaching skeleton active/.test(default3d.statusText)) ||
+          (default3d.hasFallback && default3d.canvasCount === 0 && /unavailable|fallback|备用|不可用/i.test(default3d.statusText))
         ),
-      "optional 3D scene did not activate or fall back cleanly",
-      optional3d
+      "default 3D scene did not activate or fall back cleanly",
+      default3d
     );
-    record("optional 3D scene");
+    record("default 3D scene");
 
     progress("checking source-derived panel");
     const sourceDerived = evalInPage(

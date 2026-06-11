@@ -239,6 +239,7 @@ if (root) {
       root.classList.add("has-2d-fallback");
       updateWebglStatus("3D scene unavailable. Showing the 2D fallback. / 3D 场景不可用，显示二维备用图。");
       elements.enableSceneButtons.forEach((button) => {
+        button.hidden = false;
         button.disabled = false;
       });
       setEnableSceneButtonText("Retry 3D model / 重试 3D 模型");
@@ -375,5 +376,6 @@ if (root) {
   syncInputsFromState();
   root.classList.add("has-2d-fallback");
   applyState();
+  createScene();
   initializeSourceDataWhenNeeded();
 }
