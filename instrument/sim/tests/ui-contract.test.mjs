@@ -234,3 +234,15 @@ test("workbench exposes response-chain factor readouts", () => {
   assert.equal(elements.readouts.responseDetector.textContent, "58%");
   assert.equal(elements.readouts.signalHeadroom.textContent, "69%");
 });
+
+test("dynamic workbench status regions announce model changes accessibly", () => {
+  const scanStateMatch = instrumentHtml.match(/<div class="scan-state-grid"[\s\S]*?>/);
+  assert.ok(scanStateMatch, "expected scan-state-grid container");
+  assert.match(scanStateMatch[0], /aria-live="polite"/);
+  assert.match(scanStateMatch[0], /aria-atomic="false"/);
+
+  const diagnosticsMatch = instrumentHtml.match(/<ul class="diagnostics-list"[^>]*data-diagnostics-list[^>]*>/);
+  assert.ok(diagnosticsMatch, "expected diagnostics list");
+  assert.match(diagnosticsMatch[0], /aria-live="polite"/);
+  assert.match(diagnosticsMatch[0], /aria-relevant="additions text"/);
+});
