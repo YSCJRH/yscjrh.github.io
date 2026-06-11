@@ -179,8 +179,10 @@ export function updateDiagnostics(elements, diagnostics) {
   elements.diagnosticsList.textContent = "";
   diagnostics.forEach((item) => {
     const li = document.createElement("li");
+    const evidenceKey = item.evidenceKey || "untracked";
     li.className = `diagnostic-item diagnostic-item-${item.tone || "info"}`;
-    li.setAttribute("aria-label", `${item.label}: ${item.text}`);
+    li.setAttribute("data-evidence-key", evidenceKey);
+    li.setAttribute("aria-label", `${item.label}: ${item.text} Evidence key: ${evidenceKey}`);
     const label = document.createElement("strong");
     const separator = document.createElement("span");
     const copy = document.createElement("span");

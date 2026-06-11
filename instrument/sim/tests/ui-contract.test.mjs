@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { collectInstrumentElements } from "../ui/spectrum.mjs";
+import { collectInstrumentElements, updateDiagnostics } from "../ui/spectrum.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
@@ -112,4 +112,55 @@ test("long explanatory panels expose language-separable copy", () => {
   assert.ok(noscriptMatch, "expected no-JS fallback copy");
   assert.match(noscriptMatch[0], /data-language="en"/);
   assert.match(noscriptMatch[0], /data-language="zh"/);
+});
+
+test("diagnostic cards expose machine-readable evidence keys", () => {
+  const previousDocument = globalThis.document;
+  const fakeDocument = {
+    createElement(tagName) {
+      return {
+        tagName,
+        attributes: {},
+        children: [],
+        className: "",
+        hidden: false,
+        textContent: "",
+        setAttribute(name, value) {
+          this.attributes[name] = value;
+        },
+        append(...children) {
+          this.children.push(...children);
+        },
+      };
+    },
+  };
+  const diagnosticsList = {
+    textContent: "stale diagnostics",
+    children: [],
+    appendChild(node) {
+      this.children.push(node);
+    },
+  };
+
+  globalThis.document = fakeDocument;
+  try {
+    updateDiagnostics(
+      { diagnosticsList },
+      [
+        {
+          tone: "warn",
+          evidenceKey: "ILAB-004",
+          label: "Resolution tradeoff / 分辨率权衡",
+          text: "Slit width changes throughput and bandpass. / 狭缝宽度改变通量和带宽。",
+        },
+      ]
+    );
+  } finally {
+    globalThis.document = previousDocument;
+  }
+
+  assert.equal(diagnosticsList.textContent, "");
+  assert.equal(diagnosticsList.children.length, 1);
+  assert.equal(diagnosticsList.children[0].attributes["data-evidence-key"], "ILAB-004");
+  assert.match(diagnosticsList.children[0].attributes["aria-label"], /ILAB-004/);
 });
