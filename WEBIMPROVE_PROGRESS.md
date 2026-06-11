@@ -2,7 +2,7 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest inner-filter risk diagnostic slice locally verified
+- Status: In progress; latest inner-filter, geometry-boundary, and module-fallback slices locally and browser verified
 - Last updated: 2026-06-11
 
 ## 2026-06-11 Inner-filter risk diagnostic slice
@@ -32,7 +32,7 @@
   - No Beer-Lambert formula, absorbance path-length model, reabsorption correction, geometry-specific inner-filter correction, or calibrated sample claim was introduced.
 
 ## 2026-06-11 Geometry evidence boundary slice
-- Status: Focused evidence, UI, and physics tests passed; full release validation pending.
+- Status: Focused evidence, UI, physics, full release validation, and browser smoke passed.
 - Trigger:
   - Read-only scientific review found that `transmission` geometry was public/selectable but not specifically covered by the research log.
   - An existing inner-filter diagnostic test also needed model-documentation coverage so the categorical risk cue could not be mistaken for a correction.
@@ -50,6 +50,11 @@
   - `node --test instrument/sim/tests/evidence-docs.test.mjs` passed: 4/4.
   - `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 24/24.
   - `node --test instrument/sim/tests/physics.test.mjs` passed: 33/33.
+  - `node --test instrument/sim/tests/*.mjs` passed: 81/81.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Playwright CLI browser smoke passed: local `/instrument/` exposed the transmission and inner-filter boundary copy, console error count was 0 on normal load, mobile overflow stayed 0, and module-failure routing updated both WebGL fallback status regions.
 - Remaining notes:
   - This does not implement real transmission optics or front-face ray tracing.
   - The transmission mode remains a conservative teaching diagnostic for direct excitation and background risk.
