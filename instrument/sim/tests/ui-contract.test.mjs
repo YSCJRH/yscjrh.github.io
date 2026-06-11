@@ -383,7 +383,7 @@ test("long explanatory panels expose language-separable copy", () => {
     assert.match(block, /data-language="zh"/);
   });
 
-  const teachingCards = instrumentHtml.match(/<article class="teaching-card">[\s\S]*?<\/article>/g) || [];
+  const teachingCards = instrumentHtml.match(/<article[^>]+class="teaching-card"[\s\S]*?<\/article>/g) || [];
   assert.ok(teachingCards.length >= 10, "expected corrections and geometry teaching cards");
   teachingCards.forEach((card) => {
     assert.match(card, /data-language="en"/);

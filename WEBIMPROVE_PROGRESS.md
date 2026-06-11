@@ -1400,3 +1400,27 @@
   - This slice changes runtime copy structure only. It adds no new source-derived datasets, scientific claims, or external dependencies.
 - Blockers:
   - None.
+
+## Instrument static teaching-card evidence crosswalk
+- Status: Completed locally; pending commit and publish
+- Trigger:
+  - Continue `refine.md` DoD work on evidence/documentation coverage for public science caveats.
+  - Previous DoD audit found diagnostics had evidence keys, while static teaching cards were supported by nearby docs but not machine-linked to ILAB evidence.
+- Root cause:
+  - The static correction/artifact and sample/geometry teaching cards were visitor-facing scientific caveats, but their HTML did not expose which `docs/instrument-research-log.md` claim supported each card.
+- Changes:
+  - Added `data-evidence-key` to each static teaching card.
+  - Mapped detector response to `ILAB-003`, excitation flux/source correction to `ILAB-002`, slit bandpass to `ILAB-004`, scatter bands to `ILAB-007`, inner-filter effect to `ILAB-005`, linearity/saturation to `ILAB-010`, geometry cards to `ILAB-006`, sample-environment boundary to `ILAB-008`, and future data gate to `ILAB-009`.
+  - Added an evidence-docs test that requires every static teaching card to carry an ILAB key recorded in the research log.
+  - Updated the UI contract test matcher so teaching-card attributes remain compatible with bilingual copy checks.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before implementation because teaching cards were missing `data-evidence-key`.
+  - Green: `node --test instrument/sim/tests/evidence-docs.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 32/32.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 88/88.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `node tools/check-instrument-browser.js` passed.
+- Remaining non-blocking notes:
+  - This slice adds machine-readable evidence links only. It does not add new scientific claims or visible copy.
+- Blockers:
+  - None.
