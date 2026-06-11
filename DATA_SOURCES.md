@@ -82,6 +82,7 @@ Required dataset fields:
 - `dataUrl` for plotted data, or `null` for reference-only entries
 - `source`: title, creators, DOI if available, URL, license, source file, citation
 - `measurement`: mode, sample/context, units
+- `axes`: plotted coordinate labels, units, and source/processing notes; inferred axes must be explicitly marked
 - `processing`: normalization, downsampling, axis handling, checksum, display-only notes
 
 1D spectrum files contain:

@@ -80,7 +80,7 @@ export function generateDiagnostics(state, derived) {
       tone: "warn",
       evidenceKey: "ILAB-008",
       label: "Alignment / 对准",
-      text: "Source entrance offset lowers overlap and intensity; the fixed sample cell stays in the measurement holder and selected wavelength does not move. / 光源入口偏移会降低重叠和强度；固定样品池仍在测量架中，选通波长不会移动。",
+      text: "Source entrance offset lowers overlap and intensity; the fixed sample cell stays in the sample holder and selected wavelength does not move. / 光源入口偏移会降低重叠和强度；固定样品池仍在样品架中，选通波长不会移动。",
     });
   }
 

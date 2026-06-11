@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=control-hardening-20260611">
+    <link rel="stylesheet" href="../styles.css?v=source-axes-20260611">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=control-hardening-20260611").catch((error) => {
+        import("./instrument.js?v=source-axes-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -201,6 +201,9 @@
                 </div>
 
                 <div class="instrument-stage instrument-stage-fallback instrument-2d-fallback" data-fallback-diagram aria-label="Simplified instrument light path fallback / 简化仪器光路备用图">
+                  <p class="instrument-fallback-status" data-webgl-status aria-live="polite" aria-atomic="true">
+                    2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。
+                  </p>
                   <svg
                     class="instrument-diagram"
                     viewBox="0 0 960 560"
@@ -430,7 +433,7 @@
                   </div>
                 </details>
 
-                <div class="instrument-flow-strip" aria-label="Measurement chain / 测量链路">
+                <div class="instrument-flow-strip" aria-label="Conceptual signal chain / 概念信号链路">
                   <button type="button" data-part="source" aria-pressed="true">Light source / 光源</button>
                   <button type="button" data-part="excitation" aria-pressed="false">Excitation mono / 激发单色器</button>
                   <button type="button" data-part="sample" aria-pressed="false">Sample cell / 样品池</button>
@@ -855,6 +858,10 @@
                     <div>
                       <dt>License / 许可</dt>
                       <dd data-source-license>Recorded in manifest / 已记录在 manifest 中</dd>
+                    </div>
+                    <div>
+                      <dt>Axes / 坐标轴</dt>
+                      <dd data-source-axes>Recorded in manifest / 已记录在 manifest 中</dd>
                     </div>
                     <div>
                       <dt>Processing / 处理方式</dt>

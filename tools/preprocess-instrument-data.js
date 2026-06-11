@@ -351,6 +351,18 @@ async function buildArtifacts() {
           xUnit: "nm",
           yUnit: "normalized a.u.",
         },
+        axes: {
+          x: {
+            label: "wavelength",
+            unit: "nm",
+            source: "source CSV wavelength column",
+          },
+          y: {
+            label: "normalized intensity",
+            unit: "a.u.",
+            source: "processed fluorescence counts normalized to max=1",
+          },
+        },
         processing: {
           normalization:
             "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
@@ -388,6 +400,18 @@ async function buildArtifacts() {
           sample: "EGFP purified fluorescent protein table entry",
           xUnit: "nm",
           yUnit: "normalized a.u.",
+        },
+        axes: {
+          x: {
+            label: "wavelength",
+            unit: "nm",
+            source: "source table column immediately before the EGFP emission column",
+          },
+          y: {
+            label: "normalized intensity",
+            unit: "a.u.",
+            source: "processed EGFP emission values normalized to max=1",
+          },
         },
         processing: {
           normalization: "negative values clamped to zero; max intensity normalized to 1",
@@ -433,6 +457,26 @@ async function buildArtifacts() {
           yUnit: "emission nm",
           zUnit: "normalized a.u.",
           sourceValueUnit: "Raman Units (RU)",
+        },
+        axes: {
+          excitation: {
+            label: "excitation wavelength",
+            unit: "nm",
+            source:
+              "inferred from matrix width and source notes; excitation_lambda.txt is absent from the Zenodo record",
+            inferred: true,
+          },
+          emission: {
+            label: "emission wavelength",
+            unit: "nm",
+            source: "emission_lambda.txt",
+          },
+          intensity: {
+            label: "normalized intensity",
+            unit: "a.u.",
+            source: "sample01EEM.txt matrix values normalized to max=1",
+            sourceUnit: "Raman Units (RU)",
+          },
         },
         processing: {
           normalization: "negative matrix values clamped to zero; max intensity normalized to 1",
@@ -579,6 +623,10 @@ async function validateOutput() {
       throw new Error(`Plottable dataset must record axis handling and source checksum: ${dataset.id}`);
     }
 
+    if (!dataset.axes || typeof dataset.axes !== "object") {
+      throw new Error(`Plottable dataset must declare structured axes: ${dataset.id}`);
+    }
+
     if (!supportedDataKinds.has(dataset.kind)) {
       throw new Error(`Unsupported plottable dataset kind for ${dataset.id}: ${dataset.kind}`);
     }
@@ -592,6 +640,13 @@ async function validateOutput() {
     packageBytes += (await fs.stat(dataPath)).size;
 
     if (dataset.kind === "spectrum1d") {
+      for (const key of ["x", "y"]) {
+        const axis = dataset.axes[key];
+        if (!axis?.label || !axis?.unit || !axis?.source) {
+          throw new Error(`1D dataset axis ${key} is missing label, unit, or source: ${dataset.id}`);
+        }
+      }
+
       if (!Array.isArray(data.x) || !Array.isArray(data.y) || data.x.length !== data.y.length || data.x.length < 2) {
         throw new Error(`Invalid 1D spectrum arrays for ${dataset.id}`);
       }
@@ -602,6 +657,17 @@ async function validateOutput() {
     }
 
     if (dataset.kind === "eem") {
+      for (const key of ["excitation", "emission", "intensity"]) {
+        const axis = dataset.axes[key];
+        if (!axis?.label || !axis?.unit || !axis?.source) {
+          throw new Error(`EEM dataset axis ${key} is missing label, unit, or source: ${dataset.id}`);
+        }
+      }
+
+      if (dataset.axes.excitation.inferred !== true) {
+        throw new Error(`EEM excitation axis must be marked inferred when source axis file is absent: ${dataset.id}`);
+      }
+
       if (!Array.isArray(data.excitation) || !Array.isArray(data.emission) || !Array.isArray(data.z)) {
         throw new Error(`Invalid EEM arrays for ${dataset.id}`);
       }

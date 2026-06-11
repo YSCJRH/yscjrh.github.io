@@ -239,6 +239,7 @@ export function collectInstrumentElements(root) {
     fallbackDiagram: root.querySelector("[data-fallback-diagram]"),
     sceneHost: root.querySelector("[data-scene-host]"),
     webglStatus: root.querySelector("[data-webgl-status]"),
+    webglStatuses: Array.from(root.querySelectorAll("[data-webgl-status]")),
     readouts: {
       excitationAngle: root.querySelector('[data-readout="excitation-angle"]'),
       emissionAngle: root.querySelector('[data-readout="emission-angle"]'),

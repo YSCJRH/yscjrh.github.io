@@ -43,6 +43,18 @@
         "xUnit": "nm",
         "yUnit": "normalized a.u."
       },
+      "axes": {
+        "x": {
+          "label": "wavelength",
+          "unit": "nm",
+          "source": "source CSV wavelength column"
+        },
+        "y": {
+          "label": "normalized intensity",
+          "unit": "a.u.",
+          "source": "processed fluorescence counts normalized to max=1"
+        }
+      },
       "processing": {
         "normalization": "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
         "downsampling": "bucket average to 320 points",
@@ -88,6 +100,18 @@
         "sample": "EGFP purified fluorescent protein table entry",
         "xUnit": "nm",
         "yUnit": "normalized a.u."
+      },
+      "axes": {
+        "x": {
+          "label": "wavelength",
+          "unit": "nm",
+          "source": "source table column immediately before the EGFP emission column"
+        },
+        "y": {
+          "label": "normalized intensity",
+          "unit": "a.u.",
+          "source": "processed EGFP emission values normalized to max=1"
+        }
       },
       "processing": {
         "normalization": "negative values clamped to zero; max intensity normalized to 1",
@@ -143,6 +167,25 @@
         "yUnit": "emission nm",
         "zUnit": "normalized a.u.",
         "sourceValueUnit": "Raman Units (RU)"
+      },
+      "axes": {
+        "excitation": {
+          "label": "excitation wavelength",
+          "unit": "nm",
+          "source": "inferred from matrix width and source notes; excitation_lambda.txt is absent from the Zenodo record",
+          "inferred": true
+        },
+        "emission": {
+          "label": "emission wavelength",
+          "unit": "nm",
+          "source": "emission_lambda.txt"
+        },
+        "intensity": {
+          "label": "normalized intensity",
+          "unit": "a.u.",
+          "source": "sample01EEM.txt matrix values normalized to max=1",
+          "sourceUnit": "Raman Units (RU)"
+        }
       },
       "processing": {
         "normalization": "negative matrix values clamped to zero; max intensity normalized to 1",

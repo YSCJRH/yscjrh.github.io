@@ -4523,6 +4523,24 @@ section[id] {
   background: rgba(77, 237, 207, 0.1);
 }
 
+.instrument-fallback-status {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 3;
+  margin: 0;
+  padding: 0.45rem 0.64rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  background: rgba(5, 7, 13, 0.72);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-align: center;
+  backdrop-filter: blur(14px);
+}
+
 .instrument-stage::before {
   content: "";
   position: absolute;
@@ -6260,6 +6278,15 @@ section[id] {
     display: block;
     flex-basis: 100%;
     text-align: center;
+    font-size: 0.62rem;
+    line-height: 1.25;
+  }
+
+  .instrument-fallback-status {
+    top: 0.45rem;
+    left: 0.45rem;
+    right: 0.45rem;
+    border-radius: 0.5rem;
     font-size: 0.62rem;
     line-height: 1.25;
   }

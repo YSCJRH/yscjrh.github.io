@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   findClosestIndex,
   findEemPeak,
+  formatSourceAxes,
   getEemSlice,
   isPlottableSourceDataset,
   setElementText,
@@ -158,6 +159,42 @@ test("processed source-derived data axes and provenance are valid for plotting",
         });
       }
     });
+});
+
+test("plottable source-derived datasets declare structured axes for the facts panel", () => {
+  manifest.datasets.filter(isPlottableSourceDataset).forEach((dataset) => {
+    assert.equal(typeof dataset.axes, "object", `${dataset.id} should declare axes`);
+
+    if (dataset.kind === "eem") {
+      for (const key of ["excitation", "emission", "intensity"]) {
+        assert.equal(typeof dataset.axes[key]?.label, "string", `${dataset.id}.${key} should have label`);
+        assert.equal(typeof dataset.axes[key]?.unit, "string", `${dataset.id}.${key} should have unit`);
+        assert.equal(typeof dataset.axes[key]?.source, "string", `${dataset.id}.${key} should have source`);
+      }
+      assert.equal(dataset.axes.excitation.inferred, true, `${dataset.id} excitation axis should be marked inferred`);
+    } else {
+      for (const key of ["x", "y"]) {
+        assert.equal(typeof dataset.axes[key]?.label, "string", `${dataset.id}.${key} should have label`);
+        assert.equal(typeof dataset.axes[key]?.unit, "string", `${dataset.id}.${key} should have unit`);
+        assert.equal(typeof dataset.axes[key]?.source, "string", `${dataset.id}.${key} should have source`);
+      }
+    }
+  });
+});
+
+test("source axis facts are concise paired public copy", () => {
+  const spectrum = manifest.datasets.find((dataset) => dataset.id === "r6g-emission-ethylene-glycol");
+  const eem = manifest.datasets.find((dataset) => dataset.id === "fe-dom-sample01-eem");
+
+  const spectrumCopy = formatSourceAxes(spectrum);
+  const eemCopy = formatSourceAxes(eem);
+
+  assert.match(spectrumCopy, /X: wavelength .*nm/i);
+  assert.match(spectrumCopy, /Y: normalized intensity .*a\.u\./i);
+  assert.match(spectrumCopy, /坐标轴/);
+  assert.match(eemCopy, /Excitation: .*inferred/i);
+  assert.match(eemCopy, /Emission: .*emission_lambda\.txt/i);
+  assert.match(eemCopy, /激发/);
 });
 
 test("source dataset card boundary notes are short paired display-only copy", () => {

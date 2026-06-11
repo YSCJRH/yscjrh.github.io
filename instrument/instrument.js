@@ -14,7 +14,7 @@ import {
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=control-hardening-20260611";
+} from "./sim/ui/spectrum.mjs?v=source-axes-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -91,9 +91,10 @@ if (root) {
   }
 
   function updateWebglStatus(message) {
-    if (elements.webglStatus) {
-      elements.webglStatus.textContent = message;
-    }
+    const statusElements = elements.webglStatuses?.length ? elements.webglStatuses : [elements.webglStatus].filter(Boolean);
+    statusElements.forEach((status) => {
+      status.textContent = message;
+    });
   }
 
   function applyReducedMotionPreference() {
@@ -121,7 +122,7 @@ if (root) {
   }
 
   function loadSourceDataModule() {
-    sourceDataModulePromise ||= import("./sim/ui/source-data.mjs?v=control-hardening-20260611");
+    sourceDataModulePromise ||= import("./sim/ui/source-data.mjs?v=source-axes-20260611");
     return sourceDataModulePromise;
   }
 

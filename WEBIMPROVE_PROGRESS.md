@@ -2,8 +2,32 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest sample preset boundary metadata slice locally verified
+- Status: In progress; latest source axes and fallback status slice locally and browser verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Source axes and fallback status slice
+- Status: Local tests, data validation, site check, diff check, and Chrome headless/CDP QA passed; full final `refine.md` DoD audit remains open.
+- Trigger:
+  - Final DoD audit needed fresh browser evidence and clearer source-derived provenance facts.
+  - Source-derived examples exposed processing and boundary notes, but plotted axes were not shown as a separate facts-panel field.
+  - Mobile browser QA found the WebGL status text existed only inside the hidden optional 3D stage when the 2D fallback was active.
+- Changes:
+  - Added structured `axes` metadata for plotted source-derived datasets in `instrument/data/manifest.json` and the preprocessing validator.
+  - Added `Axes / 坐标轴` source facts and `formatSourceAxes()` rendering.
+  - Added a visible 2D fallback WebGL live status and synchronized all duplicated status regions.
+  - Added UI/source-data tests for source axes facts and fallback status visibility.
+  - Tightened public wording from measurement-chain language to conceptual signal-chain language.
+- Validation result:
+  - TDD RED confirmed the focused UI/source-data tests failed before the axes renderer and facts-panel field were added.
+  - `node --test instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 36/36.
+  - `node --test instrument/sim/tests/*.mjs` passed: 76/76.
+  - `node tools/preprocess-instrument-data.js --validate` passed; validated package size was 65160 bytes.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Chrome headless/CDP QA passed 14 checks covering desktop workbench/readouts/diagnostics, language switching, source-derived cards and axes, optional 3D canvas, desktop/mobile console cleanliness, mobile reduced motion/no overflow/visible fallback status, and JS-disabled fallback.
+- Remaining notes:
+  - This does not make source-derived examples simulator-controlled, calibrated, or measured by this site.
+  - Automated browser QA is still not a substitute for a human comprehension study.
 
 ## 2026-06-11 Sample preset boundary metadata slice
 - Status: Local tests, data validation, site check, diff check, and Chrome headless smoke passed; full final `refine.md` DoD audit remains open.

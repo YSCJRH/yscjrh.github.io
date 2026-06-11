@@ -249,6 +249,63 @@ export function isPlottableSourceDataset(dataset) {
   );
 }
 
+function axisPhrase(axis, fallbackLabel) {
+  const label = axis?.label || fallbackLabel;
+  const unit = axis?.unit ? ` (${axis.unit})` : "";
+  const source = axis?.source ? `, ${axis.source}` : "";
+  const inferred = axis?.inferred ? ", inferred" : "";
+  return `${label}${unit}${source}${inferred}`;
+}
+
+function axisPhraseZh(axis, fallbackLabel) {
+  const labelMap = {
+    "excitation wavelength": "激发波长",
+    "emission wavelength": "发射波长",
+    "normalized intensity": "归一化强度",
+    wavelength: "波长",
+  };
+  const sourceMap = {
+    "source CSV wavelength column": "源 CSV 波长列",
+    "processed fluorescence counts normalized to max=1": "处理后的荧光计数按最大值归一化",
+    "source table column immediately before the EGFP emission column": "EGFP 发射列前一列的源表格波长列",
+    "processed EGFP emission values normalized to max=1": "处理后的 EGFP 发射值按最大值归一化",
+    "inferred from matrix width and source notes; excitation_lambda.txt is absent from the Zenodo record":
+      "根据矩阵宽度和来源说明推断；Zenodo 记录缺少 excitation_lambda.txt",
+    "emission_lambda.txt": "emission_lambda.txt",
+    "sample01EEM.txt matrix values normalized to max=1": "sample01EEM.txt 矩阵值按最大值归一化",
+  };
+
+  const label = labelMap[axis?.label] || fallbackLabel;
+  const unit = axis?.unit ? `（${axis.unit}）` : "";
+  const source = axis?.source ? `，来源：${sourceMap[axis.source] || axis.source}` : "";
+  const inferred = axis?.inferred ? "，推断轴" : "";
+  return `${label}${unit}${source}${inferred}`;
+}
+
+export function formatSourceAxes(dataset) {
+  const axes = dataset?.axes || {};
+
+  if (dataset?.kind === "eem") {
+    const excitation = axisPhrase(axes.excitation, "excitation wavelength");
+    const emission = axisPhrase(axes.emission, "emission wavelength");
+    const intensity = axisPhrase(axes.intensity, "normalized intensity");
+    const excitationZh = axisPhraseZh(axes.excitation, "激发波长");
+    const emissionZh = axisPhraseZh(axes.emission, "发射波长");
+    const intensityZh = axisPhraseZh(axes.intensity, "归一化强度");
+    return `Axes: Excitation: ${excitation}; Emission: ${emission}; Intensity: ${intensity}. / 坐标轴：激发为 ${excitationZh}；发射为 ${emissionZh}；强度为 ${intensityZh}。`;
+  }
+
+  if (axes.x || axes.y) {
+    const x = axisPhrase(axes.x, "wavelength");
+    const y = axisPhrase(axes.y, "normalized intensity");
+    const xZh = axisPhraseZh(axes.x, "波长");
+    const yZh = axisPhraseZh(axes.y, "归一化强度");
+    return `Axes: X: ${x}; Y: ${y}. / 坐标轴：X 为 ${xZh}；Y 为 ${yZh}。`;
+  }
+
+  return "Axes recorded in manifest when plotted. / 绘图坐标轴记录在 manifest 中。";
+}
+
 function updateDatasetCards(elements, datasetId) {
   const cards = elements.sourceCards ? Array.from(elements.sourceCards.querySelectorAll("[data-source-card]")) : [];
   cards.forEach((card) => {
@@ -506,6 +563,7 @@ function updateSourceMetadata(elements, dataset, data) {
   const boundaryPair = splitLanguagePair(boundary);
   setElementText(elements.sourceName, source.title || dataset.label);
   setElementText(elements.sourceLicense, source.license || "Recorded in manifest / 已记录在 manifest 中");
+  setElementText(elements.sourceAxes, formatSourceAxes(dataset));
   setElementText(
     elements.sourceProcessing,
     processing.notes || data.notes || "Normalized/downsampled for display. / 已归一化并降采样用于显示。"
@@ -591,6 +649,7 @@ export async function initializeSourceData(root) {
     sourceName: root.querySelector("[data-source-name]"),
     sourceLink: root.querySelector("[data-source-link]"),
     sourceLicense: root.querySelector("[data-source-license]"),
+    sourceAxes: root.querySelector("[data-source-axes]"),
     sourceProcessing: root.querySelector("[data-source-processing]"),
     sourceFile: root.querySelector("[data-source-file]"),
     sourceBoundary: root.querySelector("[data-source-boundary]"),

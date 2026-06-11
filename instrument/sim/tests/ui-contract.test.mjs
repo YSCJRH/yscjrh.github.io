@@ -254,6 +254,16 @@ test("mobile view keeps WebGL fallback status visible", () => {
     /\.instrument-view-toolbar \[data-webgl-status\]\s*{[\s\S]*?display: block;/,
     "mobile WebGL status should be explicitly restored as visible text"
   );
+  assert.match(
+    instrumentHtml,
+    /class="instrument-fallback-status"[^>]*data-webgl-status/,
+    "2D fallback should expose a visible WebGL status outside the hidden 3D stage"
+  );
+  assert.match(
+    instrumentScript,
+    /webglStatuses/,
+    "runtime should keep all duplicated WebGL status regions synchronized"
+  );
 });
 
 test("instrument page exposes a persistent language display framework", () => {
@@ -572,6 +582,19 @@ test("workbench exposes synthetic component overlay controls and layers", () => 
   assert.match(instrumentHtml, /sample, baseline\/artifact, and noise cues|样品、基线\/伪影与噪声提示/);
   assert.match(instrumentHtml, /data-chart-components/);
   assert.match(siteStyles, /\.spectrum-component-trace/);
+});
+
+test("source-derived facts expose axes separately from processing and boundaries", () => {
+  const factsIndex = instrumentHtml.indexOf("source-data-facts");
+  const axesIndex = instrumentHtml.indexOf("data-source-axes");
+  const processingIndex = instrumentHtml.indexOf("data-source-processing");
+  const boundaryIndex = instrumentHtml.indexOf("data-source-boundary");
+
+  assert.ok(factsIndex > 0, "source facts panel should exist");
+  assert.ok(axesIndex > factsIndex, "source axes fact should exist in the facts panel");
+  assert.ok(axesIndex < processingIndex, "axes should be visible before long processing notes");
+  assert.ok(processingIndex < boundaryIndex, "processing and boundary facts should remain separate");
+  assert.match(instrumentHtml, /Axes \/ 坐标轴/);
 });
 
 test("dynamic workbench status regions announce model changes accessibly", () => {
