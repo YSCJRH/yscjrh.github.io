@@ -20,6 +20,7 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     "keyboard",
     "geometry mode",
     "source-derived",
+    "source-derived language",
     "module failure",
     "language switch",
     "WebGL fallback",

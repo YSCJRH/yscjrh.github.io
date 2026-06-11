@@ -86,6 +86,24 @@ export function setLanguagePair(element, pair) {
   element.append(en, zh);
 }
 
+function sourceDatasetLabelPair(dataset) {
+  return splitLanguagePair(dataset?.label || "Source-derived dataset / 引用数据集");
+}
+
+export function formatSourceDatasetLoadingStatus(dataset) {
+  const label = sourceDatasetLabelPair(dataset);
+  return {
+    en: `Loading ${label.en}...`,
+    zh: `正在加载${label.zh}...`,
+  };
+}
+
+export function setSourceDatasetCardCopy(parts, dataset) {
+  setElementText(parts?.tag, datasetKindLabel(dataset));
+  setElementText(parts?.label, dataset?.label || "Source-derived dataset / 引用数据集");
+  setElementText(parts?.note, sourceDatasetBoundaryNote(dataset));
+}
+
 function formatNumber(value, digits = 0) {
   if (!Number.isFinite(value)) {
     return "--";
@@ -325,14 +343,13 @@ function createDatasetCard(dataset, onSelect) {
 
   const tag = document.createElement("span");
   tag.className = "source-dataset-card__tag";
-  tag.textContent = datasetKindLabel(dataset);
 
   const label = document.createElement("strong");
-  label.textContent = dataset.label;
 
   const note = document.createElement("span");
   note.className = "source-dataset-card__note";
-  note.textContent = sourceDatasetBoundaryNote(dataset);
+
+  setSourceDatasetCardCopy({ tag, label, note }, dataset);
 
   button.append(tag, label, note);
   button.addEventListener("click", () => onSelect(dataset.id));
@@ -603,7 +620,7 @@ async function showSourceDataset(elements, datasetId) {
   }
 
   try {
-    setElementText(elements.sourceStatus, `Loading ${dataset.label}... / 正在加载 ${dataset.label}...`);
+    setLanguagePair(elements.sourceStatus, formatSourceDatasetLoadingStatus(dataset));
 
     if (!sourceState.cache.has(dataset.id)) {
       sourceState.cache.set(dataset.id, await fetchJson(`data/${dataset.dataUrl}`));

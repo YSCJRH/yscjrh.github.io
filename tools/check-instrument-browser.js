@@ -17,6 +17,7 @@ const MARKERS = [
   "keyboard",
   "geometry mode",
   "source-derived",
+  "source-derived language",
   "module failure",
   "language switch",
   "WebGL fallback",
@@ -357,6 +358,61 @@ async function main() {
     );
     assertCheck(sourceDerived.cards >= 3 && /display|显示|source/i.test(sourceDerived.boundary || ""), "source-derived display-only panel failed", sourceDerived);
     record("source-derived");
+
+    progress("checking source-derived language mode");
+    const sourceDerivedLanguage = evalInPage(
+      SESSION,
+      `async () => {
+        function visibleLanguageText(selector) {
+          const element = document.querySelector(selector);
+          if (!element) return "";
+          const languageSpans = [...element.querySelectorAll('[data-language]')];
+          if (!languageSpans.length) return element.textContent.trim();
+          return languageSpans
+            .filter((span) => {
+              const style = getComputedStyle(span);
+              const rect = span.getBoundingClientRect();
+              return style.display !== 'none' && style.visibility !== 'hidden' && rect.width >= 0 && rect.height >= 0;
+            })
+            .map((span) => span.textContent.trim())
+            .join(" ")
+            .trim();
+        }
+
+        document.querySelector('[data-language-mode-option="zh"]').click();
+        await new Promise((resolve) => setTimeout(resolve, 120));
+        const zh = {
+          mode: document.querySelector('[data-instrument-lab]')?.dataset.languageMode,
+          card: visibleLanguageText('[data-source-cards] button strong'),
+          status: visibleLanguageText('[data-source-status]'),
+          boundary: visibleLanguageText('[data-source-boundary]'),
+        };
+
+        document.querySelector('[data-language-mode-option="en"]').click();
+        await new Promise((resolve) => setTimeout(resolve, 120));
+        const en = {
+          mode: document.querySelector('[data-instrument-lab]')?.dataset.languageMode,
+          card: visibleLanguageText('[data-source-cards] button strong'),
+          status: visibleLanguageText('[data-source-status]'),
+          boundary: visibleLanguageText('[data-source-boundary]'),
+        };
+
+        return { zh, en };
+      }`
+    );
+    assertCheck(
+      sourceDerivedLanguage.zh.mode === "zh" &&
+        /[\u3400-\u9fff]/.test(sourceDerivedLanguage.zh.card) &&
+        /[\u3400-\u9fff]/.test(sourceDerivedLanguage.zh.status) &&
+        !/Loading|Display-only source example/.test(sourceDerivedLanguage.zh.card + sourceDerivedLanguage.zh.status + sourceDerivedLanguage.zh.boundary) &&
+        sourceDerivedLanguage.en.mode === "en" &&
+        /Rhodamine|EGFP|Fe\\(II\\)-DOM|Reference/i.test(sourceDerivedLanguage.en.card) &&
+        /Loaded local source-derived example/i.test(sourceDerivedLanguage.en.status) &&
+        !/正在加载|已加载|仅作|模拟器/.test(sourceDerivedLanguage.en.card + sourceDerivedLanguage.en.status + sourceDerivedLanguage.en.boundary),
+      "source-derived text did not follow the selected language mode",
+      sourceDerivedLanguage
+    );
+    record("source-derived language");
 
     progress("checking module failure fallback");
     runCli(FAIL_SESSION, ["open", "about:blank"]);

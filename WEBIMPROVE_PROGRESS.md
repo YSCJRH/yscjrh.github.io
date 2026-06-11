@@ -1327,7 +1327,7 @@
   - None.
 
 ## Instrument browser QA and language switch hardening
-- Status: Completed locally; ready for commit and publish
+- Status: Published in `3c9e6d0 instrument: bump browser qa cache key`
 - Trigger:
   - Continue `refine.md` DoD work on browser evidence, accessibility, mobile/fallback resilience, and bilingual public UI behavior.
 - Root cause:
@@ -1350,5 +1350,53 @@
   - `node tools/check-instrument-browser.js` passed: first viewport workbench, WebGL fallback status, console errors, mobile overflow/touch target, prefers-reduced-motion page state, language switch, keyboard activation, source-derived panel, and module failure fallback.
 - Remaining non-blocking notes:
   - The browser QA command uses local `npx --package @playwright/cli` on demand; it adds no project runtime dependency and creates no tracked browser session artifacts.
+- Blockers:
+  - None.
+
+## Instrument geometry-mode fallback diagram cues
+- Status: Published in `ccfefd8 instrument: sync geometry fallback visuals`
+- Trigger:
+  - Continue `refine.md` DoD work on geometry mode affecting the light-path diagram, not only diagnostics and response factors.
+- Root cause:
+  - `geometryMode` already affected collection/background diagnostics and the synthetic response chain, but the 2D fallback diagram did not expose mode-specific visual cues.
+  - Browser QA did not verify that changing geometry mode changed any visible light-path state.
+- Changes:
+  - Added `data-geometry-mode` to the Instrument Lab root and synchronized it from state.
+  - Added right-angle, front-face boundary, and transmission direct-path risk cue groups to the 2D fallback diagram.
+  - Added CSS rules that show exactly the cue matching the selected geometry mode.
+  - Extended browser QA to switch all three geometry modes and verify the matching fallback cue is the only visible geometry cue.
+  - Updated `instrument/MODEL.md` to state that these are teaching cues, not ray-traced front-face or inline optics.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation because `root.dataset.geometryMode` and fallback geometry visuals were missing.
+  - TDD red: `node --test instrument/sim/tests/browser-qa-tool.test.mjs` failed before the browser QA tool covered `geometry mode`.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 27/27.
+  - Green: `node --test instrument/sim/tests/browser-qa-tool.test.mjs` passed: 1/1.
+  - `node tools/check-instrument-browser.js` passed with `geometry mode` included in the real browser checks.
+- Remaining non-blocking notes:
+  - This slice does not implement real front-face optics, inline fluorescence optics, or manufacturer-specific geometry. It keeps the existing `ILAB-006` boundary.
+- Blockers:
+  - None.
+
+## Instrument source-derived language-mode hardening
+- Status: Completed and validated; published via commit `instrument: harden source data language mode`
+- Trigger:
+  - Continue `refine.md` DoD work on bilingual public UI and source-derived/synthetic separation.
+  - Read-only review found that source-derived dataset cards and loading statuses could keep mixed bilingual strings visible after switching to English-only or Chinese-only mode.
+- Root cause:
+  - Runtime source-derived cards used direct `textContent` for kind, label, and boundary note, bypassing the page's `[data-language]` display framework.
+  - Loading status interpolated an already bilingual dataset label into another bilingual sentence, which nested English and Chinese text inside the Chinese half.
+- Changes:
+  - Added source-derived helpers that split dataset labels once and compose clean English/Chinese loading statuses.
+  - Updated dataset card rendering so tag, label, and note use language spans.
+  - Extended source-data unit tests for nested-label loading status and language-switchable dataset card text.
+  - Extended browser QA coverage so loaded source-derived cards/statuses are checked after switching between English and Chinese modes.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/source-data.test.mjs` failed before implementation because `formatSourceDatasetLoadingStatus` was not exported.
+  - TDD red: `node --test instrument/sim/tests/browser-qa-tool.test.mjs` failed before the browser QA tool covered `source-derived language`.
+  - Green: `node --test instrument/sim/tests/browser-qa-tool.test.mjs instrument/sim/tests/source-data.test.mjs` passed: 17/17.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 87/87.
+  - `node tools/check-instrument-browser.js` passed with `source-derived language` included in the real browser checks.
+- Remaining non-blocking notes:
+  - This slice changes runtime copy structure only. It adds no new source-derived datasets, scientific claims, or external dependencies.
 - Blockers:
   - None.

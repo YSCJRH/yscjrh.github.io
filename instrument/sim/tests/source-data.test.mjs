@@ -6,11 +6,13 @@ import { fileURLToPath } from "node:url";
 import {
   findClosestIndex,
   findEemPeak,
+  formatSourceDatasetLoadingStatus,
   formatSourceAxes,
   getEemSlice,
   isPlottableSourceDataset,
   setElementText,
   setLanguagePair,
+  setSourceDatasetCardCopy,
   sourceDatasetBoundaryNote,
   splitLanguagePair,
 } from "../ui/source-data.mjs";
@@ -253,6 +255,66 @@ test("runtime source-data copy can preserve language mode structure", () => {
   assert.equal(fakeElement.children[1].dataset.language, "zh");
   assert.equal(fakeElement.children[1].attributes.lang, "zh-CN");
   assert.equal(fakeElement.children[1].textContent, "仅显示的运行时文案。");
+});
+
+test("source dataset loading status does not nest bilingual dataset labels", () => {
+  const dataset = manifest.datasets.find((entry) => entry.id === "r6g-emission-ethylene-glycol");
+  const status = formatSourceDatasetLoadingStatus(dataset);
+
+  assert.equal(status.en, "Loading Rhodamine 6G emission in ethylene glycol...");
+  assert.equal(status.zh, "正在加载乙二醇中罗丹明 6G 发射谱...");
+  assert.doesNotMatch(status.en, /乙二醇|正在加载/);
+  assert.doesNotMatch(status.zh, /Loading| \/ /);
+});
+
+test("source dataset cards expose language-switchable text nodes", () => {
+  const created = [];
+  const fakeDocument = {
+    createElement(tagName) {
+      const node = {
+        tagName,
+        dataset: {},
+        attributes: {},
+        textContent: "",
+        setAttribute(name, value) {
+          this.attributes[name] = value;
+        },
+      };
+      created.push(node);
+      return node;
+    },
+  };
+
+  function fakeElement() {
+    return {
+      namespaceURI: "http://www.w3.org/1999/xhtml",
+      ownerDocument: fakeDocument,
+      textContent: "stale",
+      children: [],
+      append(...nodes) {
+        this.children.push(...nodes);
+      },
+    };
+  }
+
+  const dataset = manifest.datasets.find((entry) => entry.id === "r6g-emission-ethylene-glycol");
+  const tag = fakeElement();
+  const label = fakeElement();
+  const note = fakeElement();
+
+  setSourceDatasetCardCopy({ tag, label, note }, dataset);
+
+  for (const element of [tag, label, note]) {
+    assert.equal(element.textContent, "");
+    assert.equal(element.children.length, 2);
+    assert.equal(element.children[0].dataset.language, "en");
+    assert.equal(element.children[1].dataset.language, "zh");
+    assert.equal(element.children[1].attributes.lang, "zh-CN");
+  }
+
+  assert.equal(label.children[0].textContent, "Rhodamine 6G emission in ethylene glycol");
+  assert.equal(label.children[1].textContent, "乙二醇中罗丹明 6G 发射谱");
+  assert.doesNotMatch(label.children[1].textContent, /Rhodamine| \/ /);
 });
 
 test("source-data language splitting preserves slash-heavy English labels", () => {
