@@ -14,6 +14,7 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
   const script = readFileSync(qaToolPath, "utf8");
   for (const marker of [
     "first viewport",
+    "fallback label collisions",
     "console errors",
     "mobile overflow",
     "prefers-reduced-motion",

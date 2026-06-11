@@ -4405,6 +4405,7 @@ section[id] {
 
 .instrument-stage {
   position: relative;
+  --fallback-status-clearance: 0px;
   min-height: 28rem;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -4546,6 +4547,10 @@ section[id] {
   backdrop-filter: blur(14px);
 }
 
+.instrument-stage-fallback {
+  --fallback-status-clearance: clamp(3.6rem, 7vw, 4.8rem);
+}
+
 .instrument-stage::before {
   content: "";
   position: absolute;
@@ -4574,9 +4579,12 @@ section[id] {
 
 .instrument-diagram {
   position: absolute;
-  inset: 0;
+  top: var(--fallback-status-clearance);
+  right: 0;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--fallback-status-clearance));
 }
 
 .instrument-grid-bg {

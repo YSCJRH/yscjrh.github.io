@@ -11,6 +11,7 @@ const FAIL_SESSION = `${SESSION}-fail`;
 const SERVER_READY_RE = /Serving .* at (http:\/\/127\.0\.0\.1:\d+\/)/;
 const MARKERS = [
   "first viewport",
+  "fallback label collisions",
   "console errors",
   "mobile overflow",
   "prefers-reduced-motion",
@@ -204,6 +205,59 @@ async function main() {
     assertCheck(normal.overflowX === 0, "desktop horizontal overflow detected", normal);
     record("first viewport workbench");
     record("WebGL fallback status");
+
+    progress("checking fallback label collisions");
+    const fallbackTextLayout = evalInPage(
+      SESSION,
+      `() => {
+        function rectFor(selector) {
+          const element = document.querySelector(selector);
+          if (!element) {
+            return null;
+          }
+          const rect = element.getBoundingClientRect();
+          return {
+            selector,
+            left: rect.left,
+            right: rect.right,
+            top: rect.top,
+            bottom: rect.bottom,
+            width: rect.width,
+            height: rect.height,
+          };
+        }
+
+        function overlapArea(a, b) {
+          if (!a || !b) {
+            return 0;
+          }
+          const width = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+          const height = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+          return width * height;
+        }
+
+        const status = rectFor('.instrument-fallback-status');
+        const emissionLabel = rectFor('.component-label-emission');
+        const emissionScanBadge = rectFor('.scan-badge-emission');
+        const rightAngleLabel = rectFor('.geometry-visual-right-angle .geometry-cue-label');
+
+        return {
+          status,
+          emissionLabel,
+          emissionScanBadge,
+          rightAngleLabel,
+          statusEmissionOverlap: overlapArea(status, emissionLabel),
+          scanGeometryOverlap: overlapArea(emissionScanBadge, rightAngleLabel),
+        };
+      }`
+    );
+    assertCheck(
+      fallbackTextLayout.statusEmissionOverlap === 0 &&
+        fallbackTextLayout.scanGeometryOverlap === 0,
+      "2D fallback labels overlap on first load",
+      fallbackTextLayout
+    );
+    record("fallback label collisions");
 
     progress("checking console errors");
     const consoleErrors = consoleMessages(SESSION, "error");

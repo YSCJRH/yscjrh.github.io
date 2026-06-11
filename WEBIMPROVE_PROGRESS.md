@@ -1,9 +1,32 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: Final DoD audit validated locally; ready for commit and publish
+- Active: 2026-06-11 Instrument Lab fallback label overlap hotfix
+- Status: Focused overlap regression and browser QA passed locally; ready for commit and publish
 - Last updated: 2026-06-11
+
+## 2026-06-11 Instrument Lab fallback label overlap hotfix
+- Status: Focused regression and browser QA passed locally; ready for commit and publish
+- Trigger:
+  - User screenshot showed overlapping text on first load in the `/instrument/` 2D fallback diagram.
+- Root cause:
+  - The fallback SVG filled the stage from the top while the visible WebGL status pill was also absolutely positioned at the top, placing the `Em mono / 发射单色器` SVG label under the status pill.
+  - The default right-angle geometry cue label and emission scan badge shared nearly the same vertical coordinate band.
+- Changes:
+  - Added an explicit `--fallback-status-clearance` layout variable and moved the fallback SVG below the visible status pill.
+  - Moved the right-angle geometry cue label away from the emission scan badge.
+  - Added a static UI contract and browser QA collision check so status/diagram and badge/geometry-label overlap regressions fail automatically.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` failed before the CSS/SVG fix because no status-clearance contract existed.
+  - Browser red: `node tools/check-instrument-browser.js` failed before the fix with positive `statusEmissionOverlap` and `scanGeometryOverlap` measurements.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` passed: 33/33.
+  - Green: `node tools/check-instrument-browser.js` passed with `fallback label collisions` included in the real browser checks.
+  - Release green: `node --test instrument/sim/tests/*.mjs` passed: 98/98.
+  - Release green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+- Remaining notes:
+  - This is a layout-only hotfix. It does not change the simulator model, controls, or scientific claims.
+- Blockers:
+  - None.
 
 ## 2026-06-11 Final refine DoD audit and first-screen clarity closeout
 - Status: Completed and validated locally; ready for commit and publish

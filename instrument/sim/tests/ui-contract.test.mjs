@@ -328,6 +328,36 @@ test("mobile view keeps WebGL fallback status visible", () => {
   );
 });
 
+test("fallback diagram reserves space around status and scan labels", () => {
+  assert.match(
+    siteStyles,
+    /--fallback-status-clearance:/,
+    "fallback diagram should reserve explicit space for the WebGL status pill"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-diagram\s*{[\s\S]*?top:\s*var\(--fallback-status-clearance\)/,
+    "fallback SVG should start below the visible status pill instead of sitting under it"
+  );
+
+  const scanBadgeMatch = instrumentHtml.match(
+    /<g class="scan-badge scan-badge-emission" transform="translate\(([-\d.]+) ([-\d.]+)\)">[\s\S]*?<text[^>]*y="([-\d.]+)"/
+  );
+  const rightAngleLabelMatch = instrumentHtml.match(
+    /<text class="geometry-cue-label" x="[-\d.]+" y="([-\d.]+)">right-angle/
+  );
+  assert.ok(scanBadgeMatch, "expected emission scan badge coordinates");
+  assert.ok(rightAngleLabelMatch, "expected right-angle geometry label coordinate");
+
+  const scanBadgeTextY = Number(scanBadgeMatch[2]) + Number(scanBadgeMatch[3]);
+  const rightAngleLabelY = Number(rightAngleLabelMatch[1]);
+
+  assert.ok(
+    Math.abs(scanBadgeTextY - rightAngleLabelY) >= 30,
+    `emission scan badge and right-angle geometry label are too close: ${scanBadgeTextY} vs ${rightAngleLabelY}`
+  );
+});
+
 test("module load failure updates every WebGL fallback status region", () => {
   assert.match(
     instrumentHtml,
@@ -372,6 +402,14 @@ test("instrument route cache key changes with the browser QA hardening slice", (
     instrumentHtml,
     /instrument\.js\?v=browser-qa-20260611/,
     "instrument.js cache key should be bumped when runtime language switch behavior changes"
+  );
+});
+
+test("instrument stylesheet cache key changes with the fallback overlap fix", () => {
+  assert.match(
+    instrumentHtml,
+    /styles\.css\?v=fallback-overlap-20260611/,
+    "instrument stylesheet cache key should be bumped when fallback SVG layout changes"
   );
 });
 
