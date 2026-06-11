@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=display-toggles-20260611">
+    <link rel="stylesheet" href="../styles.css?v=component-overlay-20260611">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=instrument-function-20260611").catch((error) => {
+        import("./instrument.js?v=component-overlay-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -511,6 +511,13 @@
 
                     <div class="instrument-toggle-grid" aria-label="Synthetic trace display cues / 合成谱图显示提示">
                       <label class="instrument-toggle-control">
+                        <input data-control="show-components" type="checkbox">
+                        <span>
+                          <strong>Component overlay / 组分叠加</strong>
+                          <small>Show sample, baseline/artifact, and noise cues; same teaching units, not component quantitation. 显示样品、基线/伪影与噪声提示；使用同一教学单位，不是组分定量。</small>
+                        </span>
+                      </label>
+                      <label class="instrument-toggle-control">
                         <input data-control="show-noise" type="checkbox" checked>
                         <span>
                           <strong>Noise cue / 噪声提示</strong>
@@ -661,6 +668,10 @@
                       <span>Scale / 标度</span>
                       <strong data-chart-scale>fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准</strong>
                     </p>
+                    <p>
+                      <span>Components / 组分</span>
+                      <strong data-chart-components>Off / 关闭</strong>
+                    </p>
                   </div>
 
                   <svg class="spectrum-chart" viewBox="0 0 620 300" role="img" aria-labelledby="spectrum-chart-title spectrum-chart-desc">
@@ -670,6 +681,9 @@
                       <path d="M54 34V248H588"></path>
                       <path d="M54 198H588M54 148H588M54 98H588M154 34V248M254 34V248M354 34V248M454 34V248M554 34V248"></path>
                     </g>
+                    <polyline class="spectrum-component-trace spectrum-component-sample" data-spectrum-component="sample" aria-hidden="true" hidden points=""></polyline>
+                    <polyline class="spectrum-component-trace spectrum-component-artifact" data-spectrum-component="artifact" aria-hidden="true" hidden points=""></polyline>
+                    <polyline class="spectrum-component-trace spectrum-component-noise" data-spectrum-component="noise" aria-hidden="true" hidden points=""></polyline>
                     <polyline
                       class="spectrum-trace"
                       data-spectrum-trace
@@ -680,6 +694,12 @@
                     <text class="spectrum-axis-label spectrum-axis-end" x="588" y="282" data-x-axis-end>900 nm</text>
                     <text class="spectrum-mode-label" x="310" y="286" text-anchor="middle" data-spectrum-mode-label>Emission wavelength / 发射波长</text>
                   </svg>
+
+                  <p class="spectrum-component-legend" data-component-legend hidden>
+                    <span><i class="component-swatch component-swatch-sample" aria-hidden="true"></i>Sample / 样品</span>
+                    <span><i class="component-swatch component-swatch-artifact" aria-hidden="true"></i>Baseline/artifact / 基线/伪影</span>
+                    <span><i class="component-swatch component-swatch-noise" aria-hidden="true"></i>Noise magnitude / 噪声幅度</span>
+                  </p>
 
                   <p class="instrument-disclaimer instrument-disclaimer-small">
                     <span data-language="en">Illustrative synthetic traces only. Shapes and intensities do not represent calibrated spectra, real samples, or instrument validation.</span>

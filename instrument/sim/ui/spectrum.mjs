@@ -6,7 +6,7 @@ import {
   SAMPLE_PRESET_OPTIONS,
   SPECTRUM_VIEW_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=display-toggles-20260611";
+} from "../state.mjs?v=component-overlay-20260611";
 
 const chart = {
   left: 54,
@@ -15,9 +15,44 @@ const chart = {
   bottom: 248,
 };
 
-function setText(element, text) {
+function splitLanguagePair(text) {
+  const value = String(text ?? "");
+  const separator = " / ";
+  const firstCjkIndex = value.search(/[\u3400-\u9fff]/);
+
+  if (firstCjkIndex === -1) {
+    return { en: value, zh: value };
+  }
+
+  const separatorIndex = value.lastIndexOf(separator, firstCjkIndex);
+  if (separatorIndex !== -1) {
+    return {
+      en: value.slice(0, separatorIndex).trim(),
+      zh: value.slice(separatorIndex + separator.length).trim(),
+    };
+  }
+
+  return { en: value, zh: value };
+}
+
+export function localizedText(text, languageMode = "bilingual") {
+  const value = String(text ?? "");
+  if (languageMode === "bilingual") {
+    return value;
+  }
+
+  const pair = splitLanguagePair(value);
+  return languageMode === "zh" ? pair.zh : pair.en;
+}
+
+function languageModeForElements(elements) {
+  const mode = elements?.root?.dataset?.languageMode;
+  return mode === "en" || mode === "zh" || mode === "bilingual" ? mode : "bilingual";
+}
+
+function setText(element, text, languageMode = "bilingual") {
   if (element) {
-    element.textContent = text;
+    element.textContent = localizedText(text, languageMode);
   }
 }
 
@@ -94,17 +129,85 @@ function headroomText(saturationRatio) {
 }
 
 function pointsToPolyline(series) {
+  return normalizedPointsToPolyline(series.points, series.min, series.max, (point) => point.y);
+}
+
+function normalizedPointsToPolyline(points, min, max, normalizedValueForPoint) {
   const width = chart.right - chart.left;
   const height = chart.bottom - chart.top;
 
-  return series.points
+  return points
     .map((point) => {
-      const xProgress = (point.x - series.min) / Math.max(series.max - series.min, 1);
+      const xProgress = (point.x - min) / Math.max(max - min, 1);
       const x = chart.left + xProgress * width;
-      const y = chart.bottom - Math.min(Math.max(point.y, 0), 1) * height;
+      const y = chart.bottom - Math.min(Math.max(normalizedValueForPoint(point), 0), 1) * height;
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(" ");
+}
+
+function componentScaleForPoint(point, viewId) {
+  if (viewId !== "response-normalized") {
+    return 1;
+  }
+
+  const raw = Number(point.rawY);
+  const normalized = Number(point.responseNormalizedY);
+  if (!Number.isFinite(raw) || raw <= 0 || !Number.isFinite(normalized)) {
+    return 1;
+  }
+
+  return normalized / raw;
+}
+
+function componentValueForPoint(point, componentKey, viewId) {
+  const components = point.components || {};
+  const scale = componentScaleForPoint(point, viewId);
+
+  if (componentKey === "sample") {
+    return Math.max(Number(components.sampleInstrumentY) || 0, 0) * scale;
+  }
+
+  if (componentKey === "artifact") {
+    return (
+      Math.max(Number(components.baselineY) || 0, 0) +
+      Math.max(Number(components.scatterY) || 0, 0)
+    ) * scale;
+  }
+
+  if (componentKey === "noise") {
+    return Math.abs(Number(components.noiseY) || 0) * scale;
+  }
+
+  return 0;
+}
+
+function pointsToComponentPolyline(series, componentKey) {
+  const yScaleMax = Math.max(Number(series.yScaleMax) || 1, 1);
+  return normalizedPointsToPolyline(
+    series.points,
+    series.min,
+    series.max,
+    (point) => componentValueForPoint(point, componentKey, series.view?.id) / yScaleMax
+  );
+}
+
+function setComponentTrace(line, series, componentKey, isVisible) {
+  if (!line) {
+    return;
+  }
+
+  line.toggleAttribute("hidden", !isVisible);
+  line.setAttribute("data-visible", String(isVisible));
+  line.setAttribute("points", isVisible ? pointsToComponentPolyline(series, componentKey) : "");
+}
+
+function setHidden(element, hidden) {
+  if (!element) {
+    return;
+  }
+
+  element.hidden = hidden;
 }
 
 export function collectInstrumentElements(root) {
@@ -118,6 +221,7 @@ export function collectInstrumentElements(root) {
     detectorType: root.querySelector('[data-control="detector-type"]'),
     geometryMode: root.querySelector('[data-control="geometry-mode"]'),
     spectrumView: root.querySelector('[data-control="spectrum-view"]'),
+    showComponents: root.querySelector('[data-control="show-components"]'),
     showNoise: root.querySelector('[data-control="show-noise"]'),
     showArtifacts: root.querySelector('[data-control="show-artifacts"]'),
     sourceOffset: root.querySelector('[data-control="source-offset"]'),
@@ -125,6 +229,7 @@ export function collectInstrumentElements(root) {
   };
 
   return {
+    root,
     controls,
     modeButtons: Array.from(root.querySelectorAll("[data-mode]")),
     partButtons: Array.from(root.querySelectorAll("[data-part]")),
@@ -170,6 +275,13 @@ export function collectInstrumentElements(root) {
     chartFixedReadout: root.querySelector("[data-chart-fixed]"),
     chartViewReadout: root.querySelector("[data-chart-view]"),
     chartScaleReadout: root.querySelector("[data-chart-scale]"),
+    chartComponentsReadout: root.querySelector("[data-chart-components]"),
+    componentLegend: root.querySelector("[data-component-legend]"),
+    componentTraces: {
+      sample: root.querySelector('[data-spectrum-component="sample"]'),
+      artifact: root.querySelector('[data-spectrum-component="artifact"]'),
+      noise: root.querySelector('[data-spectrum-component="noise"]'),
+    },
     sampleNote: root.querySelector("[data-sample-note]"),
     excitationBadge: root.querySelector("[data-badge-excitation]"),
     emissionBadge: root.querySelector("[data-badge-emission]"),
@@ -179,6 +291,7 @@ export function collectInstrumentElements(root) {
 
 export function updateControlsFromState(elements, state, derived) {
   const { controls, readouts } = elements;
+  const languageMode = languageModeForElements(elements);
   syncSimulatorPresetOptions(elements);
 
   setText(readouts.excitationAngle, `${state.exMono.gratingAngleDeg.toFixed(1)} deg`);
@@ -186,7 +299,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.excitation, `${Math.round(derived.excitationNm)} nm`);
   setText(readouts.emission, `${Math.round(derived.emissionNm)} nm`);
   setText(readouts.slit, `${state.slit.widthUm} um`);
-  setText(readouts.bandpass, `~${derived.bandpassNm.toFixed(1)} nm teaching bandpass / 教学带宽`);
+  setText(readouts.bandpass, `~${derived.bandpassNm.toFixed(1)} nm teaching bandpass / 教学带宽`, languageMode);
   setText(readouts.integration, `${state.integrationTimeMs} ms`);
   setText(readouts.sourceOffset, `${state.source.offsetUm} um`);
   setText(readouts.detectorAngle, `${state.detector.angleDeg.toFixed(1)} deg`);
@@ -200,39 +313,47 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.responseSample, percentText(derived.responseChain?.sample?.absorptionAtExcitation));
   setText(readouts.responseDetector, percentText(derived.responseChain?.detector?.atEmission));
   setText(readouts.signalHeadroom, headroomText(derived.responseChain?.signal?.saturationRatio));
-  setText(elements.sampleNote, derived.spectrum.profile.description);
+  setText(elements.sampleNote, derived.spectrum.profile.description, languageMode);
   if (controls.spectrumView) controls.spectrumView.value = state.display?.spectrumView || "raw";
+  if (controls.showComponents) controls.showComponents.checked = state.display?.showComponents === true;
   if (controls.showNoise) controls.showNoise.checked = state.display?.showNoise !== false;
   if (controls.showArtifacts) controls.showArtifacts.checked = state.display?.showArtifacts !== false;
 
   setDisabled(controls.emissionWavelength, false);
-  setText(elements.emissionLabel, derived.scanMeta.emissionControlLabel);
+  setText(elements.emissionLabel, derived.scanMeta.emissionControlLabel, languageMode);
 }
 
 export function updateModeChrome(elements, state, derived) {
+  const languageMode = languageModeForElements(elements);
   elements.modeButtons.forEach((button) => {
     const isActive = button.dataset.mode === state.mode;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
 
-  setText(elements.modeSummary, MODES[state.mode]?.summary || MODES.emission.summary);
-  setText(elements.spectrumModeLabel, derived.scanMeta.axisLabel);
+  setText(elements.modeSummary, MODES[state.mode]?.summary || MODES.emission.summary, languageMode);
+  setText(elements.spectrumModeLabel, derived.scanMeta.axisLabel, languageMode);
   setText(elements.xAxisStart, derived.scanMeta.startLabel);
   setText(elements.xAxisEnd, derived.scanMeta.endLabel);
-  setText(elements.excitationBadge, derived.scanMeta.excitationBadge);
-  setText(elements.emissionBadge, derived.scanMeta.emissionBadge);
-  setText(elements.scanAxisReadout, derived.scanMeta.axisRange);
-  setText(elements.fixedChannelReadout, derived.scanMeta.fixedChannel);
-  setText(elements.chartModeReadout, MODES[state.mode]?.label || "Emission scan / 发射扫描");
-  setText(elements.chartAxisReadout, derived.scanMeta.axisRange);
-  setText(elements.chartFixedReadout, derived.scanMeta.fixedChannel);
-  setText(elements.chartViewReadout, derived.spectrum.view.label);
-  setText(elements.chartScaleReadout, derived.spectrum.view.scaleLabel);
+  setText(elements.excitationBadge, derived.scanMeta.excitationBadge, languageMode);
+  setText(elements.emissionBadge, derived.scanMeta.emissionBadge, languageMode);
+  setText(elements.scanAxisReadout, derived.scanMeta.axisRange, languageMode);
+  setText(elements.fixedChannelReadout, derived.scanMeta.fixedChannel, languageMode);
+  setText(elements.chartModeReadout, MODES[state.mode]?.label || "Emission scan / 发射扫描", languageMode);
+  setText(elements.chartAxisReadout, derived.scanMeta.axisRange, languageMode);
+  setText(elements.chartFixedReadout, derived.scanMeta.fixedChannel, languageMode);
+  setText(elements.chartViewReadout, derived.spectrum.view.label, languageMode);
+  setText(elements.chartScaleReadout, derived.spectrum.view.scaleLabel, languageMode);
+  setText(
+    elements.chartComponentsReadout,
+    derived.spectrum.display?.showComponents ? "On / 开启" : "Off / 关闭",
+    languageMode
+  );
 }
 
 export function updatePartChrome(elements, state) {
   const part = PARTS[state.selectedPart] ? state.selectedPart : "source";
+  const languageMode = languageModeForElements(elements);
 
   elements.partButtons.forEach((button) => {
     const isActive = button.dataset.part === part;
@@ -240,10 +361,10 @@ export function updatePartChrome(elements, state) {
     button.setAttribute("aria-pressed", String(isActive));
   });
 
-  setText(elements.partTitle, PARTS[part].title);
-  setText(elements.partCopy, PARTS[part].copy);
-  setText(elements.partHint, PARTS[part].hint);
-  setText(elements.sceneHint, PARTS[part].hint);
+  setText(elements.partTitle, PARTS[part].title, languageMode);
+  setText(elements.partCopy, PARTS[part].copy, languageMode);
+  setText(elements.partHint, PARTS[part].hint, languageMode);
+  setText(elements.sceneHint, PARTS[part].hint, languageMode);
 }
 
 export function updateSpectrumChrome(root, elements, state, derived) {
@@ -251,9 +372,15 @@ export function updateSpectrumChrome(root, elements, state, derived) {
     elements.trace.setAttribute("points", pointsToPolyline(derived.spectrum));
   }
 
+  const showComponents = derived.spectrum.display?.showComponents === true;
+  for (const [componentKey, trace] of Object.entries(elements.componentTraces || {})) {
+    setComponentTrace(trace, derived.spectrum, componentKey, showComponents);
+  }
+  setHidden(elements.componentLegend, !showComponents);
+
   setText(
     elements.intensityReadout,
-    `${state.mode === "single" ? "Point / 单点" : "Peak / 峰值"} ${derived.spectrum.peak.toFixed(2)} a.u.`
+    `${localizedText(state.mode === "single" ? "Point / 单点" : "Peak / 峰值", languageModeForElements(elements))} ${derived.spectrum.peak.toFixed(2)} a.u.`
   );
   root.style.setProperty("--beam-intensity", String(derived.beams.excitationIntensity));
   root.style.setProperty("--emission-intensity", String(derived.beams.emissionIntensity));
@@ -270,20 +397,23 @@ export function updateDiagnostics(elements, diagnostics) {
     return;
   }
 
+  const languageMode = languageModeForElements(elements);
   elements.diagnosticsList.textContent = "";
   diagnostics.forEach((item) => {
     const li = document.createElement("li");
     const evidenceKey = item.evidenceKey || "untracked";
+    const labelText = localizedText(item.label, languageMode);
+    const copyText = localizedText(item.text, languageMode);
     li.className = `diagnostic-item diagnostic-item-${item.tone || "info"}`;
     li.setAttribute("data-evidence-key", evidenceKey);
-    li.setAttribute("aria-label", `${item.label}: ${item.text} Evidence key: ${evidenceKey}`);
+    li.setAttribute("aria-label", `${labelText}: ${copyText}. ${localizedText("Evidence key / 证据编号", languageMode)}: ${evidenceKey}`);
     const label = document.createElement("strong");
     const separator = document.createElement("span");
     const copy = document.createElement("span");
-    label.textContent = item.label;
+    label.textContent = labelText;
     separator.hidden = true;
     separator.textContent = ": ";
-    copy.textContent = item.text;
+    copy.textContent = copyText;
     li.append(label, separator, copy);
     elements.diagnosticsList.appendChild(li);
   });

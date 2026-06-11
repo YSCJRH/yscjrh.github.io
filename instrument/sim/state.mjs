@@ -127,6 +127,7 @@ export function createInstrumentState() {
     },
     display: {
       spectrumView: "raw",
+      showComponents: false,
       showNoise: true,
       showArtifacts: true,
     },
@@ -177,6 +178,9 @@ export function applyControlValue(state, controlName, rawValue) {
       break;
     case "spectrum-view":
       setSpectrumView(state, rawValue);
+      break;
+    case "show-components":
+      setDisplayToggle(state, "showComponents", rawValue);
       break;
     case "show-noise":
       setDisplayToggle(state, "showNoise", rawValue);
@@ -240,7 +244,7 @@ export function setSpectrumView(state, viewId) {
 }
 
 export function setDisplayToggle(state, key, rawValue) {
-  if (key !== "showNoise" && key !== "showArtifacts") {
+  if (key !== "showComponents" && key !== "showNoise" && key !== "showArtifacts") {
     return;
   }
 

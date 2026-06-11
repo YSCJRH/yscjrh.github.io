@@ -9,7 +9,7 @@ import { DETECTOR_PRESET_OPTIONS } from "../physics/detector.mjs";
 import { GEOMETRY_PRESET_OPTIONS } from "../physics/geometry.mjs";
 import { SOURCE_PRESET_OPTIONS } from "../physics/source.mjs";
 
-const { collectInstrumentElements, updateControlsFromState, updateDiagnostics } = spectrumUi;
+const { collectInstrumentElements, updateControlsFromState, updateDiagnostics, updatePartChrome } = spectrumUi;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
@@ -43,6 +43,14 @@ function optionPairs(options) {
   return options.map((option) => [option.id, option.label]);
 }
 
+function textNode() {
+  return { textContent: "" };
+}
+
+function hasCjk(text) {
+  return /[\u3400-\u9fff]/.test(text);
+}
+
 test("advanced response-chain controls live in the simulator workbench", () => {
   const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
   const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
@@ -50,7 +58,15 @@ test("advanced response-chain controls live in the simulator workbench", () => {
   assert.ok(advancedStart > 0);
   assert.ok(sourceDataStart > advancedStart);
 
-  for (const controlName of ["source-type", "detector-type", "geometry-mode", "spectrum-view", "show-noise", "show-artifacts"]) {
+  for (const controlName of [
+    "source-type",
+    "detector-type",
+    "geometry-mode",
+    "spectrum-view",
+    "show-components",
+    "show-noise",
+    "show-artifacts",
+  ]) {
     const controlIndex = instrumentHtml.indexOf(`data-control="${controlName}"`);
     assert.ok(controlIndex > advancedStart, `${controlName} should be inside the advanced simulator controls`);
     assert.ok(controlIndex < sourceDataStart, `${controlName} must stay separate from source-derived examples`);
@@ -98,12 +114,14 @@ test("instrument element collection includes advanced response-chain controls", 
   assert.equal(elements.controls.detectorType, null);
   assert.equal(elements.controls.geometryMode, null);
   assert.equal(elements.controls.spectrumView, null);
+  assert.equal(elements.controls.showComponents, null);
   assert.equal(elements.controls.showNoise, null);
   assert.equal(elements.controls.showArtifacts, null);
   assert.ok(selectors.includes('[data-control="source-type"]'));
   assert.ok(selectors.includes('[data-control="detector-type"]'));
   assert.ok(selectors.includes('[data-control="geometry-mode"]'));
   assert.ok(selectors.includes('[data-control="spectrum-view"]'));
+  assert.ok(selectors.includes('[data-control="show-components"]'));
   assert.ok(selectors.includes('[data-control="show-noise"]'));
   assert.ok(selectors.includes('[data-control="show-artifacts"]'));
 });
@@ -330,6 +348,98 @@ test("diagnostic cards expose machine-readable evidence keys", () => {
   assert.match(diagnosticsList.children[0].attributes["aria-label"], /ILAB-004/);
 });
 
+test("dynamic diagnostic cards follow the selected language mode", () => {
+  const previousDocument = globalThis.document;
+  const fakeDocument = {
+    createElement(tagName) {
+      return {
+        tagName,
+        attributes: {},
+        children: [],
+        className: "",
+        hidden: false,
+        textContent: "",
+        setAttribute(name, value) {
+          this.attributes[name] = value;
+        },
+        append(...children) {
+          this.children.push(...children);
+        },
+      };
+    },
+  };
+
+  function renderFor(languageMode) {
+    const diagnosticsList = {
+      textContent: "stale diagnostics",
+      children: [],
+      appendChild(node) {
+        this.children.push(node);
+      },
+    };
+
+    updateDiagnostics(
+      { root: { dataset: { languageMode } }, diagnosticsList },
+      [
+        {
+          tone: "warn",
+          evidenceKey: "ILAB-004",
+          label: "Resolution tradeoff / 分辨率权衡",
+          text: "Slit width changes throughput and bandpass. / 狭缝宽度改变通量和带宽。",
+        },
+      ]
+    );
+    return diagnosticsList.children[0];
+  }
+
+  globalThis.document = fakeDocument;
+  try {
+    const english = renderFor("en");
+    assert.equal(english.children[0].textContent, "Resolution tradeoff");
+    assert.equal(english.children[2].textContent, "Slit width changes throughput and bandpass.");
+    assert.equal(hasCjk(english.attributes["aria-label"]), false);
+
+    const chinese = renderFor("zh");
+    assert.equal(chinese.children[0].textContent, "分辨率权衡");
+    assert.equal(chinese.children[2].textContent, "狭缝宽度改变通量和带宽。");
+    assert.doesNotMatch(chinese.attributes["aria-label"], /Resolution tradeoff|Slit width changes/);
+  } finally {
+    globalThis.document = previousDocument;
+  }
+});
+
+test("dynamic selected-part guidance follows the selected language mode", () => {
+  const elements = {
+    root: { dataset: { languageMode: "en" } },
+    partButtons: [],
+    partTitle: textNode(),
+    partCopy: textNode(),
+    partHint: textNode(),
+    sceneHint: textNode(),
+  };
+
+  updatePartChrome(elements, { selectedPart: "excitation" });
+
+  assert.equal(elements.partTitle.textContent, "Excitation monochromator");
+  assert.equal(hasCjk(elements.partCopy.textContent), false);
+  assert.equal(hasCjk(elements.partHint.textContent), false);
+
+  elements.root.dataset.languageMode = "zh";
+  updatePartChrome(elements, { selectedPart: "excitation" });
+
+  assert.equal(elements.partTitle.textContent, "激发单色器");
+  assert.doesNotMatch(elements.partCopy.textContent, /Uses slits/);
+  assert.doesNotMatch(elements.partHint.textContent, /Click the excitation monochromator/);
+});
+
+test("dynamic localizer preserves slash-heavy English labels", () => {
+  const label = "Excitation wavelength / EEM heatmap / 激发波长 / EEM 热图";
+
+  assert.equal(spectrumUi.localizedText(label, "en"), "Excitation wavelength / EEM heatmap");
+  assert.equal(spectrumUi.localizedText(label, "zh"), "激发波长 / EEM 热图");
+  assert.equal(spectrumUi.localizedText(label, "bilingual"), label);
+});
+
 test("workbench exposes response-chain factor readouts", () => {
   assert.match(instrumentHtml, /Alignment \/ geometry \/ 对准 \/ 几何/);
 
@@ -431,6 +541,24 @@ test("workbench exposes noise and artifact teaching toggles", () => {
   assert.match(instrumentHtml, /Artifact cue \/ 伪影提示/);
   assert.match(instrumentHtml, /deterministic teaching perturbation|确定性教学扰动/);
   assert.match(instrumentHtml, /conceptual scatter\/background cues|概念散射与背景提示/);
+});
+
+test("workbench exposes synthetic component overlay controls and layers", () => {
+  const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
+  const toggleIndex = instrumentHtml.indexOf('data-control="show-components"');
+  const sampleLineIndex = instrumentHtml.indexOf('data-spectrum-component="sample"');
+  const artifactLineIndex = instrumentHtml.indexOf('data-spectrum-component="artifact"');
+  const noiseLineIndex = instrumentHtml.indexOf('data-spectrum-component="noise"');
+
+  assert.ok(toggleIndex > 0, "component overlay toggle should exist in the simulator workbench");
+  assert.ok(toggleIndex < sourceDataStart, "component overlay toggle must stay separate from source-derived examples");
+  assert.ok(sampleLineIndex > 0, "sample component line should exist");
+  assert.ok(artifactLineIndex > 0, "artifact/background component line should exist");
+  assert.ok(noiseLineIndex > 0, "noise component line should exist");
+  assert.match(instrumentHtml, /Component overlay \/ 组分叠加/);
+  assert.match(instrumentHtml, /sample, baseline\/artifact, and noise cues|样品、基线\/伪影与噪声提示/);
+  assert.match(instrumentHtml, /data-chart-components/);
+  assert.match(siteStyles, /\.spectrum-component-trace/);
 });
 
 test("dynamic workbench status regions announce model changes accessibly", () => {

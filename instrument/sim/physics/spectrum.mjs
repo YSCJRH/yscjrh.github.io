@@ -4,7 +4,7 @@ import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { convolveLineShape } from "./instrumentFunction.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=display-toggles-20260611";
+import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=component-overlay-20260611";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 
@@ -232,6 +232,7 @@ export function generateSpectrum(state, physics, responseChain = null) {
   const profile = SAMPLE_PROFILES[state.sample.preset] || SAMPLE_PROFILES["low-background"];
   const view = spectrumViewForState(state);
   const display = {
+    showComponents: state.display?.showComponents === true,
     showNoise: isNoiseVisible(state),
     showArtifacts: areArtifactCuesVisible(state),
   };

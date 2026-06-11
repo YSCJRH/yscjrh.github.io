@@ -63,7 +63,9 @@ test("default spectrum view is raw synthetic", () => {
   assert.equal(state.display.spectrumView, "raw");
   assert.equal(state.display.showNoise, true);
   assert.equal(state.display.showArtifacts, true);
+  assert.equal(state.display.showComponents, false);
   assert.equal(derived.spectrum.view.id, "raw");
+  assert.equal(derived.spectrum.display.showComponents, false);
   assert.match(derived.spectrum.view.scaleLabel, /not calibrated/i);
 });
 
@@ -185,6 +187,28 @@ test("noise and artifact display toggles change the synthetic trace without movi
 
   assert.ok(quietDerived.diagnostics.some((item) => item.label === "Noise cue hidden / 噪声提示隐藏"));
   assert.ok(cleanDerived.diagnostics.some((item) => item.label === "Artifact cues hidden / 伪影提示隐藏"));
+});
+
+test("component overlay toggle exposes component display state without changing synthetic trace", () => {
+  const baseline = createInstrumentState();
+  const baselineDerived = deriveInstrument(baseline);
+
+  const overlay = createInstrumentState();
+  applyControlValue(overlay, "show-components", true);
+  const overlayDerived = deriveInstrument(overlay);
+
+  assert.equal(overlay.display.showComponents, true);
+  assert.equal(overlayDerived.spectrum.display.showComponents, true);
+  assert.equal(overlayDerived.spectrum.points.length, baselineDerived.spectrum.points.length);
+  overlayDerived.spectrum.points.forEach((point, index) => {
+    const baselinePoint = baselineDerived.spectrum.points[index];
+    assert.equal(point.rawY, baselinePoint.rawY);
+    assert.equal(point.y, baselinePoint.y);
+    assert.ok(Number.isFinite(point.components.sampleInstrumentY));
+    assert.ok(Number.isFinite(point.components.baselineY));
+    assert.ok(Number.isFinite(point.components.scatterY));
+    assert.ok(Number.isFinite(point.components.noiseY));
+  });
 });
 
 test("geometry mode affects both response chain and synthetic trace without moving wavelengths", () => {

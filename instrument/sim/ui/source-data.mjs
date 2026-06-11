@@ -29,25 +29,37 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function setElementText(element, text) {
+export function setElementText(element, text) {
   if (element) {
+    const pair = splitLanguagePair(text);
+    const hasLanguagePair = pair.en !== pair.zh;
+    if (hasLanguagePair && element.namespaceURI !== "http://www.w3.org/2000/svg") {
+      setLanguagePair(element, pair);
+      return;
+    }
+
     element.textContent = text;
   }
 }
 
-function splitLanguagePair(text) {
+export function splitLanguagePair(text) {
   const value = String(text || "");
   const separator = " / ";
-  const separatorIndex = value.indexOf(separator);
+  const firstCjkIndex = value.search(/[\u3400-\u9fff]/);
 
-  if (separatorIndex === -1) {
+  if (firstCjkIndex === -1) {
     return { en: value, zh: value };
   }
 
-  return {
-    en: value.slice(0, separatorIndex).trim(),
-    zh: value.slice(separatorIndex + separator.length).trim(),
-  };
+  const separatorIndex = value.lastIndexOf(separator, firstCjkIndex);
+  if (separatorIndex !== -1) {
+    return {
+      en: value.slice(0, separatorIndex).trim(),
+      zh: value.slice(separatorIndex + separator.length).trim(),
+    };
+  }
+
+  return { en: value, zh: value };
 }
 
 export function setLanguagePair(element, pair) {
@@ -57,7 +69,7 @@ export function setLanguagePair(element, pair) {
 
   const documentRef = element.ownerDocument;
   if (!documentRef?.createElement) {
-    setElementText(element, `${pair.en} / ${pair.zh}`);
+    element.textContent = `${pair.en} / ${pair.zh}`;
     return;
   }
 

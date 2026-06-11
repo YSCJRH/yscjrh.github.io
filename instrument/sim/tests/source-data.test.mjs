@@ -8,8 +8,10 @@ import {
   findEemPeak,
   getEemSlice,
   isPlottableSourceDataset,
+  setElementText,
   setLanguagePair,
   sourceDatasetBoundaryNote,
+  splitLanguagePair,
 } from "../ui/source-data.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -214,4 +216,54 @@ test("runtime source-data copy can preserve language mode structure", () => {
   assert.equal(fakeElement.children[1].dataset.language, "zh");
   assert.equal(fakeElement.children[1].attributes.lang, "zh-CN");
   assert.equal(fakeElement.children[1].textContent, "仅显示的运行时文案。");
+});
+
+test("source-data language splitting preserves slash-heavy English labels", () => {
+  assert.deepEqual(
+    splitLanguagePair("Excitation wavelength / EEM heatmap / 激发波长 / EEM 热图"),
+    {
+      en: "Excitation wavelength / EEM heatmap",
+      zh: "激发波长 / EEM 热图",
+    }
+  );
+});
+
+test("source-data localized text uses language spans for HTML but keeps SVG text plain", () => {
+  const fakeDocument = {
+    createElement(tagName) {
+      return {
+        tagName,
+        dataset: {},
+        attributes: {},
+        textContent: "",
+        setAttribute(name, value) {
+          this.attributes[name] = value;
+        },
+      };
+    },
+  };
+  const htmlElement = {
+    namespaceURI: "http://www.w3.org/1999/xhtml",
+    ownerDocument: fakeDocument,
+    textContent: "stale",
+    children: [],
+    append(...nodes) {
+      this.children.push(...nodes);
+    },
+  };
+  const svgText = {
+    namespaceURI: "http://www.w3.org/2000/svg",
+    textContent: "stale",
+  };
+
+  setElementText(htmlElement, "Loaded local source-derived example. / 已加载本地引用数据示例。");
+  setElementText(svgText, "Emission wavelength / 发射波长");
+
+  assert.equal(htmlElement.textContent, "");
+  assert.equal(htmlElement.children.length, 2);
+  assert.equal(htmlElement.children[0].dataset.language, "en");
+  assert.equal(htmlElement.children[0].textContent, "Loaded local source-derived example.");
+  assert.equal(htmlElement.children[1].dataset.language, "zh");
+  assert.equal(htmlElement.children[1].textContent, "已加载本地引用数据示例。");
+  assert.equal(svgText.textContent, "Emission wavelength / 发射波长");
 });
