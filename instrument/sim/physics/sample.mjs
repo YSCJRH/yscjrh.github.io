@@ -26,3 +26,23 @@ export function evaluateGaussianMixture(wavelengthNm, peaks = []) {
 
   return clamp(value, 0, 1);
 }
+
+export function deriveInnerFilterRisk({ declaredRisk = "low", concentrationRelative = 0, absorptionAtExcitation = 0 } = {}) {
+  const declaredBase = {
+    low: 0.08,
+    medium: 0.32,
+    high: 0.68,
+  }[declaredRisk] ?? 0.08;
+  const concentration = clamp(Number(concentrationRelative) || 0, 0, 1);
+  const absorption = clamp(Number(absorptionAtExcitation) || 0, 0, 1);
+  const score = clamp(declaredBase + concentration * absorption * 0.45, 0, 1);
+  const level = score >= 0.7 ? "high" : score >= 0.32 ? "medium" : "low";
+
+  return {
+    level,
+    score: Number(score.toFixed(3)),
+    declaredRisk: ["low", "medium", "high"].includes(declaredRisk) ? declaredRisk : "low",
+    concentrationRelative: concentration,
+    absorptionAtExcitation: absorption,
+  };
+}

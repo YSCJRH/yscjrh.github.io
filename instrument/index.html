@@ -45,14 +45,14 @@
           return;
         }
 
-        import("./instrument.js?v=source-axes-20260611").catch((error) => {
+        import("./instrument.js?v=inner-filter-risk-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
-          const status = document.querySelector("[data-webgl-status]");
+          const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
           root?.classList.add("has-2d-fallback");
-          if (status) {
+          statusElements.forEach((status) => {
             status.textContent = "Interactive module unavailable. Showing the 2D fallback. / 交互模块不可用，显示二维备用图。";
-          }
+          });
         });
       })();
     </script>
@@ -974,6 +974,11 @@
                     <span>Front-face / 前表面采集</span>
                     <strong><span data-language="en">Useful concept for dense, turbid, solid, or surface-like samples.</span><span data-language="zh" lang="zh-CN">对浓稠、浑浊、固体或表面样品更需要考虑这种概念。</span></strong>
                     <p><span data-language="en">This is noted as a boundary only; the current 3D simulator does not implement front-face optics.</span><span data-language="zh" lang="zh-CN">这里只作为边界提示；当前 3D 模型未实现前表面光路。</span></p>
+                  </article>
+                  <article class="teaching-card">
+                    <span>Transmission / 透射路径</span>
+                    <strong><span data-language="en">A direct-path teaching mode raises background risk.</span><span data-language="zh" lang="zh-CN">直接路径教学模式会提高背景风险。</span></strong>
+                    <p><span data-language="en">It represents direct excitation and background risk, not a built inline fluorescence optical design.</span><span data-language="zh" lang="zh-CN">它表示直射激发光和背景风险，不代表已实现真实同轴荧光光路。</span></p>
                   </article>
                   <article class="teaching-card">
                     <span>Sample environment / 样品环境</span>

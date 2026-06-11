@@ -134,6 +134,16 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
+  const innerFilterRisk = derived.responseChain?.sample?.innerFilterRisk;
+  if (innerFilterRisk && innerFilterRisk.level !== "low") {
+    diagnostics.push({
+      tone: "warn",
+      evidenceKey: "ILAB-005",
+      label: "Inner-filter risk / 内滤风险",
+      text: "Sample absorption and concentration make inner-filter effects plausible: excitation attenuation and reabsorption may distort intensity or bandshape. This is a categorical teaching risk, not a correction formula. / 样品吸收与相对浓度提示可能存在内滤效应：激发衰减和重吸收可能改变强度或谱带形状。这是分类教学风险，不是校正公式。",
+    });
+  }
+
   const headroomPeak = derived.spectrum.rawPeak ?? derived.spectrum.peak;
   if (headroomPeak / Math.max(derived.spectrum.yScaleMax, 0.001) >= 0.85) {
     diagnostics.push({

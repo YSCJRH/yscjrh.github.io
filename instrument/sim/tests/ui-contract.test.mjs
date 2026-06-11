@@ -82,6 +82,14 @@ test("advanced geometry copy separates geometry mode from detector arm offset", 
   assert.match(advancedCopy, /Detector arm offset \/ 检测臂偏离/);
 });
 
+test("geometry boundary teaching copy covers every selectable geometry mode", () => {
+  assert.match(instrumentHtml, /Right-angle \/ 直角采集/);
+  assert.match(instrumentHtml, /Front-face \/ 前表面采集/);
+  assert.match(instrumentHtml, /Transmission \/ 透射路径/);
+  assert.match(instrumentHtml, /direct excitation|background risk/i);
+  assert.match(instrumentHtml, /直射激发光|背景风险/);
+});
+
 test("mobile onboarding stays stacked and keeps explanatory copy visible", () => {
   const instrumentOnboardingIndex = siteStyles.indexOf(".instrument-onboarding {", siteStyles.indexOf("@media (max-width: 780px)", siteStyles.indexOf(".teaching-card-grid")));
   const nextMobileBlockIndex = siteStyles.indexOf("@media (max-width: 560px)", instrumentOnboardingIndex);
@@ -263,6 +271,19 @@ test("mobile view keeps WebGL fallback status visible", () => {
     instrumentScript,
     /webglStatuses/,
     "runtime should keep all duplicated WebGL status regions synchronized"
+  );
+});
+
+test("module load failure updates every WebGL fallback status region", () => {
+  assert.match(
+    instrumentHtml,
+    /querySelectorAll\("\[data-webgl-status\]"\)/,
+    "module failure handler should collect all WebGL status regions, including the visible 2D fallback status"
+  );
+  assert.match(
+    instrumentHtml,
+    /statusElements\.forEach/,
+    "module failure handler should update every duplicated WebGL status region"
   );
 });
 

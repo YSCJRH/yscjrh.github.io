@@ -21,3 +21,16 @@ test("model notes describe deterministic noise and Gaussian instrument-function 
   assert.match(modelNotes, /Gaussian instrument-function/i);
   assert.match(modelNotes, /teaching convolution/i);
 });
+
+test("model notes describe inner-filter risk as categorical teaching guidance", () => {
+  assert.match(modelNotes, /inner-filter risk/i);
+  assert.match(modelNotes, /categorical/i);
+  assert.match(modelNotes, /ILAB-005/i);
+  assert.match(modelNotes, /not a quantitative correction/i);
+});
+
+test("research log covers the selectable transmission geometry boundary", () => {
+  assert.match(researchLog, /Claim ILAB-006:[\s\S]*0°\/180° transmitting geometry/i);
+  assert.match(researchLog, /Claim ILAB-006:[\s\S]*transmission teaching mode/i);
+  assert.match(researchLog, /Claim ILAB-006:[\s\S]*background risk/i);
+});

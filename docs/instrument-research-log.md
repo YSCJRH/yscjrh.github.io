@@ -62,14 +62,14 @@ Rules:
 - Code / UI touched: `instrument/sim/physics/sample.mjs`, `instrument/sim/physics/artifacts.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/data/samples/*.json`, `instrument/sim/tests/sample-data.test.mjs`.
 - Confidence: high for risk language; low for any correction formula until researched separately.
 
-## Claim ILAB-006: Right-angle geometry is a conventional model for dilute transparent samples; front-face geometry is used for optically dense, turbid, solid, or surface samples
+## Claim ILAB-006: Right-angle geometry is a conventional model for dilute transparent samples; front-face and transmission geometries need explicit boundary copy
 
 - Date checked: 2026-06-11
 - Source(s):
   - NISTIR 7457: https://nvlpubs.nist.gov/nistpubs/ir/2007/ir7457.pdf
   - HORIBA Fluorolog-3 manual: https://www.horiba.com/fileadmin/uploads/Scientific/Downloads/UserArea/Fluorescence/Legacy/Complete_FluoroLog3_Manual.pdf
-- Evidence summary: NISTIR 7457 describes 0/90 right-angle geometry for dilute transparent samples and front-face geometry for optically dense samples. The Fluorolog-3 manual similarly distinguishes right-angle and front-face collection and links front-face use to solid, turbid, or highly absorbent samples.
-- Implementation boundary: Keep the current 90-degree view as the default conceptual geometry. Future front-face mode should change diagram, collection factor, diagnostics, and boundary copy, but must not claim manufacturer-specific reconstruction.
+- Evidence summary: NISTIR 7457 describes 0/90 right-angle geometry for dilute transparent samples, front-face geometry for optically dense samples, and 0°/180° transmitting geometry as a distinct geometry family. The Fluorolog-3 manual similarly distinguishes right-angle and front-face collection and links front-face use to solid, turbid, or highly absorbent samples.
+- Implementation boundary: Keep the current 90-degree view as the default conceptual geometry. Front-face and transmission teaching mode selections may change collection and background risk diagnostics, but they are not manufacturer-specific reconstructions. The transmission mode is a conservative direct-path/background risk teaching boundary, not an implemented inline fluorescence optics model.
 - Code / UI touched: `instrument/sim/physics/alignment.mjs`, `instrument/sim/physics/geometry.mjs`, `instrument/sim/physics/derive.mjs`, `instrument/sim/scene/InstrumentScene.mjs`, `instrument/index.html`, `instrument/sim/tests/physics.test.mjs`.
 - Confidence: high
 

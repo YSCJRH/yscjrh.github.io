@@ -49,6 +49,10 @@ The main workbench now labels the compact alignment/geometry readout explicitly 
 
 The spectrum display now has two teaching views. `raw` remains the default and plots the raw synthetic trace. `response-normalized` keeps the same `rawY` values in each point, then divides the displayed curve by bounded teaching source, detector, and geometry response cues. This is correction literacy only: it shows why instrument response matters, but it is not a NIST-style corrected spectrum, not a calibrated correction, and not a quantitative comparison tool.
 
+Inner-filter risk is currently a categorical teaching diagnostic covered by `ILAB-005`. The sample module can classify risk from the selected teaching preset, but the simulator does not apply an inner-filter correction, does not model absorbance-path geometry, and must not describe this cue as a quantitative correction.
+
+The geometry selector exposes right-angle, front-face, and transmission teaching modes. `ILAB-006` covers the right-angle/front-face distinction and records NISTIR 7457's 0°/180° transmitting geometry reference. The current transmission mode is a direct-path/background-risk teaching boundary that changes collection/background diagnostics; it is not an implemented inline optical design and does not move selected wavelengths.
+
 ## Noise, Headroom, And Instrument Function Boundaries
 
 The current trace uses deterministic noise in `spectrum.mjs`, not unseeded random noise. The seed is derived from the selected excitation/emission channels, teaching bandpass, and integration time so the same control state produces the same visible perturbation. This keeps the browser demo reproducible and testable. It is a visual teaching perturbation only; it is not a detector-specific shot-noise, read-noise, dark-current, SNR, limit-of-detection, or photon-counting model.
@@ -58,6 +62,12 @@ The advanced display toggles can hide the deterministic noise cue and the concep
 `composeRawSignal()` uses a compact multiplicative response chain plus baseline/background terms to produce a raw synthetic intensity and a saturation/headroom cue. The cue warns that the plotted trace is near the fixed teaching display scale. It must not be read as a measured detector linear range or real saturation threshold.
 
 `instrumentFunction.mjs` uses a Gaussian instrument-function weighting as a teaching convolution. It is currently wired into the emission-scan sample component: wider slit settings broaden the instrument-function sample component before the final raw teaching trace is composed. The Gaussian choice and the slit-width-to-FWHM mapping are not a measured monochromator line-spread function, not a wavelength-accuracy check, and not a manufacturer-specific bandpass model.
+
+## Inner-filter Risk Boundary
+
+The current sample response exposes a categorical inner-filter risk cue from `concentrationRelative`, the declared sample preset risk, and normalized absorption at the selected excitation wavelength. This uses research-log evidence key `ILAB-005`.
+
+The cue is teaching guidance only. Medium or high risk can produce an `Inner-filter risk / 内滤风险` diagnostic explaining that excitation attenuation and reabsorption may distort intensity or bandshape. It is not a quantitative correction, not an absorbance calculation, not a geometry-specific inner-filter formula, and not a claim that the synthetic trace has been corrected for a real sample.
 
 ## Target Response Chain
 
@@ -83,6 +93,7 @@ The target chain is teaching-level unless a future decision record documents cal
 - `source spectrum`: normalized teaching spectrum unless a source and license are recorded.
 - `excitation/emission monochromator`: teaching bandpass and throughput model; not a manufacturer-specific optical reconstruction.
 - `sample absorption / emission`: synthetic presets unless source-derived and license-reviewed.
+- `inner-filter risk`: categorical diagnostic only; no quantitative correction without additional sourced geometry and absorbance assumptions.
 - `geometry`: 90-degree default; front-face/transmission modes need separate diagnostics and boundary copy.
 - `detector response`: normalized teaching responsivity; not a specific PMT/CCD/silicon detector curve unless sourced.
 - `noise/artifacts`: deterministic and reproducible by default; no random unseeded UI changes.

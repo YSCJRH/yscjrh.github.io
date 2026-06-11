@@ -8,7 +8,7 @@ import {
   setMode,
   setSelectedPart,
 } from "./sim/state.mjs?v=control-hardening-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=control-hardening-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=inner-filter-risk-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,

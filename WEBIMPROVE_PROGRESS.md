@@ -2,8 +2,78 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest source axes and fallback status slice locally and browser verified
+- Status: In progress; latest inner-filter risk diagnostic slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Inner-filter risk diagnostic slice
+- Status: Focused model and evidence tests, full release validation, and browser runtime QA passed locally.
+- Trigger:
+  - `refine.md` calls for inner-filter effect handling as a risk diagnostic first, not a correction formula.
+  - Existing sample presets already carried `concentrationRelative` and `innerFilterRisk`, but `responseChain.sample` did not expose them and diagnostics did not surface ILAB-005.
+- Evidence used:
+  - Existing `ILAB-005` research-log entry defines the allowed boundary: inner-filter effects may reduce apparent emission yield or distort bandshape; this implementation must not be quantitative correction.
+- Changes:
+  - Added `deriveInnerFilterRisk()` to `instrument/sim/physics/sample.mjs`.
+  - Exposed `concentrationRelative` and categorical `innerFilterRisk` through `responseChain.sample`.
+  - Added `Inner-filter risk / 内滤风险` diagnostic for medium/high categorical risk using evidence key `ILAB-005`.
+  - Documented the boundary in `instrument/MODEL.md`.
+  - Added tests proving low-risk default samples stay quiet and scattering samples show the diagnostic without calibrated/quantitative wording.
+- Validation result:
+  - TDD RED confirmed `node --test instrument/sim/tests/physics.test.mjs` failed before `responseChain.sample` exposed inner-filter fields.
+  - TDD RED confirmed `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before model notes documented the categorical boundary.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 33/33.
+  - `node --test instrument/sim/tests/evidence-docs.test.mjs` passed: 4/4.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 81/81.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Chrome headless/CDP runtime QA passed: default low-risk sample stayed quiet, selecting the scattering sample showed `Inner-filter risk / 内滤风险`, horizontal overflow stayed 0, and runtime issues stayed 0.
+- Remaining notes:
+  - No Beer-Lambert formula, absorbance path-length model, reabsorption correction, geometry-specific inner-filter correction, or calibrated sample claim was introduced.
+
+## 2026-06-11 Geometry evidence boundary slice
+- Status: Focused evidence, UI, and physics tests passed; full release validation pending.
+- Trigger:
+  - Read-only scientific review found that `transmission` geometry was public/selectable but not specifically covered by the research log.
+  - An existing inner-filter diagnostic test also needed model-documentation coverage so the categorical risk cue could not be mistaken for a correction.
+- Evidence checked:
+  - NISTIR 7457 describes 0/90 right-angle geometry, front-face geometry for optically dense samples, and 0°/180° transmitting geometry.
+  - The existing ILAB-005 inner-filter entry supports risk language only, not quantitative correction.
+- Changes:
+  - Expanded `ILAB-006` to cover transmission as a direct-path/background-risk teaching boundary, not an implemented inline optical design.
+  - Added a geometry teaching card for `Transmission / 透射路径`.
+  - Added model notes explaining that inner-filter risk is categorical and that transmission changes collection/background diagnostics without moving selected wavelengths.
+  - Added tests requiring transmission geometry evidence, public geometry boundary copy, and inner-filter model-boundary documentation.
+- Validation result:
+  - TDD RED confirmed `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before ILAB-006 and model notes were updated.
+  - TDD RED confirmed `node --test instrument/sim/tests/ui-contract.test.mjs` failed before the transmission teaching card was added.
+  - `node --test instrument/sim/tests/evidence-docs.test.mjs` passed: 4/4.
+  - `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 24/24.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 33/33.
+- Remaining notes:
+  - This does not implement real transmission optics or front-face ray tracing.
+  - The transmission mode remains a conservative teaching diagnostic for direct excitation and background risk.
+
+## 2026-06-11 Module-failure fallback status slice
+- Status: Focused UI contract, syntax checks, site check, full tests, data validation, diff check, and browser module-failure interception QA passed.
+- Trigger:
+  - The page now has two `data-webgl-status` regions so the visible 2D fallback can announce WebGL status.
+  - Normal runtime synchronization updated both regions, but the inline module-import failure handler still updated only the first matching status node.
+  - This left the visible 2D fallback status at its generic default if the route-local module failed to load.
+- Changes:
+  - Added a UI contract requiring the module-load failure handler to collect and update every WebGL status region.
+  - Updated the inline `/instrument/` module failure handler to use `querySelectorAll("[data-webgl-status]")` and update each region.
+- Validation result:
+  - TDD RED confirmed `node --test instrument/sim/tests/ui-contract.test.mjs` failed on the new contract before the inline handler was changed.
+  - `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 23/23.
+  - `node --test instrument/sim/tests/*.mjs` passed: 77/77.
+  - `node --check instrument/instrument.js; node --check instrument/sim/ui/spectrum.mjs; node --check instrument/sim/ui/source-data.mjs` passed.
+  - `node tools/preprocess-instrument-data.js --validate` passed; validated package size was 65160 bytes.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Git line-ending normalization warnings.
+  - Chrome headless/CDP interception QA passed: blocking `instrument.js` forced the module-failure branch, both WebGL status regions updated to the bilingual unavailable message, the visible 2D fallback status remained visible, and horizontal overflow stayed 0.
+- Remaining notes:
+  - No scientific model or public claim changed in this slice.
 
 ## 2026-06-11 Source axes and fallback status slice
 - Status: Local tests, data validation, site check, diff check, and Chrome headless/CDP QA passed; full final `refine.md` DoD audit remains open.

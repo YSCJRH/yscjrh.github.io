@@ -2,12 +2,12 @@ import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=w
 import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
 import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
 import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=control-hardening-20260611";
-import { generateDiagnostics } from "./diagnostics.mjs?v=display-toggles-20260611";
+import { generateDiagnostics } from "./diagnostics.mjs?v=inner-filter-risk-20260611";
 import { deriveArtifactRisks } from "./artifacts.mjs?v=response-chain-20260611";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { deriveGeometryResponse } from "./geometry.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
-import { evaluateGaussianMixture } from "./sample.mjs?v=response-chain-20260611";
+import { deriveInnerFilterRisk, evaluateGaussianMixture } from "./sample.mjs?v=inner-filter-risk-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
 import { SAMPLE_PROFILES } from "../state.mjs?v=control-hardening-20260611";
@@ -46,6 +46,12 @@ function deriveResponseChain(state, physics) {
     physics.emissionNm,
     profileToPeak(profile, "emissionPeak", "emissionWidth")
   );
+  const concentrationRelative = clamp(profile.concentrationRelative ?? 0.1, 0, 1);
+  const innerFilterRisk = deriveInnerFilterRisk({
+    declaredRisk: profile.innerFilterRisk,
+    concentrationRelative,
+    absorptionAtExcitation,
+  });
   const artifacts = deriveArtifactRisks({
     excitationNm: physics.excitationNm,
     emissionNm: physics.emissionNm,
@@ -83,6 +89,8 @@ function deriveResponseChain(state, physics) {
       absorptionAtExcitation,
       emissionAtEmission,
       quantumYieldTeaching: clamp(profile.amplitude ?? 0.8, 0, 1),
+      concentrationRelative,
+      innerFilterRisk,
     },
     geometry,
     detector: {

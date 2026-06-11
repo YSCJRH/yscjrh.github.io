@@ -304,6 +304,29 @@ test("diagnostics surface response-chain consequences", () => {
   assert.ok(highTraceLabels.includes("Signal headroom / 信号余量"));
 });
 
+test("inner-filter risk remains a categorical diagnostic, not a correction", () => {
+  const lowRisk = createInstrumentState();
+  const lowRiskDerived = deriveInstrument(lowRisk);
+  assert.equal(lowRiskDerived.responseChain.sample.concentrationRelative, 0.18);
+  assert.equal(lowRiskDerived.responseChain.sample.innerFilterRisk.level, "low");
+  assert.ok(!lowRiskDerived.diagnostics.some((diagnostic) => diagnostic.label === "Inner-filter risk / 内滤风险"));
+
+  const scattering = createInstrumentState();
+  scattering.sample.preset = "scattering";
+  const derived = deriveInstrument(scattering);
+  const sample = derived.responseChain.sample;
+  const diagnostic = derived.diagnostics.find((item) => item.label === "Inner-filter risk / 内滤风险");
+
+  assert.equal(sample.concentrationRelative, 0.52);
+  assert.equal(sample.innerFilterRisk.level, "medium");
+  assert.ok(sample.innerFilterRisk.score > lowRiskDerived.responseChain.sample.innerFilterRisk.score);
+  assert.equal(diagnostic?.evidenceKey, "ILAB-005");
+  assert.match(diagnostic?.text || "", /attenuation/i);
+  assert.match(diagnostic?.text || "", /reabsorption/i);
+  assert.match(diagnostic?.text || "", /内滤|重吸收/);
+  assert.doesNotMatch(diagnostic?.text || "", /calibrated|quantitative|corrected spectrum/i);
+});
+
 test("display toggle diagnostics remain visible in busy warning states", () => {
   const state = createInstrumentState();
   state.display.spectrumView = "response-normalized";
