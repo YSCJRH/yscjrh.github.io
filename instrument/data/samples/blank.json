@@ -1,0 +1,34 @@
+{
+  "id": "blank",
+  "label": {
+    "en": "Blank / background-dominant",
+    "zh": "空白或背景主导"
+  },
+  "claimLevel": "synthetic-teaching",
+  "absorption": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 330, "fwhmNm": 120, "amplitude": 1 }
+    ]
+  },
+  "emission": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 430, "fwhmNm": 96, "amplitude": 1 }
+    ]
+  },
+  "quantumYieldTeaching": 0.02,
+  "concentrationRelative": 0.02,
+  "innerFilterRisk": "low",
+  "notes": {
+    "en": "Mostly baseline plus small background/scatter; not a true fluorescence band.",
+    "zh": "主要由基线和少量背景或散射组成，不是真正的荧光峰带。"
+  },
+  "model": {
+    "kind": "blank",
+    "baseline": 0.026,
+    "noise": 0.008,
+    "decay": 0.02
+  },
+  "sources": []
+}

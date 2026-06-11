@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=response-chain-20260611";
+import { MODES, PARTS } from "../state.mjs?v=sample-data-20260611";
 
 const chart = {
   left: 54,

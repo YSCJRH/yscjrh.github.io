@@ -23,6 +23,15 @@ Use these statuses before any new public data or material example is embedded:
 | `teaching context` | Source helps explain an instrument concept, artifact, or sample limitation. | Use short conservative explanations, not copied figures or method claims. |
 | `defer` | Source is promising but currently too large, ambiguous, domain-specific, or unclear for public reuse. | Keep in this file until a smaller, licensed, well-described subset exists. |
 
+## Synthetic Teaching Sample Presets
+
+`instrument/data/samples/*.json` stores the simulator's synthetic sample presets. These files are not source-derived spectra and do not claim to represent calibrated materials.
+
+- `claimLevel` is `synthetic-teaching`.
+- `sources` remains an empty array unless a future preset is backed by reviewed source data and a decision record.
+- The runtime module `instrument/sim/data/samplePresets.mjs` derives compact legacy profile fields from those teaching presets for the current static ES module simulator.
+- Source-derived examples remain indexed by `instrument/data/manifest.json` and stay separate from these simulator controls.
+
 ## Candidate Sources And Current Status
 
 | Candidate | Current status | Intended use | Reason / gate before embedding |

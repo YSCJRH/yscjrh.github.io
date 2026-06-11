@@ -10,7 +10,7 @@ import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { evaluateGaussianMixture } from "./sample.mjs?v=response-chain-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=response-chain-20260611";
+import { SAMPLE_PROFILES } from "../state.mjs?v=sample-data-20260611";
 
 const DEFAULT_SOURCE_ID = "xenon-like";
 const DEFAULT_DETECTOR_ID = "pmt-like-visible";

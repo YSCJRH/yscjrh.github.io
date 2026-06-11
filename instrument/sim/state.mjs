@@ -5,6 +5,9 @@ import {
   gratingAngleFromWavelength,
   wavelengthFromGratingAngle,
 } from "./physics/grating.mjs?v=wavelength-control-20260429";
+import { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES } from "./data/samplePresets.mjs?v=sample-data-20260611";
+
+export { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES };
 
 export { clamp };
 
@@ -73,59 +76,6 @@ export const PARTS = Object.freeze({
       "Shows a generated trace for the selected conceptual mode. The detector-to-display connection is an electronic signal path, not another light beam. / 显示当前概念模式生成的谱线；检测器到显示区之间是电子信号路径，不是另一束光。",
     hint:
       "The trace is derived from the current model state. Source-derived examples below stay separate from these synthetic controls. / 谱线由当前模型状态派生；下方引用数据示例与这些合成控制项保持分离。",
-  },
-});
-
-export const SAMPLE_PROFILES = Object.freeze({
-  "low-background": {
-    name: "Low-background sample / 低背景样品",
-    description: "A clean illustrative sample with a distinct synthetic emission feature. / 一个干净的示意样品，具有清晰的合成发射特征。",
-    excitationPeak: 365,
-    excitationWidth: 42,
-    emissionPeak: 468,
-    emissionWidth: 36,
-    amplitude: 1,
-    baseline: 0.025,
-    noise: 0.018,
-    decay: 0.2,
-  },
-  "broad-emission": {
-    name: "Broad-emission sample / 宽发射样品",
-    description: "A conceptual sample with broader excitation and emission response. / 一个概念样品，具有更宽的激发和发射响应。",
-    excitationPeak: 405,
-    excitationWidth: 72,
-    emissionPeak: 552,
-    emissionWidth: 74,
-    amplitude: 0.86,
-    baseline: 0.04,
-    noise: 0.015,
-    decay: 0.12,
-  },
-  blank: {
-    name: "Blank / background-dominant / 空白或背景主导",
-    description: "Mostly baseline plus small background/scatter; not a true fluorescence band. / 主要由基线和少量背景或散射组成，不是真正的荧光峰带。",
-    kind: "blank",
-    excitationPeak: 330,
-    excitationWidth: 60,
-    emissionPeak: 430,
-    emissionWidth: 48,
-    amplitude: 0.02,
-    baseline: 0.026,
-    noise: 0.008,
-    decay: 0.02,
-  },
-  scattering: {
-    name: "Scattering sample / 散射样品",
-    description: "A conceptual case where background and scatter compete with fluorescence. / 一个背景和散射会与荧光竞争的概念情形。",
-    kind: "scattering",
-    excitationPeak: 320,
-    excitationWidth: 56,
-    emissionPeak: 440,
-    emissionWidth: 42,
-    amplitude: 0.38,
-    baseline: 0.12,
-    noise: 0.026,
-    decay: 0.08,
   },
 });
 

@@ -2,7 +2,7 @@ import { MONOCHROMATOR_WAVELENGTH_RANGE } from "./grating.mjs?v=wavelength-contr
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=response-chain-20260611";
+import { SAMPLE_PROFILES } from "../state.mjs?v=sample-data-20260611";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 

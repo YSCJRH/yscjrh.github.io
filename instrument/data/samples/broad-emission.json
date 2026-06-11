@@ -1,0 +1,33 @@
+{
+  "id": "broad-emission",
+  "label": {
+    "en": "Broad-emission sample",
+    "zh": "宽发射样品"
+  },
+  "claimLevel": "synthetic-teaching",
+  "absorption": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 405, "fwhmNm": 144, "amplitude": 1 }
+    ]
+  },
+  "emission": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 552, "fwhmNm": 148, "amplitude": 1 }
+    ]
+  },
+  "quantumYieldTeaching": 0.86,
+  "concentrationRelative": 0.24,
+  "innerFilterRisk": "low",
+  "notes": {
+    "en": "A conceptual sample with broader excitation and emission response.",
+    "zh": "一个概念样品，具有更宽的激发和发射响应。"
+  },
+  "model": {
+    "baseline": 0.04,
+    "noise": 0.015,
+    "decay": 0.12
+  },
+  "sources": []
+}

@@ -1,0 +1,34 @@
+{
+  "id": "scattering",
+  "label": {
+    "en": "Scattering sample",
+    "zh": "散射样品"
+  },
+  "claimLevel": "synthetic-teaching",
+  "absorption": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 320, "fwhmNm": 112, "amplitude": 1 }
+    ]
+  },
+  "emission": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 440, "fwhmNm": 84, "amplitude": 1 }
+    ]
+  },
+  "quantumYieldTeaching": 0.38,
+  "concentrationRelative": 0.52,
+  "innerFilterRisk": "medium",
+  "notes": {
+    "en": "A conceptual case where background and scatter compete with fluorescence.",
+    "zh": "一个背景和散射会与荧光竞争的概念情形。"
+  },
+  "model": {
+    "kind": "scattering",
+    "baseline": 0.12,
+    "noise": 0.026,
+    "decay": 0.08
+  },
+  "sources": []
+}

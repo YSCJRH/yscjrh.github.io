@@ -21,6 +21,7 @@ Current implementation files:
 - Grating/wavelength mapping: `instrument/sim/physics/grating.mjs`
 - Slit teaching mapping: `instrument/sim/physics/monochromator.mjs`
 - Alignment and detector-arm collection: `instrument/sim/physics/alignment.mjs`
+- Synthetic teaching sample presets: `instrument/data/samples/*.json` and `instrument/sim/data/samplePresets.mjs`
 - Synthetic traces and scan metadata: `instrument/sim/physics/spectrum.mjs`
 - Diagnostics: `instrument/sim/physics/diagnostics.mjs`
 - Response-chain scaffold: `instrument/sim/physics/source.mjs`, `instrument/sim/physics/detector.mjs`, `instrument/sim/physics/sample.mjs`, `instrument/sim/physics/geometry.mjs`, `instrument/sim/physics/artifacts.mjs`, `instrument/sim/physics/instrumentFunction.mjs`, `instrument/sim/physics/radiometry.mjs`, `instrument/sim/physics/scan.mjs`
@@ -34,7 +35,7 @@ state
   -> grating angles produce selected excitation/emission wavelengths
   -> slit width produces teaching bandpass and throughput
   -> source alignment and detector angle scale intensity/background risk
-  -> sample preset supplies hard-coded excitation/emission Gaussian-like shape
+  -> synthetic sample preset data supplies excitation/emission Gaussian-mixture teaching shape
   -> responseChain exposes normalized source, sample, geometry, detector, artifact, and signal terms
   -> spectrum.mjs generates a normalized synthetic trace
   -> diagnostics.mjs emits short bilingual status cards with research-log evidence keys
@@ -83,14 +84,14 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 23 tests passed after wiring `responseChain`, source/detector trace factors, and diagnostic evidence keys.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 25 tests passed after adding advanced source, detector, and geometry controls to the simulator workbench.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 29 tests passed after routing geometry mode into the synthetic trace and surfacing response-chain diagnostics for source, detector, geometry, artifacts, and signal headroom.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/sample-data.test.mjs`: 31 tests passed after moving teaching sample presets into static JSON plus a runtime data module.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
 
 ## Next Model Slices
 
-1. Move hard-coded sample presets into static JSON with claim-level fields.
-2. Replace the remaining parallel chart math with shared response-chain helpers where doing so preserves current behavior.
-3. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
-4. Add a compact response-chain readout or component overlay only after the visible wording stays short and bilingual.
-5. Move hard-coded teaching sample presets into static JSON with claim-level fields.
+1. Replace the remaining parallel chart math with shared response-chain helpers where doing so preserves current behavior.
+2. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
+3. Add a compact response-chain readout or component overlay only after the visible wording stays short and bilingual.
+4. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.
