@@ -7,6 +7,7 @@ import { collectInstrumentElements } from "../ui/spectrum.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
+const instrumentScript = readFileSync(resolve(here, "../../instrument.js"), "utf8");
 
 test("advanced response-chain controls live in the simulator workbench", () => {
   const advancedStart = instrumentHtml.indexOf('<details class="advanced-geometry">');
@@ -52,4 +53,30 @@ test("3D scene is optional with an honest initial fallback state", () => {
   assert.ok(statusMatch, "instrument page should include a WebGL status element");
   assert.doesNotMatch(statusMatch[1], /Loading|正在加载/);
   assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
+});
+
+test("instrument page exposes a persistent language display framework", () => {
+  assert.match(
+    instrumentHtml,
+    /data-instrument-lab[^>]*data-language-mode="bilingual"/,
+    "instrument root should default to bilingual so no-JS remains readable"
+  );
+
+  const languageControlIndex = instrumentHtml.indexOf("data-language-mode-control");
+  const workstationIndex = instrumentHtml.indexOf("instrument-workstation");
+  assert.ok(languageControlIndex > 0, "language mode control should exist");
+  assert.ok(languageControlIndex < workstationIndex, "language mode control should be discoverable before the workbench");
+
+  for (const mode of ["en", "zh", "bilingual"]) {
+    assert.match(
+      instrumentHtml,
+      new RegExp(`data-language-mode-option="${mode}"`),
+      `missing ${mode} language mode button`
+    );
+  }
+
+  assert.match(instrumentHtml, /data-language="en"/, "English long-form copy should be structurally marked");
+  assert.match(instrumentHtml, /data-language="zh"/, "Chinese long-form copy should be structurally marked");
+  assert.match(instrumentScript, /instrumentLanguageMode/, "language mode should use a stable localStorage key");
+  assert.match(instrumentScript, /localStorage/, "language mode should persist locally");
 });

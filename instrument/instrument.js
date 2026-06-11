@@ -19,6 +19,8 @@ import {
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
 let sourceDataModulePromise = null;
+const LANGUAGE_MODE_STORAGE_KEY = "instrumentLanguageMode";
+const LANGUAGE_MODES = new Set(["en", "zh", "bilingual"]);
 
 if (root) {
   window.__instrumentLabModuleLoaded = true;
@@ -28,6 +30,42 @@ if (root) {
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   let sceneController = null;
   let isSceneLoading = false;
+
+  function normalizeLanguageMode(mode) {
+    return LANGUAGE_MODES.has(mode) ? mode : "bilingual";
+  }
+
+  function readStoredLanguageMode() {
+    try {
+      return normalizeLanguageMode(window.localStorage.getItem(LANGUAGE_MODE_STORAGE_KEY));
+    } catch {
+      return "bilingual";
+    }
+  }
+
+  function persistLanguageMode(mode) {
+    try {
+      window.localStorage.setItem(LANGUAGE_MODE_STORAGE_KEY, mode);
+    } catch {
+      // localStorage can be unavailable in restrictive browser modes.
+    }
+  }
+
+  function setLanguageMode(mode, { persist = true } = {}) {
+    const nextMode = normalizeLanguageMode(mode);
+    root.dataset.languageMode = nextMode;
+    document.documentElement.lang = nextMode === "zh" ? "zh-CN" : "en";
+
+    root.querySelectorAll("[data-language-mode-option]").forEach((button) => {
+      const isActive = button.dataset.languageModeOption === nextMode;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    if (persist) {
+      persistLanguageMode(nextMode);
+    }
+  }
 
   function syncInputsFromState() {
     const { controls } = elements;
@@ -246,6 +284,12 @@ if (root) {
     });
   });
 
+  root.querySelectorAll("[data-language-mode-option]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setLanguageMode(button.dataset.languageModeOption);
+    });
+  });
+
   if ("addEventListener" in reduceMotionQuery) {
     reduceMotionQuery.addEventListener("change", () => {
       applyReducedMotionPreference();
@@ -260,6 +304,7 @@ if (root) {
     });
   }
 
+  setLanguageMode(readStoredLanguageMode(), { persist: false });
   applyReducedMotionPreference();
   syncInputsFromState();
   root.classList.add("has-2d-fallback");

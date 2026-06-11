@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=optical-confidence-20260509">
+    <link rel="stylesheet" href="../styles.css?v=language-mode-20260611">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=sample-data-20260611").catch((error) => {
+        import("./instrument.js?v=language-mode-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -124,7 +124,7 @@
       </header>
 
       <main id="main">
-        <section class="section article-section instrument-page" data-instrument-lab>
+        <section class="section article-section instrument-page" data-instrument-lab data-language-mode="bilingual">
           <div class="container instrument-shell">
             <div class="article-nav" data-reveal>
               <a class="article-back" href="../index.html#research">Back to Research / 返回研究方向</a>
@@ -134,38 +134,45 @@
             <article class="surface surface-glass article-card instrument-hero-card" data-reveal>
               <div>
                 <p class="eyebrow">Instrument Lab / 荧光仪器可视化实验室</p>
-                <h1 class="article-title">Fluorescence instrument teaching skeleton</h1>
-                <p class="instrument-title-zh" lang="zh-CN">荧光仪器教学骨架</p>
-                <p class="article-lead">
+                <h1 class="article-title" data-language="en">Fluorescence instrument teaching skeleton</h1>
+                <p class="instrument-title-zh" lang="zh-CN" data-language="zh">荧光仪器教学骨架</p>
+                <p class="article-lead" data-language="en">
                   Explore a static 3D optical bench, grating-driven monochromators, and a simplified synthetic trace.
                 </p>
-                <p class="article-lead article-lead-zh" lang="zh-CN">
+                <p class="article-lead article-lead-zh" lang="zh-CN" data-language="zh">
                   从激发单色器、样品池、90° 发射收集到检测输出，用一个克制的教学骨架理解荧光分光光度计的工作链路。
                 </p>
               </div>
-              <p class="instrument-disclaimer" data-disclaimer>
-                Conceptual model only. Not real instrument control. Not calibrated measurement.
-                <br>
-                仅为概念模型，不是真实仪器控制，也不是校准测量。
-              </p>
+              <div class="instrument-hero-tools">
+                <div class="instrument-language-switch" data-language-mode-control role="group" aria-label="Language display / 语言显示">
+                  <span class="instrument-language-switch-label">Language / 语言</span>
+                  <button type="button" data-language-mode-option="en" aria-pressed="false">English</button>
+                  <button type="button" data-language-mode-option="zh" aria-pressed="false">中文</button>
+                  <button type="button" data-language-mode-option="bilingual" aria-pressed="true">Both / 双语</button>
+                </div>
+                <p class="instrument-disclaimer" data-disclaimer>
+                  <span data-language="en">Conceptual model only. Not real instrument control. Not calibrated measurement.</span>
+                  <span data-language="zh" lang="zh-CN">仅为概念模型，不是真实仪器控制，也不是校准测量。</span>
+                </p>
+              </div>
             </article>
 
             <section class="instrument-workstation" aria-label="Interactive fluorescence spectrophotometer concept model / 交互式荧光分光光度计概念模型">
               <div class="instrument-onboarding" aria-label="How to use the concept model / 如何使用概念模型" data-reveal>
                 <p>
                   <strong>1. Choose a mode / 选择模式</strong>
-                  Pick a scan channel.
-                  <span>选择扫描模式，先看哪一路通道在变化。</span>
+                  <span data-language="en">Pick a scan channel.</span>
+                  <span data-language="zh" lang="zh-CN">选择扫描模式，先看哪一路通道在变化。</span>
                 </p>
                 <p>
                   <strong>2. Move one control / 移动控制项</strong>
-                  Watch the trace respond.
-                  <span>移动一个控制项，观察合成谱线如何响应。</span>
+                  <span data-language="en">Watch the trace respond.</span>
+                  <span data-language="zh" lang="zh-CN">移动一个控制项，观察合成谱线如何响应。</span>
                 </p>
                 <p>
                   <strong>3. Inspect a mono / 查看单色器</strong>
-                  Click Ex or Em mono, then drag the grating.
-                  <span>点选激发或发射单色器，然后拖动光栅。</span>
+                  <span data-language="en">Click Ex or Em mono, then drag the grating.</span>
+                  <span data-language="zh" lang="zh-CN">点选激发或发射单色器，然后拖动光栅。</span>
                 </p>
               </div>
 

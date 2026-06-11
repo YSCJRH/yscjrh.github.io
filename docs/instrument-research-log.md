@@ -16,7 +16,7 @@ Rules:
   - NISTIR 7457, "Recommendations and Guidelines for Standardization of Fluorescence Spectroscopy": https://nvlpubs.nist.gov/nistpubs/ir/2007/ir7457.pdf
 - Evidence summary: NIST describes conventional fluorescence spectrometers as having excitation and emission wavelength selectors. Fixing excitation and scanning emission gives an emission spectrum; fixing emission and scanning excitation gives an excitation spectrum.
 - Implementation boundary: Use this to label scan modes and diagnostics. Do not imply the site measures real spectra or follows a validated NIST procedure.
-- Code / UI touched: pending; current references include `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/index.html`.
+- Code / UI touched: `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/scan.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/index.html`, `instrument/sim/tests/physics.test.mjs`.
 - Confidence: high
 
 ## Claim ILAB-002: Corrected excitation and EEM displays require excitation-flux and emission-response correction assumptions
@@ -27,7 +27,7 @@ Rules:
   - IUPAC Gold Book, "corrected excitation spectrum": https://goldbook.iupac.org/terms/view/C01344/pdf
 - Evidence summary: IUPAC defines an excitation-emission spectrum as emission spectra collected at incremental excitation wavelengths. Corrected EES requires emission correction for instrumental wavelength response and constant exciting radiation flux; corrected excitation spectra assume constant incident photon flux plus dilute-solution conditions.
 - Implementation boundary: Source-derived EEM examples may be displayed as normalized/downsampled teaching examples. The simulator must not call its EEM or excitation traces "corrected" unless the required correction model is explicitly implemented and bounded.
-- Code / UI touched: pending; current references include `instrument/sim/ui/source-data.mjs`, `instrument/data/manifest.json`.
+- Code / UI touched: `instrument/sim/ui/source-data.mjs`, `instrument/data/manifest.json`, `instrument/sim/tests/source-data.test.mjs`.
 - Confidence: high
 
 ## Claim ILAB-003: Instrument spectral responsivity changes fluorescence spectral shape and must be corrected for quantitative comparison
@@ -38,7 +38,7 @@ Rules:
   - NISTIR 7915, "Standard Practice for Determining the Relative Spectral Correction Factors for the Emission Signal of Fluorescence Spectrometers": https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=913001
 - Evidence summary: NIST states that fluorescence instruments have unique spectral responsivity, so the apparent shape and intensity of a sample can differ between instruments and over time. NISTIR 7915 describes relative emission correction factors for grating-based fluorescence spectrometers and emphasizes wavelength accuracy and detector linear range.
 - Implementation boundary: Use this to justify detector-response teaching curves, raw/corrected literacy, and "not calibrated" copy. Do not embed NIST correction curves or claim calibration unless a specific public data file and reuse boundary are verified.
-- Code / UI touched: pending; current references include `instrument/data/manifest.json`, `DATA_SOURCES.md`.
+- Code / UI touched: `instrument/sim/physics/detector.mjs`, `instrument/sim/physics/derive.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/data/manifest.json`, `DATA_SOURCES.md`.
 - Confidence: high
 
 ## Claim ILAB-004: Slit width and spectral bandpass are linked to spectral resolution, throughput, and wavelength-selector checks
@@ -49,7 +49,7 @@ Rules:
   - NISTIR 7915: https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=913001
 - Evidence summary: NISTIR 7458 treats spectral slit width accuracy through measured spectral bandwidth and FWHM of a narrow line. NISTIR 7915 notes that correction procedures depend on defined instrument settings and detector linear range.
 - Implementation boundary: Slit width may enter a teaching instrument-function model and diagnostics. The mapping from slit micrometers to FWHM must be labeled as a teaching mapping unless real monochromator constants are introduced with evidence.
-- Code / UI touched: pending; current references include `instrument/sim/physics/monochromator.mjs`, `instrument/sim/physics/spectrum.mjs`.
+- Code / UI touched: `instrument/sim/physics/monochromator.mjs`, `instrument/sim/physics/instrumentFunction.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/sim/tests/model-invariants.test.mjs`, `instrument/sim/tests/physics.test.mjs`.
 - Confidence: high for qualitative tradeoff; medium for any numeric mapping until the teaching constants are documented.
 
 ## Claim ILAB-005: Inner-filter effects can reduce apparent emission yield and distort bandshape
@@ -59,7 +59,7 @@ Rules:
   - IUPAC Gold Book, "inner filter effect": https://goldbook.iupac.org/terms/view/I03047
 - Evidence summary: IUPAC defines inner-filter effect as apparent emission quantum-yield decrease or bandshape distortion caused by reabsorption of emitted radiation, and also as absorption of incident radiation by another species during irradiation.
 - Implementation boundary: First implementation should use an inner-filter risk diagnostic, not a quantitative correction, unless geometry and absorbance assumptions are added with sources.
-- Code / UI touched: pending; current references include `instrument/sim/physics/diagnostics.mjs`.
+- Code / UI touched: `instrument/sim/physics/sample.mjs`, `instrument/sim/physics/artifacts.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/data/samples/*.json`, `instrument/sim/tests/sample-data.test.mjs`.
 - Confidence: high for risk language; low for any correction formula until researched separately.
 
 ## Claim ILAB-006: Right-angle geometry is a conventional model for dilute transparent samples; front-face geometry is used for optically dense, turbid, solid, or surface samples
@@ -70,7 +70,7 @@ Rules:
   - HORIBA Fluorolog-3 manual: https://www.horiba.com/fileadmin/uploads/Scientific/Downloads/UserArea/Fluorescence/Legacy/Complete_FluoroLog3_Manual.pdf
 - Evidence summary: NISTIR 7457 describes 0/90 right-angle geometry for dilute transparent samples and front-face geometry for optically dense samples. The Fluorolog-3 manual similarly distinguishes right-angle and front-face collection and links front-face use to solid, turbid, or highly absorbent samples.
 - Implementation boundary: Keep the current 90-degree view as the default conceptual geometry. Future front-face mode should change diagram, collection factor, diagnostics, and boundary copy, but must not claim manufacturer-specific reconstruction.
-- Code / UI touched: pending; current references include `instrument/sim/physics/alignment.mjs`, `instrument/sim/scene/InstrumentScene.mjs`.
+- Code / UI touched: `instrument/sim/physics/alignment.mjs`, `instrument/sim/physics/geometry.mjs`, `instrument/sim/physics/derive.mjs`, `instrument/sim/scene/InstrumentScene.mjs`, `instrument/index.html`, `instrument/sim/tests/physics.test.mjs`.
 - Confidence: high
 
 ## Claim ILAB-007: Scatter and second-order warnings are real operating concerns, but the site should initially present them as diagnostics rather than calibrated artifact curves
@@ -81,7 +81,7 @@ Rules:
   - NISTIR 7458: https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7458.pdf
 - Evidence summary: The Thermo manual warns that excitation and emission wavelength choices near scattering conditions can require optical filtering. NISTIR 7458 discusses water Raman and wavelength-selector calibration contexts, showing that scatter features are part of fluorescence-instrument qualification practice.
 - Implementation boundary: Add conservative Rayleigh/second-order risk diagnostics before drawing quantitative scatter curves. If Rayleigh/Raman/stray-light components are plotted, create separate evidence entries and tests first.
-- Code / UI touched: pending; current references include `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`.
+- Code / UI touched: `instrument/sim/physics/artifacts.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/index.html`, `instrument/sim/tests/model-invariants.test.mjs`.
 - Confidence: medium for UI warnings; low for plotted component amplitudes until modeled.
 
 ## Claim ILAB-008: Teaching source, detector, geometry, artifact, and radiometry modules are normalized placeholders until wired to sourced public UI behavior

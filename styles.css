@@ -4191,6 +4191,11 @@ section[id] {
   --emission-color: #52f0d3;
 }
 
+.instrument-page[data-language-mode="en"] [data-language="zh"],
+.instrument-page[data-language-mode="zh"] [data-language="en"] {
+  display: none !important;
+}
+
 .instrument-shell {
   max-width: 76rem;
 }
@@ -4210,6 +4215,49 @@ section[id] {
 
 .instrument-hero-card > * {
   min-width: 0;
+}
+
+.instrument-hero-tools {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.instrument-language-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.34rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.instrument-language-switch-label {
+  flex-basis: 100%;
+  color: var(--color-text-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.instrument-language-switch button {
+  min-height: 2rem;
+  border: 1px solid rgba(139, 226, 214, 0.18);
+  border-radius: 999px;
+  padding: 0.32rem 0.64rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.74rem;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.instrument-language-switch button:hover,
+.instrument-language-switch button:focus-visible,
+.instrument-language-switch button.is-active {
+  border-color: rgba(139, 226, 214, 0.5);
+  color: #d8fff8;
+  background: rgba(77, 237, 207, 0.12);
 }
 
 .instrument-page .instrument-hero-card .article-title {
