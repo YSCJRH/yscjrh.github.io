@@ -35,13 +35,14 @@ state
   -> slit width produces teaching bandpass and throughput
   -> source alignment and detector angle scale intensity/background risk
   -> sample preset supplies hard-coded excitation/emission Gaussian-like shape
+  -> responseChain exposes normalized source, sample, geometry, detector, artifact, and signal terms
   -> spectrum.mjs generates a normalized synthetic trace
-  -> diagnostics.mjs emits short bilingual status cards
+  -> diagnostics.mjs emits short bilingual status cards with research-log evidence keys
 ```
 
-This is useful as a conceptual skeleton, but it does not yet expose the full response chain requested by `refine.md`.
+This is useful as a conceptual skeleton. As of 2026-06-11, `deriveInstrument()` exposes a bounded `responseChain`, and source/detector teaching response factors affect the synthetic trace. The chain is still teaching-level and partly parallel to the legacy chart calculation, so it must not be presented as a calibrated radiometric model.
 
-The 2026-06-11 response-chain scaffold is tested but not yet wired into the public UI. It exists to make later replacement of the compact synthetic chain incremental and reviewable.
+The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, and the synthetic trace. It exists to make later replacement of the compact synthetic chain incremental and reviewable.
 
 ## Target Response Chain
 
@@ -79,6 +80,8 @@ Fresh baseline from 2026-06-11:
 - `node --check instrument/instrument.js`: passed.
 - `node --test instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 17 tests passed.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 20 tests passed after adding the response-chain scaffold.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 23 tests passed after wiring `responseChain`, source/detector trace factors, and diagnostic evidence keys.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 25 tests passed after adding advanced source, detector, and geometry controls to the simulator workbench.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
@@ -86,7 +89,7 @@ Fresh baseline from 2026-06-11:
 ## Next Model Slices
 
 1. Move hard-coded sample presets into static JSON with claim-level fields.
-2. Add pure modules for source, detector, sample, geometry, artifacts, instrument function, radiometry, and scan composition.
-3. Add model-invariant tests covering finite outputs, non-negative intensities, source-data separation, seeded noise, and scan-mode semantics.
-4. Refactor diagnostics to use structured evidence keys that point back to `docs/instrument-research-log.md`.
-5. Only then connect the richer response chain to the UI.
+2. Replace the remaining parallel chart math with shared response-chain helpers where doing so preserves current behavior.
+3. Add detector, geometry, integration, and saturation parity tests before exposing those values in public controls.
+4. Surface response-chain diagnostics for low source output, detector response, saturation, and artifact risk without implying calibration.
+5. Move hard-coded teaching sample presets into static JSON with claim-level fields.

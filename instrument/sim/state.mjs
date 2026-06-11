@@ -134,6 +134,7 @@ export function createInstrumentState() {
     mode: "emission",
     selectedPart: "source",
     source: {
+      id: "xenon-like",
       offsetUm: 0,
     },
     exMono: {
@@ -150,7 +151,11 @@ export function createInstrumentState() {
       offsetUm: 0,
     },
     detector: {
+      id: "pmt-like-visible",
       angleDeg: 90,
+    },
+    geometry: {
+      id: "right-angle-90",
     },
     integrationTimeMs: 200,
   };
@@ -184,8 +189,18 @@ export function applyControlValue(state, controlName, rawValue) {
     case "source-offset":
       state.source.offsetUm = clamp(numeric, -120, 120);
       break;
+    case "source-type":
+      state.source.id = String(rawValue || "xenon-like");
+      break;
     case "detector-angle":
       state.detector.angleDeg = clamp(numeric, 80, 100);
+      break;
+    case "detector-type":
+      state.detector.id = String(rawValue || "pmt-like-visible");
+      break;
+    case "geometry-mode":
+      state.geometry ||= {};
+      state.geometry.id = String(rawValue || "right-angle-90");
       break;
     default:
       break;

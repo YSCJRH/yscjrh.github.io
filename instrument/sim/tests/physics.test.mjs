@@ -30,6 +30,65 @@ test("default grating wavelengths match the teaching channels", () => {
   assert.equal(Math.round(derived.emissionNm), 520);
 });
 
+test("derived state exposes a bounded instrument response chain", () => {
+  const state = createInstrumentState();
+  const derived = deriveInstrument(state);
+
+  assert.equal(derived.responseChain.claimLevel, "synthetic-teaching");
+  assert.equal(derived.responseChain.source.id, "xenon-like");
+  assert.equal(derived.responseChain.detector.id, "pmt-like-visible");
+  assert.equal(derived.responseChain.geometry.id, "right-angle-90");
+
+  for (const value of [
+    derived.responseChain.source.atExcitation,
+    derived.responseChain.detector.atEmission,
+    derived.responseChain.sample.absorptionAtExcitation,
+    derived.responseChain.sample.emissionAtEmission,
+    derived.responseChain.signal.normalized,
+  ]) {
+    assert.ok(Number.isFinite(value));
+    assert.ok(value >= 0);
+    assert.ok(value <= 1);
+  }
+
+  assert.ok(["low", "medium", "high"].includes(derived.responseChain.signal.saturationRisk));
+  assert.ok(["low", "medium", "high"].includes(derived.responseChain.artifacts.rayleighRisk.level));
+  assert.ok(derived.responseChain.evidenceKeys.includes("ILAB-003"));
+});
+
+test("teaching source spectrum affects the synthetic emission trace", () => {
+  const matched = createInstrumentState();
+  matched.source.id = "led-365";
+  const matchedDerived = deriveInstrument(matched);
+
+  const mismatched = createInstrumentState();
+  mismatched.source.id = "led-405";
+  const mismatchedDerived = deriveInstrument(mismatched);
+
+  assert.ok(matchedDerived.responseChain.source.atExcitation > mismatchedDerived.responseChain.source.atExcitation);
+  assert.ok(matchedDerived.spectrum.peak > mismatchedDerived.spectrum.peak);
+});
+
+test("diagnostics carry research-log evidence keys", () => {
+  const state = createInstrumentState();
+  state.slit.widthUm = 1000;
+  state.detector.angleDeg = 82;
+  state.sample.preset = "blank";
+  const derived = deriveInstrument(state);
+
+  assert.ok(derived.diagnostics.length >= 4);
+  for (const diagnostic of derived.diagnostics) {
+    assert.match(diagnostic.evidenceKey, /^ILAB-\d{3}$/);
+    assert.equal(typeof diagnostic.label, "string");
+    assert.equal(typeof diagnostic.text, "string");
+  }
+
+  const evidenceKeys = new Set(derived.diagnostics.map((diagnostic) => diagnostic.evidenceKey));
+  assert.ok(evidenceKeys.has("ILAB-004"));
+  assert.ok(evidenceKeys.has("ILAB-006"));
+  assert.ok(evidenceKeys.has("ILAB-008"));
+});
+
 test("wider slit increases bandpass and throughput", () => {
   const narrowBandpass = bandpassFromSlit(150);
   const wideBandpass = bandpassFromSlit(900);

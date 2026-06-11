@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=optical-confidence-20260509").catch((error) => {
+        import("./instrument.js?v=response-chain-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -492,6 +492,37 @@
                         <br>
                         在 3D 场景中选择光源，可拖动蓝色 Z 轴手柄做受限入口偏移；样品池固定在样品架中。选择检测器可显示青色检测臂手柄。这些几何变化只影响强度和诊断，不改变选通波长。
                       </p>
+
+                    <label class="instrument-control instrument-select-control">
+                      <span>Source type / 光源类型</span>
+                      <select data-control="source-type">
+                        <option value="xenon-like">Broadband teaching source / 宽带教学光源</option>
+                        <option value="ideal-flat">Ideal flat teaching source / 理想平坦教学光源</option>
+                        <option value="led-365">365 nm LED teaching source / 365 nm LED 教学光源</option>
+                        <option value="led-405">405 nm LED teaching source / 405 nm LED 教学光源</option>
+                      </select>
+                      <small class="control-help">Normalized teaching source shape, not a measured lamp spectrum. 归一化教学光源形状，不是实测灯谱。</small>
+                    </label>
+
+                    <label class="instrument-control instrument-select-control">
+                      <span>Detector type / 检测器类型</span>
+                      <select data-control="detector-type">
+                        <option value="pmt-like-visible">Visible PMT-like teaching response / 可见区 PMT 风格教学响应</option>
+                        <option value="silicon-like">Silicon-like teaching response / 硅探测器风格教学响应</option>
+                        <option value="ideal-flat">Ideal flat detector / 理想平坦检测器</option>
+                      </select>
+                      <small class="control-help">Normalized responsivity cue; it is not a detector calibration curve. 归一化响应提示，不是检测器校准曲线。</small>
+                    </label>
+
+                    <label class="instrument-control instrument-select-control">
+                      <span>Geometry mode / 几何模式</span>
+                      <select data-control="geometry-mode">
+                        <option value="right-angle-90">Right-angle 90 degree / 90° 直角收集</option>
+                        <option value="front-face">Front-face teaching geometry / 前表面教学几何</option>
+                        <option value="transmission">Transmission teaching geometry / 透射教学几何</option>
+                      </select>
+                      <small class="control-help">Conceptual geometry selector; it changes collection/background diagnostics, not wavelength. 概念几何选择器，只改变收集和背景诊断，不改变波长。</small>
+                    </label>
 
                     <label class="instrument-control">
                       <span>Source offset / 光源偏移 <strong data-readout="source-offset">0 um</strong></span>

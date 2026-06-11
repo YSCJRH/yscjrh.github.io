@@ -1,4 +1,4 @@
-import { MODES, PARTS } from "../state.mjs?v=wavelength-control-20260429";
+import { MODES, PARTS } from "../state.mjs?v=response-chain-20260611";
 
 const chart = {
   left: 54,
@@ -42,6 +42,9 @@ export function collectInstrumentElements(root) {
     slit: root.querySelector('[data-control="slit"]'),
     integration: root.querySelector('[data-control="integration"]'),
     sample: root.querySelector('[data-control="sample"]'),
+    sourceType: root.querySelector('[data-control="source-type"]'),
+    detectorType: root.querySelector('[data-control="detector-type"]'),
+    geometryMode: root.querySelector('[data-control="geometry-mode"]'),
     sourceOffset: root.querySelector('[data-control="source-offset"]'),
     detectorAngle: root.querySelector('[data-control="detector-angle"]'),
   };

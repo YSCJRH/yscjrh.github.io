@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=optical-confidence-20260509";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=wavelength-control-20260429";
+} from "./sim/state.mjs?v=response-chain-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=response-chain-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=optical-confidence-20260509";
+} from "./sim/ui/spectrum.mjs?v=response-chain-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -41,6 +41,9 @@ if (root) {
     if (controls.slit) controls.slit.value = String(state.slit.widthUm);
     if (controls.integration) controls.integration.value = String(state.integrationTimeMs);
     if (controls.sample) controls.sample.value = state.sample.preset;
+    if (controls.sourceType) controls.sourceType.value = state.source.id;
+    if (controls.detectorType) controls.detectorType.value = state.detector.id;
+    if (controls.geometryMode) controls.geometryMode.value = state.geometry?.id || "right-angle-90";
     if (controls.sourceOffset) controls.sourceOffset.value = String(state.source.offsetUm);
     if (controls.detectorAngle) controls.detectorAngle.value = String(state.detector.angleDeg);
   }

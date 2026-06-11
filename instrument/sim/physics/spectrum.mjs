@@ -1,6 +1,8 @@
 import { MONOCHROMATOR_WAVELENGTH_RANGE } from "./grating.mjs?v=wavelength-control-20260429";
+import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
+import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=wavelength-control-20260429";
+import { SAMPLE_PROFILES } from "../state.mjs?v=response-chain-20260611";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 
@@ -18,13 +20,29 @@ function pointNoise(index, derivedSeed, profile) {
   return deterministicNoise(index, derivedSeed) * profile.noise;
 }
 
-function gainForState(state, physics, profile) {
+function spectralResponseForPoint(mode, x, state, physics) {
+  const sourceId = state.source.id || "xenon-like";
+  const detectorId = state.detector.id || "pmt-like-visible";
+  const sourceWavelengthNm = mode === "excitation" ? x : physics.excitationNm;
+  const detectorWavelengthNm = mode === "emission" ? x : physics.emissionNm;
+
+  return {
+    source: evaluateSourceSpectrum(sourceId, sourceWavelengthNm),
+    detector: evaluateDetectorResponse(detectorId, detectorWavelengthNm),
+  };
+}
+
+function gainForState(mode, x, state, physics, profile) {
   const integrationGain = 0.72 + Math.sqrt(state.integrationTimeMs / 1000) * 0.5;
+  const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+
   return (
     profile.amplitude *
     physics.throughput *
     physics.alignment.overlapFactor *
     physics.collection.collectionFactor *
+    spectralResponse.source *
+    spectralResponse.detector *
     integrationGain
   );
 }
@@ -40,7 +58,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
     profile.baseline +
     physics.bandpassNm * 0.002 +
     physics.collection.backgroundRisk * (profile.kind === "blank" ? 0.018 : 0.028);
-  const gain = gainForState(state, physics, profile);
+  const gain = gainForState(mode, x, state, physics, profile);
 
   if (profile.kind === "blank") {
     if (mode === "emission") {
