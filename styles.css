@@ -4928,6 +4928,58 @@ section[id] {
   display: block;
 }
 
+[data-geometry-visual] {
+  display: none;
+  pointer-events: none;
+}
+
+.instrument-page[data-geometry-mode="right-angle-90"] [data-geometry-visual="right-angle-90"],
+.instrument-page[data-geometry-mode="front-face"] [data-geometry-visual="front-face"],
+.instrument-page[data-geometry-mode="transmission"] [data-geometry-visual="transmission"] {
+  display: block;
+}
+
+.geometry-cue-path,
+.geometry-cue-surface {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+  stroke-dasharray: 10 9;
+  opacity: 0.58;
+}
+
+.geometry-cue-right-angle {
+  stroke: rgba(216, 255, 248, 0.5);
+}
+
+.geometry-cue-front-face {
+  stroke: rgba(255, 209, 102, 0.56);
+}
+
+.geometry-cue-surface {
+  stroke: rgba(255, 209, 102, 0.38);
+  stroke-width: 5;
+}
+
+.geometry-cue-risk {
+  stroke: rgba(255, 122, 144, 0.62);
+  stroke-width: 5;
+}
+
+.geometry-cue-label {
+  fill: rgba(237, 237, 239, 0.68);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-anchor: middle;
+  text-transform: uppercase;
+}
+
+.geometry-cue-risk-label {
+  fill: rgba(255, 190, 200, 0.76);
+}
+
 .beam {
   fill: none;
   stroke-linecap: round;

@@ -111,6 +111,7 @@ if (root) {
     const derived = deriveInstrument(state);
     root.dataset.scanMode = state.mode;
     root.dataset.activePart = state.selectedPart;
+    root.dataset.geometryMode = state.geometry?.id || "right-angle-90";
 
     updateSpectrumChrome(root, elements, state, derived);
     updateDiagnostics(elements, derived.diagnostics);

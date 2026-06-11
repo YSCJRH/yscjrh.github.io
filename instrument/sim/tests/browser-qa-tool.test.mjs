@@ -18,6 +18,7 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     "mobile overflow",
     "prefers-reduced-motion",
     "keyboard",
+    "geometry mode",
     "source-derived",
     "module failure",
     "language switch",

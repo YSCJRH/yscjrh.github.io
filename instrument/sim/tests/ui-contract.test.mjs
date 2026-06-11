@@ -90,6 +90,27 @@ test("geometry boundary teaching copy covers every selectable geometry mode", ()
   assert.match(instrumentHtml, /直射激发光|背景风险/);
 });
 
+test("geometry mode drives the fallback light-path diagram", () => {
+  assert.match(
+    instrumentScript,
+    /dataset\.geometryMode/,
+    "runtime should expose the selected geometry mode on the instrument root"
+  );
+
+  for (const geometryId of ["right-angle-90", "front-face", "transmission"]) {
+    assert.match(
+      instrumentHtml,
+      new RegExp(`data-geometry-visual="${geometryId}"`),
+      `2D fallback should include a ${geometryId} geometry visual cue`
+    );
+    assert.match(
+      siteStyles,
+      new RegExp(`data-geometry-mode="${geometryId}"[\\s\\S]*data-geometry-visual="${geometryId}"`),
+      `CSS should show the ${geometryId} geometry visual when selected`
+    );
+  }
+});
+
 test("mobile onboarding stays stacked and keeps explanatory copy visible", () => {
   const instrumentOnboardingIndex = siteStyles.indexOf(".instrument-onboarding {", siteStyles.indexOf("@media (max-width: 780px)", siteStyles.indexOf(".teaching-card-grid")));
   const nextMobileBlockIndex = siteStyles.indexOf("@media (max-width: 560px)", instrumentOnboardingIndex);

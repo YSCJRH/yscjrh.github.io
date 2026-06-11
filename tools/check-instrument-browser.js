@@ -15,6 +15,7 @@ const MARKERS = [
   "mobile overflow",
   "prefers-reduced-motion",
   "keyboard",
+  "geometry mode",
   "source-derived",
   "module failure",
   "language switch",
@@ -300,6 +301,45 @@ async function main() {
     );
     assertCheck(keyboard.modePressed === "true" && keyboard.scanMode === "excitation" && keyboard.selectedMarker === "true", "keyboard activation failed", keyboard);
     record("keyboard");
+
+    progress("checking geometry mode visuals");
+    const geometryMode = evalInPage(
+      SESSION,
+      `async () => {
+        const select = document.querySelector('[data-control="geometry-mode"]');
+        const modes = ["right-angle-90", "front-face", "transmission"];
+        const results = [];
+        for (const mode of modes) {
+          select.value = mode;
+          select.dispatchEvent(new Event('input', { bubbles: true }));
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          await new Promise((resolve) => setTimeout(resolve, 80));
+          const visuals = [...document.querySelectorAll('[data-geometry-visual]')].map((visual) => {
+            const rect = visual.getBoundingClientRect();
+            const style = getComputedStyle(visual);
+            return {
+              id: visual.dataset.geometryVisual,
+              visible: rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden',
+            };
+          });
+          results.push({
+            mode,
+            rootMode: document.querySelector('[data-instrument-lab]')?.dataset.geometryMode,
+            visible: visuals.filter((visual) => visual.visible).map((visual) => visual.id),
+            collection: document.querySelector('[data-readout="collection"]')?.textContent.trim(),
+          });
+        }
+        return results;
+      }`
+    );
+    assertCheck(
+      Array.isArray(geometryMode) &&
+        geometryMode.length === 3 &&
+        geometryMode.every((entry) => entry.rootMode === entry.mode && entry.visible.length === 1 && entry.visible[0] === entry.mode),
+      "geometry mode did not drive the fallback light-path visual",
+      geometryMode
+    );
+    record("geometry mode");
 
     progress("checking source-derived panel");
     const sourceDerived = evalInPage(
