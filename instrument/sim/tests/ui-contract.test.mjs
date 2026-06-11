@@ -14,6 +14,7 @@ const { collectInstrumentElements, updateControlsFromState, updateDiagnostics, u
 const here = dirname(fileURLToPath(import.meta.url));
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
 const instrumentScript = readFileSync(resolve(here, "../../instrument.js"), "utf8");
+const sceneScript = readFileSync(resolve(here, "../scene/InstrumentScene.mjs"), "utf8");
 const siteStyles = readFileSync(resolve(here, "../../../styles.css"), "utf8");
 
 function blocksForClass(className) {
@@ -270,6 +271,26 @@ test("3D scene is optional with an honest initial fallback state", () => {
   assert.match(statusMatch[0], /aria-atomic="true"/);
   assert.doesNotMatch(statusMatch[1], /Loading|正在加载/);
   assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
+});
+
+test("3D scene exposes geometry-mode teaching cues", () => {
+  assert.match(
+    sceneScript,
+    /createGeometryModeCue/,
+    "3D scene should create a geometry-mode cue instead of relying only on the 2D fallback SVG"
+  );
+  assert.match(
+    sceneScript,
+    /updateGeometryModeCue/,
+    "3D scene should update the cue when geometry mode changes"
+  );
+  assert.match(
+    sceneScript,
+    /currentState\.geometry\?\.id/,
+    "3D scene update should read the selected geometry mode from state"
+  );
+  assert.match(sceneScript, /Front-face boundary \/ 前表面边界/);
+  assert.match(sceneScript, /Direct-path risk \/ 直射风险/);
 });
 
 test("mobile view keeps WebGL fallback status visible", () => {

@@ -944,6 +944,117 @@ function updateDetectorArmControl(group, samplePosition, detectorPosition, angle
   }
 }
 
+const GEOMETRY_MODE_CUE_CONFIG = Object.freeze({
+  "right-angle-90": {
+    label: "Right-angle / 直角采集",
+    color: 0x7df5df,
+  },
+  "front-face": {
+    label: "Front-face boundary / 前表面边界",
+    color: 0xffd166,
+  },
+  transmission: {
+    label: "Direct-path risk / 直射风险",
+    color: 0xff7a90,
+  },
+});
+
+function createGeometryModeCue() {
+  const group = new THREE.Group();
+  const path = createLine([], 0x7df5df, 0.52);
+  const surface = createLine([], 0xffd166, 0.42);
+  const marker = new THREE.Mesh(
+    new THREE.SphereGeometry(0.055, 18, 18),
+    new THREE.MeshBasicMaterial({
+      color: 0x7df5df,
+      transparent: true,
+      opacity: 0.86,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: false,
+    })
+  );
+  const label = createLabel("Right-angle / 直角采集", { width: 2.05, height: 0.32, fontSize: 28 });
+
+  path.material.depthTest = false;
+  surface.material.depthTest = false;
+  path.renderOrder = 18;
+  surface.renderOrder = 19;
+  marker.renderOrder = 21;
+  label.renderOrder = 34;
+
+  group.add(path, surface, marker, label);
+  group.userData.path = path;
+  group.userData.surface = surface;
+  group.userData.marker = marker;
+  group.userData.label = label;
+  return group;
+}
+
+function updateGeometryModeCue(group, geometryMode, samplePosition) {
+  const mode = GEOMETRY_MODE_CUE_CONFIG[geometryMode] ? geometryMode : "right-angle-90";
+  const config = GEOMETRY_MODE_CUE_CONFIG[mode];
+  const center = samplePosition.clone().setY(BENCH_Y + 0.22);
+  const path = group?.userData?.path;
+  const surface = group?.userData?.surface;
+  const marker = group?.userData?.marker;
+  const label = group?.userData?.label;
+  if (!path || !surface || !marker || !label) {
+    return;
+  }
+
+  const pathPoints = mode === "front-face"
+    ? [
+        center.clone().add(new THREE.Vector3(-0.18, 0.02, 0.2)),
+        center.clone().add(new THREE.Vector3(0.4, 0.08, 0.85)),
+        center.clone().add(new THREE.Vector3(1.05, 0.05, 1.32)),
+      ]
+    : mode === "transmission"
+      ? [
+          center.clone().add(new THREE.Vector3(-0.18, 0, 0)),
+          center.clone().add(new THREE.Vector3(0.5, 0, 0)),
+          center.clone().add(new THREE.Vector3(1.22, 0, 0)),
+        ]
+      : [
+          center.clone(),
+          center.clone().add(new THREE.Vector3(0, 0.04, 0.86)),
+          center.clone().add(new THREE.Vector3(0.92, 0.04, 0.86)),
+        ];
+
+  const surfacePoints = mode === "front-face"
+    ? [
+        center.clone().add(new THREE.Vector3(-0.18, -0.16, 0.2)),
+        center.clone().add(new THREE.Vector3(0.14, 0.18, 0.52)),
+      ]
+    : mode === "transmission"
+      ? [
+          center.clone().add(new THREE.Vector3(0.48, -0.16, -0.14)),
+          center.clone().add(new THREE.Vector3(0.48, 0.18, 0.14)),
+        ]
+      : [
+          center.clone().add(new THREE.Vector3(-0.14, -0.12, 0.72)),
+          center.clone().add(new THREE.Vector3(0.14, 0.12, 0.98)),
+        ];
+
+  path.geometry.dispose();
+  path.geometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+  path.material.color.set(config.color);
+  path.material.opacity = mode === "right-angle-90" ? 0.42 : 0.58;
+
+  surface.geometry.dispose();
+  surface.geometry = new THREE.BufferGeometry().setFromPoints(surfacePoints);
+  surface.material.color.set(config.color);
+  surface.material.opacity = mode === "right-angle-90" ? 0.22 : 0.44;
+
+  marker.position.copy(pathPoints[pathPoints.length - 1]);
+  marker.material.color.set(config.color);
+  marker.material.opacity = mode === "right-angle-90" ? 0.68 : 0.92;
+
+  label.userData.updateText?.(config.label);
+  label.position.copy(pathPoints[pathPoints.length - 1]).add(new THREE.Vector3(0.18, 0.34, 0.08));
+  label.material.opacity = mode === "right-angle-90" ? 0.68 : 0.92;
+}
+
 function createOutputMiniGraph() {
   const group = new THREE.Group();
   const axisMaterial = new THREE.LineBasicMaterial({
@@ -1238,6 +1349,8 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
 
   const detectorArmControl = createDetectorArmControl();
   root.add(detectorArmControl);
+  const geometryModeCue = createGeometryModeCue();
+  root.add(geometryModeCue);
 
   const beams = {
     excitation: createBeam(0x6f88ff, 0.035, 0.82),
@@ -1494,6 +1607,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     setCylinderBetween(beams.emission, samplePoint, components.detector.position.clone().setY(BENCH_Y + 0.1));
     setCylinderBetween(beams.signal, components.detector.position.clone().setY(BENCH_Y + 0.16), components.output.position.clone().setY(BENCH_Y + 0.18));
     updateDetectorArmControl(detectorArmControl, components.sample.position, components.detector.position, currentState.detector.angleDeg);
+    updateGeometryModeCue(geometryModeCue, currentState.geometry?.id, components.sample.position);
 
     if (components.sample.userData.plume) {
       const plumeScale = 0.78 + derived.beams.emissionIntensity * 0.62;

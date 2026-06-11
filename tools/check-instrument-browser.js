@@ -15,6 +15,7 @@ const MARKERS = [
   "mobile overflow",
   "prefers-reduced-motion",
   "keyboard",
+  "optional 3D scene",
   "geometry mode",
   "source-derived",
   "source-derived language",
@@ -341,6 +342,39 @@ async function main() {
       geometryMode
     );
     record("geometry mode");
+
+    progress("checking optional 3D scene");
+    const optional3d = runCode(
+      SESSION,
+      `async (page) => {
+        await page.setViewportSize({ width: 1100, height: 820 });
+        await page.locator('[data-action="enable-3d"]').click();
+        await page.waitForTimeout(1400);
+        return await page.evaluate(() => {
+          const root = document.querySelector('[data-instrument-lab]');
+          const statusText = [...document.querySelectorAll('[data-webgl-status]')]
+            .map((entry) => entry.textContent.trim())
+            .join(" ");
+          return {
+            canvasCount: document.querySelectorAll('[data-scene-host] canvas').length,
+            hasWebglScene: root?.classList.contains('has-webgl-scene') || false,
+            hasFallback: root?.classList.contains('has-2d-fallback') || false,
+            statusText,
+            overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+          };
+        });
+      }`
+    );
+    assertCheck(
+      optional3d.overflowX === 0 &&
+        (
+          (optional3d.hasWebglScene && optional3d.canvasCount === 1 && /3D teaching skeleton active/.test(optional3d.statusText)) ||
+          (optional3d.hasFallback && optional3d.canvasCount === 0 && /unavailable|fallback|备用|不可用/i.test(optional3d.statusText))
+        ),
+      "optional 3D scene did not activate or fall back cleanly",
+      optional3d
+    );
+    record("optional 3D scene");
 
     progress("checking source-derived panel");
     const sourceDerived = evalInPage(

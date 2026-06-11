@@ -1402,7 +1402,7 @@
   - None.
 
 ## Instrument static teaching-card evidence crosswalk
-- Status: Completed locally; pending commit and publish
+- Status: Completed and validated in this changeset
 - Trigger:
   - Continue `refine.md` DoD work on evidence/documentation coverage for public science caveats.
   - Previous DoD audit found diagnostics had evidence keys, while static teaching cards were supported by nearby docs but not machine-linked to ILAB evidence.
@@ -1410,17 +1410,43 @@
   - The static correction/artifact and sample/geometry teaching cards were visitor-facing scientific caveats, but their HTML did not expose which `docs/instrument-research-log.md` claim supported each card.
 - Changes:
   - Added `data-evidence-key` to each static teaching card.
-  - Mapped detector response to `ILAB-003`, excitation flux/source correction to `ILAB-002`, slit bandpass to `ILAB-004`, scatter bands to `ILAB-007`, inner-filter effect to `ILAB-005`, linearity/saturation to `ILAB-010`, geometry cards to `ILAB-006`, sample-environment boundary to `ILAB-008`, and future data gate to `ILAB-009`.
+  - Mapped detector response to `ILAB-003`, excitation flux/source correction to `ILAB-002`, slit bandpass to `ILAB-004`, scatter bands to `ILAB-007`, inner-filter effect to `ILAB-005`, linearity/saturation to `ILAB-010`, geometry cards to `ILAB-006`, sample-environment boundary to the new source-backed `ILAB-012`, and future data gate to `ILAB-009`.
+  - Tightened sample-environment copy from solvent-specific wording to matrix-condition wording and added `ILAB-012` with USGS/IUPAC support.
+  - Added a small 3D geometry-mode cue so right-angle, front-face, and transmission teaching modes are visible in WebGL as well as in the 2D fallback.
   - Added an evidence-docs test that requires every static teaching card to carry an ILAB key recorded in the research log.
-  - Updated the UI contract test matcher so teaching-card attributes remain compatible with bilingual copy checks.
+  - Updated the UI contract test matcher so teaching-card attributes remain compatible with bilingual copy checks, and added a contract for the 3D geometry-mode cue.
 - Validation result:
   - TDD red: `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before implementation because teaching cards were missing `data-evidence-key`.
-  - Green: `node --test instrument/sim/tests/evidence-docs.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 32/32.
-  - Green: `node --test instrument/sim/tests/*.mjs` passed: 88/88.
+  - TDD red: `node --test instrument/sim/tests/evidence-docs.test.mjs` failed after adding the `ILAB-012` contract because the card still cited `ILAB-008` and the research log had no sample-environment evidence entry.
+  - Green: `node --test instrument/sim/tests/evidence-docs.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 34/34.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 90/90.
   - `node tools/preprocess-instrument-data.js --validate` passed.
   - `python tools/check_site.py` passed.
   - `node tools/check-instrument-browser.js` passed.
 - Remaining non-blocking notes:
-  - This slice adds machine-readable evidence links only. It does not add new scientific claims or visible copy.
+  - This slice adds machine-readable evidence links and one conservative visible-copy refinement. It does not add sample-environment physics or correction controls.
+- Blockers:
+  - None.
+
+## Instrument optional 3D geometry cue coverage
+- Status: Completed and validated in this changeset
+- Trigger:
+  - Continue `refine.md` DoD work on Canvas/SVG/3D explanatory coverage and 3D fallback/optional-scene QA.
+  - Read-only review noted that geometry mode had response-chain and 2D fallback feedback, but optional 3D could still read as a right-angle-only scene.
+- Root cause:
+  - `InstrumentScene.mjs` updated beams, monochromators, detector arm, and mini spectrum, but did not read `currentState.geometry?.id`.
+  - Browser QA covered the 2D fallback geometry cue and WebGL fallback status, but did not exercise the optional 3D enable path after the reusable QA tool was added.
+- Changes:
+  - Added `createGeometryModeCue()` and `updateGeometryModeCue()` to the 3D scene.
+  - Added right-angle, front-face boundary, and direct-path risk labels near the sample in optional 3D mode.
+  - Kept the cue as a visual boundary only; it does not move selected wavelengths, detector geometry, or the synthetic physics chain.
+  - Extended browser QA markers and the browser run to click the optional 3D enable button and verify either one WebGL canvas with active status or a clean fallback state.
+  - Updated `instrument/MODEL.md` so geometry cue documentation covers both the 2D fallback and optional 3D scene.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` failed because the 3D geometry cue functions and `optional 3D scene` browser marker were missing.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` passed: 29/29.
+  - Green: `node tools/check-instrument-browser.js` passed with `optional 3D scene` included in the real browser checks.
+- Remaining non-blocking notes:
+  - This slice does not implement real front-face optics or inline transmission optics. Those remain explicit model boundaries under `ILAB-006`.
 - Blockers:
   - None.

@@ -132,6 +132,17 @@ Rules:
 - Code / UI touched: `instrument/sim/physics/instrumentFunction.mjs`, `instrument/sim/physics/monochromator.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/MODEL.md`, `instrument/sim/tests/evidence-docs.test.mjs`.
 - Confidence: high for qualitative bandpass/resolution boundary; medium for the teaching Gaussian choice; low for any future quantitative FWHM mapping without instrument constants.
 
+## Claim ILAB-012: Sample matrix conditions can alter fluorescence signals, so sample-environment copy must stay qualitative
+
+- Date checked: 2026-06-11
+- Source(s):
+  - USGS Techniques and Methods 1-D11, "Field Techniques for Fluorescence Measurements Targeting Dissolved Organic Matter, Hydrocarbons, and Wastewater in Environmental Waters": https://pubs.usgs.gov/publication/tm1D11/full
+  - IUPAC Gold Book, "quenching": https://goldbook.iupac.org/terms/view/Q05007
+- Evidence summary: USGS field guidance describes matrix effects and notes that water properties such as temperature, pH, and dissolved metals can quench fluorescence at the molecular level. IUPAC defines quenching as non-radiative deactivation of an excited molecular entity by environmental influence, a quencher, or an intramolecular substituent.
+- Implementation boundary: Use this only for qualitative sample-context copy. The simulator does not model solvent polarity, pH equilibria, temperature correction, dissolved-metal quenching, Stern-Volmer behavior, or sample-specific chemical interpretation. Do not add quantitative environmental correction controls without separate sources, assumptions, and tests.
+- Code / UI touched: `instrument/index.html`, `instrument/sim/tests/evidence-docs.test.mjs`.
+- Confidence: high for qualitative caution; low for any quantitative sample-environment model until sample-specific evidence is added.
+
 ## Open Evidence Backlog
 
 - Source spectra presets: `ideal-flat`, `xenon-like`, and LED presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured boundary. Add evidence before using real lamp spectra.

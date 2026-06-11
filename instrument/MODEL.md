@@ -51,7 +51,7 @@ The spectrum display now has two teaching views. `raw` remains the default and p
 
 Inner-filter risk is currently a categorical teaching diagnostic covered by `ILAB-005`. The sample module can classify risk from the selected teaching preset, but the simulator does not apply an inner-filter correction, does not model absorbance-path geometry, and must not describe this cue as a quantitative correction.
 
-The geometry selector exposes right-angle, front-face, and transmission teaching modes. `ILAB-006` covers the right-angle/front-face distinction and records NISTIR 7457's 0°/180° transmitting geometry reference. The current transmission mode is a direct-path/background-risk teaching boundary that changes collection/background diagnostics; it is not an implemented inline optical design and does not move selected wavelengths. The 2D fallback diagram now switches between geometry-specific teaching cues for these three modes; those cues are visual boundaries, not ray-traced reconstructions of front-face or inline optics.
+The geometry selector exposes right-angle, front-face, and transmission teaching modes. `ILAB-006` covers the right-angle/front-face distinction and records NISTIR 7457's 0°/180° transmitting geometry reference. The current transmission mode is a direct-path/background-risk teaching boundary that changes collection/background diagnostics; it is not an implemented inline optical design and does not move selected wavelengths. The 2D fallback diagram and optional 3D scene now switch between geometry-specific teaching cues for these three modes; those cues are visual boundaries, not ray-traced reconstructions of front-face or inline optics.
 
 ## Noise, Headroom, And Instrument Function Boundaries
 

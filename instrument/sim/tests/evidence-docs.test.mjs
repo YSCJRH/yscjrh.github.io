@@ -65,6 +65,12 @@ test("static teaching cards are machine-linked to recorded ILAB evidence", () =>
   assertTeachingCardEvidence("Right-angle", "ILAB-006");
   assertTeachingCardEvidence("Front-face", "ILAB-006");
   assertTeachingCardEvidence("Transmission", "ILAB-006");
-  assertTeachingCardEvidence("Sample environment", "ILAB-008");
+  assertTeachingCardEvidence("Sample environment", "ILAB-012");
   assertTeachingCardEvidence("Future data gate", "ILAB-009");
+});
+
+test("sample environment evidence covers environmental fluorescence effects", () => {
+  assert.match(researchLog, /Claim ILAB-012:[\s\S]*temperature[\s\S]*pH[\s\S]*quench/i);
+  assert.match(researchLog, /Claim ILAB-012:[\s\S]*(solvent|matrix)/i);
+  assertTeachingCardEvidence("Sample environment", "ILAB-012");
 });
