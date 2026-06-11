@@ -65,6 +65,56 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
+  if (derived.responseChain?.source?.atExcitation <= 0.2) {
+    diagnostics.push({
+      tone: "warn",
+      evidenceKey: "ILAB-008",
+      label: "Low source output / 光源输出较低",
+      text: "The selected teaching source is weak at the excitation wavelength, so the synthetic trace drops. This is a normalized teaching source, not a measured lamp spectrum. / 当前教学光源在激发波长处较弱，因此合成谱线降低；这是归一化教学光源，不是实测灯谱。",
+    });
+  }
+
+  if (derived.responseChain?.detector?.atEmission <= 0.65) {
+    diagnostics.push({
+      tone: "info",
+      evidenceKey: "ILAB-003",
+      label: "Detector response / 检测器响应",
+      text: "The detector preset has lower normalized response at the selected emission wavelength, changing the synthetic signal shape. It is not a calibration curve. / 检测器预设在当前发射波长处归一化响应较低，会改变合成信号形状；它不是校准曲线。",
+    });
+  }
+
+  const geometry = derived.responseChain?.geometry;
+  if (geometry && geometry.id !== "right-angle-90") {
+    diagnostics.push({
+      tone: geometry.backgroundRisk >= 0.34 ? "warn" : "info",
+      evidenceKey: "ILAB-006",
+      label: "Geometry mode / 几何模式",
+      text: "The selected geometry changes collection and background risk in the teaching model. It does not move the selected wavelengths. / 当前几何模式会改变教学模型中的收集效率和背景风险，但不会移动选通波长。",
+    });
+  }
+
+  const artifacts = derived.responseChain?.artifacts;
+  const artifactRisk = artifacts
+    ? [artifacts.rayleighRisk, artifacts.secondOrderRisk, artifacts.backgroundRisk].find((risk) => risk?.level !== "low")
+    : null;
+  if (artifactRisk) {
+    diagnostics.push({
+      tone: artifactRisk.level === "high" ? "warn" : "info",
+      evidenceKey: "ILAB-007",
+      label: "Artifact risk / 伪影风险",
+      text: "The current wavelength pairing or geometry raises a conceptual scatter, second-order, or background warning. This is a diagnostic cue, not a calibrated artifact curve. / 当前波长组合或几何关系触发概念性的散射、二级衍射或背景提示；这是诊断提示，不是校准伪影曲线。",
+    });
+  }
+
+  if (derived.spectrum.peak / Math.max(derived.spectrum.yScaleMax, 0.001) >= 0.85) {
+    diagnostics.push({
+      tone: "warn",
+      evidenceKey: "ILAB-008",
+      label: "Signal headroom / 信号余量",
+      text: "The synthetic trace is close to the fixed display scale, so headroom is limited in this teaching view. It is not a real detector saturation claim. / 合成谱线接近固定显示量程，因此此教学视图中的余量有限；这不是真实检测器饱和声明。",
+    });
+  }
+
   if (derived.spectrum.profile.kind === "blank") {
     diagnostics.push({
       tone: "info",

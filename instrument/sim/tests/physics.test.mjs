@@ -69,6 +69,58 @@ test("teaching source spectrum affects the synthetic emission trace", () => {
   assert.ok(matchedDerived.spectrum.peak > mismatchedDerived.spectrum.peak);
 });
 
+test("detector response affects both response chain and synthetic trace", () => {
+  const flat = createInstrumentState();
+  flat.detector.id = "ideal-flat";
+  const flatDerived = deriveInstrument(flat);
+
+  const pmt = createInstrumentState();
+  pmt.detector.id = "pmt-like-visible";
+  const pmtDerived = deriveInstrument(pmt);
+
+  assert.ok(flatDerived.responseChain.detector.atEmission > pmtDerived.responseChain.detector.atEmission);
+  assert.ok(flatDerived.responseChain.signal.normalized > pmtDerived.responseChain.signal.normalized);
+  const flatTotal = flatDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0);
+  const pmtTotal = pmtDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0);
+  assert.ok(flatTotal > pmtTotal);
+});
+
+test("geometry mode affects both response chain and synthetic trace without moving wavelengths", () => {
+  const rightAngle = createInstrumentState();
+  rightAngle.geometry.id = "right-angle-90";
+  const rightAngleDerived = deriveInstrument(rightAngle);
+
+  const transmission = createInstrumentState();
+  transmission.geometry.id = "transmission";
+  const transmissionDerived = deriveInstrument(transmission);
+
+  assert.equal(Math.round(rightAngleDerived.excitationNm), Math.round(transmissionDerived.excitationNm));
+  assert.equal(Math.round(rightAngleDerived.emissionNm), Math.round(transmissionDerived.emissionNm));
+  assert.ok(rightAngleDerived.responseChain.geometry.collectionFactor > transmissionDerived.responseChain.geometry.collectionFactor);
+  assert.ok(rightAngleDerived.responseChain.signal.normalized > transmissionDerived.responseChain.signal.normalized);
+  assert.ok(rightAngleDerived.spectrum.peak > transmissionDerived.spectrum.peak);
+});
+
+test("integration time scales response-chain signal and bounded synthetic trace", () => {
+  const shortIntegration = createInstrumentState();
+  shortIntegration.integrationTimeMs = 20;
+  const shortDerived = deriveInstrument(shortIntegration);
+
+  const longIntegration = createInstrumentState();
+  longIntegration.integrationTimeMs = 1000;
+  const longDerived = deriveInstrument(longIntegration);
+
+  assert.ok(longDerived.responseChain.signal.saturationRatio > shortDerived.responseChain.signal.saturationRatio);
+  assert.ok(longDerived.responseChain.signal.normalized >= shortDerived.responseChain.signal.normalized);
+  assert.ok(longDerived.spectrum.peak > shortDerived.spectrum.peak);
+
+  for (const point of longDerived.spectrum.points) {
+    assert.ok(Number.isFinite(point.rawY));
+    assert.ok(point.rawY >= 0);
+    assert.ok(point.rawY <= longDerived.spectrum.yScaleMax);
+  }
+});
+
 test("diagnostics carry research-log evidence keys", () => {
   const state = createInstrumentState();
   state.slit.widthUm = 1000;
@@ -87,6 +139,36 @@ test("diagnostics carry research-log evidence keys", () => {
   assert.ok(evidenceKeys.has("ILAB-004"));
   assert.ok(evidenceKeys.has("ILAB-006"));
   assert.ok(evidenceKeys.has("ILAB-008"));
+});
+
+test("diagnostics surface response-chain consequences", () => {
+  const weakSource = createInstrumentState();
+  weakSource.source.id = "led-405";
+  const weakSourceLabels = deriveInstrument(weakSource).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(weakSourceLabels.includes("Low source output / 光源输出较低"));
+
+  const weakDetector = createInstrumentState();
+  weakDetector.detector.id = "silicon-like";
+  const weakDetectorLabels = deriveInstrument(weakDetector).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(weakDetectorLabels.includes("Detector response / 检测器响应"));
+
+  const transmission = createInstrumentState();
+  transmission.geometry.id = "transmission";
+  const transmissionLabels = deriveInstrument(transmission).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(transmissionLabels.includes("Geometry mode / 几何模式"));
+
+  const secondOrder = createInstrumentState();
+  setGratingWavelength(secondOrder, "emission", 730);
+  const secondOrderLabels = deriveInstrument(secondOrder).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(secondOrderLabels.includes("Artifact risk / 伪影风险"));
+
+  const highTrace = createInstrumentState();
+  highTrace.integrationTimeMs = 1000;
+  highTrace.slit.widthUm = 1000;
+  highTrace.source.id = "ideal-flat";
+  highTrace.detector.id = "ideal-flat";
+  const highTraceLabels = deriveInstrument(highTrace).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(highTraceLabels.includes("Signal headroom / 信号余量"));
 });
 
 test("wider slit increases bandpass and throughput", () => {

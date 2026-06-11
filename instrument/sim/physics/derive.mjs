@@ -112,7 +112,7 @@ export function deriveInstrument(state) {
     collection,
   };
   const responseChain = deriveResponseChain(state, physics);
-  const spectrum = generateSpectrum(state, physics);
+  const spectrum = generateSpectrum(state, physics, responseChain);
   const scanMeta = scanMetaForMode(state.mode, physics);
 
   const derived = {

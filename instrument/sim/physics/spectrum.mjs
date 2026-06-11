@@ -32,33 +32,35 @@ function spectralResponseForPoint(mode, x, state, physics) {
   };
 }
 
-function gainForState(mode, x, state, physics, profile) {
+function gainForState(mode, x, state, physics, profile, responseChain) {
   const integrationGain = 0.72 + Math.sqrt(state.integrationTimeMs / 1000) * 0.5;
   const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+  const collectionFactor = responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor;
 
   return (
     profile.amplitude *
     physics.throughput *
     physics.alignment.overlapFactor *
-    physics.collection.collectionFactor *
+    collectionFactor *
     spectralResponse.source *
     spectralResponse.detector *
     integrationGain
   );
 }
 
-function calculatePoint(mode, x, index, state, physics, profile) {
+function calculatePoint(mode, x, index, state, physics, profile, responseChain) {
   const seed =
     physics.excitationNm * 0.011 +
     physics.emissionNm * 0.017 +
     physics.bandpassNm +
     state.integrationTimeMs * 0.001;
   const noise = pointNoise(index, seed, profile);
+  const backgroundRisk = responseChain?.geometry?.backgroundRisk ?? physics.collection.backgroundRisk;
   const baseline =
     profile.baseline +
     physics.bandpassNm * 0.002 +
-    physics.collection.backgroundRisk * (profile.kind === "blank" ? 0.018 : 0.028);
-  const gain = gainForState(mode, x, state, physics, profile);
+    backgroundRisk * (profile.kind === "blank" ? 0.018 : 0.028);
+  const gain = gainForState(mode, x, state, physics, profile, responseChain);
 
   if (profile.kind === "blank") {
     if (mode === "emission") {
@@ -86,7 +88,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
     const fluorescence = gaussian(x, shiftedPeak, profile.emissionWidth + physics.bandpassNm * 2.2);
     const scatter =
       profile.kind === "scattering"
-        ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * (0.13 + physics.collection.backgroundRisk * 0.25)
+        ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * (0.13 + backgroundRisk * 0.25)
         : 0;
     return baseline + gain * excitationFit * fluorescence + scatter + noise;
   }
@@ -100,7 +102,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
     const excitation = gaussian(x, profile.excitationPeak, profile.excitationWidth + physics.bandpassNm * 1.35);
     const scatter =
       profile.kind === "scattering"
-        ? gaussian(x, physics.emissionNm - 24, 26 + physics.bandpassNm) * (0.1 + physics.collection.backgroundRisk * 0.2)
+        ? gaussian(x, physics.emissionNm - 24, 26 + physics.bandpassNm) * (0.1 + backgroundRisk * 0.2)
         : 0;
     return baseline + gain * emissionFit * excitation + scatter + noise;
   }
@@ -120,7 +122,7 @@ function calculatePoint(mode, x, index, state, physics, profile) {
   return baseline + gain * excitationFit * emissionFit * settle * decay + ripple + noise;
 }
 
-export function generateSpectrum(state, physics) {
+export function generateSpectrum(state, physics, responseChain = null) {
   const profile = SAMPLE_PROFILES[state.sample.preset] || SAMPLE_PROFILES["low-background"];
   const ranges = {
     emission: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
@@ -135,7 +137,7 @@ export function generateSpectrum(state, physics) {
   for (let index = 0; index < count; index += 1) {
     const progress = index / (count - 1);
     const x = min + (max - min) * progress;
-    const rawY = clamp(calculatePoint(state.mode, x, index, state, physics, profile), 0, FIXED_Y_SCALE_MAX);
+    const rawY = clamp(calculatePoint(state.mode, x, index, state, physics, profile, responseChain), 0, FIXED_Y_SCALE_MAX);
     points.push({
       x,
       y: rawY / FIXED_Y_SCALE_MAX,

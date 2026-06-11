@@ -82,6 +82,7 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 20 tests passed after adding the response-chain scaffold.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs`: 23 tests passed after wiring `responseChain`, source/detector trace factors, and diagnostic evidence keys.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 25 tests passed after adding advanced source, detector, and geometry controls to the simulator workbench.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 29 tests passed after routing geometry mode into the synthetic trace and surfacing response-chain diagnostics for source, detector, geometry, artifacts, and signal headroom.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
@@ -90,6 +91,6 @@ Fresh baseline from 2026-06-11:
 
 1. Move hard-coded sample presets into static JSON with claim-level fields.
 2. Replace the remaining parallel chart math with shared response-chain helpers where doing so preserves current behavior.
-3. Add detector, geometry, integration, and saturation parity tests before exposing those values in public controls.
-4. Surface response-chain diagnostics for low source output, detector response, saturation, and artifact risk without implying calibration.
+3. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
+4. Add a compact response-chain readout or component overlay only after the visible wording stays short and bilingual.
 5. Move hard-coded teaching sample presets into static JSON with claim-level fields.
