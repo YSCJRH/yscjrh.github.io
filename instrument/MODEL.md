@@ -108,6 +108,7 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs`: 54 tests passed after synchronizing public sample preset options from shared runtime data while preserving the no-JS fallback.
 - `node --test instrument/sim/tests/sample-data.test.mjs`: 2 tests passed after adding sample preset `controlBinding`, `evidenceKey`, and bilingual not-measured boundary metadata.
 - `node --test instrument/sim/tests/ui-contract.test.mjs`: 14 tests passed after synchronizing source, detector, and sample preset select options from shared runtime data while preserving no-JS fallback order.
+- `node --test instrument/sim/tests/ui-contract.test.mjs`: 14 tests passed after extending shared preset synchronization to geometry mode and aligning the runtime geometry label with the no-JS fallback.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.

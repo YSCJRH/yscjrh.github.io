@@ -7,9 +7,10 @@ import {
 } from "./physics/grating.mjs?v=wavelength-control-20260429";
 import { SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES } from "./data/samplePresets.mjs?v=sample-boundary-20260611";
 import { DETECTOR_PRESET_OPTIONS } from "./physics/detector.mjs?v=preset-sync-20260611";
+import { GEOMETRY_PRESET_OPTIONS } from "./physics/geometry.mjs?v=geometry-sync-20260611";
 import { SOURCE_PRESET_OPTIONS } from "./physics/source.mjs?v=preset-sync-20260611";
 
-export { DETECTOR_PRESET_OPTIONS, SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES, SOURCE_PRESET_OPTIONS };
+export { DETECTOR_PRESET_OPTIONS, GEOMETRY_PRESET_OPTIONS, SAMPLE_PRESET_OPTIONS, SAMPLE_PROFILES, SOURCE_PRESET_OPTIONS };
 
 export { clamp };
 

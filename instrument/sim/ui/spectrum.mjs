@@ -1,10 +1,11 @@
 import {
   DETECTOR_PRESET_OPTIONS,
+  GEOMETRY_PRESET_OPTIONS,
   MODES,
   PARTS,
   SAMPLE_PRESET_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=preset-sync-20260611";
+} from "../state.mjs?v=geometry-sync-20260611";
 
 const chart = {
   left: 54,
@@ -67,6 +68,7 @@ export function syncSimulatorPresetOptions(elements, documentRef = globalThis.do
   syncSamplePresetOptions(elements, documentRef);
   syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef);
   syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef);
+  syncPresetSelectOptions(elements?.controls?.geometryMode, GEOMETRY_PRESET_OPTIONS, documentRef);
 }
 
 function percentText(value) {

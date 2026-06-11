@@ -1200,3 +1200,29 @@
   - This slice adds no new scientific source claim; existing `ILAB-008` placeholder boundary remains the evidence anchor for teaching source and detector presets.
 - Blockers:
   - None.
+
+## Instrument geometry preset option synchronization
+- Status: Completed locally; pending commit and publish
+- Trigger:
+  - Continue `refine.md` DoD work on geometry boundary maintainability and tested no-JS/runtime UI parity.
+- Root cause:
+  - Source, detector, and sample selects were synchronized from shared runtime data, but `geometry-mode` still relied on hand-written HTML options.
+  - The runtime geometry preset label used `90 度`, while the no-JS fallback used the tighter public UI label `90°`.
+- Changes:
+  - Added shared `GEOMETRY_PRESET_OPTIONS`.
+  - Added geometry select synchronization to `syncSimulatorPresetOptions()`.
+  - Aligned the runtime geometry label with the no-JS fallback label: `Right-angle 90 degree / 90° 直角收集`.
+  - Bumped `/instrument/` route-local ESM cache keys to `geometry-sync-20260611`.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed because geometry options were not synchronized at runtime and the geometry label differed between runtime presets and fallback HTML.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 14/14.
+  - `node --check instrument/instrument.js instrument/sim/state.mjs instrument/sim/physics/geometry.mjs instrument/sim/ui/spectrum.mjs instrument/sim/tests/ui-contract.test.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 56/56.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only line-ending normalization warnings.
+  - Local Playwright smoke on `http://127.0.0.1:4173/instrument/?qa=geometry-sync` passed using local Chrome: module loaded, `geometry-sync-20260611` cache key present, geometry options matched shared runtime order, default geometry remained `right-angle-90`, horizontal overflow was `0`, and one `h1` was present.
+- Remaining non-blocking notes:
+  - This slice adds no new geometry physics claim; existing right-angle/front-face/transmission boundaries remain covered by `ILAB-006`.
+- Blockers:
+  - None.

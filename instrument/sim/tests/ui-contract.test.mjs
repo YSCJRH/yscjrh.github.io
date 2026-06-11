@@ -6,6 +6,7 @@ import { dirname, resolve } from "node:path";
 import * as spectrumUi from "../ui/spectrum.mjs";
 import { SAMPLE_PRESET_OPTIONS } from "../data/samplePresets.mjs";
 import { DETECTOR_PRESET_OPTIONS } from "../physics/detector.mjs";
+import { GEOMETRY_PRESET_OPTIONS } from "../physics/geometry.mjs";
 import { SOURCE_PRESET_OPTIONS } from "../physics/source.mjs";
 
 const { collectInstrumentElements, updateControlsFromState, updateDiagnostics } = spectrumUi;
@@ -129,7 +130,7 @@ test("sample preset select can be synchronized from the shared preset options", 
   );
 });
 
-test("source and detector preset selects can be synchronized from shared preset options", () => {
+test("source, detector, and geometry preset selects can be synchronized from shared preset options", () => {
   assert.equal(typeof spectrumUi.syncSimulatorPresetOptions, "function");
   const sourceSelect = {
     options: [],
@@ -147,6 +148,14 @@ test("source and detector preset selects can be synchronized from shared preset 
       this.options.push(...nodes);
     },
   };
+  const geometrySelect = {
+    options: [],
+    value: "",
+    textContent: "stale geometry fallback",
+    append(...nodes) {
+      this.options.push(...nodes);
+    },
+  };
   const fakeDocument = {
     createElement(tagName) {
       assert.equal(tagName, "option");
@@ -158,7 +167,7 @@ test("source and detector preset selects can be synchronized from shared preset 
   };
 
   spectrumUi.syncSimulatorPresetOptions(
-    { controls: { sourceType: sourceSelect, detectorType: detectorSelect } },
+    { controls: { sourceType: sourceSelect, detectorType: detectorSelect, geometryMode: geometrySelect } },
     fakeDocument
   );
 
@@ -170,6 +179,10 @@ test("source and detector preset selects can be synchronized from shared preset 
     detectorSelect.options.map((option) => [option.value, option.textContent]),
     optionPairs(DETECTOR_PRESET_OPTIONS)
   );
+  assert.deepEqual(
+    geometrySelect.options.map((option) => [option.value, option.textContent]),
+    optionPairs(GEOMETRY_PRESET_OPTIONS)
+  );
 });
 
 test("sample preset no-JS fallback options match the shared preset options", () => {
@@ -179,7 +192,7 @@ test("sample preset no-JS fallback options match the shared preset options", () 
   );
 });
 
-test("source and detector no-JS fallback options match the shared preset options", () => {
+test("source, detector, and geometry no-JS fallback options match the shared preset options", () => {
   assert.deepEqual(
     selectOptionsFromHtml("source-type"),
     optionPairs(SOURCE_PRESET_OPTIONS)
@@ -187,6 +200,10 @@ test("source and detector no-JS fallback options match the shared preset options
   assert.deepEqual(
     selectOptionsFromHtml("detector-type"),
     optionPairs(DETECTOR_PRESET_OPTIONS)
+  );
+  assert.deepEqual(
+    selectOptionsFromHtml("geometry-mode"),
+    optionPairs(GEOMETRY_PRESET_OPTIONS)
   );
 });
 

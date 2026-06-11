@@ -2,7 +2,7 @@ import { clamp } from "../math.mjs?v=response-chain-20260611";
 
 export const GEOMETRY_PRESETS = Object.freeze({
   "right-angle-90": {
-    label: "Right-angle 90 degree / 90 度直角收集",
+    label: "Right-angle 90 degree / 90° 直角收集",
     claimLevel: "conceptual-teaching",
   },
   "front-face": {
@@ -14,6 +14,15 @@ export const GEOMETRY_PRESETS = Object.freeze({
     claimLevel: "conceptual-teaching",
   },
 });
+
+export const GEOMETRY_PRESET_OPTIONS = Object.freeze(
+  ["right-angle-90", "front-face", "transmission"].map((id) =>
+    Object.freeze({
+      id,
+      label: GEOMETRY_PRESETS[id].label,
+    })
+  )
+);
 
 export function deriveGeometryResponse(geometryId, options = {}) {
   const detectorAngleDeg = Number(options.detectorAngleDeg ?? 90);

@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=preset-sync-20260611";
+} from "./sim/state.mjs?v=geometry-sync-20260611";
 import { deriveInstrument } from "./sim/physics/derive.mjs?v=sample-boundary-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=preset-sync-20260611";
+} from "./sim/ui/spectrum.mjs?v=geometry-sync-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
