@@ -5,6 +5,31 @@
 - Status: In progress; latest model slice locally verified
 - Last updated: 2026-06-11
 
+## 2026-06-11 Excitation scan response-chain slice
+- Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
+- Trigger:
+  - The previous slice moved emission scan toward the explicit response chain, leaving excitation scan as the next parallel chart-gain path.
+  - Active `refine.md` requires excitation scans not to be presented as pure sample response; source output, excitation selection, sample absorption, fixed emission channel, detector response, geometry, and integration need to be testable factors.
+- Changes:
+  - Added a TDD regression proving an excitation scan point is composed from `composeRawSignal()` with source output at the scanned excitation wavelength, excitation bandpass/alignment, teaching absorption shape at the scanned wavelength, quantum-yield teaching factor, fixed emission shape, emission throughput, detector response at the fixed emission wavelength, geometry collection, integration time, and baseline.
+  - Routed the excitation scan main fluorescence term through `composeRawSignal()` per scanned excitation wavelength.
+  - Preserved existing teaching scatter, blank/background, deterministic noise, fixed y-scale, and time-scan dynamics.
+  - Bumped `/instrument/` route-local module cache keys to `scan-chain-20260611`.
+  - Updated `instrument/MODEL.md` so the remaining scan-model gap is now focused on time-scan behavior.
+- Validation result:
+  - TDD RED confirmed the old excitation scan value differed from the per-point `composeRawSignal()` expectation.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/physics/derive.mjs` passed.
+  - `node --check instrument/sim/physics/spectrum.mjs` passed.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 22/22.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 46/46.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Windows line-ending warnings.
+- Remaining notes:
+  - Time scan still uses the compact teaching dynamic formula and needs either response-chain migration or explicit retention as teaching chart-shape logic.
+  - Full browser QA remains required before the overall `refine.md` Definition of Done can be claimed.
+
 ## 2026-06-11 Emission scan response-chain slice
 - Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
 - Trigger:

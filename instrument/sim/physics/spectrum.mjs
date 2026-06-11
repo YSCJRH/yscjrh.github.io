@@ -61,7 +61,6 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
     profile.baseline +
     physics.bandpassNm * 0.002 +
     backgroundRisk * (profile.kind === "blank" ? 0.018 : 0.028);
-  const gain = gainForState(mode, x, state, physics, profile, responseChain);
 
   if (profile.kind === "blank") {
     if (mode === "emission") {
@@ -115,8 +114,25 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
       profile.kind === "scattering"
         ? gaussian(x, physics.emissionNm - 24, 26 + physics.bandpassNm) * (0.1 + backgroundRisk * 0.2)
         : 0;
-    return baseline + gain * emissionFit * excitation + scatter + noise;
+    const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+    const signal = composeRawSignal({
+      sourceAtExcitation: spectralResponse.source,
+      excitationBandpassTransmission: physics.throughput * physics.alignment.overlapFactor,
+      absorptionAtExcitation: excitation,
+      quantumYield: profile.amplitude,
+      emissionShapeAtWavelength: emissionFit,
+      emissionBandpassTransmission: physics.throughput,
+      detectorResponseAtEmission: responseChain?.detector?.atEmission ?? spectralResponse.detector,
+      collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+      integrationMs: state.integrationTimeMs,
+      darkBaseline: baseline,
+      background: 0,
+      saturationThreshold: 1.15,
+    });
+    return signal.raw + scatter + noise;
   }
+
+  const gain = gainForState(mode, x, state, physics, profile, responseChain);
 
   if (mode === "single") {
     const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);

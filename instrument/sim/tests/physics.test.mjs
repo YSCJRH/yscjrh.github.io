@@ -11,6 +11,7 @@ import { bandpassFromSlit, throughputFromSlit } from "../physics/monochromator.m
 import { deriveAlignment, collectionFromDetectorAngle } from "../physics/alignment.mjs";
 import { evaluateDetectorResponse } from "../physics/detector.mjs";
 import { composeRawSignal } from "../physics/radiometry.mjs";
+import { evaluateSourceSpectrum } from "../physics/source.mjs";
 
 function gaussian(value, center, width) {
   const normalized = (value - center) / Math.max(width, 1);
@@ -322,6 +323,54 @@ test("emission scan main fluorescence term is composed from response-chain facto
   });
 
   assert.equal(point.x, scannedEmissionNm);
+  assert.ok(signal.raw > baseline);
+  assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
+});
+
+test("excitation scan main fluorescence term is composed from response-chain factors per scanned wavelength", () => {
+  const state = createInstrumentState();
+  state.mode = "excitation";
+  const excitationPointIndex = 22;
+
+  const derived = deriveInstrument(state);
+  const point = derived.spectrum.points[excitationPointIndex];
+  const profile = derived.spectrum.profile;
+  const seed =
+    derived.excitationNm * 0.011 +
+    derived.emissionNm * 0.017 +
+    derived.bandpassNm +
+    state.integrationTimeMs * 0.001;
+  const noise = deterministicNoise(excitationPointIndex, seed) * profile.noise;
+  const baseline =
+    profile.baseline +
+    derived.bandpassNm * 0.002 +
+    derived.responseChain.geometry.backgroundRisk * 0.028;
+  const emissionShapeAtWavelength = gaussian(
+    derived.emissionNm,
+    profile.emissionPeak,
+    profile.emissionWidth + derived.bandpassNm
+  );
+  const absorptionAtExcitation = gaussian(
+    point.x,
+    profile.excitationPeak,
+    profile.excitationWidth + derived.bandpassNm * 1.35
+  );
+  const signal = composeRawSignal({
+    sourceAtExcitation: evaluateSourceSpectrum(state.source.id, point.x),
+    excitationBandpassTransmission: derived.throughput * derived.alignment.overlapFactor,
+    absorptionAtExcitation,
+    quantumYield: profile.amplitude,
+    emissionShapeAtWavelength,
+    emissionBandpassTransmission: derived.throughput,
+    detectorResponseAtEmission: evaluateDetectorResponse(state.detector.id, derived.emissionNm),
+    collectionFactor: derived.responseChain.geometry.collectionFactor,
+    integrationMs: state.integrationTimeMs,
+    darkBaseline: baseline,
+    background: 0,
+    saturationThreshold: 1.15,
+  });
+
+  assert.ok(Math.abs(point.x - 362.1052631578947) < 1e-12);
   assert.ok(signal.raw > baseline);
   assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
 });
