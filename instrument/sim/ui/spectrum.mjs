@@ -68,12 +68,12 @@ function selectOptionPairs(select) {
   return Array.from(select?.options || []).map((option) => [option.value, option.textContent]);
 }
 
-function syncPresetSelectOptions(select, options, documentRef = globalThis.document) {
+function syncPresetSelectOptions(select, options, documentRef = globalThis.document, languageMode = "bilingual") {
   if (!select || !documentRef?.createElement) {
     return;
   }
 
-  const desiredPairs = options.map((option) => [option.id, option.label]);
+  const desiredPairs = options.map((option) => [option.id, localizedText(option.label, languageMode)]);
   if (JSON.stringify(selectOptionPairs(select)) === JSON.stringify(desiredPairs)) {
     return;
   }
@@ -96,16 +96,20 @@ function syncPresetSelectOptions(select, options, documentRef = globalThis.docum
     : options[0]?.id || "";
 }
 
-export function syncSamplePresetOptions(elements, documentRef = globalThis.document) {
-  syncPresetSelectOptions(elements?.controls?.sample, SAMPLE_PRESET_OPTIONS, documentRef);
+export function syncSamplePresetOptions(elements, documentRef = globalThis.document, languageMode = languageModeForElements(elements)) {
+  syncPresetSelectOptions(elements?.controls?.sample, SAMPLE_PRESET_OPTIONS, documentRef, languageMode);
 }
 
-export function syncSimulatorPresetOptions(elements, documentRef = globalThis.document) {
-  syncSamplePresetOptions(elements, documentRef);
-  syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef);
-  syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef);
-  syncPresetSelectOptions(elements?.controls?.geometryMode, GEOMETRY_PRESET_OPTIONS, documentRef);
-  syncPresetSelectOptions(elements?.controls?.spectrumView, SPECTRUM_VIEW_OPTIONS, documentRef);
+export function syncSimulatorPresetOptions(
+  elements,
+  documentRef = globalThis.document,
+  languageMode = languageModeForElements(elements)
+) {
+  syncSamplePresetOptions(elements, documentRef, languageMode);
+  syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef, languageMode);
+  syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef, languageMode);
+  syncPresetSelectOptions(elements?.controls?.geometryMode, GEOMETRY_PRESET_OPTIONS, documentRef, languageMode);
+  syncPresetSelectOptions(elements?.controls?.spectrumView, SPECTRUM_VIEW_OPTIONS, documentRef, languageMode);
 }
 
 function percentText(value) {
@@ -293,7 +297,7 @@ export function collectInstrumentElements(root) {
 export function updateControlsFromState(elements, state, derived) {
   const { controls, readouts } = elements;
   const languageMode = languageModeForElements(elements);
-  syncSimulatorPresetOptions(elements);
+  syncSimulatorPresetOptions(elements, globalThis.document, languageMode);
 
   setText(readouts.excitationAngle, `${state.exMono.gratingAngleDeg.toFixed(1)} deg`);
   setText(readouts.emissionAngle, `${state.emMono.gratingAngleDeg.toFixed(1)} deg`);

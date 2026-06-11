@@ -24,6 +24,7 @@ const MARKERS = [
   "source-derived language",
   "module failure",
   "language switch",
+  "language density",
   "WebGL fallback",
 ];
 
@@ -314,22 +315,46 @@ async function main() {
     const language = evalInPage(
       SESSION,
       `async () => {
+        function visibleText(selector) {
+          const element = document.querySelector(selector);
+          return element ? element.innerText.replace(/\\s+/g, " ").trim() : "";
+        }
+
         document.querySelector('[data-language-mode-option="zh"]').click();
         await new Promise((resolve) => setTimeout(resolve, 80));
         const zhMode = document.querySelector('[data-instrument-lab]')?.dataset.languageMode;
         const zhPressed = document.querySelector('[data-language-mode-option="zh"]')?.getAttribute('aria-pressed');
+        const zhWorkbenchText = [
+          visibleText('.instrument-onboarding'),
+          visibleText('.instrument-control-panel'),
+        ].join(" ");
         document.querySelector('[data-language-mode-option="en"]').click();
         await new Promise((resolve) => setTimeout(resolve, 80));
+        const enWorkbenchText = [
+          visibleText('.instrument-onboarding'),
+          visibleText('.instrument-control-panel'),
+        ].join(" ");
         return {
           zhMode,
           zhPressed,
           enMode: document.querySelector('[data-instrument-lab]')?.dataset.languageMode,
           stored: localStorage.getItem('instrumentLanguageMode'),
+          zhWorkbenchText,
+          enWorkbenchText,
         };
       }`
     );
     assertCheck(language.zhMode === "zh" && language.zhPressed === "true" && language.enMode === "en", "language switch failed", language);
     record("language switch");
+    assertCheck(
+      !/Explore the scan model\s*\/|Controls\s*\/|Emission scan\s*\/|Excitation wavelength\s*\/|Teaching selector; not a calibrated range/.test(language.zhWorkbenchText) &&
+        /探索扫描模型|控制面板|发射扫描|激发波长|教学选通/.test(language.zhWorkbenchText) &&
+        !/探索扫描模型|控制面板|发射扫描|激发波长|教学选通/.test(language.enWorkbenchText) &&
+        /Explore the scan model|Controls|Emission scan|Excitation wavelength|Teaching selector; not a calibrated range/.test(language.enWorkbenchText),
+      "single-language mode leaves dense bilingual workbench labels visible",
+      language
+    );
+    record("language density");
 
     progress("checking keyboard activation");
     runCode(

@@ -397,10 +397,46 @@ test("instrument page exposes a persistent language display framework", () => {
   assert.match(instrumentScript, /localStorage/, "language mode should persist locally");
 });
 
+test("single-language mode can collapse dense static workbench labels", () => {
+  assert.match(
+    instrumentScript,
+    /syncLocalizedStaticText/,
+    "runtime should relocalize static labels that are not data-language span pairs"
+  );
+  assert.match(
+    instrumentScript,
+    /data-localize-text/,
+    "runtime should target explicit static localizable labels"
+  );
+
+  const denseLabelSources = [
+    "Language / 语言",
+    "Both / 双语",
+    "1. Choose a mode / 选择模式",
+    "3. Inspect a mono / 查看单色器",
+    "Controls / 控制面板",
+    "Explore the scan model / 探索扫描模型",
+    "Mode / 模式",
+    "Emission scan / 发射扫描",
+    "Excitation wavelength / 激发波长",
+    "Angle: / 光栅角：",
+    "Teaching selector; not a calibrated range. / 教学选通，非校准量程。",
+  ];
+
+  for (const source of denseLabelSources) {
+    const sourceIndex = instrumentHtml.indexOf(source);
+    assert.ok(sourceIndex > 0, `missing dense label source: ${source}`);
+    const tagStart = instrumentHtml.lastIndexOf("<", sourceIndex);
+    const tagEnd = instrumentHtml.indexOf(">", tagStart);
+    const openingTag = instrumentHtml.slice(tagStart, tagEnd + 1);
+    assert.match(openingTag, /data-localize-text/, `dense label should be static-localized: ${source}`);
+  }
+});
+
 test("instrument route cache key changes with the browser QA hardening slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=browser-qa-20260611/,
+    /instrument\.js\?v=language-density-20260611/,
     "instrument.js cache key should be bumped when runtime language switch behavior changes"
   );
 });

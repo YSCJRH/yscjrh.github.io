@@ -27,6 +27,7 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     "source-derived language",
     "module failure",
     "language switch",
+    "language density",
     "WebGL fallback",
   ]) {
     assert.match(script, new RegExp(marker, "i"), `missing browser QA marker: ${marker}`);

@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=browser-qa-20260611").catch((error) => {
+        import("./instrument.js?v=language-density-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
@@ -145,10 +145,10 @@
               </div>
               <div class="instrument-hero-tools">
                 <div class="instrument-language-switch" data-language-mode-control role="group" aria-label="Language display / 语言显示">
-                  <span class="instrument-language-switch-label">Language / 语言</span>
+                  <span class="instrument-language-switch-label" data-localize-text>Language / 语言</span>
                   <button type="button" data-language-mode-option="en" aria-pressed="false" disabled>English</button>
                   <button type="button" data-language-mode-option="zh" aria-pressed="false" disabled>中文</button>
-                  <button type="button" data-language-mode-option="bilingual" aria-pressed="true" disabled>Both / 双语</button>
+                  <button type="button" data-language-mode-option="bilingual" aria-pressed="true" disabled data-localize-text>Both / 双语</button>
                 </div>
                 <p class="instrument-disclaimer" data-disclaimer>
                   <span data-language="en">Conceptual model only. Not real instrument control. Not calibrated measurement.</span>
@@ -160,17 +160,17 @@
             <section class="instrument-workstation" aria-label="Interactive fluorescence spectrophotometer concept model / 交互式荧光分光光度计概念模型">
               <div class="instrument-onboarding" aria-label="How to use the concept model / 如何使用概念模型" data-reveal>
                 <p>
-                  <strong>1. Choose a mode / 选择模式</strong>
+                  <strong data-localize-text>1. Choose a mode / 选择模式</strong>
                   <span data-language="en">Pick a scan channel.</span>
                   <span data-language="zh" lang="zh-CN">选择扫描模式，先看哪一路通道在变化。</span>
                 </p>
                 <p>
-                  <strong>2. Move one control / 移动控制项</strong>
+                  <strong data-localize-text>2. Move one control / 移动控制项</strong>
                   <span data-language="en">Watch the trace respond.</span>
                   <span data-language="zh" lang="zh-CN">移动一个控制项，观察合成谱线如何响应。</span>
                 </p>
                 <p>
-                  <strong>3. Inspect a mono / 查看单色器</strong>
+                  <strong data-localize-text>3. Inspect a mono / 查看单色器</strong>
                   <span data-language="en">Use part buttons in the 2D fallback; enable optional 3D to drag grating handles.</span>
                   <span data-language="zh" lang="zh-CN">在 2D 备用图中使用部件按钮；启用可选 3D 后再拖动光栅手柄。</span>
                 </p>
@@ -183,7 +183,7 @@
                     <span></span>
                     <span></span>
                   </div>
-                  <p class="panel-chrome-label">Concept model / 概念模型</p>
+                  <p class="panel-chrome-label" data-localize-text>Concept model / 概念模型</p>
                 </div>
 
                 <div class="instrument-stage instrument-stage-3d" aria-label="3D teaching skeleton for the fluorescence instrument path / 荧光仪器光路的 3D 教学骨架">
@@ -194,14 +194,14 @@
                     <p>剩余激发光进入终止器；荧光以 90° 侧向收集。</p>
                   </div>
                   <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
-                    <button type="button" data-action="reset-view">Reset view / 重置视角</button>
-                    <button type="button" data-action="reset-geometry">Reset alignment / 重置对准</button>
-                    <span data-webgl-status aria-live="polite" aria-atomic="true">2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。</span>
+                    <button type="button" data-action="reset-view" data-localize-text>Reset view / 重置视角</button>
+                    <button type="button" data-action="reset-geometry" data-localize-text>Reset alignment / 重置对准</button>
+                    <span data-webgl-status aria-live="polite" aria-atomic="true" data-localize-text>2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。</span>
                   </div>
                 </div>
 
                 <div class="instrument-stage instrument-stage-fallback instrument-2d-fallback" data-fallback-diagram aria-label="Simplified instrument light path fallback / 简化仪器光路备用图">
-                  <p class="instrument-fallback-status" data-webgl-status aria-live="polite" aria-atomic="true">
+                  <p class="instrument-fallback-status" data-webgl-status aria-live="polite" aria-atomic="true" data-localize-text>
                     2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。
                   </p>
                   <svg
@@ -410,36 +410,36 @@
                   <span data-language="zh" lang="zh-CN">主要路径：先使用 2D 备用图中的可见控制项和部件按钮。启用可选 3D 后，再点击激发或发射单色器并拖动浅色光栅面或发光手柄，观察线束、波长、光束颜色、诊断和谱图同步变化。</span>
                 </p>
                 <div class="instrument-inline-actions">
-                  <button class="instrument-inline-action" type="button" data-action="enable-3d">Enable optional 3D model / 启用可选 3D 模型</button>
+                  <button class="instrument-inline-action" type="button" data-action="enable-3d" data-localize-text>Enable optional 3D model / 启用可选 3D 模型</button>
                 </div>
 
                 <details class="instrument-principle-details">
                   <summary>
-                    Optical path notes / 光路说明
-                    <span>Keep the main view focused; open for geometry caveats. / 保持主视图聚焦，需要时展开几何边界。</span>
+                    <span data-localize-text>Optical path notes / 光路说明</span>
+                    <span data-localize-text>Keep the main view focused; open for geometry caveats. / 保持主视图聚焦，需要时展开几何边界。</span>
                   </summary>
                   <div class="instrument-principle-strip" aria-label="Conceptual optical geometry notes / 概念光路几何说明">
                     <p>
                       <span class="path-key path-key-excitation" aria-hidden="true"></span>
-                      <strong>Blue excitation axis / 蓝色激发轴</strong>
+                      <strong data-localize-text>Blue excitation axis / 蓝色激发轴</strong>
                       <span data-language="en">Light reaches the sample through the excitation monochromator; the straight-through residual excitation is shown entering a beam stop, not the detector.</span>
                       <span data-language="zh" lang="zh-CN">光经激发单色器到达样品；直通方向的剩余激发光进入光束终止器，而不是进入检测器。</span>
                     </p>
                     <p>
                       <span class="path-key path-key-emission" aria-hidden="true"></span>
-                      <strong>Cyan 90° collection arm / 青色 90° 收集臂</strong>
+                      <strong data-localize-text>Cyan 90° collection arm / 青色 90° 收集臂</strong>
                       <span data-language="en">Fluorescence is collected from the side path through the emission monochromator before detection.</span>
                       <span data-language="zh" lang="zh-CN">荧光从侧向路径被收集，经过发射单色器后再进入检测器。</span>
                     </p>
                     <p>
                       <span class="path-key path-key-residual" aria-hidden="true"></span>
-                      <strong>Beam stop / 光束终止器</strong>
+                      <strong data-localize-text>Beam stop / 光束终止器</strong>
                       <span data-language="en">The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.</span>
                       <span data-language="zh" lang="zh-CN">直通方向的激发光进入吸收终止块，避免被误解为反射光或检测光路。</span>
                     </p>
                     <p>
                       <span class="path-key path-key-signal" aria-hidden="true"></span>
-                      <strong>Signal output line / 信号输出线</strong>
+                      <strong data-localize-text>Signal output line / 信号输出线</strong>
                       <span data-language="en">The fine line after the detector represents a processed display signal, not another optical beam.</span>
                       <span data-language="zh" lang="zh-CN">检测器之后的细线表示处理后的显示信号，不是另一束光。</span>
                     </p>
@@ -447,55 +447,55 @@
                 </details>
 
                 <div class="instrument-flow-strip" aria-label="Conceptual signal chain / 概念信号链路">
-                  <button type="button" data-part="source" aria-pressed="true">Light source / 光源</button>
-                  <button type="button" data-part="excitation" aria-pressed="false">Excitation mono / 激发单色器</button>
-                  <button type="button" data-part="sample" aria-pressed="false">Sample cell / 样品池</button>
-                  <button type="button" data-part="emission" aria-pressed="false">Emission mono / 发射单色器</button>
-                  <button type="button" data-part="detector" aria-pressed="false">Detector / 检测器</button>
-                  <button type="button" data-part="output" aria-pressed="false">Spectrum / 谱图</button>
+                  <button type="button" data-part="source" aria-pressed="true" data-localize-text>Light source / 光源</button>
+                  <button type="button" data-part="excitation" aria-pressed="false" data-localize-text>Excitation mono / 激发单色器</button>
+                  <button type="button" data-part="sample" aria-pressed="false" data-localize-text>Sample cell / 样品池</button>
+                  <button type="button" data-part="emission" aria-pressed="false" data-localize-text>Emission mono / 发射单色器</button>
+                  <button type="button" data-part="detector" aria-pressed="false" data-localize-text>Detector / 检测器</button>
+                  <button type="button" data-part="output" aria-pressed="false" data-localize-text>Spectrum / 谱图</button>
                 </div>
               </div>
 
               <div class="instrument-side">
                 <section class="surface surface-glass instrument-control-panel" aria-labelledby="instrument-controls-title" data-reveal>
-                  <p class="eyebrow">Controls / 控制面板</p>
-                  <h2 class="article-subtitle" id="instrument-controls-title">Explore the scan model / 探索扫描模型</h2>
+                  <p class="eyebrow" data-localize-text>Controls / 控制面板</p>
+                  <h2 class="article-subtitle" id="instrument-controls-title" data-localize-text>Explore the scan model / 探索扫描模型</h2>
 
                   <fieldset class="mode-selector" data-mode-selector>
-                    <legend>Mode / 模式</legend>
-                    <button type="button" data-mode="emission" aria-pressed="true">Emission scan / 发射扫描</button>
-                    <button type="button" data-mode="excitation" aria-pressed="false">Excitation scan / 激发扫描</button>
-                    <button type="button" data-mode="time" aria-pressed="false">Time / kinetic scan / 时间动力学扫描</button>
-                    <button type="button" data-mode="single" aria-pressed="false">Single-point monitor / 单点监测</button>
+                    <legend data-localize-text>Mode / 模式</legend>
+                    <button type="button" data-mode="emission" aria-pressed="true" data-localize-text>Emission scan / 发射扫描</button>
+                    <button type="button" data-mode="excitation" aria-pressed="false" data-localize-text>Excitation scan / 激发扫描</button>
+                    <button type="button" data-mode="time" aria-pressed="false" data-localize-text>Time / kinetic scan / 时间动力学扫描</button>
+                    <button type="button" data-mode="single" aria-pressed="false" data-localize-text>Single-point monitor / 单点监测</button>
                   </fieldset>
 
                   <div class="control-stack">
                     <label class="instrument-control">
-                      <span>Excitation wavelength / 激发波长 <strong data-readout="excitation">365 nm</strong></span>
+                      <span><span data-localize-text>Excitation wavelength / 激发波长</span> <strong data-readout="excitation">365 nm</strong></span>
                       <input data-control="excitation-wavelength" type="range" min="200" max="900" step="1" value="365">
-                      <small class="control-help">Angle / 光栅角：<strong data-readout="excitation-angle">12.8 deg</strong>. Teaching selector; not a calibrated range. 教学选通，非校准量程。</small>
+                      <small class="control-help"><span data-localize-text>Angle: / 光栅角：</span><strong data-readout="excitation-angle">12.8 deg</strong>. <span data-localize-text>Teaching selector; not a calibrated range. / 教学选通，非校准量程。</span></small>
                     </label>
 
                     <label class="instrument-control">
-                      <span><span data-emission-label>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
+                      <span><span data-emission-label data-localize-text>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
                       <input data-control="emission-wavelength" type="range" min="200" max="900" step="1" value="520">
-                      <small class="control-help" id="emission-range-help">Angle / 光栅角：<strong data-readout="emission-angle">18.5 deg</strong>. UV/NIR use false-color cues. 紫外/近红外为伪色提示。</small>
+                      <small class="control-help" id="emission-range-help"><span data-localize-text>Angle: / 光栅角：</span><strong data-readout="emission-angle">18.5 deg</strong>. <span data-localize-text>UV/NIR use false-color cues. / 紫外/近红外为伪色提示。</span></small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Slit width / 狭缝宽度 <strong data-readout="slit">500 um</strong></span>
+                      <span><span data-localize-text>Slit width / 狭缝宽度</span> <strong data-readout="slit">500 um</strong></span>
                       <input data-control="slit" type="range" min="100" max="1000" step="25" value="500">
-                      <small class="control-help"><strong data-readout="bandpass">~4.6 nm teaching bandpass / 约 4.6 nm 教学带宽</strong>; wider slit raises throughput and broadens peaks. 狭缝越宽，通光量越高，峰越宽。</small>
+                      <small class="control-help"><strong data-readout="bandpass">~4.6 nm teaching bandpass / 约 4.6 nm 教学带宽</strong>; <span data-localize-text>wider slit raises throughput and broadens peaks. / 狭缝越宽，通光量越高，峰越宽。</span></small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Integration time / 积分时间 <strong data-readout="integration">200 ms</strong></span>
+                      <span><span data-localize-text>Integration time / 积分时间</span> <strong data-readout="integration">200 ms</strong></span>
                       <input data-control="integration" type="range" min="20" max="1000" step="20" value="200">
-                      <small class="control-help">Signal averaging time, not fluorescence lifetime. 信号平均时间，不是荧光寿命。</small>
+                      <small class="control-help"><span data-localize-text>Signal averaging time, not fluorescence lifetime. / 信号平均时间，不是荧光寿命。</span></small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Sample preset / 样品预设</span>
+                      <span data-localize-text>Sample preset / 样品预设</span>
                       <select data-control="sample">
                         <option value="low-background">Low-background sample / 低背景样品</option>
                         <option value="broad-emission">Broad-emission sample / 宽发射样品</option>
@@ -507,93 +507,92 @@
 
                     <details class="advanced-geometry">
                       <summary>
-                        <span>Response, geometry, and offsets / 响应、几何与偏移</span>
-                        <strong>Correction-literacy view + geometry mode / 校正理解视图 + 几何模式</strong>
+                        <span data-localize-text>Response, geometry, and offsets / 响应、几何与偏移</span>
+                        <strong data-localize-text>Correction-literacy view + geometry mode / 校正理解视图 + 几何模式</strong>
                       </summary>
                       <p class="control-help advanced-geometry-note">
-                        Response-normalized view is a correction-literacy display, not a calibrated correction. Geometry mode changes conceptual collection/background behavior. Source offset and detector arm offset are bounded local perturbations; they affect intensity and diagnostics, not selected wavelength.
-                        <br>
-                        响应归一化视图用于理解校正思路，不是校准校正。几何模式改变概念性的收集与背景行为。光源偏移和检测臂偏离是受限的局部扰动；它们只影响强度和诊断，不改变选通波长。
+                        <span data-language="en">Response-normalized view is a correction-literacy display, not a calibrated correction. Geometry mode changes conceptual collection/background behavior. Source offset and detector arm offset are bounded local perturbations; they affect intensity and diagnostics, not selected wavelength.</span>
+                        <span data-language="zh" lang="zh-CN">响应归一化视图用于理解校正思路，不是校准校正。几何模式改变概念性的收集与背景行为。光源偏移和检测臂偏离是受限的局部扰动；它们只影响强度和诊断，不改变选通波长。</span>
                       </p>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Spectrum view / 谱图视图</span>
+                      <span data-localize-text>Spectrum view / 谱图视图</span>
                       <select data-control="spectrum-view">
                         <option value="raw">Raw synthetic / 原始合成</option>
                         <option value="response-normalized">Response-normalized teaching / 响应归一化教学</option>
                       </select>
-                      <small class="control-help">Response-normalized view divides out selected teaching source, detector, and geometry cues; it is not a calibrated correction. 响应归一化视图会按当前教学光源、检测器和几何提示做归一化；它不是校准校正。</small>
+                      <small class="control-help"><span data-localize-text>Response-normalized view divides out selected teaching source, detector, and geometry cues; it is not a calibrated correction. / 响应归一化视图会按当前教学光源、检测器和几何提示做归一化；它不是校准校正。</span></small>
                     </label>
 
                     <div class="instrument-toggle-grid" aria-label="Synthetic trace display cues / 合成谱图显示提示">
                       <label class="instrument-toggle-control">
                         <input data-control="show-components" type="checkbox">
                         <span>
-                          <strong>Component overlay / 组分叠加</strong>
-                          <small>Show sample, baseline/artifact, and noise cues; same teaching units, not component quantitation. 显示样品、基线/伪影与噪声提示；使用同一教学单位，不是组分定量。</small>
+                          <strong data-localize-text>Component overlay / 组分叠加</strong>
+                          <small data-localize-text>Show sample, baseline/artifact, and noise cues; same teaching units, not component quantitation. / 显示样品、基线/伪影与噪声提示；使用同一教学单位，不是组分定量。</small>
                         </span>
                       </label>
                       <label class="instrument-toggle-control">
                         <input data-control="show-noise" type="checkbox" checked>
                         <span>
-                          <strong>Noise cue / 噪声提示</strong>
-                          <small>Show deterministic teaching perturbation; not a detector-noise model. 显示确定性教学扰动；不是检测器噪声模型。</small>
+                          <strong data-localize-text>Noise cue / 噪声提示</strong>
+                          <small data-localize-text>Show deterministic teaching perturbation; not a detector-noise model. / 显示确定性教学扰动；不是检测器噪声模型。</small>
                         </span>
                       </label>
                       <label class="instrument-toggle-control">
                         <input data-control="show-artifacts" type="checkbox" checked>
                         <span>
-                          <strong>Artifact cue / 伪影提示</strong>
-                          <small>Show conceptual scatter/background cues; not calibrated artifact curves. 显示概念散射与背景提示；不是校准伪影曲线。</small>
+                          <strong data-localize-text>Artifact cue / 伪影提示</strong>
+                          <small data-localize-text>Show conceptual scatter/background cues; not calibrated artifact curves. / 显示概念散射与背景提示；不是校准伪影曲线。</small>
                         </span>
                       </label>
                     </div>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Source type / 光源类型</span>
+                      <span data-localize-text>Source type / 光源类型</span>
                       <select data-control="source-type">
                         <option value="xenon-like">Broadband teaching source / 宽带教学光源</option>
                         <option value="ideal-flat">Ideal flat teaching source / 理想平坦教学光源</option>
                         <option value="led-365">365 nm LED teaching source / 365 nm LED 教学光源</option>
                         <option value="led-405">405 nm LED teaching source / 405 nm LED 教学光源</option>
                       </select>
-                      <small class="control-help">Normalized teaching source shape, not a measured lamp spectrum. 归一化教学光源形状，不是实测灯谱。</small>
+                      <small class="control-help"><span data-localize-text>Normalized teaching source shape, not a measured lamp spectrum. / 归一化教学光源形状，不是实测灯谱。</span></small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Detector type / 检测器类型</span>
+                      <span data-localize-text>Detector type / 检测器类型</span>
                       <select data-control="detector-type">
                         <option value="pmt-like-visible">Visible PMT-like teaching response / 可见区 PMT 风格教学响应</option>
                         <option value="silicon-like">Silicon-like teaching response / 硅探测器风格教学响应</option>
                         <option value="ideal-flat">Ideal flat detector / 理想平坦检测器</option>
                       </select>
-                      <small class="control-help">Normalized responsivity cue; it is not a detector calibration curve. 归一化响应提示，不是检测器校准曲线。</small>
+                      <small class="control-help"><span data-localize-text>Normalized responsivity cue; it is not a detector calibration curve. / 归一化响应提示，不是检测器校准曲线。</span></small>
                     </label>
 
                     <label class="instrument-control instrument-select-control">
-                      <span>Geometry mode / 几何模式</span>
+                      <span data-localize-text>Geometry mode / 几何模式</span>
                       <select data-control="geometry-mode">
                         <option value="right-angle-90">Right-angle 90 degree / 90° 直角收集</option>
                         <option value="front-face">Front-face teaching geometry / 前表面教学几何</option>
                         <option value="transmission">Transmission teaching geometry / 透射教学几何</option>
                       </select>
-                      <small class="control-help">Conceptual geometry selector; it changes collection/background diagnostics, not wavelength. 概念几何选择器，只改变收集和背景诊断，不改变波长。</small>
+                      <small class="control-help"><span data-localize-text>Conceptual geometry selector; it changes collection/background diagnostics, not wavelength. / 概念几何选择器，只改变收集和背景诊断，不改变波长。</span></small>
                     </label>
 
                     <label class="instrument-control">
-                      <span>Source offset / 光源偏移 <strong data-readout="source-offset">0 um</strong></span>
+                      <span><span data-localize-text>Source offset / 光源偏移</span> <strong data-readout="source-offset">0 um</strong></span>
                       <input data-control="source-offset" type="range" min="-120" max="120" step="5" value="0">
-                      <small class="control-help">Conceptual entrance alignment; it changes intensity, not wavelength. 概念入口对准，只改变强度，不改变波长。</small>
+                      <small class="control-help"><span data-localize-text>Conceptual entrance alignment; it changes intensity, not wavelength. / 概念入口对准，只改变强度，不改变波长。</span></small>
                     </label>
 
                     <p class="control-help">
-                      Sample cell is fixed in this model, matching the usual cuvette-holder workflow. 样品池在此模型中固定，贴近常见比色皿架的使用方式。
+                      <span data-localize-text>Sample cell is fixed in this model, matching the usual cuvette-holder workflow. / 样品池在此模型中固定，贴近常见比色皿架的使用方式。</span>
                     </p>
 
                     <label class="instrument-control">
-                      <span>Detector arm offset / 检测臂偏离 <strong data-readout="detector-angle">90.0 deg</strong></span>
+                      <span><span data-localize-text>Detector arm offset / 检测臂偏离</span> <strong data-readout="detector-angle">90.0 deg</strong></span>
                       <input data-control="detector-angle" type="range" min="80" max="100" step="0.5" value="90">
-                      <small class="control-help">90 deg collection is the teaching default; offsets reduce collection and raise background risk. 90° 收集是教学默认值，偏离会降低收集效率并提高背景风险。</small>
+                      <small class="control-help"><span data-localize-text>90 deg collection is the teaching default; offsets reduce collection and raise background risk. / 90° 收集是教学默认值，偏离会降低收集效率并提高背景风险。</span></small>
                     </label>
                     </details>
                   </div>
@@ -604,34 +603,34 @@
 
                   <div class="scan-state-grid" aria-label="Current conceptual scan state / 当前概念扫描状态" aria-live="polite" aria-atomic="false">
                     <p>
-                      <span>Scan axis / 扫描轴</span>
+                      <span data-localize-text>Scan axis / 扫描轴</span>
                       <strong data-scan-axis-readout>Emission 200-900 nm / 发射 200-900 nm</strong>
                     </p>
                     <p>
-                      <span>Fixed channel / 固定通道</span>
+                      <span data-localize-text>Fixed channel / 固定通道</span>
                       <strong data-fixed-channel-readout>Excitation 365 nm / 激发 365 nm</strong>
                     </p>
                     <p>
-                      <span>Throughput / 通光量</span>
+                      <span data-localize-text>Throughput / 通光量</span>
                       <strong data-readout="throughput">--</strong>
                     </p>
                     <p>
-                      <span>Alignment / geometry / 对准 / 几何</span>
+                      <span data-localize-text>Alignment / geometry / 对准 / 几何</span>
                       <strong><span data-readout="overlap">100%</span> / <span data-readout="collection">100%</span></strong>
                     </p>
                     <p>
-                      <span>Source / sample / 光源 / 样品</span>
+                      <span data-localize-text>Source / sample / 光源 / 样品</span>
                       <strong><span data-readout="response-source">--</span> / <span data-readout="response-sample">--</span></strong>
                     </p>
                     <p>
-                      <span>Detector / headroom / 检测 / 余量</span>
+                      <span data-localize-text>Detector / headroom / 检测 / 余量</span>
                       <strong><span data-readout="response-detector">--</span> / <span data-readout="signal-headroom">--</span></strong>
                     </p>
                   </div>
                 </section>
 
                 <section class="surface surface-glass part-panel" aria-live="polite" data-reveal>
-                  <p class="eyebrow">Part note / 部件说明</p>
+                  <p class="eyebrow" data-localize-text>Part note / 部件说明</p>
                   <h2 class="article-subtitle" data-part-title>Light source / 光源</h2>
                   <p data-part-copy>
                     Provides broadband or selected excitation energy before the path is shaped by the excitation monochromator.
@@ -644,8 +643,8 @@
                 </section>
 
                 <section class="surface surface-glass diagnostics-panel" aria-labelledby="diagnostics-title" data-reveal>
-                  <p class="eyebrow">Diagnostics / 物理状态</p>
-                  <h2 class="article-subtitle" id="diagnostics-title">Consequences, not claims / 只说明后果，不声称性能</h2>
+                  <p class="eyebrow" data-localize-text>Diagnostics / 物理状态</p>
+                  <h2 class="article-subtitle" id="diagnostics-title" data-localize-text>Consequences, not claims / 只说明后果，不声称性能</h2>
                   <ul class="diagnostics-list" data-diagnostics-list aria-live="polite" aria-relevant="additions text">
                     <li class="diagnostic-item diagnostic-item-info">
                       <strong>Waiting for model / 等待模型加载</strong>
@@ -657,35 +656,35 @@
                 <section class="surface surface-glass spectrum-panel" aria-labelledby="spectrum-title" data-reveal>
                   <div class="spectrum-panel-head">
                     <div>
-                      <p class="eyebrow">Synthetic output / 合成输出</p>
-                      <h2 class="article-subtitle" id="spectrum-title">Conceptual spectrum / 概念谱图</h2>
+                      <p class="eyebrow" data-localize-text>Synthetic output / 合成输出</p>
+                      <h2 class="article-subtitle" id="spectrum-title" data-localize-text>Conceptual spectrum / 概念谱图</h2>
                     </div>
                     <p class="spectrum-readout" data-intensity-readout>Peak / 峰值 -- a.u.</p>
                   </div>
 
                   <div class="spectrum-meta-grid" aria-label="Current synthetic output state / 当前合成输出状态">
                     <p>
-                      <span>Mode / 模式</span>
+                      <span data-localize-text>Mode / 模式</span>
                       <strong data-chart-mode>Emission scan / 发射扫描</strong>
                     </p>
                     <p>
-                      <span>Scan axis / 扫描轴</span>
+                      <span data-localize-text>Scan axis / 扫描轴</span>
                       <strong data-chart-axis>Emission 200-900 nm / 发射 200-900 nm</strong>
                     </p>
                     <p>
-                      <span>Fixed / 固定通道</span>
+                      <span data-localize-text>Fixed / 固定通道</span>
                       <strong data-chart-fixed>Excitation 365 nm / 激发 365 nm</strong>
                     </p>
                     <p>
-                      <span>View / 视图</span>
+                      <span data-localize-text>View / 视图</span>
                       <strong data-chart-view>Raw synthetic / 原始合成</strong>
                     </p>
                     <p>
-                      <span>Scale / 标度</span>
+                      <span data-localize-text>Scale / 标度</span>
                       <strong data-chart-scale>fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准</strong>
                     </p>
                     <p>
-                      <span>Components / 组分</span>
+                      <span data-localize-text>Components / 组分</span>
                       <strong data-chart-components>Off / 关闭</strong>
                     </p>
                   </div>

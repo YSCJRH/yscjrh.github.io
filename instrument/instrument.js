@@ -11,6 +11,7 @@ import {
 import { deriveInstrument } from "./sim/physics/derive.mjs?v=inner-filter-risk-20260611";
 import {
   collectInstrumentElements,
+  localizedText,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
@@ -57,10 +58,57 @@ if (root) {
     });
   }
 
+  function setLocalizedElementText(element, text, languageMode = root.dataset.languageMode) {
+    if (!element) {
+      return;
+    }
+
+    const source = String(text ?? "");
+    element.dataset.localizeSource = source;
+    element.textContent = localizedText(source, normalizeLanguageMode(languageMode));
+
+    if (normalizeLanguageMode(languageMode) === "zh") {
+      element.lang = "zh-CN";
+    } else {
+      element.removeAttribute("lang");
+    }
+  }
+
+  function syncLocalizedStaticText(languageMode = root.dataset.languageMode) {
+    const candidates = new Set(root.querySelectorAll("[data-localize-text]"));
+
+    root.querySelectorAll("*").forEach((element) => {
+      if (
+        element.children.length > 0 ||
+        element.closest("[data-language]") ||
+        element.matches("script, style")
+      ) {
+        return;
+      }
+
+      const source = element.dataset.localizeSource || element.textContent.trim();
+      if (source.includes(" / ") && /[\u3400-\u9fff]/.test(source)) {
+        candidates.add(element);
+      }
+    });
+
+    candidates.forEach((element) => {
+      const source = element.dataset.localizeSource || element.dataset.localizeText || element.textContent.trim();
+      setLocalizedElementText(element, source, languageMode);
+    });
+  }
+
+  function setEnableSceneButtonText(text) {
+    elements.enableSceneButtons.forEach((button) => {
+      setLocalizedElementText(button, text);
+    });
+  }
+
   function setLanguageMode(mode, { persist = true } = {}) {
     const nextMode = normalizeLanguageMode(mode);
     root.dataset.languageMode = nextMode;
     document.documentElement.lang = nextMode === "zh" ? "zh-CN" : "en";
+    syncLocalizedStaticText(nextMode);
 
     root.querySelectorAll("[data-language-mode-option]").forEach((button) => {
       const isActive = button.dataset.languageModeOption === nextMode;
@@ -99,7 +147,7 @@ if (root) {
   function updateWebglStatus(message) {
     const statusElements = elements.webglStatuses?.length ? elements.webglStatuses : [elements.webglStatus].filter(Boolean);
     statusElements.forEach((status) => {
-      status.textContent = message;
+      setLocalizedElementText(status, message);
     });
   }
 
@@ -179,8 +227,8 @@ if (root) {
     isSceneLoading = true;
     elements.enableSceneButtons.forEach((button) => {
       button.disabled = true;
-      button.textContent = "Loading 3D model... / 正在加载 3D 模型...";
     });
+    setEnableSceneButtonText("Loading 3D model... / 正在加载 3D 模型...");
     updateWebglStatus("Loading 3D teaching skeleton... / 正在加载 3D 教学骨架...");
 
     let createInstrumentScene;
@@ -192,8 +240,8 @@ if (root) {
       updateWebglStatus("3D scene unavailable. Showing the 2D fallback. / 3D 场景不可用，显示二维备用图。");
       elements.enableSceneButtons.forEach((button) => {
         button.disabled = false;
-        button.textContent = "Retry 3D model / 重试 3D 模型";
       });
+      setEnableSceneButtonText("Retry 3D model / 重试 3D 模型");
       isSceneLoading = false;
       return;
     }
@@ -229,10 +277,12 @@ if (root) {
     elements.enableSceneButtons.forEach((button) => {
       button.hidden = Boolean(sceneController.available);
       button.disabled = false;
-      button.textContent = sceneController.available
-        ? "3D model active / 3D 模型已启用"
-        : "Retry 3D model / 重试 3D 模型";
     });
+    setEnableSceneButtonText(
+      sceneController.available
+        ? "3D model active / 3D 模型已启用"
+        : "Retry 3D model / 重试 3D 模型"
+    );
     isSceneLoading = false;
   }
 
