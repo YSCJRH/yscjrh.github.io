@@ -50,7 +50,7 @@ test("advanced response-chain controls live in the simulator workbench", () => {
   assert.ok(advancedStart > 0);
   assert.ok(sourceDataStart > advancedStart);
 
-  for (const controlName of ["source-type", "detector-type", "geometry-mode"]) {
+  for (const controlName of ["source-type", "detector-type", "geometry-mode", "spectrum-view"]) {
     const controlIndex = instrumentHtml.indexOf(`data-control="${controlName}"`);
     assert.ok(controlIndex > advancedStart, `${controlName} should be inside the advanced simulator controls`);
     assert.ok(controlIndex < sourceDataStart, `${controlName} must stay separate from source-derived examples`);
@@ -97,9 +97,11 @@ test("instrument element collection includes advanced response-chain controls", 
   assert.equal(elements.controls.sourceType, null);
   assert.equal(elements.controls.detectorType, null);
   assert.equal(elements.controls.geometryMode, null);
+  assert.equal(elements.controls.spectrumView, null);
   assert.ok(selectors.includes('[data-control="source-type"]'));
   assert.ok(selectors.includes('[data-control="detector-type"]'));
   assert.ok(selectors.includes('[data-control="geometry-mode"]'));
+  assert.ok(selectors.includes('[data-control="spectrum-view"]'));
 });
 
 test("sample preset select can be synchronized from the shared preset options", () => {
@@ -394,6 +396,20 @@ test("workbench exposes response-chain factor readouts", () => {
   assert.equal(elements.readouts.responseSample.textContent, "72%");
   assert.equal(elements.readouts.responseDetector.textContent, "58%");
   assert.equal(elements.readouts.signalHeadroom.textContent, "69%");
+});
+
+test("workbench exposes raw and response-normalized spectrum view controls", () => {
+  const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
+  const controlIndex = instrumentHtml.indexOf('data-control="spectrum-view"');
+
+  assert.ok(controlIndex > 0, "spectrum view control should exist in the simulator workbench");
+  assert.ok(controlIndex < sourceDataStart, "spectrum view control must stay separate from source-derived examples");
+  assert.deepEqual(selectOptionsFromHtml("spectrum-view"), [
+    ["raw", "Raw synthetic / 原始合成"],
+    ["response-normalized", "Response-normalized teaching / 响应归一化教学"],
+  ]);
+  assert.match(instrumentHtml, /data-chart-scale/);
+  assert.match(instrumentHtml, /not a calibrated correction|不是校准校正/);
 });
 
 test("dynamic workbench status regions announce model changes accessibly", () => {

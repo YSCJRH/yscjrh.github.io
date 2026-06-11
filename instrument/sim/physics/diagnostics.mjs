@@ -31,6 +31,15 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
+  if (state.display?.spectrumView === "response-normalized") {
+    diagnostics.push({
+      tone: "info",
+      evidenceKey: "ILAB-003",
+      label: "Response-normalized view / 响应归一化视图",
+      text: "The chart divides the raw synthetic trace by selected teaching source, detector, and geometry response cues. It demonstrates correction logic, not calibrated correction. / 谱图按当前教学光源、检测器和几何响应提示对原始合成谱线做归一化，用于展示校正思路，不是校准校正。",
+    });
+  }
+
   if (derived.bandpassNm >= 7) {
     diagnostics.push({
       tone: "warn",
@@ -106,7 +115,8 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
-  if (derived.spectrum.peak / Math.max(derived.spectrum.yScaleMax, 0.001) >= 0.85) {
+  const headroomPeak = derived.spectrum.rawPeak ?? derived.spectrum.peak;
+  if (headroomPeak / Math.max(derived.spectrum.yScaleMax, 0.001) >= 0.85) {
     diagnostics.push({
       tone: "warn",
       evidenceKey: "ILAB-008",

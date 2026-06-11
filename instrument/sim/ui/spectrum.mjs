@@ -4,8 +4,9 @@ import {
   MODES,
   PARTS,
   SAMPLE_PRESET_OPTIONS,
+  SPECTRUM_VIEW_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=geometry-sync-20260611";
+} from "../state.mjs?v=spectrum-view-20260611";
 
 const chart = {
   left: 54,
@@ -69,6 +70,7 @@ export function syncSimulatorPresetOptions(elements, documentRef = globalThis.do
   syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef);
   syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef);
   syncPresetSelectOptions(elements?.controls?.geometryMode, GEOMETRY_PRESET_OPTIONS, documentRef);
+  syncPresetSelectOptions(elements?.controls?.spectrumView, SPECTRUM_VIEW_OPTIONS, documentRef);
 }
 
 function percentText(value) {
@@ -115,6 +117,7 @@ export function collectInstrumentElements(root) {
     sourceType: root.querySelector('[data-control="source-type"]'),
     detectorType: root.querySelector('[data-control="detector-type"]'),
     geometryMode: root.querySelector('[data-control="geometry-mode"]'),
+    spectrumView: root.querySelector('[data-control="spectrum-view"]'),
     sourceOffset: root.querySelector('[data-control="source-offset"]'),
     detectorAngle: root.querySelector('[data-control="detector-angle"]'),
   };
@@ -163,6 +166,8 @@ export function collectInstrumentElements(root) {
     chartModeReadout: root.querySelector("[data-chart-mode]"),
     chartAxisReadout: root.querySelector("[data-chart-axis]"),
     chartFixedReadout: root.querySelector("[data-chart-fixed]"),
+    chartViewReadout: root.querySelector("[data-chart-view]"),
+    chartScaleReadout: root.querySelector("[data-chart-scale]"),
     sampleNote: root.querySelector("[data-sample-note]"),
     excitationBadge: root.querySelector("[data-badge-excitation]"),
     emissionBadge: root.querySelector("[data-badge-emission]"),
@@ -194,6 +199,7 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.responseDetector, percentText(derived.responseChain?.detector?.atEmission));
   setText(readouts.signalHeadroom, headroomText(derived.responseChain?.signal?.saturationRatio));
   setText(elements.sampleNote, derived.spectrum.profile.description);
+  if (controls.spectrumView) controls.spectrumView.value = state.display?.spectrumView || "raw";
 
   setDisabled(controls.emissionWavelength, false);
   setText(elements.emissionLabel, derived.scanMeta.emissionControlLabel);
@@ -217,6 +223,8 @@ export function updateModeChrome(elements, state, derived) {
   setText(elements.chartModeReadout, MODES[state.mode]?.label || "Emission scan / 发射扫描");
   setText(elements.chartAxisReadout, derived.scanMeta.axisRange);
   setText(elements.chartFixedReadout, derived.scanMeta.fixedChannel);
+  setText(elements.chartViewReadout, derived.spectrum.view.label);
+  setText(elements.chartScaleReadout, derived.spectrum.view.scaleLabel);
 }
 
 export function updatePartChrome(elements, state) {

@@ -37,7 +37,7 @@ Rules:
   - NIST, "Relative Intensity Correction Standards for Fluorescence and Raman Spectroscopy": https://www.nist.gov/programs-projects/relative-intensity-correction-standards-fluorescence-and-raman-spectroscopy
   - NISTIR 7915, "Standard Practice for Determining the Relative Spectral Correction Factors for the Emission Signal of Fluorescence Spectrometers": https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=913001
 - Evidence summary: NIST states that fluorescence instruments have unique spectral responsivity, so the apparent shape and intensity of a sample can differ between instruments and over time. NISTIR 7915 describes relative emission correction factors for grating-based fluorescence spectrometers and emphasizes wavelength accuracy and detector linear range.
-- Implementation boundary: Use this to justify detector-response teaching curves, raw/corrected literacy, and "not calibrated" copy. Do not embed NIST correction curves or claim calibration unless a specific public data file and reuse boundary are verified.
+- Implementation boundary: Use this to justify detector-response teaching curves, raw/corrected literacy, and "not calibrated" copy. The response-normalized teaching view divides the raw synthetic trace by normalized teaching source, detector, and geometry response cues to demonstrate correction logic; it is not a calibrated correction and does not embed NIST correction curves. Do not claim calibration unless a specific public data file and reuse boundary are verified.
 - Code / UI touched: `instrument/sim/physics/detector.mjs`, `instrument/sim/physics/derive.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/data/manifest.json`, `DATA_SOURCES.md`.
 - Confidence: high
 

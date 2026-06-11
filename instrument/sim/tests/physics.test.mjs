@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createInstrumentState, gratingWavelengthForPart, setGeometryOffsets, setGratingWavelength } from "../state.mjs";
+import {
+  applyControlValue,
+  createInstrumentState,
+  gratingWavelengthForPart,
+  setGeometryOffsets,
+  setGratingWavelength,
+} from "../state.mjs";
 import { deriveInstrument } from "../physics/derive.mjs";
 import {
   MONOCHROMATOR_GRATING_ANGLE_RANGE,
@@ -41,6 +47,15 @@ test("default grating wavelengths match the teaching channels", () => {
 
   assert.equal(Math.round(derived.excitationNm), 365);
   assert.equal(Math.round(derived.emissionNm), 520);
+});
+
+test("default spectrum view is raw synthetic", () => {
+  const state = createInstrumentState();
+  const derived = deriveInstrument(state);
+
+  assert.equal(state.display.spectrumView, "raw");
+  assert.equal(derived.spectrum.view.id, "raw");
+  assert.match(derived.spectrum.view.scaleLabel, /not calibrated/i);
 });
 
 test("derived state exposes a bounded instrument response chain", () => {
@@ -96,6 +111,35 @@ test("detector response affects both response chain and synthetic trace", () => 
   const flatTotal = flatDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0);
   const pmtTotal = pmtDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0);
   assert.ok(flatTotal > pmtTotal);
+});
+
+test("response-normalized teaching view preserves raw trace and changes displayed spectrum", () => {
+  const rawState = createInstrumentState();
+  rawState.source.id = "led-405";
+  rawState.detector.id = "silicon-like";
+  const raw = deriveInstrument(rawState);
+
+  const normalizedState = createInstrumentState();
+  normalizedState.source.id = "led-405";
+  normalizedState.detector.id = "silicon-like";
+  applyControlValue(normalizedState, "spectrum-view", "response-normalized");
+  const normalized = deriveInstrument(normalizedState);
+
+  assert.equal(normalized.spectrum.view.id, "response-normalized");
+  assert.match(normalized.spectrum.view.scaleLabel, /teaching/i);
+  assert.equal(normalized.spectrum.points.length, raw.spectrum.points.length);
+  assert.equal(normalized.spectrum.rawPeak, raw.spectrum.rawPeak);
+
+  const changedPoint = normalized.spectrum.points.find((point, index) => {
+    assert.equal(point.rawY, raw.spectrum.points[index].rawY);
+    assert.equal(point.responseNormalizedY >= point.rawY, true);
+    return Math.abs(point.y - raw.spectrum.points[index].y) > 1e-6;
+  });
+
+  assert.ok(changedPoint, "expected at least one displayed point to change after response normalization");
+
+  const labels = normalized.diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(labels.includes("Response-normalized view / 响应归一化视图"));
 });
 
 test("geometry mode affects both response chain and synthetic trace without moving wavelengths", () => {

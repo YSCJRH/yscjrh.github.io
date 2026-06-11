@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=geometry-sync-20260611").catch((error) => {
+        import("./instrument.js?v=spectrum-view-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -501,6 +501,15 @@
                       </p>
 
                     <label class="instrument-control instrument-select-control">
+                      <span>Spectrum view / 谱图视图</span>
+                      <select data-control="spectrum-view">
+                        <option value="raw">Raw synthetic / 原始合成</option>
+                        <option value="response-normalized">Response-normalized teaching / 响应归一化教学</option>
+                      </select>
+                      <small class="control-help">Response-normalized view divides out selected teaching source, detector, and geometry cues; it is not a calibrated correction. 响应归一化视图会按当前教学光源、检测器和几何提示做归一化；它不是校准校正。</small>
+                    </label>
+
+                    <label class="instrument-control instrument-select-control">
                       <span>Source type / 光源类型</span>
                       <select data-control="source-type">
                         <option value="xenon-like">Broadband teaching source / 宽带教学光源</option>
@@ -628,8 +637,12 @@
                       <strong data-chart-fixed>Excitation 365 nm / 激发 365 nm</strong>
                     </p>
                     <p>
+                      <span>View / 视图</span>
+                      <strong data-chart-view>Raw synthetic / 原始合成</strong>
+                    </p>
+                    <p>
                       <span>Scale / 标度</span>
-                      <strong>fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准</strong>
+                      <strong data-chart-scale>fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准</strong>
                     </p>
                   </div>
 

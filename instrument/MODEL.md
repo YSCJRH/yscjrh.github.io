@@ -47,6 +47,8 @@ The 2026-06-11 response-chain scaffold is now connected to derived state, diagno
 
 The main workbench now labels the compact alignment/geometry readout explicitly and uses `responseChain.geometry.collectionFactor` for the geometry value when the response chain is available. Detector-arm offset diagnostics are separately labeled as local arm perturbations rather than as the geometry mode itself. The remaining detector-arm helper is exposed as `derived.detectorArm`, so code-level naming no longer presents the local arm response as the geometry-mode collection factor.
 
+The spectrum display now has two teaching views. `raw` remains the default and plots the raw synthetic trace. `response-normalized` keeps the same `rawY` values in each point, then divides the displayed curve by bounded teaching source, detector, and geometry response cues. This is correction literacy only: it shows why instrument response matters, but it is not a NIST-style corrected spectrum, not a calibrated correction, and not a quantitative comparison tool.
+
 ## Noise, Headroom, And Instrument Function Boundaries
 
 The current trace uses deterministic noise in `spectrum.mjs`, not unseeded random noise. The seed is derived from the selected excitation/emission channels, teaching bandpass, and integration time so the same control state produces the same visible perturbation. This keeps the browser demo reproducible and testable. It is a visual teaching perturbation only; it is not a detector-specific shot-noise, read-noise, dark-current, SNR, limit-of-detection, or photon-counting model.

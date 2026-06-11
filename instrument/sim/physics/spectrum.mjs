@@ -3,7 +3,7 @@ import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-202606
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=sample-boundary-20260611";
+import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=spectrum-view-20260611";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 
@@ -31,6 +31,26 @@ function spectralResponseForPoint(mode, x, state, physics) {
     source: evaluateSourceSpectrum(sourceId, sourceWavelengthNm),
     detector: evaluateDetectorResponse(detectorId, detectorWavelengthNm),
   };
+}
+
+function spectrumViewForState(state) {
+  return (
+    SPECTRUM_VIEW_OPTIONS.find((option) => option.id === state.display?.spectrumView) ||
+    SPECTRUM_VIEW_OPTIONS[0]
+  );
+}
+
+function responseNormalizerForPoint(mode, x, state, physics, responseChain) {
+  const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+  const source = mode === "excitation"
+    ? spectralResponse.source
+    : responseChain?.source?.atExcitation ?? spectralResponse.source;
+  const detector = mode === "emission"
+    ? spectralResponse.detector
+    : responseChain?.detector?.atEmission ?? spectralResponse.detector;
+  const collection = responseChain?.geometry?.collectionFactor ?? physics.detectorArm.collectionFactor;
+
+  return clamp(source * detector * collection, 0.22, 1);
 }
 
 function gainForState(mode, x, state, physics, profile, responseChain) {
@@ -165,6 +185,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
 
 export function generateSpectrum(state, physics, responseChain = null) {
   const profile = SAMPLE_PROFILES[state.sample.preset] || SAMPLE_PROFILES["low-background"];
+  const view = spectrumViewForState(state);
   const ranges = {
     emission: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
     excitation: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
@@ -183,20 +204,29 @@ export function generateSpectrum(state, physics, responseChain = null) {
     const progress = index / (count - 1);
     const x = min + (max - min) * progress;
     const rawY = singlePointRawY ?? clamp(calculatePoint(state.mode, x, index, state, physics, profile, responseChain), 0, FIXED_Y_SCALE_MAX);
+    const responseNormalizer = responseNormalizerForPoint(state.mode, x, state, physics, responseChain);
+    const responseNormalizedY = clamp(rawY / responseNormalizer, 0, FIXED_Y_SCALE_MAX);
+    const displayY = view.id === "response-normalized" ? responseNormalizedY : rawY;
     points.push({
       x,
-      y: rawY / FIXED_Y_SCALE_MAX,
+      y: displayY / FIXED_Y_SCALE_MAX,
       rawY,
+      responseNormalizedY,
     });
   }
 
-  const peak = Math.max(...points.map((point) => point.rawY), 0);
+  const rawPeak = Math.max(...points.map((point) => point.rawY), 0);
+  const responseNormalizedPeak = Math.max(...points.map((point) => point.responseNormalizedY), 0);
+  const peak = view.id === "response-normalized" ? responseNormalizedPeak : rawPeak;
 
   return {
     min,
     max,
     points,
     peak,
+    rawPeak,
+    responseNormalizedPeak,
+    view,
     yScaleMax: FIXED_Y_SCALE_MAX,
     profile,
   };

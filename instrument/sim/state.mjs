@@ -14,6 +14,21 @@ export { DETECTOR_PRESET_OPTIONS, GEOMETRY_PRESET_OPTIONS, SAMPLE_PRESET_OPTIONS
 
 export { clamp };
 
+export const SPECTRUM_VIEW_OPTIONS = Object.freeze([
+  {
+    id: "raw",
+    label: "Raw synthetic / 原始合成",
+    scaleLabel: "fixed synthetic a.u. / not calibrated / 固定合成强度单位，未校准",
+  },
+  {
+    id: "response-normalized",
+    label: "Response-normalized teaching / 响应归一化教学",
+    scaleLabel: "teaching normalized a.u. / not calibrated / 教学归一化强度单位，未校准",
+  },
+]);
+
+const SPECTRUM_VIEW_IDS = new Set(SPECTRUM_VIEW_OPTIONS.map((option) => option.id));
+
 export const MODES = Object.freeze({
   emission: {
     label: "Emission scan / 发射扫描",
@@ -110,6 +125,9 @@ export function createInstrumentState() {
     geometry: {
       id: "right-angle-90",
     },
+    display: {
+      spectrumView: "raw",
+    },
     integrationTimeMs: 200,
   };
 }
@@ -154,6 +172,9 @@ export function applyControlValue(state, controlName, rawValue) {
     case "geometry-mode":
       state.geometry ||= {};
       state.geometry.id = String(rawValue || "right-angle-90");
+      break;
+    case "spectrum-view":
+      setSpectrumView(state, rawValue);
       break;
     default:
       break;
@@ -203,6 +224,11 @@ export function setGratingWavelength(state, part, wavelengthNm) {
 
   const clamped = clamp(numeric, MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm);
   setGratingAngle(state, part, gratingAngleFromWavelength(clamped));
+}
+
+export function setSpectrumView(state, viewId) {
+  state.display ||= {};
+  state.display.spectrumView = SPECTRUM_VIEW_IDS.has(String(viewId)) ? String(viewId) : "raw";
 }
 
 export function gratingWavelengthForPart(state, part) {

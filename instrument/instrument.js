@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=geometry-sync-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=sample-boundary-20260611";
+} from "./sim/state.mjs?v=spectrum-view-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=spectrum-view-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=geometry-sync-20260611";
+} from "./sim/ui/spectrum.mjs?v=spectrum-view-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -82,6 +82,7 @@ if (root) {
     if (controls.sourceType) controls.sourceType.value = state.source.id;
     if (controls.detectorType) controls.detectorType.value = state.detector.id;
     if (controls.geometryMode) controls.geometryMode.value = state.geometry?.id || "right-angle-90";
+    if (controls.spectrumView) controls.spectrumView.value = state.display?.spectrumView || "raw";
     if (controls.sourceOffset) controls.sourceOffset.value = String(state.source.offsetUm);
     if (controls.detectorAngle) controls.detectorAngle.value = String(state.detector.angleDeg);
   }
