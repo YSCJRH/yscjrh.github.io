@@ -53,6 +53,8 @@ The spectrum display now has two teaching views. `raw` remains the default and p
 
 The current trace uses deterministic noise in `spectrum.mjs`, not unseeded random noise. The seed is derived from the selected excitation/emission channels, teaching bandpass, and integration time so the same control state produces the same visible perturbation. This keeps the browser demo reproducible and testable. It is a visual teaching perturbation only; it is not a detector-specific shot-noise, read-noise, dark-current, SNR, limit-of-detection, or photon-counting model.
 
+The advanced display toggles can hide the deterministic noise cue and the conceptual scatter/background artifact cue from the plotted synthetic trace. These are display controls for teaching clarity. They do not imply a real noise-free measurement, a calibrated artifact subtraction, or a change to source-derived examples.
+
 `composeRawSignal()` uses a compact multiplicative response chain plus baseline/background terms to produce a raw synthetic intensity and a saturation/headroom cue. The cue warns that the plotted trace is near the fixed teaching display scale. It must not be read as a measured detector linear range or real saturation threshold.
 
 `instrumentFunction.mjs` uses a Gaussian instrument-function weighting as a teaching convolution. Wider slit settings broaden features and lower narrow-peak height in the synthetic trace. The Gaussian choice and the slit-width-to-FWHM mapping are not a measured monochromator line-spread function, not a wavelength-accuracy check, and not a manufacturer-specific bandpass model.
@@ -111,6 +113,8 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/sample-data.test.mjs`: 2 tests passed after adding sample preset `controlBinding`, `evidenceKey`, and bilingual not-measured boundary metadata.
 - `node --test instrument/sim/tests/ui-contract.test.mjs`: 14 tests passed after synchronizing source, detector, and sample preset select options from shared runtime data while preserving no-JS fallback order.
 - `node --test instrument/sim/tests/ui-contract.test.mjs`: 14 tests passed after extending shared preset synchronization to geometry mode and aligning the runtime geometry label with the no-JS fallback.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs`: 61 tests passed after adding deterministic noise and conceptual artifact display toggles.
+- Local Chrome DevTools Protocol browser check passed for the advanced display toggles: disabling both cues changed the synthetic trace, showed the paired hidden-cue diagnostics, and kept the WebGL status live region active.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.

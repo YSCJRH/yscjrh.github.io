@@ -5746,6 +5746,50 @@ section[id] {
   opacity: 0.48;
 }
 
+.instrument-toggle-grid {
+  display: grid;
+  gap: 0.48rem;
+}
+
+.instrument-toggle-control {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.58rem;
+  align-items: start;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.72rem;
+  padding: 0.58rem 0.64rem;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.instrument-toggle-control input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.12rem;
+  accent-color: #7df5df;
+}
+
+.instrument-toggle-control span,
+.instrument-toggle-control strong,
+.instrument-toggle-control small {
+  display: block;
+}
+
+.instrument-toggle-control strong {
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.instrument-toggle-control small {
+  margin-top: 0.18rem;
+  color: rgba(176, 186, 206, 0.72);
+  font-size: 0.7rem;
+  font-weight: 650;
+  line-height: 1.32;
+}
+
 .instrument-select-control select {
   width: 100%;
   min-height: 2.7rem;

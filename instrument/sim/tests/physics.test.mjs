@@ -54,6 +54,8 @@ test("default spectrum view is raw synthetic", () => {
   const derived = deriveInstrument(state);
 
   assert.equal(state.display.spectrumView, "raw");
+  assert.equal(state.display.showNoise, true);
+  assert.equal(state.display.showArtifacts, true);
   assert.equal(derived.spectrum.view.id, "raw");
   assert.match(derived.spectrum.view.scaleLabel, /not calibrated/i);
 });
@@ -142,6 +144,42 @@ test("response-normalized teaching view preserves raw trace and changes displaye
   assert.ok(labels.includes("Response-normalized view / 响应归一化视图"));
 });
 
+test("noise and artifact display toggles change the synthetic trace without moving wavelengths", () => {
+  const baseline = createInstrumentState();
+  baseline.sample.preset = "scattering";
+  baseline.geometry.id = "transmission";
+  const baselineDerived = deriveInstrument(baseline);
+
+  const quiet = createInstrumentState();
+  quiet.sample.preset = "scattering";
+  quiet.geometry.id = "transmission";
+  applyControlValue(quiet, "show-noise", false);
+  const quietDerived = deriveInstrument(quiet);
+
+  const clean = createInstrumentState();
+  clean.sample.preset = "scattering";
+  clean.geometry.id = "transmission";
+  applyControlValue(clean, "show-artifacts", false);
+  const cleanDerived = deriveInstrument(clean);
+
+  assert.equal(quiet.display.showNoise, false);
+  assert.equal(clean.display.showArtifacts, false);
+  assert.equal(Math.round(baselineDerived.excitationNm), Math.round(quietDerived.excitationNm));
+  assert.equal(Math.round(baselineDerived.emissionNm), Math.round(cleanDerived.emissionNm));
+  assert.ok(
+    baselineDerived.spectrum.points.some((point, index) => Math.abs(point.rawY - quietDerived.spectrum.points[index].rawY) > 1e-6),
+    "turning off deterministic noise should change at least one plotted raw point"
+  );
+  assert.ok(
+    baselineDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0) >
+      cleanDerived.spectrum.points.reduce((total, point) => total + point.rawY, 0),
+    "turning off artifact cues should reduce the scattering/background contribution"
+  );
+
+  assert.ok(quietDerived.diagnostics.some((item) => item.label === "Noise cue hidden / 噪声提示隐藏"));
+  assert.ok(cleanDerived.diagnostics.some((item) => item.label === "Artifact cues hidden / 伪影提示隐藏"));
+});
+
 test("geometry mode affects both response chain and synthetic trace without moving wavelengths", () => {
   const rightAngle = createInstrumentState();
   rightAngle.geometry.id = "right-angle-90";
@@ -218,6 +256,13 @@ test("diagnostics surface response-chain consequences", () => {
   setGratingWavelength(secondOrder, "emission", 730);
   const secondOrderLabels = deriveInstrument(secondOrder).diagnostics.map((diagnostic) => diagnostic.label);
   assert.ok(secondOrderLabels.includes("Artifact risk / 伪影风险"));
+
+  const hiddenArtifactTrace = createInstrumentState();
+  setGratingWavelength(hiddenArtifactTrace, "emission", 730);
+  applyControlValue(hiddenArtifactTrace, "show-artifacts", false);
+  const hiddenArtifactLabels = deriveInstrument(hiddenArtifactTrace).diagnostics.map((diagnostic) => diagnostic.label);
+  assert.ok(hiddenArtifactLabels.includes("Artifact risk / 伪影风险"));
+  assert.ok(hiddenArtifactLabels.includes("Artifact cues hidden / 伪影提示隐藏"));
 
   const highTrace = createInstrumentState();
   highTrace.integrationTimeMs = 1000;
@@ -335,6 +380,14 @@ test("single-point monitor is anchored to the response-chain signal", () => {
   derived.spectrum.points.forEach((point) => {
     assert.equal(point.rawY, expectedRaw);
     assert.equal(point.y, expectedRaw / derived.spectrum.yScaleMax);
+  });
+
+  applyControlValue(state, "show-artifacts", false);
+  const hiddenArtifactTrace = deriveInstrument(state);
+  assert.equal(hiddenArtifactTrace.spectrum.peak, expectedRaw);
+  hiddenArtifactTrace.spectrum.points.forEach((point) => {
+    assert.equal(point.rawY, expectedRaw);
+    assert.equal(point.y, expectedRaw / hiddenArtifactTrace.spectrum.yScaleMax);
   });
 });
 

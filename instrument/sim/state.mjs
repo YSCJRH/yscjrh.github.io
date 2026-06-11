@@ -127,6 +127,8 @@ export function createInstrumentState() {
     },
     display: {
       spectrumView: "raw",
+      showNoise: true,
+      showArtifacts: true,
     },
     integrationTimeMs: 200,
   };
@@ -175,6 +177,12 @@ export function applyControlValue(state, controlName, rawValue) {
       break;
     case "spectrum-view":
       setSpectrumView(state, rawValue);
+      break;
+    case "show-noise":
+      setDisplayToggle(state, "showNoise", rawValue);
+      break;
+    case "show-artifacts":
+      setDisplayToggle(state, "showArtifacts", rawValue);
       break;
     default:
       break;
@@ -229,6 +237,21 @@ export function setGratingWavelength(state, part, wavelengthNm) {
 export function setSpectrumView(state, viewId) {
   state.display ||= {};
   state.display.spectrumView = SPECTRUM_VIEW_IDS.has(String(viewId)) ? String(viewId) : "raw";
+}
+
+export function setDisplayToggle(state, key, rawValue) {
+  if (key !== "showNoise" && key !== "showArtifacts") {
+    return;
+  }
+
+  state.display ||= {};
+  if (typeof rawValue === "boolean") {
+    state.display[key] = rawValue;
+    return;
+  }
+
+  const value = String(rawValue).toLowerCase();
+  state.display[key] = !(value === "false" || value === "0" || value === "off");
 }
 
 export function gratingWavelengthForPart(state, part) {

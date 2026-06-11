@@ -3,7 +3,7 @@ import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-202606
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=spectrum-view-20260611";
+import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=display-toggles-20260611";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 
@@ -19,6 +19,14 @@ function deterministicNoise(index, seed) {
 
 function pointNoise(index, derivedSeed, profile) {
   return deterministicNoise(index, derivedSeed) * profile.noise;
+}
+
+function isNoiseVisible(state) {
+  return state.display?.showNoise !== false;
+}
+
+function areArtifactCuesVisible(state) {
+  return state.display?.showArtifacts !== false;
 }
 
 function spectralResponseForPoint(mode, x, state, physics) {
@@ -70,13 +78,17 @@ function gainForState(mode, x, state, physics, profile, responseChain) {
 }
 
 function calculatePoint(mode, x, index, state, physics, profile, responseChain) {
+  const showNoise = isNoiseVisible(state);
+  const showArtifacts = areArtifactCuesVisible(state);
   const seed =
     physics.excitationNm * 0.011 +
     physics.emissionNm * 0.017 +
     physics.bandpassNm +
     state.integrationTimeMs * 0.001;
-  const noise = pointNoise(index, seed, profile);
-  const backgroundRisk = responseChain?.geometry?.backgroundRisk ?? physics.detectorArm.backgroundRisk;
+  const noise = showNoise ? pointNoise(index, seed, profile) : 0;
+  const backgroundRisk = showArtifacts
+    ? responseChain?.geometry?.backgroundRisk ?? physics.detectorArm.backgroundRisk
+    : 0;
   const baseline =
     profile.baseline +
     physics.bandpassNm * 0.002 +
@@ -84,25 +96,28 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
 
   if (profile.kind === "blank") {
     if (mode === "emission") {
-      return baseline + gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * 0.032 + noise * 0.7;
+      const scatter = showArtifacts ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * 0.032 : 0;
+      return baseline + scatter + noise * 0.7;
     }
 
     if (mode === "excitation") {
-      return baseline + gaussian(x, physics.emissionNm - 28, 32 + physics.bandpassNm) * 0.024 + noise * 0.7;
+      const scatter = showArtifacts ? gaussian(x, physics.emissionNm - 28, 32 + physics.bandpassNm) * 0.024 : 0;
+      return baseline + scatter + noise * 0.7;
     }
 
     if (mode === "single") {
       return baseline;
     }
 
-    return baseline + Math.sin(x / 34) * 0.004 + (x / 120) * 0.006 + noise * 0.6;
+    const drift = showArtifacts ? Math.sin(x / 34) * 0.004 + (x / 120) * 0.006 : 0;
+    return baseline + drift + noise * 0.6;
   }
 
   if (mode === "emission") {
     const shiftedPeak = profile.emissionPeak + (physics.excitationNm - profile.excitationPeak) * 0.05;
     const fluorescence = gaussian(x, shiftedPeak, profile.emissionWidth + physics.bandpassNm * 2.2);
     const scatter =
-      profile.kind === "scattering"
+      showArtifacts && profile.kind === "scattering"
         ? gaussian(x, physics.excitationNm + 18, 18 + physics.bandpassNm) * (0.13 + backgroundRisk * 0.25)
         : 0;
     const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
@@ -131,7 +146,7 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
     );
     const excitation = gaussian(x, profile.excitationPeak, profile.excitationWidth + physics.bandpassNm * 1.35);
     const scatter =
-      profile.kind === "scattering"
+      showArtifacts && profile.kind === "scattering"
         ? gaussian(x, physics.emissionNm - 24, 26 + physics.bandpassNm) * (0.1 + backgroundRisk * 0.2)
         : 0;
     const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
@@ -186,6 +201,10 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
 export function generateSpectrum(state, physics, responseChain = null) {
   const profile = SAMPLE_PROFILES[state.sample.preset] || SAMPLE_PROFILES["low-background"];
   const view = spectrumViewForState(state);
+  const display = {
+    showNoise: isNoiseVisible(state),
+    showArtifacts: areArtifactCuesVisible(state),
+  };
   const ranges = {
     emission: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
     excitation: [MONOCHROMATOR_WAVELENGTH_RANGE.minNm, MONOCHROMATOR_WAVELENGTH_RANGE.maxNm],
@@ -227,6 +246,7 @@ export function generateSpectrum(state, physics, responseChain = null) {
     rawPeak,
     responseNormalizedPeak,
     view,
+    display,
     yScaleMax: FIXED_Y_SCALE_MAX,
     profile,
   };

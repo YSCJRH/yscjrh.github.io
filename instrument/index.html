@@ -34,7 +34,7 @@
     <meta name="theme-color" content="#05070d">
     <link rel="canonical" href="https://yscjrh.github.io/instrument/">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../styles.css?v=language-mode-20260611">
+    <link rel="stylesheet" href="../styles.css?v=display-toggles-20260611">
     <script src="../script.js" defer></script>
     <script>
       (() => {
@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=spectrum-view-20260611").catch((error) => {
+        import("./instrument.js?v=display-toggles-20260611").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const status = document.querySelector("[data-webgl-status]");
@@ -196,7 +196,7 @@
                   <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
                     <button type="button" data-action="reset-view">Reset view / 重置视角</button>
                     <button type="button" data-action="reset-geometry">Reset alignment / 重置对准</button>
-                    <span data-webgl-status>2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。</span>
+                    <span data-webgl-status aria-live="polite" aria-atomic="true">2D fallback active; optional 3D model is off. / 二维备用图已启用；可选 3D 模型未开启。</span>
                   </div>
                 </div>
 
@@ -508,6 +508,23 @@
                       </select>
                       <small class="control-help">Response-normalized view divides out selected teaching source, detector, and geometry cues; it is not a calibrated correction. 响应归一化视图会按当前教学光源、检测器和几何提示做归一化；它不是校准校正。</small>
                     </label>
+
+                    <div class="instrument-toggle-grid" aria-label="Synthetic trace display cues / 合成谱图显示提示">
+                      <label class="instrument-toggle-control">
+                        <input data-control="show-noise" type="checkbox" checked>
+                        <span>
+                          <strong>Noise cue / 噪声提示</strong>
+                          <small>Show deterministic teaching perturbation; not a detector-noise model. 显示确定性教学扰动；不是检测器噪声模型。</small>
+                        </span>
+                      </label>
+                      <label class="instrument-toggle-control">
+                        <input data-control="show-artifacts" type="checkbox" checked>
+                        <span>
+                          <strong>Artifact cue / 伪影提示</strong>
+                          <small>Show conceptual scatter/background cues; not calibrated artifact curves. 显示概念散射与背景提示；不是校准伪影曲线。</small>
+                        </span>
+                      </label>
+                    </div>
 
                     <label class="instrument-control instrument-select-control">
                       <span>Source type / 光源类型</span>

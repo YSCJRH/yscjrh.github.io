@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=spectrum-view-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=spectrum-view-20260611";
+} from "./sim/state.mjs?v=display-toggles-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=display-toggles-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=spectrum-view-20260611";
+} from "./sim/ui/spectrum.mjs?v=display-toggles-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -83,6 +83,8 @@ if (root) {
     if (controls.detectorType) controls.detectorType.value = state.detector.id;
     if (controls.geometryMode) controls.geometryMode.value = state.geometry?.id || "right-angle-90";
     if (controls.spectrumView) controls.spectrumView.value = state.display?.spectrumView || "raw";
+    if (controls.showNoise) controls.showNoise.checked = state.display?.showNoise !== false;
+    if (controls.showArtifacts) controls.showArtifacts.checked = state.display?.showArtifacts !== false;
     if (controls.sourceOffset) controls.sourceOffset.value = String(state.source.offsetUm);
     if (controls.detectorAngle) controls.detectorAngle.value = String(state.detector.angleDeg);
   }
@@ -257,7 +259,8 @@ if (root) {
     }
 
     const handler = () => {
-      applyControlValue(state, control.dataset.control, control.value);
+      const value = control.type === "checkbox" ? control.checked : control.value;
+      applyControlValue(state, control.dataset.control, value);
       applyState();
     };
 

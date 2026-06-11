@@ -6,7 +6,7 @@ import {
   SAMPLE_PRESET_OPTIONS,
   SPECTRUM_VIEW_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=spectrum-view-20260611";
+} from "../state.mjs?v=display-toggles-20260611";
 
 const chart = {
   left: 54,
@@ -118,6 +118,8 @@ export function collectInstrumentElements(root) {
     detectorType: root.querySelector('[data-control="detector-type"]'),
     geometryMode: root.querySelector('[data-control="geometry-mode"]'),
     spectrumView: root.querySelector('[data-control="spectrum-view"]'),
+    showNoise: root.querySelector('[data-control="show-noise"]'),
+    showArtifacts: root.querySelector('[data-control="show-artifacts"]'),
     sourceOffset: root.querySelector('[data-control="source-offset"]'),
     detectorAngle: root.querySelector('[data-control="detector-angle"]'),
   };
@@ -200,6 +202,8 @@ export function updateControlsFromState(elements, state, derived) {
   setText(readouts.signalHeadroom, headroomText(derived.responseChain?.signal?.saturationRatio));
   setText(elements.sampleNote, derived.spectrum.profile.description);
   if (controls.spectrumView) controls.spectrumView.value = state.display?.spectrumView || "raw";
+  if (controls.showNoise) controls.showNoise.checked = state.display?.showNoise !== false;
+  if (controls.showArtifacts) controls.showArtifacts.checked = state.display?.showArtifacts !== false;
 
   setDisabled(controls.emissionWavelength, false);
   setText(elements.emissionLabel, derived.scanMeta.emissionControlLabel);

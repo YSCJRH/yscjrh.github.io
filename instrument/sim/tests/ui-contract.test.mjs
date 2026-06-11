@@ -50,7 +50,7 @@ test("advanced response-chain controls live in the simulator workbench", () => {
   assert.ok(advancedStart > 0);
   assert.ok(sourceDataStart > advancedStart);
 
-  for (const controlName of ["source-type", "detector-type", "geometry-mode", "spectrum-view"]) {
+  for (const controlName of ["source-type", "detector-type", "geometry-mode", "spectrum-view", "show-noise", "show-artifacts"]) {
     const controlIndex = instrumentHtml.indexOf(`data-control="${controlName}"`);
     assert.ok(controlIndex > advancedStart, `${controlName} should be inside the advanced simulator controls`);
     assert.ok(controlIndex < sourceDataStart, `${controlName} must stay separate from source-derived examples`);
@@ -98,10 +98,14 @@ test("instrument element collection includes advanced response-chain controls", 
   assert.equal(elements.controls.detectorType, null);
   assert.equal(elements.controls.geometryMode, null);
   assert.equal(elements.controls.spectrumView, null);
+  assert.equal(elements.controls.showNoise, null);
+  assert.equal(elements.controls.showArtifacts, null);
   assert.ok(selectors.includes('[data-control="source-type"]'));
   assert.ok(selectors.includes('[data-control="detector-type"]'));
   assert.ok(selectors.includes('[data-control="geometry-mode"]'));
   assert.ok(selectors.includes('[data-control="spectrum-view"]'));
+  assert.ok(selectors.includes('[data-control="show-noise"]'));
+  assert.ok(selectors.includes('[data-control="show-artifacts"]'));
 });
 
 test("sample preset select can be synchronized from the shared preset options", () => {
@@ -213,8 +217,10 @@ test("3D scene is optional with an honest initial fallback state", () => {
   const enableMatches = instrumentHtml.match(/data-action="enable-3d"/g) || [];
   assert.equal(enableMatches.length, 1, "instrument page should expose one explicit 3D enable button");
 
-  const statusMatch = instrumentHtml.match(/<span data-webgl-status>([\s\S]*?)<\/span>/);
+  const statusMatch = instrumentHtml.match(/<span[^>]*data-webgl-status[^>]*>([\s\S]*?)<\/span>/);
   assert.ok(statusMatch, "instrument page should include a WebGL status element");
+  assert.match(statusMatch[0], /aria-live="polite"/);
+  assert.match(statusMatch[0], /aria-atomic="true"/);
   assert.doesNotMatch(statusMatch[1], /Loading|正在加载/);
   assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
 });
@@ -410,6 +416,21 @@ test("workbench exposes raw and response-normalized spectrum view controls", () 
   ]);
   assert.match(instrumentHtml, /data-chart-scale/);
   assert.match(instrumentHtml, /not a calibrated correction|不是校准校正/);
+});
+
+test("workbench exposes noise and artifact teaching toggles", () => {
+  const sourceDataStart = instrumentHtml.indexOf("data-source-data-panel");
+  const noiseIndex = instrumentHtml.indexOf('data-control="show-noise"');
+  const artifactsIndex = instrumentHtml.indexOf('data-control="show-artifacts"');
+
+  assert.ok(noiseIndex > 0, "noise display toggle should exist in the simulator workbench");
+  assert.ok(artifactsIndex > 0, "artifact display toggle should exist in the simulator workbench");
+  assert.ok(noiseIndex < sourceDataStart, "noise toggle must stay separate from source-derived examples");
+  assert.ok(artifactsIndex < sourceDataStart, "artifact toggle must stay separate from source-derived examples");
+  assert.match(instrumentHtml, /Noise cue \/ 噪声提示/);
+  assert.match(instrumentHtml, /Artifact cue \/ 伪影提示/);
+  assert.match(instrumentHtml, /deterministic teaching perturbation|确定性教学扰动/);
+  assert.match(instrumentHtml, /conceptual scatter\/background cues|概念散射与背景提示/);
 });
 
 test("dynamic workbench status regions announce model changes accessibly", () => {

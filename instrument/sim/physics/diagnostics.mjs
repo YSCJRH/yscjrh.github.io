@@ -1,5 +1,6 @@
 export function generateDiagnostics(state, derived) {
   const diagnostics = [];
+  const displayDiagnostics = [];
 
   if (state.mode === "emission") {
     diagnostics.push({
@@ -37,6 +38,24 @@ export function generateDiagnostics(state, derived) {
       evidenceKey: "ILAB-003",
       label: "Response-normalized view / 响应归一化视图",
       text: "The chart divides the raw synthetic trace by selected teaching source, detector, and geometry response cues. It demonstrates correction logic, not calibrated correction. / 谱图按当前教学光源、检测器和几何响应提示对原始合成谱线做归一化，用于展示校正思路，不是校准校正。",
+    });
+  }
+
+  if (state.display?.showNoise === false) {
+    displayDiagnostics.push({
+      tone: "info",
+      evidenceKey: "ILAB-010",
+      label: "Noise cue hidden / 噪声提示隐藏",
+      text: "The deterministic teaching perturbation is hidden from the chart. This does not create a real noise-free measurement. / 谱图已隐藏确定性教学扰动；这不代表真实无噪声测量。",
+    });
+  }
+
+  if (state.display?.showArtifacts === false) {
+    displayDiagnostics.push({
+      tone: "info",
+      evidenceKey: "ILAB-007",
+      label: "Artifact cues hidden / 伪影提示隐藏",
+      text: "Conceptual scatter and background cues are hidden from the synthetic trace. Risk diagnostics remain teaching boundaries, not calibrated artifact curves. / 合成谱线已隐藏概念散射与背景提示；风险诊断仍是教学边界，不是校准伪影曲线。",
     });
   }
 
@@ -134,5 +153,7 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
-  return diagnostics.slice(0, 5);
+  const warnings = diagnostics.filter((diagnostic) => diagnostic.tone === "warn");
+  const notes = diagnostics.filter((diagnostic) => diagnostic.tone !== "warn");
+  return [...warnings, ...notes, ...displayDiagnostics].slice(0, 5);
 }
