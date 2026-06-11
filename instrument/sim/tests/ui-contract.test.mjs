@@ -43,3 +43,13 @@ test("instrument element collection includes advanced response-chain controls", 
   assert.ok(selectors.includes('[data-control="detector-type"]'));
   assert.ok(selectors.includes('[data-control="geometry-mode"]'));
 });
+
+test("3D scene is optional with an honest initial fallback state", () => {
+  const enableMatches = instrumentHtml.match(/data-action="enable-3d"/g) || [];
+  assert.equal(enableMatches.length, 1, "instrument page should expose one explicit 3D enable button");
+
+  const statusMatch = instrumentHtml.match(/<span data-webgl-status>([\s\S]*?)<\/span>/);
+  assert.ok(statusMatch, "instrument page should include a WebGL status element");
+  assert.doesNotMatch(statusMatch[1], /Loading|正在加载/);
+  assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
+});
