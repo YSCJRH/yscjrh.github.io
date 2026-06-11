@@ -1173,3 +1173,30 @@
   - GitHub Pages publication is verified after the commit is pushed because the live site updates asynchronously.
 - Blockers:
   - None.
+
+## Instrument preset option synchronization
+- Status: Completed locally; pending commit and publish
+- Trigger:
+  - Continue `refine.md` DoD work on maintainability, source/synthetic separation, and tested UI contracts.
+- Root cause:
+  - Sample preset options were already synchronized from shared runtime data, but source and detector preset options still relied on hand-written HTML order and labels.
+  - This made it possible for physics preset labels or default ordering to drift away from the no-JS fallback and runtime selects.
+- Changes:
+  - Added shared `SOURCE_PRESET_OPTIONS` and `DETECTOR_PRESET_OPTIONS` exports.
+  - Added `syncSimulatorPresetOptions()` so sample, source, and detector selects are synchronized from shared preset data at runtime.
+  - Preserved the current no-JS fallback order: broadband source first and PMT-like detector first.
+  - Added UI contract tests for source/detector runtime synchronization and no-JS fallback parity.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed because `syncSimulatorPresetOptions` was missing and source fallback order was not tied to shared options.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 14/14.
+  - `node --check instrument/instrument.js instrument/sim/state.mjs instrument/sim/physics/source.mjs instrument/sim/physics/detector.mjs instrument/sim/ui/spectrum.mjs instrument/sim/tests/ui-contract.test.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 56/56.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only line-ending normalization warnings.
+  - Local Playwright smoke on `http://127.0.0.1:4173/instrument/?qa=preset-sync` passed using local Chrome: module loaded, `preset-sync-20260611` cache key present, source/detector/sample options matched shared runtime order, default values remained `xenon-like`, `pmt-like-visible`, and `low-background`, horizontal overflow was `0`, and one `h1` was present.
+  - Screenshot saved: `output/playwright/preset-sync-instrument-1366.png`.
+- Remaining non-blocking notes:
+  - This slice adds no new scientific source claim; existing `ILAB-008` placeholder boundary remains the evidence anchor for teaching source and detector presets.
+- Blockers:
+  - None.

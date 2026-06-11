@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import * as spectrumUi from "../ui/spectrum.mjs";
 import { SAMPLE_PRESET_OPTIONS } from "../data/samplePresets.mjs";
+import { DETECTOR_PRESET_OPTIONS } from "../physics/detector.mjs";
+import { SOURCE_PRESET_OPTIONS } from "../physics/source.mjs";
 
 const { collectInstrumentElements, updateControlsFromState, updateDiagnostics } = spectrumUi;
 
@@ -25,6 +27,19 @@ function sampleSelectOptionsFromHtml() {
     match[1],
     match[2].trim(),
   ]);
+}
+
+function selectOptionsFromHtml(controlName) {
+  const selectMatch = instrumentHtml.match(new RegExp(`<select data-control="${controlName}">([\\s\\S]*?)<\\/select>`));
+  assert.ok(selectMatch, `${controlName} select should exist`);
+  return Array.from(selectMatch[1].matchAll(/<option value="([^"]+)">([\s\S]*?)<\/option>/g)).map((match) => [
+    match[1],
+    match[2].trim(),
+  ]);
+}
+
+function optionPairs(options) {
+  return options.map((option) => [option.id, option.label]);
 }
 
 test("advanced response-chain controls live in the simulator workbench", () => {
@@ -114,10 +129,64 @@ test("sample preset select can be synchronized from the shared preset options", 
   );
 });
 
+test("source and detector preset selects can be synchronized from shared preset options", () => {
+  assert.equal(typeof spectrumUi.syncSimulatorPresetOptions, "function");
+  const sourceSelect = {
+    options: [],
+    value: "",
+    textContent: "stale source fallback",
+    append(...nodes) {
+      this.options.push(...nodes);
+    },
+  };
+  const detectorSelect = {
+    options: [],
+    value: "",
+    textContent: "stale detector fallback",
+    append(...nodes) {
+      this.options.push(...nodes);
+    },
+  };
+  const fakeDocument = {
+    createElement(tagName) {
+      assert.equal(tagName, "option");
+      return {
+        value: "",
+        textContent: "",
+      };
+    },
+  };
+
+  spectrumUi.syncSimulatorPresetOptions(
+    { controls: { sourceType: sourceSelect, detectorType: detectorSelect } },
+    fakeDocument
+  );
+
+  assert.deepEqual(
+    sourceSelect.options.map((option) => [option.value, option.textContent]),
+    optionPairs(SOURCE_PRESET_OPTIONS)
+  );
+  assert.deepEqual(
+    detectorSelect.options.map((option) => [option.value, option.textContent]),
+    optionPairs(DETECTOR_PRESET_OPTIONS)
+  );
+});
+
 test("sample preset no-JS fallback options match the shared preset options", () => {
   assert.deepEqual(
     sampleSelectOptionsFromHtml(),
     SAMPLE_PRESET_OPTIONS.map((option) => [option.id, option.label])
+  );
+});
+
+test("source and detector no-JS fallback options match the shared preset options", () => {
+  assert.deepEqual(
+    selectOptionsFromHtml("source-type"),
+    optionPairs(SOURCE_PRESET_OPTIONS)
+  );
+  assert.deepEqual(
+    selectOptionsFromHtml("detector-type"),
+    optionPairs(DETECTOR_PRESET_OPTIONS)
   );
 });
 

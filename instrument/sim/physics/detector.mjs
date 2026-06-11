@@ -36,6 +36,15 @@ export const DETECTOR_PRESETS = Object.freeze({
   },
 });
 
+export const DETECTOR_PRESET_OPTIONS = Object.freeze(
+  ["pmt-like-visible", "silicon-like", "ideal-flat"].map((id) =>
+    Object.freeze({
+      id,
+      label: DETECTOR_PRESETS[id].label,
+    })
+  )
+);
+
 export function evaluateDetectorResponse(detectorId, wavelengthNm) {
   const preset = DETECTOR_PRESETS[detectorId] || DETECTOR_PRESETS["ideal-flat"];
 

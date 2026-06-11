@@ -42,6 +42,15 @@ export const TEACHING_SOURCE_PRESETS = Object.freeze({
   },
 });
 
+export const SOURCE_PRESET_OPTIONS = Object.freeze(
+  ["xenon-like", "ideal-flat", "led-365", "led-405"].map((id) =>
+    Object.freeze({
+      id,
+      label: TEACHING_SOURCE_PRESETS[id].label,
+    })
+  )
+);
+
 export function evaluateSourceSpectrum(sourceId, wavelengthNm) {
   const preset = TEACHING_SOURCE_PRESETS[sourceId] || TEACHING_SOURCE_PRESETS["ideal-flat"];
 

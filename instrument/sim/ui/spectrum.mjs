@@ -1,4 +1,10 @@
-import { MODES, PARTS, SAMPLE_PRESET_OPTIONS } from "../state.mjs?v=sample-boundary-20260611";
+import {
+  DETECTOR_PRESET_OPTIONS,
+  MODES,
+  PARTS,
+  SAMPLE_PRESET_OPTIONS,
+  SOURCE_PRESET_OPTIONS,
+} from "../state.mjs?v=preset-sync-20260611";
 
 const chart = {
   left: 54,
@@ -21,37 +27,46 @@ function setDisabled(element, disabled) {
   element.disabled = disabled;
 }
 
-function sampleOptionPairs(select) {
+function selectOptionPairs(select) {
   return Array.from(select?.options || []).map((option) => [option.value, option.textContent]);
 }
 
-export function syncSamplePresetOptions(elements, documentRef = globalThis.document) {
-  const sampleSelect = elements?.controls?.sample;
-  if (!sampleSelect || !documentRef?.createElement) {
+function syncPresetSelectOptions(select, options, documentRef = globalThis.document) {
+  if (!select || !documentRef?.createElement) {
     return;
   }
 
-  const desiredPairs = SAMPLE_PRESET_OPTIONS.map((option) => [option.id, option.label]);
-  if (JSON.stringify(sampleOptionPairs(sampleSelect)) === JSON.stringify(desiredPairs)) {
+  const desiredPairs = options.map((option) => [option.id, option.label]);
+  if (JSON.stringify(selectOptionPairs(select)) === JSON.stringify(desiredPairs)) {
     return;
   }
 
-  const previousValue = sampleSelect.value;
-  if (Array.isArray(sampleSelect.options)) {
-    sampleSelect.options.length = 0;
+  const previousValue = select.value;
+  if (Array.isArray(select.options)) {
+    select.options.length = 0;
   }
-  sampleSelect.textContent = "";
+  select.textContent = "";
 
-  SAMPLE_PRESET_OPTIONS.forEach((option) => {
+  options.forEach((option) => {
     const node = documentRef.createElement("option");
     node.value = option.id;
     node.textContent = option.label;
-    sampleSelect.append(node);
+    select.append(node);
   });
 
-  sampleSelect.value = SAMPLE_PRESET_OPTIONS.some((option) => option.id === previousValue)
+  select.value = options.some((option) => option.id === previousValue)
     ? previousValue
-    : SAMPLE_PRESET_OPTIONS[0]?.id || "";
+    : options[0]?.id || "";
+}
+
+export function syncSamplePresetOptions(elements, documentRef = globalThis.document) {
+  syncPresetSelectOptions(elements?.controls?.sample, SAMPLE_PRESET_OPTIONS, documentRef);
+}
+
+export function syncSimulatorPresetOptions(elements, documentRef = globalThis.document) {
+  syncSamplePresetOptions(elements, documentRef);
+  syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef);
+  syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef);
 }
 
 function percentText(value) {
@@ -155,7 +170,7 @@ export function collectInstrumentElements(root) {
 
 export function updateControlsFromState(elements, state, derived) {
   const { controls, readouts } = elements;
-  syncSamplePresetOptions(elements);
+  syncSimulatorPresetOptions(elements);
 
   setText(readouts.excitationAngle, `${state.exMono.gratingAngleDeg.toFixed(1)} deg`);
   setText(readouts.emissionAngle, `${state.emMono.gratingAngleDeg.toFixed(1)} deg`);
