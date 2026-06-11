@@ -429,6 +429,32 @@ test("long explanatory panels expose language-separable copy", () => {
   assert.match(noscriptMatch[0], /data-language="zh"/);
 });
 
+test("first-screen operation copy separates default 2D controls from optional 3D dragging", () => {
+  const onboardingStart = instrumentHtml.indexOf('<div class="instrument-onboarding"');
+  const onboardingEnd = instrumentHtml.indexOf("</div>", onboardingStart);
+  const onboarding = instrumentHtml.slice(onboardingStart, onboardingEnd);
+  const sceneHintMatch = instrumentHtml.match(/<p class="instrument-operability-note"[\s\S]*?<\/p>/);
+  const sceneHint = sceneHintMatch?.[0] || "";
+
+  assert.match(onboarding, /2D fallback|2D 备用|optional 3D|可选 3D/);
+  assert.doesNotMatch(onboarding, /then drag the grating/);
+  assert.match(sceneHint, /Enable optional 3D|启用可选 3D/);
+  assert.match(sceneHint, /drag .*grating|拖动.*光栅/);
+});
+
+test("optical path detail notes follow the language display framework", () => {
+  const detailsStart = instrumentHtml.indexOf('<details class="instrument-principle-details">');
+  const detailsEnd = instrumentHtml.indexOf("</details>", detailsStart);
+  const block = instrumentHtml.slice(detailsStart, detailsEnd);
+  const notes = block.match(/<p>[\s\S]*?<\/p>/g) || [];
+
+  assert.equal(notes.length, 4, "expected four optical path notes");
+  notes.forEach((note) => {
+    assert.match(note, /data-language="en"/);
+    assert.match(note, /data-language="zh" lang="zh-CN"/);
+  });
+});
+
 test("diagnostic cards expose machine-readable evidence keys", () => {
   const previousDocument = globalThis.document;
   const fakeDocument = {

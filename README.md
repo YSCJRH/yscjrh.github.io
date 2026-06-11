@@ -29,7 +29,8 @@ When taking over this repo, read these files in order:
 - The project gateway upgrade has landed on the homepage and `/projects/`.
 - A visual depth pass is live; key homepage/project/note visuals are now local CSS/HTML modules rather than fragile image embeds.
 - Current maintenance baselines now cover content model, design system, accessibility, performance/SEO, and site sanity checks.
-- Next likely work is browser QA, GitHub wording alignment, and continued evidence-backed content strengthening.
+- Instrument Lab now has a repeatable browser QA gate, source/synthetic separation checks, and a dated `refine.md` final audit for the 2026-06-11 reconstruction.
+- Next likely work is routine public-surface maintenance, GitHub wording alignment, and evidence-backed content strengthening outside the closed Instrument Lab refine scope.
 - Public claims must stay within the truthfulness boundaries defined in `personalweb.md` and `AGENTS.md`.
 
 ## Local Preview

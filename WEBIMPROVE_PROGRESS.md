@@ -2,8 +2,29 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest inner-filter, geometry-boundary, and module-fallback slices locally and browser verified
+- Status: Final DoD audit validated locally; ready for commit and publish
 - Last updated: 2026-06-11
+
+## 2026-06-11 Final refine DoD audit and first-screen clarity closeout
+- Status: Completed and validated locally; ready for commit and publish
+- Trigger:
+  - `PLANS.md` and the 2026-06-11 decision record require requirement-by-requirement proof against `refine.md` section 9 before the long-running goal can be marked complete.
+  - Read-only review found that first-screen copy implied grating dragging before optional 3D was enabled, and optical-path detail notes bypassed the language-mode framework.
+- Changes:
+  - Added `docs/instrument-refine-final-audit-2026-06-11.md` with a `refine.md` 9.1-9.6 evidence crosswalk and explicit limitations.
+  - Updated first-screen copy to distinguish default 2D fallback controls from optional 3D grating dragging.
+  - Wrapped optical-path detail notes in paired `data-language="en"` / `data-language="zh" lang="zh-CN"` spans.
+  - Added UI contracts for first-screen 2D/optional-3D copy and optical-path language-mode behavior.
+  - Added an evidence-docs contract requiring the final audit to cover all DoD sections and closeout validation commands.
+  - Updated README and `instrument/MODEL.md` to reflect the current Instrument Lab closeout state.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation because first-screen copy still promised immediate grating dragging and optical-path notes lacked language spans.
+  - TDD red: `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before the final audit file existed.
+  - Final green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node --test instrument/sim/tests/*.mjs`; `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `node tools/check-instrument-browser.js`; `git diff --check`.
+- Remaining non-blocking notes:
+  - The “30 seconds understand” item is closed by interface/QA evidence and heuristic review, not by a controlled human usability study.
+- Blockers:
+  - None.
 
 ## 2026-06-11 Inner-filter risk diagnostic slice
 - Status: Focused model and evidence tests, full release validation, and browser runtime QA passed locally.

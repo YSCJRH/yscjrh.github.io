@@ -131,6 +131,11 @@ Fresh baseline from 2026-06-11:
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
+- `node --test instrument/sim/tests/*.mjs`: 96 tests passed after completing the final `refine.md` DoD audit, first-screen 2D/optional-3D copy contract, optical-path language-mode contract, dynamic diagnostic evidence-key coverage, and response-normalized browser QA coverage.
+- `node tools/preprocess-instrument-data.js --validate`: passed for the final closeout data package.
+- `python tools/check_site.py`: passed for the final closeout public site check.
+- `node tools/check-instrument-browser.js`: passed for first viewport workbench, WebGL fallback status, console errors, mobile overflow, prefers-reduced-motion, language switch, keyboard activation, no-JS fallback, geometry mode, response-normalized view, optional 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
+- `docs/instrument-refine-final-audit-2026-06-11.md`: records the requirement-by-requirement `refine.md` section 9 closeout crosswalk.
 
 ## Next Model Slices
 

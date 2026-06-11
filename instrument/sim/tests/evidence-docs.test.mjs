@@ -10,6 +10,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const researchLog = readFileSync(resolve(here, "../../../docs/instrument-research-log.md"), "utf8");
 const modelNotes = readFileSync(resolve(here, "../../MODEL.md"), "utf8");
 const instrumentHtml = readFileSync(resolve(here, "../../index.html"), "utf8");
+const finalAudit = readFileSync(resolve(here, "../../../docs/instrument-refine-final-audit-2026-06-11.md"), "utf8");
 
 function teachingCards() {
   return instrumentHtml.match(/<article class="teaching-card"[\s\S]*?<\/article>/g) || [];
@@ -119,4 +120,25 @@ test("sample environment evidence covers environmental fluorescence effects", ()
   assert.match(researchLog, /Claim ILAB-012:[\s\S]*temperature[\s\S]*pH[\s\S]*quench/i);
   assert.match(researchLog, /Claim ILAB-012:[\s\S]*(solvent|matrix)/i);
   assertTeachingCardEvidence("Sample environment", "ILAB-012");
+});
+
+test("final refine audit maps every Definition of Done section to current evidence", () => {
+  for (const section of ["9.1", "9.2", "9.3", "9.4", "9.5", "9.6"]) {
+    assert.match(finalAudit, new RegExp(`refine\\.md ${section}`), `missing DoD section ${section}`);
+  }
+
+  for (const command of [
+    "node --test instrument/sim/tests/*.mjs",
+    "node tools/preprocess-instrument-data.js --validate",
+    "python tools/check_site.py",
+    "node tools/check-instrument-browser.js",
+    "git diff --check",
+  ]) {
+    assert.match(finalAudit, new RegExp(command.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `missing validation command ${command}`);
+  }
+
+  assert.match(finalAudit, /Status:\s*Satisfied/i);
+  assert.match(finalAudit, /not a human comprehension study/i);
+  assert.match(finalAudit, /no calibrated measurement/i);
+  assert.match(finalAudit, /source-derived examples are display-only/i);
 });

@@ -28,7 +28,7 @@ Core pages checked:
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
 - Images and decorative graphics: decorative generated visuals are `aria-hidden`; meaningful SVG diagrams use accessible labels or titles where present.
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
-- Bilingual language semantics: full-sentence Chinese blocks with `*-zh` classes now carry `lang="zh-CN"`. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
+- Bilingual language semantics: full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
 - No forms, analytics, tracking scripts, backend flows, or private contact collection were introduced.
 
 ## Validation Commands
