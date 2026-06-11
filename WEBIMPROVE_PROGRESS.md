@@ -2,8 +2,35 @@
 
 ## Current milestone
 - Active: 2026-06-11 Instrument Lab refine reconstruction
-- Status: In progress; latest browser QA slice locally verified
+- Status: In progress; latest evidence-docs slice locally verified
 - Last updated: 2026-06-11
+
+## 2026-06-11 Noise and instrument-function evidence-docs slice
+- Status: Local documentation contract verification passed; full final DoD audit remains open.
+- Trigger:
+  - `docs/instrument-research-log.md` still carried open backlog items for deterministic noise semantics and Gaussian instrument-function behavior.
+  - `refine.md` requires every scientific/model-boundary claim to have evidence and documentation before final completion can be claimed.
+- Changes:
+  - Added `instrument/sim/tests/evidence-docs.test.mjs` to make the research-log/model-doc coverage for noise and instrument-function boundaries machine-checkable.
+  - Added research-log claim `ILAB-010` for deterministic noise and headroom cues as teaching placeholders, not detector-noise, SNR, detection-limit, or real saturation models.
+  - Added research-log claim `ILAB-011` for the Gaussian instrument-function as a teaching convolution, not a measured line-spread function or manufacturer-specific bandpass model.
+  - Updated `instrument/MODEL.md` with deterministic-noise, headroom, and Gaussian instrument-function boundaries.
+  - Reframed the open evidence backlog so future quantitative noise or instrument-function claims require new evidence entries.
+- Evidence sources:
+  - NISTIR 7458 for spectral slit-width FWHM, detector linear range, and calibration boundaries.
+  - HORIBA bandpass/resolution notes for bandpass depending on slit, grating, detector, and optical factors.
+  - Hamamatsu PMT FAQ for dark-current boundary language.
+  - Ibsen detector-noise explainer for dark current, baseline, read-noise, and dark-current-limited regimes.
+  - NIST microscope benchmarking page for detection threshold, saturation, and linear dynamic range as measured performance properties.
+- Validation result:
+  - TDD RED confirmed the old research log and model notes did not satisfy the new evidence-docs contract.
+  - `node --test instrument/sim/tests/evidence-docs.test.mjs` passed: 2/2.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs` passed: 52/52.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+- Remaining notes:
+  - This slice does not introduce new quantitative detector-noise, SNR, line-spread, or manufacturer-specific bandpass behavior.
+  - Full command suite and browser QA still need to be rerun before any final completion claim.
 
 ## 2026-06-11 Browser QA and mobile onboarding slice
 - Status: Local Chrome headless QA passed for the checked `/instrument/` paths; full human visual review and final DoD audit remain open.

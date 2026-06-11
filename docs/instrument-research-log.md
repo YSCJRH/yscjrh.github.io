@@ -108,11 +108,35 @@ Rules:
 - Code / UI touched: `instrument/data/manifest.json`, `instrument/data/processed/egfp-emission.json`, `instrument/sim/ui/source-data.mjs`, `instrument/sim/tests/source-data.test.mjs`, `tools/preprocess-instrument-data.js`, `DATA_SOURCES.md`.
 - Confidence: high for the display-only boundary; this does not add new scientific interpretation of the source data.
 
+## Claim ILAB-010: Deterministic noise and headroom cues are teaching placeholders, not a detector-noise model
+
+- Date checked: 2026-06-11
+- Source(s):
+  - NISTIR 7458, "Standard Guide to Fluorescence Instrument Calibration and Correction": https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7458.pdf
+  - Hamamatsu Photonics PMT FAQ: https://www.hamamatsu.com/us/en/product/optical-sensors/pmt/faq.html
+  - Ibsen Photonics, "Understanding noise in spectroscopic detectors": https://ibsen.com/resources/detector-resources/noise-in-detectors/
+  - NIST, "Procedure for Benchmarking a Fluorescent Microscope": https://www.nist.gov/video/procedure-benchmarking-fluorescent-microscope
+- Evidence summary: NISTIR 7458 treats detector linear range as something that must be determined for an instrument and emphasizes keeping calibration intensities inside that range. Hamamatsu describes PMT dark current as signal present in darkness from tube and environmental mechanisms. Ibsen separates useful signal from dark current and baseline and describes read-noise, shot-noise, and dark-current-limited regimes. NIST microscope benchmarking separately names detection threshold, saturation, and linear dynamic range as measured performance properties.
+- Implementation boundary: The current `spectrum.mjs` perturbation is deterministic pseudo-noise seeded from the selected channels, bandpass, and integration time so visual traces are reproducible. `composeRawSignal()` exposes headroom and saturation-risk cues, but it does not model detector-specific dark current, read noise, photon shot noise, photon counting statistics, or a measured linear dynamic range. Do not describe the output as measured SNR, detection limit, or detector saturation.
+- Code / UI touched: `instrument/sim/physics/spectrum.mjs`, `instrument/sim/physics/radiometry.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/MODEL.md`, `instrument/sim/tests/evidence-docs.test.mjs`.
+- Confidence: high for boundary language; low for quantitative detector-noise claims until a detector-specific model and sourced constants are added.
+
+## Claim ILAB-011: The Gaussian instrument function is a teaching convolution, not a measured monochromator line-spread function
+
+- Date checked: 2026-06-11
+- Source(s):
+  - NISTIR 7458, "Standard Guide to Fluorescence Instrument Calibration and Correction": https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7458.pdf
+  - HORIBA, "Bandpass and Resolution": https://www.horiba.com/usa/bandpass-resolution/
+- Evidence summary: NISTIR 7458 describes spectral slit-width accuracy through measured spectral bandwidth, taken as the FWHM of a single line. HORIBA describes bandpass as the spectral interval isolated by an instrument and notes that it depends on grating width, aberrations, detector spatial resolution, and entrance/exit slit widths.
+- Implementation boundary: `instrumentFunction.mjs` uses a normalized Gaussian weighting to smooth teaching spectra so wider slit settings visibly broaden features and lower peak height. This is a qualitative teaching convolution. It is not a measured slit function, not a wavelength-accuracy procedure, not a real monochromator model, and not a claim that the current slit-width-to-FWHM mapping matches a manufacturer instrument.
+- Code / UI touched: `instrument/sim/physics/instrumentFunction.mjs`, `instrument/sim/physics/monochromator.mjs`, `instrument/sim/physics/spectrum.mjs`, `instrument/MODEL.md`, `instrument/sim/tests/evidence-docs.test.mjs`.
+- Confidence: high for qualitative bandpass/resolution boundary; medium for the teaching Gaussian choice; low for any future quantitative FWHM mapping without instrument constants.
+
 ## Open Evidence Backlog
 
 - Source spectra presets: `ideal-flat`, `xenon-like`, and LED presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured boundary. Add evidence before using real lamp spectra.
 - Detector response presets: `ideal-flat`, `pmt-like-visible`, and `silicon-like` now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured/not-calibrated boundary. Add evidence before using real detector responsivity curves.
-- Noise model: document deterministic seed, shot/read/dark baseline semantics, saturation threshold, and why the values are educational.
-- Instrument function: document the Gaussian or triangular convolution choice and area/peak behavior.
+- Noise model: ILAB-010 covers the current deterministic teaching perturbation and headroom boundary. Add a new evidence entry before introducing real shot/read/dark-noise formulas, SNR, detection-limit, or detector-linearity claims.
+- Instrument function: ILAB-011 covers the current Gaussian teaching convolution. Add a new evidence entry before claiming a measured slit function, wavelength accuracy, or manufacturer-specific bandpass mapping.
 - Sample presets: migrate hard-coded profiles to data files and avoid real material names unless source support is sufficient.
 - Source-derived data: keep `instrument/data/manifest.json` as the authority for DOI, license, processing, axes, claim boundaries, `claimLevel`, and display-only control binding.

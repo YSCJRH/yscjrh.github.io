@@ -47,6 +47,14 @@ The 2026-06-11 response-chain scaffold is now connected to derived state, diagno
 
 The main workbench now labels the compact alignment/geometry readout explicitly and uses `responseChain.geometry.collectionFactor` for the geometry value when the response chain is available. Detector-arm offset diagnostics are separately labeled as local arm perturbations rather than as the geometry mode itself. The older `derived.collection` detector-arm helper remains for detector-offset diagnostics and scene behavior, so future cleanup should rename or separate that internal object rather than present it as the geometry-mode collection factor.
 
+## Noise, Headroom, And Instrument Function Boundaries
+
+The current trace uses deterministic noise in `spectrum.mjs`, not unseeded random noise. The seed is derived from the selected excitation/emission channels, teaching bandpass, and integration time so the same control state produces the same visible perturbation. This keeps the browser demo reproducible and testable. It is a visual teaching perturbation only; it is not a detector-specific shot-noise, read-noise, dark-current, SNR, limit-of-detection, or photon-counting model.
+
+`composeRawSignal()` uses a compact multiplicative response chain plus baseline/background terms to produce a raw synthetic intensity and a saturation/headroom cue. The cue warns that the plotted trace is near the fixed teaching display scale. It must not be read as a measured detector linear range or real saturation threshold.
+
+`instrumentFunction.mjs` uses a Gaussian instrument-function weighting as a teaching convolution. Wider slit settings broaden features and lower narrow-peak height in the synthetic trace. The Gaussian choice and the slit-width-to-FWHM mapping are not a measured monochromator line-spread function, not a wavelength-accuracy check, and not a manufacturer-specific bandpass model.
+
 ## Target Response Chain
 
 The next stable model should make these factors explicit and testable:
