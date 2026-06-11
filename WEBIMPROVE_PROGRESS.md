@@ -1325,3 +1325,28 @@
   - This slice adds no new geometry physics claim; existing right-angle/front-face/transmission boundaries remain covered by `ILAB-006`.
 - Blockers:
   - None.
+
+## Instrument browser QA and language switch hardening
+- Status: Completed locally; ready for commit and publish
+- Trigger:
+  - Continue `refine.md` DoD work on browser evidence, accessibility, mobile/fallback resilience, and bilingual public UI behavior.
+- Root cause:
+  - The local QA evidence still depended on ad hoc browser observations instead of a reusable browser gate.
+  - The language switch controls were visible and focusable without JavaScript even though the buttons could not work in no-JS mode.
+  - The language switch button height was below the 40px touch-target baseline observed by browser/a11y review.
+- Changes:
+  - Added `tools/check-instrument-browser.js` as a repeatable Instrument Lab browser QA command.
+  - Added `instrument/sim/tests/browser-qa-tool.test.mjs` to keep the browser QA tool anchored to the DoD markers.
+  - Added a UI contract test for no-JS language switch behavior and touch target sizing.
+  - Disabled language switch buttons in static HTML until `instrument/instrument.js` enables them after JavaScript loads.
+  - Increased language switch button height to `2.5rem` and added a disabled visual state.
+  - Documented the browser QA command in `README.md` and ignored `.playwright-cli/` session artifacts.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation because language switch buttons were not disabled in no-JS HTML.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs` passed: 25/25.
+  - `node --test instrument/sim/tests/browser-qa-tool.test.mjs` passed: 1/1.
+  - `node tools/check-instrument-browser.js` passed: first viewport workbench, WebGL fallback status, console errors, mobile overflow/touch target, prefers-reduced-motion page state, language switch, keyboard activation, source-derived panel, and module failure fallback.
+- Remaining non-blocking notes:
+  - The browser QA command uses local `npx --package @playwright/cli` on demand; it adds no project runtime dependency and creates no tracked browser session artifacts.
+- Blockers:
+  - None.

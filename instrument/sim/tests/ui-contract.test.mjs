@@ -313,6 +313,32 @@ test("instrument page exposes a persistent language display framework", () => {
   assert.match(instrumentScript, /localStorage/, "language mode should persist locally");
 });
 
+test("language switch is touch-sized and non-misleading without JavaScript", () => {
+  const languageButtons = Array.from(
+    instrumentHtml.matchAll(/<button type="button"[^>]*data-language-mode-option="[^"]+"[^>]*>/g)
+  ).map((match) => match[0]);
+  assert.equal(languageButtons.length, 3, "expected three language mode buttons");
+  languageButtons.forEach((button) => {
+    assert.match(button, /disabled/, "language buttons should be disabled until JavaScript enables them");
+  });
+
+  assert.match(
+    siteStyles,
+    /\.instrument-language-switch button\s*{[\s\S]*?min-height:\s*(?:40px|2\.5rem)/,
+    "language switch buttons should meet the 40px touch target baseline"
+  );
+  assert.match(
+    instrumentScript,
+    /enableLanguageModeControl/,
+    "runtime should explicitly enable language mode buttons after JavaScript loads"
+  );
+  assert.match(
+    instrumentScript,
+    /button\.disabled\s*=\s*false/,
+    "runtime should remove the no-JS disabled state from language mode buttons"
+  );
+});
+
 test("long explanatory panels expose language-separable copy", () => {
   const introBlocks = blocksForClass("source-data-intro");
   assert.ok(introBlocks.length >= 3, "expected source/correction/geometry intro copy");

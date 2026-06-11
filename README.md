@@ -64,6 +64,12 @@ Run the site sanity checker after scoped HTML, metadata, sitemap, robots, or lin
 python tools/check_site.py
 ```
 
+For the Instrument Lab browser QA gates:
+
+```powershell
+node tools/check-instrument-browser.js
+```
+
 For browser and Lighthouse checks, start the local preview first. You can also force a specific port when needed:
 
 ```powershell

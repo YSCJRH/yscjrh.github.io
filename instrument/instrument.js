@@ -51,6 +51,12 @@ if (root) {
     }
   }
 
+  function enableLanguageModeControl() {
+    root.querySelectorAll("[data-language-mode-option]").forEach((button) => {
+      button.disabled = false;
+    });
+  }
+
   function setLanguageMode(mode, { persist = true } = {}) {
     const nextMode = normalizeLanguageMode(mode);
     root.dataset.languageMode = nextMode;
@@ -289,6 +295,8 @@ if (root) {
       applyState();
     });
   });
+
+  enableLanguageModeControl();
 
   root.querySelectorAll("[data-language-mode-option]").forEach((button) => {
     button.addEventListener("click", () => {
