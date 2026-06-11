@@ -54,7 +54,7 @@
   - `node tools/preprocess-instrument-data.js --validate` passed.
   - `python tools/check_site.py` passed.
   - `git diff --check` passed with only Git line-ending normalization warnings.
-  - Playwright CLI browser smoke passed: local `/instrument/` exposed the transmission and inner-filter boundary copy, console error count was 0 on normal load, mobile overflow stayed 0, and module-failure routing updated both WebGL fallback status regions.
+  - Chrome headless/CDP browser smoke passed: local `/instrument/` exposed the transmission and inner-filter boundary copy, console error count was 0 on normal load, mobile overflow stayed 0, and module-failure routing updated both WebGL fallback status regions.
 - Remaining notes:
   - This does not implement real transmission optics or front-face ray tracing.
   - The transmission mode remains a conservative teaching diagnostic for direct excitation and background risk.
