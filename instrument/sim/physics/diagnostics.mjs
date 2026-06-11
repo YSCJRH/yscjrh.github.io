@@ -155,5 +155,7 @@ export function generateDiagnostics(state, derived) {
 
   const warnings = diagnostics.filter((diagnostic) => diagnostic.tone === "warn");
   const notes = diagnostics.filter((diagnostic) => diagnostic.tone !== "warn");
-  return [...warnings, ...notes, ...displayDiagnostics].slice(0, 5);
+  const displaySlots = displayDiagnostics.length;
+  const warningSlots = Math.max(0, 5 - displaySlots);
+  return [...warnings.slice(0, warningSlots), ...displayDiagnostics, ...notes].slice(0, 5);
 }

@@ -273,6 +273,25 @@ test("diagnostics surface response-chain consequences", () => {
   assert.ok(highTraceLabels.includes("Signal headroom / 信号余量"));
 });
 
+test("display toggle diagnostics remain visible in busy warning states", () => {
+  const state = createInstrumentState();
+  state.display.spectrumView = "response-normalized";
+  state.slit.widthUm = 1000;
+  state.source.offsetUm = 120;
+  state.detector.angleDeg = 82;
+  state.geometry.id = "transmission";
+  state.sample.preset = "scattering";
+  setGratingWavelength(state, "emission", 730);
+  applyControlValue(state, "show-noise", false);
+  applyControlValue(state, "show-artifacts", false);
+
+  const labels = deriveInstrument(state).diagnostics.map((diagnostic) => diagnostic.label);
+
+  assert.ok(labels.length <= 5);
+  assert.ok(labels.includes("Noise cue hidden / 噪声提示隐藏"));
+  assert.ok(labels.includes("Artifact cues hidden / 伪影提示隐藏"));
+});
+
 test("diagnostics separate geometry mode from detector arm offset", () => {
   const state = createInstrumentState();
   state.geometry.id = "transmission";
