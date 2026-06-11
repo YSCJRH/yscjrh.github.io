@@ -1,8 +1,8 @@
 # Accessibility Checklist
 
-Status: 2026-06-10 refreshed baseline complete
-Last updated: 2026-06-10
-Latest local preview used: `http://127.0.0.1:4180/`
+Status: 2026-06-11 `/instrument/` refine evidence refreshed
+Last updated: 2026-06-11
+Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
 This checklist records the current accessibility baseline for the static personal site. It is not a replacement for assistive-technology testing, but it gives future Codex passes a concrete set of checks. The 2026-06-10 refresh includes the published Instrument Lab scroll-boundary fix and note metadata bilingual cleanup.
 
@@ -36,11 +36,15 @@ Core pages checked:
 ```powershell
 git diff --check
 npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=accessibility" --output=json --output-path=reports/lighthouse-a11y-home.json --chrome-flags="--headless=new"
+npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"
+node tools/check-instrument-browser.js
 npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 ```
 
 ## Results
 
+- 2026-06-11 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, console errors, mobile overflow, prefers-reduced-motion, language switch, keyboard activation, no-JS fallback, geometry mode, response-normalized view, optional 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
+- 2026-06-11 `/instrument/` Lighthouse accessibility score was `100`; the same run reported Performance `86`, Best Practices `100`, and SEO `100`.
 - 2026-06-10 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
 - 2026-06-10 `git diff --check` passed.
 - 2026-06-10 syntax checks passed for shared and Instrument Lab JavaScript modules.
@@ -52,5 +56,5 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 ## Remaining Manual Checks
 
 - Test with an actual screen reader before a public release if article-level bilingual reading quality becomes important.
-- Recheck `/instrument/` with keyboard-only interaction after any future changes to custom SVG controls or Three.js controls. The 2026-05-08 release pass included mobile menu keyboard flow and route-level Lighthouse coverage for `/instrument/`; the 2026-06-10 refresh covered route-level DOM, overflow, and console behavior.
+- Recheck `/instrument/` with keyboard-only interaction after any future changes to custom SVG controls or Three.js controls. The 2026-06-11 browser QA covered keyboard activation, reduced motion, no-JS fallback, module failure fallback, source-derived language mode, and optional 3D availability, but it is still automated browser evidence rather than a screen-reader session.
 - If compact slash labels become longer, consider replacing them with separate language spans and explicit `lang` attributes.

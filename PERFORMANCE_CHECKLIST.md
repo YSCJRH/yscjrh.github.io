@@ -1,8 +1,8 @@
 # Performance And SEO Checklist
 
-Status: 2026-06-10 refreshed baseline complete
-Last updated: 2026-06-10
-Latest local preview used: `http://127.0.0.1:4180/`
+Status: 2026-06-11 `/instrument/` refine evidence refreshed
+Last updated: 2026-06-11
+Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
 ## Scope
 
@@ -45,12 +45,23 @@ Core public pages:
 ```powershell
 git diff --check
 npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=performance,seo,best-practices" --output=json --output-path=reports/lighthouse-seo-perf-home.json --chrome-flags="--headless=new"
+npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"
 Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/robots.txt
 Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 ```
 
 ## Results
 
+- 2026-06-11 `/instrument/` Lighthouse on local preview:
+  - Performance: `86`
+  - Accessibility: `100`
+  - Best Practices: `100`
+  - SEO: `100`
+  - LCP: `3.2 s`
+  - CLS: `0`
+  - TBT: `60 ms`
+  - Report artifact: `reports/lighthouse-instrument-2026-06-11.json` (ignored local QA output).
+- 2026-06-11 `/instrument/` Lighthouse opportunities were shared static CSS unused on the single route, local-server text compression/cache lifetime, and render-blocking CSS. These are recorded as static-site tradeoffs, not blockers, because the project intentionally has no build pipeline and no route-specific CSS bundling.
 - 2026-06-10 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
 - 2026-06-10 `git diff --check` passed.
 - 2026-06-10 local and live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.

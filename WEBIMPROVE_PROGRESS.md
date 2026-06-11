@@ -1492,3 +1492,22 @@
   - This slice does not add calibrated correction, real instrument response correction, or new source-derived dataset behavior.
 - Blockers:
   - None.
+
+## Instrument `/instrument/` performance and accessibility evidence refresh
+- Status: Completed and validated in this changeset
+- Trigger:
+  - Continue `refine.md` DoD work after `d8c612e`; read-only review found that the checklist evidence was still dated 2026-06-10 while `/instrument/` had accumulated browser QA, no-JS, optional 3D, geometry, response-normalized, and evidence-key changes.
+- Root cause:
+  - The route behavior was covered by tests and `tools/check-instrument-browser.js`, but `ACCESSIBILITY_CHECKLIST.md` and `PERFORMANCE_CHECKLIST.md` had not been refreshed with a current `/instrument/` Lighthouse run or the expanded browser QA gates.
+- Changes:
+  - Refreshed `PERFORMANCE_CHECKLIST.md` with 2026-06-11 `/instrument/` Lighthouse scores and remaining static-site performance tradeoffs.
+  - Refreshed `ACCESSIBILITY_CHECKLIST.md` with 2026-06-11 `/instrument/` Lighthouse accessibility and browser QA evidence.
+  - Recorded that `reports/lighthouse-instrument-2026-06-11.json` is local ignored QA output and not a deployable artifact.
+- Validation result:
+  - `node tools/check-instrument-browser.js` passed: first viewport workbench, WebGL fallback status, console errors, mobile overflow, prefers-reduced-motion, language switch, keyboard activation, no-JS fallback, geometry mode, response-normalized view, optional 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
+  - `npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"` completed with Performance `86`, Accessibility `100`, Best Practices `100`, SEO `100`, LCP `3.2 s`, CLS `0`, and TBT `60 ms`.
+- Remaining non-blocking notes:
+  - Lighthouse opportunities are mostly shared static CSS, local-server compression/cache policy, and render-blocking CSS. They are not treated as blockers under the current no-build/static-site constraint.
+  - The 30-second comprehension DoD is still supported by product structure and automated browser evidence, not by a human comprehension study.
+- Blockers:
+  - None.
