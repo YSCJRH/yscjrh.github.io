@@ -133,11 +133,15 @@ export function generateSpectrum(state, physics, responseChain = null) {
   const [min, max] = ranges[state.mode] || ranges.emission;
   const count = state.mode === "single" ? 12 : 96;
   const points = [];
+  const singlePointRawSignal = Number(responseChain?.signal?.raw);
+  const singlePointRawY = state.mode === "single" && Number.isFinite(singlePointRawSignal)
+    ? clamp(singlePointRawSignal, 0, FIXED_Y_SCALE_MAX)
+    : null;
 
   for (let index = 0; index < count; index += 1) {
     const progress = index / (count - 1);
     const x = min + (max - min) * progress;
-    const rawY = clamp(calculatePoint(state.mode, x, index, state, physics, profile, responseChain), 0, FIXED_Y_SCALE_MAX);
+    const rawY = singlePointRawY ?? clamp(calculatePoint(state.mode, x, index, state, physics, profile, responseChain), 0, FIXED_Y_SCALE_MAX);
     points.push({
       x,
       y: rawY / FIXED_Y_SCALE_MAX,

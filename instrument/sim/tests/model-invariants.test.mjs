@@ -2,13 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { deriveArtifactRisks } from "../physics/artifacts.mjs";
-import { evaluateDetectorResponse } from "../physics/detector.mjs";
+import { DETECTOR_PRESETS, evaluateDetectorResponse } from "../physics/detector.mjs";
 import { deriveGeometryResponse } from "../physics/geometry.mjs";
 import { convolveLineShape } from "../physics/instrumentFunction.mjs";
 import { composeRawSignal } from "../physics/radiometry.mjs";
 import { buildScanAxis } from "../physics/scan.mjs";
 import { evaluateGaussianMixture } from "../physics/sample.mjs";
-import { evaluateSourceSpectrum } from "../physics/source.mjs";
+import { TEACHING_SOURCE_PRESETS, evaluateSourceSpectrum } from "../physics/source.mjs";
 
 function assertFiniteUnit(value, label) {
   assert.equal(Number.isFinite(value), true, `${label} should be finite`);
@@ -26,6 +26,22 @@ test("teaching source and detector presets stay finite and normalized across 200
 
   assert.ok(evaluateSourceSpectrum("led-365", 365) > evaluateSourceSpectrum("led-365", 520));
   assert.ok(evaluateDetectorResponse("pmt-like-visible", 520) > evaluateDetectorResponse("pmt-like-visible", 900));
+});
+
+test("teaching source and detector presets declare placeholder boundaries", () => {
+  for (const [id, preset] of Object.entries(TEACHING_SOURCE_PRESETS)) {
+    assert.equal(preset.claimLevel, "synthetic-teaching", `${id} source should stay synthetic`);
+    assert.equal(preset.controlBinding, "simulator-control", `${id} source should be simulator-only`);
+    assert.equal(preset.evidenceKey, "ILAB-008", `${id} source should cite the placeholder boundary`);
+    assert.match(preset.boundary, /not.*measured|not.*real/i, `${id} source should not imply measured lamp data`);
+  }
+
+  for (const [id, preset] of Object.entries(DETECTOR_PRESETS)) {
+    assert.equal(preset.claimLevel, "synthetic-teaching", `${id} detector should stay synthetic`);
+    assert.equal(preset.controlBinding, "simulator-control", `${id} detector should be simulator-only`);
+    assert.equal(preset.evidenceKey, "ILAB-008", `${id} detector should cite the placeholder boundary`);
+    assert.match(preset.boundary, /not.*measured|not.*real|not.*calibrated/i, `${id} detector should not imply measured hardware response`);
+  }
 });
 
 test("sample gaussian mixtures and instrument broadening avoid negative or non-finite values", () => {

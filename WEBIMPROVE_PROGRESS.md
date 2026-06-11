@@ -1,9 +1,34 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-10 final convergence external-link repair
-- Status: Published and live-verified on GitHub Pages
-- Last updated: 2026-06-10
+- Active: 2026-06-11 Instrument Lab refine reconstruction
+- Status: In progress; latest model slice locally verified
+- Last updated: 2026-06-11
+
+## 2026-06-11 Instrument response-chain single-point alignment
+- Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
+- Trigger:
+  - Active `refine.md` goal requires the synthetic trace to move toward an explicit, testable instrument response chain.
+  - Evidence audit found `instrument/MODEL.md` still described remaining chart math as partly parallel to the response-chain scaffold.
+- Changes:
+  - Anchored `single-point monitor / 单点监测` spectrum values to `responseChain.signal.raw` instead of the older parallel chart formula.
+  - Added source and detector preset metadata for `claimLevel`, `controlBinding`, `evidenceKey`, and explicit placeholder boundaries.
+  - Updated cache keys for the changed Instrument Lab module chain.
+  - Updated `instrument/MODEL.md` and `docs/instrument-research-log.md` to reflect the verified scope and remaining boundaries.
+- Validation result:
+  - TDD RED confirmed the old single-point monitor value differed from `responseChain.signal.raw`.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/physics/derive.mjs` passed.
+  - `node --check instrument/sim/physics/spectrum.mjs` passed.
+  - `node --check instrument/sim/physics/source.mjs` passed.
+  - `node --check instrument/sim/physics/detector.mjs` passed.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 44/44.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Windows line-ending warnings.
+- Remaining notes:
+  - Emission, excitation, and time scan chart-shape math still need migration or explicit retention as teaching chart-shape logic.
+  - Browser/Chrome connector tools were not exposed in this continuation turn; full browser QA remains a required DoD item, not completed by this checkpoint.
 
 ## 2026-06-10 Final convergence external-link repair
 - Status: Published and live-verified

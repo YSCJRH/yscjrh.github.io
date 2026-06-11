@@ -253,6 +253,21 @@ test("single-point monitor responds to geometry without moving wavelengths", () 
   assert.ok(baseValues.every((value) => value === baseValues[0]));
 });
 
+test("single-point monitor is anchored to the response-chain signal", () => {
+  const state = createInstrumentState();
+  state.mode = "single";
+  const derived = deriveInstrument(state);
+  const expectedRaw = Math.min(derived.responseChain.signal.raw, derived.spectrum.yScaleMax);
+
+  assert.ok(expectedRaw > 0);
+  assert.equal(derived.spectrum.points.length, 12);
+  assert.equal(derived.spectrum.peak, expectedRaw);
+  derived.spectrum.points.forEach((point) => {
+    assert.equal(point.rawY, expectedRaw);
+    assert.equal(point.y, expectedRaw / derived.spectrum.yScaleMax);
+  });
+});
+
 test("blank/background preset stays weak on fixed y scale", () => {
   const state = createInstrumentState();
   state.sample.preset = "blank";

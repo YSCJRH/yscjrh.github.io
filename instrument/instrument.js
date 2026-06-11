@@ -8,7 +8,7 @@ import {
   setMode,
   setSelectedPart,
 } from "./sim/state.mjs?v=sample-data-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=response-chain-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=single-signal-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,

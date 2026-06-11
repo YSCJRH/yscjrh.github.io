@@ -110,8 +110,8 @@ Rules:
 
 ## Open Evidence Backlog
 
-- Source spectra presets: document whether `ideal-flat`, `xenon-like`, and LED presets are synthetic teaching curves or based on public source spectra.
-- Detector response presets: document `ideal-flat`, `pmt-like-visible`, and `silicon-like` as normalized teaching curves; add evidence before using real detector shapes.
+- Source spectra presets: `ideal-flat`, `xenon-like`, and LED presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured boundary. Add evidence before using real lamp spectra.
+- Detector response presets: `ideal-flat`, `pmt-like-visible`, and `silicon-like` now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured/not-calibrated boundary. Add evidence before using real detector responsivity curves.
 - Noise model: document deterministic seed, shot/read/dark baseline semantics, saturation threshold, and why the values are educational.
 - Instrument function: document the Gaussian or triangular convolution choice and area/peak behavior.
 - Sample presets: migrate hard-coded profiles to data files and avoid real material names unless source support is sufficient.
