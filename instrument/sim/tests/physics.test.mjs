@@ -375,6 +375,48 @@ test("excitation scan main fluorescence term is composed from response-chain fac
   assert.ok(Math.abs(point.rawY - (signal.raw + noise)) < 1e-12);
 });
 
+test("time scan uses response-chain fixed-channel signal while preserving teaching dynamics", () => {
+  const state = createInstrumentState();
+  state.mode = "time";
+  const timePointIndex = 48;
+
+  const derived = deriveInstrument(state);
+  const point = derived.spectrum.points[timePointIndex];
+  const profile = derived.spectrum.profile;
+  const seed =
+    derived.excitationNm * 0.011 +
+    derived.emissionNm * 0.017 +
+    derived.bandpassNm +
+    state.integrationTimeMs * 0.001;
+  const noise = deterministicNoise(timePointIndex, seed) * profile.noise;
+  const baseline =
+    profile.baseline +
+    derived.bandpassNm * 0.002 +
+    derived.responseChain.geometry.backgroundRisk * 0.028;
+  const steadySignal = composeRawSignal({
+    sourceAtExcitation: derived.responseChain.source.atExcitation,
+    excitationBandpassTransmission: derived.throughput * derived.alignment.overlapFactor,
+    absorptionAtExcitation: derived.responseChain.sample.absorptionAtExcitation,
+    quantumYield: profile.amplitude,
+    emissionShapeAtWavelength: derived.responseChain.sample.emissionAtEmission,
+    emissionBandpassTransmission: derived.throughput,
+    detectorResponseAtEmission: derived.responseChain.detector.atEmission,
+    collectionFactor: derived.responseChain.geometry.collectionFactor,
+    integrationMs: state.integrationTimeMs,
+    darkBaseline: baseline,
+    background: 0,
+    saturationThreshold: 1.15,
+  });
+  const settle = 1 - Math.exp(-point.x / 16);
+  const decay = 1 - profile.decay * (1 - Math.exp(-point.x / 72));
+  const ripple = Math.sin(point.x / 9 + derived.bandpassNm * 0.4) * 0.025;
+  const dynamicSignal = (steadySignal.raw - baseline) * settle * decay;
+
+  assert.ok(point.x > 0);
+  assert.ok(steadySignal.raw > baseline);
+  assert.ok(Math.abs(point.rawY - (baseline + dynamicSignal + ripple + noise)) < 1e-12);
+});
+
 test("blank/background preset stays weak on fixed y scale", () => {
   const state = createInstrumentState();
   state.sample.preset = "blank";

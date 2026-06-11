@@ -5,6 +5,31 @@
 - Status: In progress; latest model slice locally verified
 - Last updated: 2026-06-11
 
+## 2026-06-11 Time scan response-chain baseline slice
+- Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
+- Trigger:
+  - Emission and excitation wavelength scans now use per-point `composeRawSignal()` for their main signal terms.
+  - Time scan still used the older gain formula for fixed-channel signal amplitude, while `refine.md` requires a testable instrument response chain and explicitly separates time / kinetic scan from fluorescence lifetime measurement.
+- Changes:
+  - Added a TDD regression proving a time scan point uses a fixed-channel `composeRawSignal()` signal amplitude and then applies the existing settle, decay, ripple, and deterministic-noise teaching dynamics.
+  - Routed time scan fixed-channel signal amplitude through `composeRawSignal()`.
+  - Preserved the existing time axis, settle/decay teaching shape, ripple, deterministic noise, blank/background behavior, and fixed y-scale.
+  - Bumped `/instrument/` route-local module cache keys to `time-chain-20260611`.
+  - Updated `instrument/MODEL.md` so time scan remains explicitly bounded as a synthetic fixed-channel kinetic-style trace, not fluorescence lifetime.
+- Validation result:
+  - TDD RED confirmed the old time scan value differed from the response-chain fixed-channel expectation.
+  - `node --check instrument/instrument.js` passed.
+  - `node --check instrument/sim/physics/derive.mjs` passed.
+  - `node --check instrument/sim/physics/spectrum.mjs` passed.
+  - `node --test instrument/sim/tests/physics.test.mjs` passed: 23/23.
+  - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 47/47.
+  - `node tools/preprocess-instrument-data.js --validate` passed.
+  - `python tools/check_site.py` passed.
+  - `git diff --check` passed with only Windows line-ending warnings.
+- Remaining notes:
+  - Full browser QA remains required before the overall `refine.md` Definition of Done can be claimed.
+  - The next model cleanup candidate is the split between optical geometry mode and legacy detector-arm offset readout.
+
 ## 2026-06-11 Excitation scan response-chain slice
 - Status: Local verification passed; browser QA still pending for the full `refine.md` closeout.
 - Trigger:

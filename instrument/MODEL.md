@@ -43,7 +43,7 @@ state
 
 This is useful as a conceptual skeleton. As of 2026-06-11, `deriveInstrument()` exposes a bounded `responseChain`, and source/detector teaching response factors affect the synthetic trace. The chain is still teaching-level and partly parallel to the legacy chart calculation, so it must not be presented as a calibrated radiometric model.
 
-The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, the synthetic trace, and the single-point monitor. The single-point mode is anchored directly to `responseChain.signal.raw`. The emission scan now composes its main fluorescence term through `composeRawSignal()` at each scanned emission wavelength, while keeping the existing teaching emission shape, scattering, blank/background, deterministic noise, and fixed y-scale behavior. The excitation scan now composes its main fluorescence term through `composeRawSignal()` at each scanned excitation wavelength, while keeping the existing teaching excitation shape, fixed emission channel, scattering, blank/background, deterministic noise, and fixed y-scale behavior. Time scan still retains compact chart-shape dynamics while using response-chain source, detector, geometry, and integration factors where already wired. Source and detector presets now carry machine-readable synthetic-teaching boundaries so they cannot be mistaken for measured lamp or hardware response curves. This incremental split must stay visible until the remaining time-scan path is migrated or explicitly retained as teaching chart-shape logic.
+The 2026-06-11 response-chain scaffold is now connected to derived state, diagnostics evidence keys, the synthetic trace, and the single-point monitor. The single-point mode is anchored directly to `responseChain.signal.raw`. The emission scan now composes its main fluorescence term through `composeRawSignal()` at each scanned emission wavelength, while keeping the existing teaching emission shape, scattering, blank/background, deterministic noise, and fixed y-scale behavior. The excitation scan now composes its main fluorescence term through `composeRawSignal()` at each scanned excitation wavelength, while keeping the existing teaching excitation shape, fixed emission channel, scattering, blank/background, deterministic noise, and fixed y-scale behavior. Time scan now takes its fixed-channel signal amplitude from `composeRawSignal()` and applies the existing settle, decay, ripple, and deterministic-noise teaching dynamics on top. It remains a synthetic fixed-channel kinetic-style trace, not a fluorescence lifetime model. Source and detector presets now carry machine-readable synthetic-teaching boundaries so they cannot be mistaken for measured lamp or hardware response curves.
 
 ## Target Response Chain
 
@@ -91,12 +91,13 @@ Fresh baseline from 2026-06-11:
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 45 tests passed after the emission-scan response-chain slice.
 - `node --test instrument/sim/tests/physics.test.mjs`: 22 tests passed after routing the excitation scan main fluorescence term through `composeRawSignal()` per scanned excitation wavelength.
 - `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 46 tests passed after the excitation-scan response-chain slice.
+- `node --test instrument/sim/tests/physics.test.mjs`: 23 tests passed after routing the time scan fixed-channel signal amplitude through `composeRawSignal()` while preserving teaching dynamics.
+- `node --test instrument/sim/tests/model-invariants.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/source-data.test.mjs instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/ui-contract.test.mjs`: 47 tests passed after the time-scan response-chain baseline slice.
 - `node tools/preprocess-instrument-data.js --validate`: passed.
 - `python tools/check_site.py`: passed for 6 public HTML pages plus `robots.txt`, `sitemap.xml`, and local references.
 - `git diff --check`: passed.
 
 ## Next Model Slices
 
-1. Replace or explicitly document the remaining time scan chart-shape math while preserving response-chain factors and current teaching behavior.
-2. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
-3. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.
+1. Replace the remaining legacy detector-angle collection readout with a clear split between optical geometry mode and detector-arm offset.
+2. Consider generating the sample `<select>` options from `SAMPLE_PRESET_OPTIONS` while preserving no-JS fallback labels.

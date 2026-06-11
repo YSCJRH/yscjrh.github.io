@@ -132,9 +132,8 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
     return signal.raw + scatter + noise;
   }
 
-  const gain = gainForState(mode, x, state, physics, profile, responseChain);
-
   if (mode === "single") {
+    const gain = gainForState(mode, x, state, physics, profile, responseChain);
     const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
     const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
     return baseline + gain * excitationFit * emissionFit;
@@ -143,10 +142,25 @@ function calculatePoint(mode, x, index, state, physics, profile, responseChain) 
   const time = x;
   const excitationFit = gaussian(physics.excitationNm, profile.excitationPeak, profile.excitationWidth);
   const emissionFit = gaussian(physics.emissionNm, profile.emissionPeak, profile.emissionWidth + physics.bandpassNm);
+  const spectralResponse = spectralResponseForPoint(mode, x, state, physics);
+  const steadySignal = composeRawSignal({
+    sourceAtExcitation: responseChain?.source?.atExcitation ?? spectralResponse.source,
+    excitationBandpassTransmission: physics.throughput * physics.alignment.overlapFactor,
+    absorptionAtExcitation: responseChain?.sample?.absorptionAtExcitation ?? excitationFit,
+    quantumYield: profile.amplitude,
+    emissionShapeAtWavelength: responseChain?.sample?.emissionAtEmission ?? emissionFit,
+    emissionBandpassTransmission: physics.throughput,
+    detectorResponseAtEmission: responseChain?.detector?.atEmission ?? spectralResponse.detector,
+    collectionFactor: responseChain?.geometry?.collectionFactor ?? physics.collection.collectionFactor,
+    integrationMs: state.integrationTimeMs,
+    darkBaseline: baseline,
+    background: 0,
+    saturationThreshold: 1.15,
+  });
   const settle = 1 - Math.exp(-time / 16);
   const decay = 1 - profile.decay * (1 - Math.exp(-time / 72));
   const ripple = Math.sin(time / 9 + physics.bandpassNm * 0.4) * 0.025;
-  return baseline + gain * excitationFit * emissionFit * settle * decay + ripple + noise;
+  return baseline + (steadySignal.raw - baseline) * settle * decay + ripple + noise;
 }
 
 export function generateSpectrum(state, physics, responseChain = null) {
