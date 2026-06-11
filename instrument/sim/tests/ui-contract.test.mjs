@@ -243,6 +243,19 @@ test("3D scene is optional with an honest initial fallback state", () => {
   assert.match(statusMatch[1], /2D|二维|fallback|备用/i);
 });
 
+test("mobile view keeps WebGL fallback status visible", () => {
+  assert.match(
+    siteStyles,
+    /\.instrument-view-toolbar span:not\(\[data-webgl-status\]\)/,
+    "mobile toolbar rule should not hide the WebGL status span"
+  );
+  assert.match(
+    siteStyles,
+    /\.instrument-view-toolbar \[data-webgl-status\]\s*{[\s\S]*?display: block;/,
+    "mobile WebGL status should be explicitly restored as visible text"
+  );
+});
+
 test("instrument page exposes a persistent language display framework", () => {
   assert.match(
     instrumentHtml,

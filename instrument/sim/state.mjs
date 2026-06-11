@@ -28,6 +28,19 @@ export const SPECTRUM_VIEW_OPTIONS = Object.freeze([
 ]);
 
 const SPECTRUM_VIEW_IDS = new Set(SPECTRUM_VIEW_OPTIONS.map((option) => option.id));
+const SOURCE_PRESET_IDS = new Set(SOURCE_PRESET_OPTIONS.map((option) => option.id));
+const DETECTOR_PRESET_IDS = new Set(DETECTOR_PRESET_OPTIONS.map((option) => option.id));
+const GEOMETRY_PRESET_IDS = new Set(GEOMETRY_PRESET_OPTIONS.map((option) => option.id));
+
+function applyFiniteClampedValue(target, key, rawValue, min, max) {
+  const numeric = Number(rawValue);
+
+  if (!Number.isFinite(numeric)) {
+    return;
+  }
+
+  target[key] = clamp(numeric, min, max);
+}
 
 export const MODES = Object.freeze({
   emission: {
@@ -152,29 +165,35 @@ export function applyControlValue(state, controlName, rawValue) {
       setGratingAngle(state, "emission", numeric);
       break;
     case "slit":
-      state.slit.widthUm = clamp(numeric, 100, 1000);
+      applyFiniteClampedValue(state.slit, "widthUm", rawValue, 100, 1000);
       break;
     case "integration":
-      state.integrationTimeMs = clamp(numeric, 20, 1000);
+      applyFiniteClampedValue(state, "integrationTimeMs", rawValue, 20, 1000);
       break;
     case "sample":
       state.sample.preset = SAMPLE_PROFILES[rawValue] ? rawValue : "low-background";
       break;
     case "source-offset":
-      state.source.offsetUm = clamp(numeric, -120, 120);
+      applyFiniteClampedValue(state.source, "offsetUm", rawValue, -120, 120);
       break;
     case "source-type":
-      state.source.id = String(rawValue || "xenon-like");
+      if (SOURCE_PRESET_IDS.has(String(rawValue))) {
+        state.source.id = String(rawValue);
+      }
       break;
     case "detector-angle":
-      state.detector.angleDeg = clamp(numeric, 80, 100);
+      applyFiniteClampedValue(state.detector, "angleDeg", rawValue, 80, 100);
       break;
     case "detector-type":
-      state.detector.id = String(rawValue || "pmt-like-visible");
+      if (DETECTOR_PRESET_IDS.has(String(rawValue))) {
+        state.detector.id = String(rawValue);
+      }
       break;
     case "geometry-mode":
-      state.geometry ||= {};
-      state.geometry.id = String(rawValue || "right-angle-90");
+      if (GEOMETRY_PRESET_IDS.has(String(rawValue))) {
+        state.geometry ||= {};
+        state.geometry.id = String(rawValue);
+      }
       break;
     case "spectrum-view":
       setSpectrumView(state, rawValue);

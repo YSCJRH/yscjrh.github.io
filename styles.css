@@ -6252,8 +6252,16 @@ section[id] {
     line-height: 1.15;
   }
 
-  .instrument-view-toolbar span {
+  .instrument-view-toolbar span:not([data-webgl-status]) {
     display: none;
+  }
+
+  .instrument-view-toolbar [data-webgl-status] {
+    display: block;
+    flex-basis: 100%;
+    text-align: center;
+    font-size: 0.62rem;
+    line-height: 1.25;
   }
 
   .instrument-axis-label,

@@ -705,3 +705,44 @@ test("sample cell remains fixed when geometry offsets are applied", () => {
   assert.equal(state.sample.offsetUm, 0);
   assert.equal(state.source.offsetUm, 80);
 });
+
+test("invalid control values cannot leak NaN or unknown presets into derived UI state", () => {
+  const state = createInstrumentState();
+  const previous = {
+    slitUm: state.slit.widthUm,
+    integrationMs: state.integrationTimeMs,
+    sourceOffsetUm: state.source.offsetUm,
+    detectorAngleDeg: state.detector.angleDeg,
+    sourceId: state.source.id,
+    detectorId: state.detector.id,
+    geometryId: state.geometry.id,
+  };
+
+  applyControlValue(state, "slit", "bad-number");
+  applyControlValue(state, "integration", Number.NaN);
+  applyControlValue(state, "source-offset", "Infinity");
+  applyControlValue(state, "detector-angle", undefined);
+  applyControlValue(state, "source-type", "unknown-source");
+  applyControlValue(state, "detector-type", "unknown-detector");
+  applyControlValue(state, "geometry-mode", "unknown-geometry");
+
+  assert.equal(state.slit.widthUm, previous.slitUm);
+  assert.equal(state.integrationTimeMs, previous.integrationMs);
+  assert.equal(state.source.offsetUm, previous.sourceOffsetUm);
+  assert.equal(state.detector.angleDeg, previous.detectorAngleDeg);
+  assert.equal(state.source.id, previous.sourceId);
+  assert.equal(state.detector.id, previous.detectorId);
+  assert.equal(state.geometry.id, previous.geometryId);
+
+  const derived = deriveInstrument(state);
+  assert.equal(derived.responseChain.source.id, previous.sourceId);
+  assert.equal(derived.responseChain.detector.id, previous.detectorId);
+  assert.equal(derived.responseChain.geometry.id, previous.geometryId);
+  for (const point of derived.spectrum.points) {
+    assert.equal(Number.isFinite(point.x), true);
+    assert.equal(Number.isFinite(point.y), true);
+    assert.equal(Number.isFinite(point.rawY), true);
+    assert.ok(point.y >= 0 && point.y <= 1);
+    assert.ok(point.rawY >= 0 && point.rawY <= derived.spectrum.yScaleMax);
+  }
+});
