@@ -96,6 +96,18 @@ Rules:
 - Code / UI touched: `instrument/sim/physics/source.mjs`, `instrument/sim/physics/detector.mjs`, `instrument/sim/physics/geometry.mjs`, `instrument/sim/physics/artifacts.mjs`, `instrument/sim/physics/instrumentFunction.mjs`, `instrument/sim/physics/radiometry.mjs`, `instrument/sim/physics/scan.mjs`, `instrument/sim/physics/sample.mjs`, `instrument/sim/tests/model-invariants.test.mjs`.
 - Confidence: high for placeholder boundary; medium for qualitative shapes; low for any future quantitative use without additional sources.
 
+## Claim ILAB-009: Source-derived examples must declare display-only control binding separately from synthetic simulator controls
+
+- Date checked: 2026-06-11
+- Source(s):
+  - `refine.md`, sections 2.3 and 6.4.
+  - `DATA_SOURCES.md`, "Initial Demo Package" and "Proposed Data Schema".
+  - `instrument/data/manifest.json`.
+- Evidence summary: The refactor specification requires public source-derived spectra to remain display-only unless source, license, axes, processing, and claim boundary are verified. The current manifest already records DOI/URL, license, source file, processing, and claim boundaries for plotted examples and reference-only entries. During validation, the EGFP processed payload was found to include empty source rows that had been converted to `0` wavelengths; the preprocessing and validation rules now reject empty numeric cells, non-increasing wavelength axes, and mismatched display ranges.
+- Implementation boundary: Add machine-readable `claimLevel` and `controlBinding` fields to the source manifest. Use `source-derived-display` only for plotted, normalized/downsampled examples and `reference-only` for unplotted references. Keep `controlBinding: display-only` so UI code and tests can verify that source-derived examples are not controlled by simulator sliders. Axis cleanup fixes processing integrity only; it does not add new scientific interpretation or calibration claims.
+- Code / UI touched: `instrument/data/manifest.json`, `instrument/data/processed/egfp-emission.json`, `instrument/sim/ui/source-data.mjs`, `instrument/sim/tests/source-data.test.mjs`, `tools/preprocess-instrument-data.js`, `DATA_SOURCES.md`.
+- Confidence: high for the display-only boundary; this does not add new scientific interpretation of the source data.
+
 ## Open Evidence Backlog
 
 - Source spectra presets: document whether `ideal-flat`, `xenon-like`, and LED presets are synthetic teaching curves or based on public source spectra.
@@ -103,4 +115,4 @@ Rules:
 - Noise model: document deterministic seed, shot/read/dark baseline semantics, saturation threshold, and why the values are educational.
 - Instrument function: document the Gaussian or triangular convolution choice and area/peak behavior.
 - Sample presets: migrate hard-coded profiles to data files and avoid real material names unless source support is sufficient.
-- Source-derived data: keep `instrument/data/manifest.json` as the authority for DOI, license, processing, axes, and claim boundaries.
+- Source-derived data: keep `instrument/data/manifest.json` as the authority for DOI, license, processing, axes, claim boundaries, `claimLevel`, and display-only control binding.

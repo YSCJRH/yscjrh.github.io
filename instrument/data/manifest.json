@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-24",
+  "generatedAt": "2026-06-11",
   "disclaimer": "Displayed source-derived data are normalized/downsampled for educational visualization. They are not measurements from this website, not calibrated by this site, and not quantitative performance claims. / 页面展示的引用数据已为教学可视化归一化或降采样；它们不是本站测量结果，未经本站校准，也不构成定量性能声明。",
   "packageNotes": [
     "The synthetic Instrument Lab controls remain the default teaching model.",
@@ -22,6 +22,8 @@
         "line"
       ],
       "claimBoundary": "Source-derived normalized dye emission example for educational display only; not calibrated and not a quantitative comparison. / 引用来源的归一化染料发射示例，仅作教学显示；未经校准，也不是定量比较。",
+      "claimLevel": "source-derived-display",
+      "controlBinding": "display-only",
       "dataUrl": "processed/r6g-emission-ethylene-glycol.json",
       "source": {
         "title": "Absorption and Fluorescence spectra of Rhodamine 6G",
@@ -44,6 +46,7 @@
       "processing": {
         "normalization": "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
         "downsampling": "bucket average to 320 points",
+        "axisHandling": "wavelength axis read from the source CSV wavelength column; empty/non-numeric rows are ignored before downsampling",
         "sourceChecksumSha256": "de0db08f9ccef08b4c40e2328f065627d7a9b28cef4aa6f1335623a243ad7b6f",
         "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum. / 源荧光计数先按 Zenodo 记录中的室内光尖峰说明做窄尖峰抑制，再分桶平均、负值置零并按最大值归一化；该数据包用于教学显示，不是校正参考谱。"
       }
@@ -62,6 +65,8 @@
         "line"
       ],
       "claimBoundary": "Source-derived normalized fluorescent-protein emission example for educational display only; not calibrated and not a biological performance claim. / 引用来源的归一化荧光蛋白发射示例，仅作教学显示；未经校准，也不构成生物性能声明。",
+      "claimLevel": "source-derived-display",
+      "controlBinding": "display-only",
       "dataUrl": "processed/egfp-emission.json",
       "source": {
         "title": "Absorption and Emission spectra of fluorescent proteins",
@@ -87,6 +92,7 @@
       "processing": {
         "normalization": "negative values clamped to zero; max intensity normalized to 1",
         "downsampling": "bucket average to 260 points",
+        "axisHandling": "wavelength axis read from the source table column immediately before the EGFP emission column; empty/non-numeric rows are ignored before downsampling",
         "sourceChecksumSha256": "b9a1f5dda187e2083357b320e54dd3fb8aa31c9de825b201dacda4447a5a9315",
         "notes": "EGFP emission columns were extracted from the public fluorescent-protein table, downsampled by bucket averaging, clamped at zero, and normalized to max=1 for display. / EGFP 发射列来自公开荧光蛋白表格，经分桶平均降采样、负值置零并按最大值归一化，仅用于显示。"
       }
@@ -112,6 +118,8 @@
         "emissionNm": 442
       },
       "claimBoundary": "Processed EEM heatmap and slices for educational display only; excitation axis is inferred, and the display is not calibrated or suitable for component identification. / 处理后的 EEM 热图与切片仅作教学显示；激发轴为推断值，显示结果未经校准，也不适合用于组分识别。",
+      "claimLevel": "source-derived-display",
+      "controlBinding": "display-only",
       "dataUrl": "processed/fe-dom-sample01-eem.json",
       "source": {
         "title": "Dataset for \"Technical note: Effects of iron(II) on fluorescence properties of dissolved organic matter at circumneutral pH\"",
@@ -158,6 +166,8 @@
         "reference-only"
       ],
       "claimBoundary": "Reference-only correction-literacy entry; no NIST data are embedded, plotted, or used to claim calibration. / 仅作校正意识参考；未嵌入、绘制或使用 NIST 数据来声明校准。",
+      "claimLevel": "reference-only",
+      "controlBinding": "display-only",
       "dataUrl": null,
       "source": {
         "title": "NIST relative intensity correction standards for fluorescence spectroscopy",

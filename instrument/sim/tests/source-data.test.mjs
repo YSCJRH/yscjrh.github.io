@@ -1,6 +1,45 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { findClosestIndex, findEemPeak, getEemSlice } from "../ui/source-data.mjs";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  findClosestIndex,
+  findEemPeak,
+  getEemSlice,
+  isPlottableSourceDataset,
+  sourceDatasetBoundaryNote,
+} from "../ui/source-data.mjs";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const manifest = JSON.parse(readFileSync(resolve(here, "../../data/manifest.json"), "utf8"));
+
+function assertStrictlyIncreasing(values, label) {
+  assert.ok(Array.isArray(values), `${label} should be an array`);
+  assert.ok(values.length >= 2, `${label} should contain at least two points`);
+
+  values.forEach((value, index) => {
+    assert.equal(Number.isFinite(value), true, `${label}[${index}] should be finite`);
+    assert.ok(value > 0, `${label}[${index}] should be a positive wavelength`);
+    if (index > 0) {
+      assert.ok(value > values[index - 1], `${label}[${index}] should be greater than previous wavelength`);
+    }
+  });
+}
+
+function assertNormalized(values, label) {
+  assert.ok(Array.isArray(values), `${label} should be an array`);
+  values.forEach((value, index) => {
+    assert.equal(Number.isFinite(value), true, `${label}[${index}] should be finite`);
+    assert.ok(value >= 0 && value <= 1, `${label}[${index}] should stay in [0, 1]`);
+  });
+}
+
+function assertDisplayRangeMatches(data, axisKey, label) {
+  const axis = data[axisKey];
+  const range = data.displayRange?.[axisKey] || data.displayRange?.x;
+  assert.deepEqual(range, [axis[0], axis.at(-1)], `${label} display range should match axis endpoints`);
+}
 
 const demoEem = {
   excitation: [250, 300, 350],
@@ -57,4 +96,84 @@ test("EEM helpers tolerate empty or malformed inputs without throwing", () => {
   assert.deepEqual(emptySlice.x, []);
   assert.deepEqual(emptySlice.y, []);
   assert.match(emptySlice.fixedLabel, /Fixed Ex -- nm/);
+});
+
+test("source-derived manifest entries declare display-only control boundaries", () => {
+  assert.ok(Array.isArray(manifest.datasets));
+  assert.ok(manifest.datasets.length > 0);
+
+  manifest.datasets.forEach((dataset) => {
+    assert.equal(dataset.controlBinding, "display-only", `${dataset.id} should not bind to simulator controls`);
+    assert.ok(
+      ["source-derived-display", "reference-only"].includes(dataset.claimLevel),
+      `${dataset.id} should declare a conservative claim level`
+    );
+    assert.match(dataset.claimBoundary, /only|仅|参考|display/i);
+    assert.ok(dataset.source?.url, `${dataset.id} should record a source URL`);
+    assert.ok(dataset.source?.license, `${dataset.id} should record a license or non-embedded boundary`);
+    assert.ok(dataset.source?.citation, `${dataset.id} should record a citation or reference note`);
+
+    if (dataset.dataUrl) {
+      assert.equal(dataset.claimLevel, "source-derived-display");
+      assert.notEqual(dataset.displayModes?.[0], "reference-only");
+      assert.ok(dataset.processing?.normalization, `${dataset.id} should record normalization`);
+      assert.ok(dataset.processing?.downsampling, `${dataset.id} should record downsampling`);
+    } else {
+      assert.equal(dataset.claimLevel, "reference-only");
+      assert.deepEqual(dataset.displayModes, ["reference-only"]);
+    }
+  });
+});
+
+test("processed source-derived data axes and provenance are valid for plotting", () => {
+  manifest.datasets
+    .filter((dataset) => dataset.dataUrl)
+    .forEach((dataset) => {
+      const data = JSON.parse(readFileSync(resolve(here, "../../data", dataset.dataUrl), "utf8"));
+
+      assert.match(dataset.processing?.sourceChecksumSha256 || "", /^[a-f0-9]{64}$/);
+      assert.equal(typeof dataset.processing?.axisHandling, "string", `${dataset.id} should document axis handling`);
+      assert.ok(dataset.processing.axisHandling.length > 0, `${dataset.id} axis handling should not be empty`);
+
+      if (dataset.kind === "spectrum1d") {
+        assertStrictlyIncreasing(data.x, `${dataset.id}.x`);
+        assert.equal(data.x.length, data.y.length, `${dataset.id} x/y lengths should match`);
+        assertNormalized(data.y, `${dataset.id}.y`);
+        assertDisplayRangeMatches(data, "x", dataset.id);
+      }
+
+      if (dataset.kind === "eem") {
+        assertStrictlyIncreasing(data.excitation, `${dataset.id}.excitation`);
+        assertStrictlyIncreasing(data.emission, `${dataset.id}.emission`);
+        assert.deepEqual(data.displayRange?.excitation, [data.excitation[0], data.excitation.at(-1)]);
+        assert.deepEqual(data.displayRange?.emission, [data.emission[0], data.emission.at(-1)]);
+        assert.deepEqual(data.displayRange?.z, [0, 1]);
+        assert.equal(data.z.length, data.emission.length, `${dataset.id} EEM rows should match emission axis`);
+        data.z.forEach((row, rowIndex) => {
+          assert.equal(row.length, data.excitation.length, `${dataset.id} row ${rowIndex} should match excitation axis`);
+          assertNormalized(row, `${dataset.id}.z[${rowIndex}]`);
+        });
+      }
+    });
+});
+
+test("source dataset card boundary notes are short paired display-only copy", () => {
+  const plotted = manifest.datasets.find((dataset) => dataset.dataUrl);
+  const reference = manifest.datasets.find((dataset) => dataset.kind === "reference");
+
+  assert.match(sourceDatasetBoundaryNote(plotted), /Display-only source example/);
+  assert.match(sourceDatasetBoundaryNote(plotted), /模拟器滑块分离/);
+  assert.match(sourceDatasetBoundaryNote(reference), /Reference-only/);
+  assert.match(sourceDatasetBoundaryNote(reference), /未绘制/);
+});
+
+test("runtime only treats source-derived display-only datasets as plottable", () => {
+  const plotted = manifest.datasets.find((dataset) => dataset.dataUrl);
+  const reference = manifest.datasets.find((dataset) => dataset.kind === "reference");
+
+  assert.equal(isPlottableSourceDataset(plotted), true);
+  assert.equal(isPlottableSourceDataset(reference), false);
+  assert.equal(isPlottableSourceDataset({ ...plotted, claimLevel: "reference-only" }), false);
+  assert.equal(isPlottableSourceDataset({ ...plotted, controlBinding: "simulator-control" }), false);
+  assert.equal(isPlottableSourceDataset({ ...plotted, dataUrl: null }), false);
 });

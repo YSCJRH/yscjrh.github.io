@@ -177,6 +177,27 @@ function datasetKindLabel(dataset) {
   return dataset.kind ? `${dataset.kind} / 数据类型` : "Spectrum / 谱图";
 }
 
+export function sourceDatasetBoundaryNote(dataset) {
+  if (dataset?.claimLevel === "reference-only" || dataset?.kind === "reference") {
+    return "Reference-only; no curve is embedded or plotted. / 仅作参考；未嵌入，未绘制曲线。";
+  }
+
+  if (dataset?.kind === "eem") {
+    return "Display-only source example with slice view; separate from simulator sliders. / 仅显示的来源示例，带切片查看；与模拟器滑块分离。";
+  }
+
+  return "Display-only source example; separate from simulator sliders. / 仅显示的来源示例；与模拟器滑块分离。";
+}
+
+export function isPlottableSourceDataset(dataset) {
+  return Boolean(
+    dataset?.dataUrl &&
+      dataset.claimLevel === "source-derived-display" &&
+      dataset.controlBinding === "display-only" &&
+      dataset.kind !== "reference"
+  );
+}
+
 function updateDatasetCards(elements, datasetId) {
   const cards = elements.sourceCards ? Array.from(elements.sourceCards.querySelectorAll("[data-source-card]")) : [];
   cards.forEach((card) => {
@@ -203,9 +224,7 @@ function createDatasetCard(dataset, onSelect) {
 
   const note = document.createElement("span");
   note.className = "source-dataset-card__note";
-  note.textContent = dataset.kind === "eem"
-    ? "Processed educational EEM heatmap with slice view; separate from simulator sliders. / 处理后的教学 EEM 热图，带切片查看；和模拟器滑块分离。"
-    : "Normalized 1D example; display only. / 归一化一维示例，仅用于显示。";
+  note.textContent = sourceDatasetBoundaryNote(dataset);
 
   button.append(tag, label, note);
   button.addEventListener("click", () => onSelect(dataset.id));
@@ -562,7 +581,7 @@ export async function initializeSourceData(root) {
 
   try {
     sourceState.manifest = await fetchJson("data/manifest.json");
-    sourceState.datasets = sourceState.manifest.datasets.filter((dataset) => dataset.dataUrl);
+    sourceState.datasets = sourceState.manifest.datasets.filter(isPlottableSourceDataset);
     sourceSelect.textContent = "";
     if (elements.sourceCards) {
       elements.sourceCards.textContent = "";

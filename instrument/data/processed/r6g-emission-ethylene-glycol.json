@@ -659,5 +659,5 @@
       1
     ]
   },
-  "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum."
+  "notes": "Source fluorescence counts were passed through a narrow-spike suppression step because the Zenodo record notes visible room-light spikes, then bucket-averaged, clamped at zero, and normalized to max=1 for display. This package is educational, not a corrected reference spectrum. / 源荧光计数先按 Zenodo 记录中的室内光尖峰说明做窄尖峰抑制，再分桶平均、负值置零并按最大值归一化；该数据包用于教学显示，不是校正参考谱。"
 }

@@ -70,6 +70,8 @@ Required dataset fields:
 - `kind`: `spectrum1d`, `eem`, or `reference`
 - `role`
 - `label`
+- `claimLevel`: `source-derived-display` for plotted source-derived examples, or `reference-only` for unplotted references
+- `controlBinding`: currently always `display-only`; source-derived examples must not bind to simulator controls
 - optional `teachingTags`
 - optional `displayModes`, for example `line`, `eem`, `eem-slice`, or `reference-only`
 - optional `defaultSlices` for EEM cross-section controls
@@ -104,6 +106,8 @@ EEM files contain:
 - Do not commit large raw datasets.
 - Commit only `instrument/data/manifest.json` and compact processed JSON files.
 - Normalize each source-derived example independently unless a source explicitly supports calibrated comparison.
+- Validate processed axes as positive, finite, and strictly increasing; display ranges must match axis endpoints.
+- Validate plotted examples with `claimLevel: source-derived-display`, `controlBinding: display-only`, axis-handling notes, and source checksums.
 - Keep source citations and preprocessing caveats visible on the page.
 - Keep source-derived examples separate from the synthetic controls so visitors do not think sliders control real datasets.
 

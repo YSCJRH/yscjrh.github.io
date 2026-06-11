@@ -3307,5 +3307,5 @@
       1
     ]
   },
-  "notes": "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes."
+  "notes": "sample01EEM.txt was clamped at zero, averaged into a compact heatmap, and normalized to max=1. emission_lambda.txt provides the row axis. The source description mentions excitation_lambda.txt, but that file is absent from the Zenodo record; the display excitation axis is inferred as 239-800 nm in 3 nm increments from matrix width and source notes. / sample01EEM.txt 经过负值置零、压缩热图分桶平均并按最大值归一化；emission_lambda.txt 提供行轴。来源说明提到 excitation_lambda.txt，但 Zenodo 记录中未包含该文件，因此显示用激发轴根据矩阵宽度和来源说明推断为 239-800 nm、3 nm 间隔。"
 }

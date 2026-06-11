@@ -51,7 +51,12 @@ function parseCsv(text) {
 }
 
 function toFiniteNumber(value) {
-  const parsed = Number(String(value || "").trim());
+  const text = String(value ?? "").trim();
+  if (!text) {
+    return null;
+  }
+
+  const parsed = Number(text);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
@@ -326,6 +331,8 @@ async function buildArtifacts() {
         displayModes: ["line"],
         claimBoundary:
           "Source-derived normalized dye emission example for educational display only; not calibrated and not a quantitative comparison. / 引用来源的归一化染料发射示例，仅作教学显示；未经校准，也不是定量比较。",
+        claimLevel: "source-derived-display",
+        controlBinding: "display-only",
         dataUrl: "processed/r6g-emission-ethylene-glycol.json",
         source: {
           title: "Absorption and Fluorescence spectra of Rhodamine 6G",
@@ -348,6 +355,7 @@ async function buildArtifacts() {
           normalization:
             "narrow room-light spikes suppressed, negative values clamped to zero, max intensity normalized to 1",
           downsampling: "bucket average to 320 points",
+          axisHandling: "wavelength axis read from the source CSV wavelength column; empty/non-numeric rows are ignored before downsampling",
           sourceChecksumSha256: sha256(r6gText),
           notes: SOURCE_NOTES.r6g,
         },
@@ -361,6 +369,8 @@ async function buildArtifacts() {
         displayModes: ["line"],
         claimBoundary:
           "Source-derived normalized fluorescent-protein emission example for educational display only; not calibrated and not a biological performance claim. / 引用来源的归一化荧光蛋白发射示例，仅作教学显示；未经校准，也不构成生物性能声明。",
+        claimLevel: "source-derived-display",
+        controlBinding: "display-only",
         dataUrl: "processed/egfp-emission.json",
         source: {
           title: "Absorption and Emission spectra of fluorescent proteins",
@@ -382,6 +392,7 @@ async function buildArtifacts() {
         processing: {
           normalization: "negative values clamped to zero; max intensity normalized to 1",
           downsampling: "bucket average to 260 points",
+          axisHandling: "wavelength axis read from the source table column immediately before the EGFP emission column; empty/non-numeric rows are ignored before downsampling",
           sourceChecksumSha256: sha256(egfpText),
           notes: SOURCE_NOTES.egfp,
         },
@@ -400,6 +411,8 @@ async function buildArtifacts() {
         },
         claimBoundary:
           "Processed EEM heatmap and slices for educational display only; excitation axis is inferred, and the display is not calibrated or suitable for component identification. / 处理后的 EEM 热图与切片仅作教学显示；激发轴为推断值，显示结果未经校准，也不适合用于组分识别。",
+        claimLevel: "source-derived-display",
+        controlBinding: "display-only",
         dataUrl: "processed/fe-dom-sample01-eem.json",
         source: {
           title:
@@ -439,6 +452,8 @@ async function buildArtifacts() {
         displayModes: ["reference-only"],
         claimBoundary:
           "Reference-only correction-literacy entry; no NIST data are embedded, plotted, or used to claim calibration. / 仅作校正意识参考；未嵌入、绘制或使用 NIST 数据来声明校准。",
+        claimLevel: "reference-only",
+        controlBinding: "display-only",
         dataUrl: null,
         source: {
           title: "NIST relative intensity correction standards for fluorescence spectroscopy",
@@ -513,6 +528,25 @@ async function validateOutput() {
     });
   };
 
+  const assertStrictlyIncreasing = (values, label) => {
+    assertFiniteArray(values, label, 2);
+    values.forEach((value, index) => {
+      if (value <= 0) {
+        throw new Error(`${label} contains a non-positive wavelength.`);
+      }
+
+      if (index > 0 && value <= values[index - 1]) {
+        throw new Error(`${label} is not strictly increasing at index ${index}.`);
+      }
+    });
+  };
+
+  const assertDisplayRange = (range, expected, label) => {
+    if (!Array.isArray(range) || range.length !== 2 || range[0] !== expected[0] || range[1] !== expected[1]) {
+      throw new Error(`${label} displayRange does not match axis endpoints.`);
+    }
+  };
+
   if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.datasets)) {
     throw new Error("Manifest schema is invalid.");
   }
@@ -526,8 +560,23 @@ async function validateOutput() {
       throw new Error(`Manifest dataset is missing display boundary fields: ${dataset.id || "(unknown)"}`);
     }
 
+    if (dataset.controlBinding !== "display-only") {
+      throw new Error(`Manifest dataset must declare display-only control binding: ${dataset.id || "(unknown)"}`);
+    }
+
     if (dataset.kind === "reference") {
+      if (dataset.claimLevel !== "reference-only" || dataset.dataUrl !== null) {
+        throw new Error(`Reference dataset must stay reference-only and unplotted: ${dataset.id || "(unknown)"}`);
+      }
       continue;
+    }
+
+    if (dataset.claimLevel !== "source-derived-display") {
+      throw new Error(`Plottable dataset must declare source-derived display claim level: ${dataset.id}`);
+    }
+
+    if (!dataset.processing?.axisHandling || !/^[a-f0-9]{64}$/.test(dataset.processing?.sourceChecksumSha256 || "")) {
+      throw new Error(`Plottable dataset must record axis handling and source checksum: ${dataset.id}`);
     }
 
     if (!supportedDataKinds.has(dataset.kind)) {
@@ -547,8 +596,9 @@ async function validateOutput() {
         throw new Error(`Invalid 1D spectrum arrays for ${dataset.id}`);
       }
 
-      assertFiniteArray(data.x, `1D x axis for ${dataset.id}`, 2);
+      assertStrictlyIncreasing(data.x, `1D x axis for ${dataset.id}`);
       assertNormalizedArray(data.y, `1D y values for ${dataset.id}`);
+      assertDisplayRange(data.displayRange?.x, [data.x[0], data.x.at(-1)], `1D x axis for ${dataset.id}`);
     }
 
     if (dataset.kind === "eem") {
@@ -556,8 +606,11 @@ async function validateOutput() {
         throw new Error(`Invalid EEM arrays for ${dataset.id}`);
       }
 
-      assertFiniteArray(data.excitation, `EEM excitation axis for ${dataset.id}`, 2);
-      assertFiniteArray(data.emission, `EEM emission axis for ${dataset.id}`, 2);
+      assertStrictlyIncreasing(data.excitation, `EEM excitation axis for ${dataset.id}`);
+      assertStrictlyIncreasing(data.emission, `EEM emission axis for ${dataset.id}`);
+      assertDisplayRange(data.displayRange?.excitation, [data.excitation[0], data.excitation.at(-1)], `EEM excitation axis for ${dataset.id}`);
+      assertDisplayRange(data.displayRange?.emission, [data.emission[0], data.emission.at(-1)], `EEM emission axis for ${dataset.id}`);
+      assertDisplayRange(data.displayRange?.z, [0, 1], `EEM z axis for ${dataset.id}`);
 
       if (dataset.displayModes.includes("eem-slice")) {
         const defaults = dataset.defaultSlices || {};
