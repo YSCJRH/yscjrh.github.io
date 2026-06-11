@@ -7,14 +7,14 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=component-overlay-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=component-overlay-20260611";
+} from "./sim/state.mjs?v=control-hardening-20260611";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=control-hardening-20260611";
 import {
   collectInstrumentElements,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=component-overlay-20260611";
+} from "./sim/ui/spectrum.mjs?v=control-hardening-20260611";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -121,7 +121,7 @@ if (root) {
   }
 
   function loadSourceDataModule() {
-    sourceDataModulePromise ||= import("./sim/ui/source-data.mjs?v=component-overlay-20260611");
+    sourceDataModulePromise ||= import("./sim/ui/source-data.mjs?v=control-hardening-20260611");
     return sourceDataModulePromise;
   }
 
