@@ -283,6 +283,17 @@ test("sample preset no-JS fallback options match the shared preset options", () 
   );
 });
 
+test("sample control exposes classic fluorescence teaching presets with boundaries", () => {
+  const sampleStart = instrumentHtml.indexOf('data-control="sample"');
+  const sampleEnd = instrumentHtml.indexOf("</label>", sampleStart);
+  const sampleBlock = instrumentHtml.slice(sampleStart, sampleEnd);
+
+  assert.match(sampleBlock, /Rhodamine 6G-like dye/);
+  assert.match(sampleBlock, /EGFP-like protein/);
+  assert.match(sampleBlock, /synthetic analogs/i);
+  assert.match(sampleBlock, /合成类比/);
+});
+
 test("source, detector, and geometry no-JS fallback options match the shared preset options", () => {
   assert.deepEqual(
     selectOptionsFromHtml("source-type"),
@@ -519,11 +530,16 @@ test("single-language mode can collapse dense static workbench labels", () => {
   }
 });
 
-test("instrument route cache key changes with the 3D readability polish slice", () => {
+test("instrument route cache key changes with the classic sample preset slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=readability-polish-20260617/,
-    "instrument.js cache key should be bumped when route-local scene or runtime copy changes"
+    /instrument\.js\?v=classic-samples-20260617/,
+    "instrument.js cache key should be bumped when route-local runtime controls change"
+  );
+  assert.match(
+    instrumentScript,
+    /state\.mjs\?v=classic-samples-20260617/,
+    "state module cache key should be bumped when preset runtime data changes"
   );
   assert.match(
     instrumentScript,

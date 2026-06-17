@@ -7,15 +7,15 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=control-hardening-20260611";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=inner-filter-risk-20260611";
+} from "./sim/state.mjs?v=classic-samples-20260617";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=classic-samples-20260617";
 import {
   collectInstrumentElements,
   localizedText,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=source-axes-20260611";
+} from "./sim/ui/spectrum.mjs?v=classic-samples-20260617";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;

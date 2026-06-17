@@ -1,8 +1,8 @@
 import { wavelengthFromGratingAngle, wavelengthToColor } from "./grating.mjs?v=wavelength-control-20260429";
 import { bandpassFromSlit, resolutionLabel, throughputFromSlit } from "./monochromator.mjs?v=wavelength-control-20260429";
 import { collectionFromDetectorAngle, deriveAlignment } from "./alignment.mjs?v=wavelength-control-20260429";
-import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=control-hardening-20260611";
-import { generateDiagnostics } from "./diagnostics.mjs?v=inner-filter-risk-20260611";
+import { generateSpectrum, scanMetaForMode } from "./spectrum.mjs?v=classic-samples-20260617";
+import { generateDiagnostics } from "./diagnostics.mjs?v=classic-samples-20260617";
 import { deriveArtifactRisks } from "./artifacts.mjs?v=response-chain-20260611";
 import { evaluateDetectorResponse } from "./detector.mjs?v=response-chain-20260611";
 import { deriveGeometryResponse } from "./geometry.mjs?v=response-chain-20260611";
@@ -10,7 +10,7 @@ import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { deriveInnerFilterRisk, evaluateGaussianMixture } from "./sample.mjs?v=inner-filter-risk-20260611";
 import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES } from "../state.mjs?v=control-hardening-20260611";
+import { SAMPLE_PROFILES } from "../state.mjs?v=classic-samples-20260617";
 
 const DEFAULT_SOURCE_ID = "xenon-like";
 const DEFAULT_DETECTOR_ID = "pmt-like-visible";

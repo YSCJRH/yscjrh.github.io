@@ -1,9 +1,33 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-17 Instrument Lab 3D readability and scientific-boundary polish
-- Status: Full local validation, browser QA, and visual screenshot review passed; ready for commit and publish
+- Active: 2026-06-17 Instrument Lab classic sample presets
+- Status: Full local validation and browser QA passed locally; ready for commit and publish
 - Last updated: 2026-06-17
+
+## 2026-06-17 Instrument Lab classic sample presets
+- Status: Full local validation and browser QA passed locally; ready for commit and publish.
+- Trigger:
+  - User requested adding classic fluorescent samples inside the sample cell with corresponding simulator feedback.
+- Changes:
+  - Added two classic teaching presets to the sample selector: `Rhodamine 6G-like dye / 罗丹明 6G 类染料` and `EGFP-like protein / EGFP 类荧光蛋白`.
+  - Kept both presets as synthetic analogs that control only the synthetic simulator model.
+  - Added bilingual preset notes and diagnostics feedback that tell users the best nearby excitation/emission wavelengths and keep source-derived examples display-only.
+  - Added `ILAB-013` to the instrument research log so classic sample names are bounded by evidence and do not become measured-spectrum claims.
+  - Added JSON sample records for the two presets and bumped route-local ESM cache keys for this slice.
+  - Extended tests and browser QA to verify the presets, diagnostics, evidence boundary, and UI contract.
+- Validation result:
+  - TDD red: focused sample-data, physics, evidence-docs, UI-contract, and browser-QA tests failed before implementation for missing classic sample presets, ILAB-013, diagnostics feedback, and browser marker coverage.
+  - Green: `node --test instrument/sim/tests/sample-data.test.mjs instrument/sim/tests/physics.test.mjs instrument/sim/tests/evidence-docs.test.mjs instrument/sim/tests/ui-contract.test.mjs` passed: 88/88.
+  - Green: `node --test instrument/sim/tests/browser-qa-tool.test.mjs`; `node --check tools/check-instrument-browser.js`; `node --check instrument/sim/data/samplePresets.mjs`; `node --check instrument/sim/physics/diagnostics.mjs`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 111/111.
+  - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+  - Green: `node tools/check-instrument-browser.js` passed with the added `classic samples` check, including Rhodamine-like and EGFP-like selector changes plus synthetic-boundary diagnostics.
+- Remaining notes:
+  - This slice does not reinterpret or reprocess source-derived spectra; those examples remain separate display-only references.
+  - Preset peak centers and widths are qualitative teaching parameters, not measured or calibrated values.
+- Blockers:
+  - None.
 
 ## 2026-06-17 Instrument Lab 3D readability and scientific-boundary polish
 - Status: Full local validation, browser QA, and visual screenshot review passed; ready for commit and publish.

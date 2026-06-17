@@ -143,11 +143,22 @@ Rules:
 - Code / UI touched: `instrument/index.html`, `instrument/sim/tests/evidence-docs.test.mjs`.
 - Confidence: high for qualitative caution; low for any quantitative sample-environment model until sample-specific evidence is added.
 
+## Claim ILAB-013: Classic named sample presets may be shown only as synthetic analogs tied to display-only examples
+
+- Date checked: 2026-06-17
+- Source(s):
+  - `instrument/data/manifest.json`, `r6g-emission-ethylene-glycol` source-derived example.
+  - `instrument/data/manifest.json`, `egfp-emission` source-derived example.
+- Evidence summary: The local source-derived manifest already records DOI, license, axes, processing, and claim boundaries for Rhodamine 6G emission and EGFP emission examples. These entries support using the names as recognizable teaching anchors, but the source-derived examples remain display-only and are not controlled by simulator sliders.
+- Implementation boundary: Classic named sample presets must be synthetic analogs. Their Gaussian excitation/emission shapes, quantum-yield cue, baseline, noise, concentration, and diagnostics are teaching parameters, not extracted from the cited spectra and not measured by this site. Keep `controlBinding: simulator-control` for the preset and keep source-derived examples separate with `controlBinding: display-only`.
+- Code / UI touched: `instrument/data/samples/*.json`, `instrument/sim/data/samplePresets.mjs`, `instrument/sim/physics/diagnostics.mjs`, `instrument/index.html`, `instrument/sim/tests/sample-data.test.mjs`, `instrument/sim/tests/physics.test.mjs`, `instrument/sim/tests/evidence-docs.test.mjs`, `instrument/sim/tests/ui-contract.test.mjs`.
+- Confidence: high for source separation and naming boundary; medium for qualitative teaching analog shapes; low for any quantitative claim about real Rhodamine 6G or EGFP spectra from these controls.
+
 ## Open Evidence Backlog
 
 - Source spectra presets: `ideal-flat`, `xenon-like`, and LED presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured boundary. Add evidence before using real lamp spectra.
 - Detector response presets: `ideal-flat`, `pmt-like-visible`, and `silicon-like` now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and an explicit not-measured/not-calibrated boundary. Add evidence before using real detector responsivity curves.
 - Noise model: ILAB-010 covers the current deterministic teaching perturbation and headroom boundary. Add a new evidence entry before introducing real shot/read/dark-noise formulas, SNR, detection-limit, or detector-linearity claims.
 - Instrument function: ILAB-011 covers the current Gaussian teaching convolution. Add a new evidence entry before claiming a measured slit function, wavelength accuracy, or manufacturer-specific bandpass mapping.
-- Sample presets: JSON-backed teaching presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, `evidenceKey: ILAB-008`, and a bilingual not-measured sample boundary. Continue avoiding real material names unless source support is sufficient.
+- Sample presets: JSON-backed teaching presets now declare `claimLevel: synthetic-teaching`, `controlBinding: simulator-control`, and a bilingual not-measured sample boundary. Real material names require source support and must stay as synthetic analogs unless separate quantitative evidence is added.
 - Source-derived data: keep `instrument/data/manifest.json` as the authority for DOI, license, processing, axes, claim boundaries, `claimLevel`, and display-only control binding.

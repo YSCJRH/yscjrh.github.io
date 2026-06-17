@@ -26,6 +26,7 @@ const MARKERS = [
   "language switch",
   "language density",
   "scene overlay language",
+  "classic samples",
   "WebGL fallback",
 ];
 
@@ -544,6 +545,58 @@ async function main() {
       responseNormalized
     );
     record("response-normalized view");
+
+    progress("checking classic sample presets");
+    const classicSamples = evalInPage(
+      SESSION,
+      `async () => {
+        document.querySelector('[data-language-mode-option="en"]').click();
+        await new Promise((resolve) => setTimeout(resolve, 80));
+
+        function setControl(selector, value) {
+          const control = document.querySelector(selector);
+          control.value = value;
+          control.dispatchEvent(new Event('input', { bubbles: true }));
+          control.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function snapshot() {
+          return {
+            note: document.querySelector('[data-sample-note]')?.textContent.trim() || "",
+            diagnostics: document.querySelector('[data-diagnostics-list]')?.textContent.trim() || "",
+            peak: document.querySelector('[data-intensity-readout]')?.textContent.trim() || "",
+          };
+        }
+
+        const sampleOptions = [...document.querySelector('[data-control="sample"]').options].map((option) => option.value);
+
+        setControl('[data-control="sample"]', 'rhodamine-6g-like');
+        setControl('[data-control="excitation-wavelength"]', '530');
+        setControl('[data-control="emission-wavelength"]', '560');
+        await new Promise((resolve) => setTimeout(resolve, 120));
+        const rhodamine = snapshot();
+
+        setControl('[data-control="sample"]', 'egfp-like');
+        setControl('[data-control="excitation-wavelength"]', '488');
+        setControl('[data-control="emission-wavelength"]', '510');
+        await new Promise((resolve) => setTimeout(resolve, 120));
+        const egfp = snapshot();
+
+        return { sampleOptions, rhodamine, egfp };
+      }`
+    );
+    assertCheck(
+      classicSamples.sampleOptions.includes("rhodamine-6g-like") &&
+        classicSamples.sampleOptions.includes("egfp-like") &&
+        /Rhodamine 6G-like dye/.test(classicSamples.rhodamine.diagnostics) &&
+        /synthetic analog/.test(classicSamples.rhodamine.diagnostics) &&
+        /EGFP-like protein/.test(classicSamples.egfp.diagnostics) &&
+        /synthetic analog/.test(classicSamples.egfp.diagnostics) &&
+        /classic bright dye|fluorescent protein/i.test(classicSamples.rhodamine.note + classicSamples.egfp.note),
+      "classic sample presets did not expose bounded feedback",
+      classicSamples
+    );
+    record("classic samples");
 
     progress("checking default 3D scene");
     const default3d = runCode(

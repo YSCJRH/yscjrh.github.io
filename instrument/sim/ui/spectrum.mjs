@@ -6,7 +6,7 @@ import {
   SAMPLE_PRESET_OPTIONS,
   SPECTRUM_VIEW_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=control-hardening-20260611";
+} from "../state.mjs?v=classic-samples-20260617";
 
 const chart = {
   left: 54,

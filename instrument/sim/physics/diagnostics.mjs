@@ -41,6 +41,16 @@ export function generateDiagnostics(state, derived) {
     });
   }
 
+  const classicSample = derived.spectrum.profile.classicSample;
+  if (classicSample) {
+    diagnostics.push({
+      tone: "info",
+      evidenceKey: "ILAB-013",
+      label: "Classic sample preset / 经典样品预设",
+      text: classicSample.feedback,
+    });
+  }
+
   if (state.display?.showNoise === false) {
     displayDiagnostics.push({
       tone: "info",

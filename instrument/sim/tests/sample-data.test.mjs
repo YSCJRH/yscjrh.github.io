@@ -55,7 +55,7 @@ test("sample presets are backed by static JSON data with teaching boundaries", (
     assert.equal(sample.id, expectedId);
     assert.equal(sample.claimLevel, "synthetic-teaching");
     assert.equal(sample.controlBinding, "simulator-control");
-    assert.equal(sample.evidenceKey, "ILAB-008");
+    assert.match(sample.evidenceKey, /^ILAB-(008|013)$/);
     assertLocalizedText(sample.label, `${sample.id}.label`);
     assertLocalizedText(sample.notes, `${sample.id}.notes`);
     assertLocalizedText(sample.boundary, `${sample.id}.boundary`);
@@ -69,6 +69,29 @@ test("sample presets are backed by static JSON data with teaching boundaries", (
     assert.ok(Array.isArray(sample.sources));
     assert.equal(sample.sources.length, 0, "synthetic teaching presets should not imply sourced sample spectra");
   });
+});
+
+test("classic fluorescence sample presets stay synthetic and source-separated", () => {
+  const classicIds = ["egfp-like", "rhodamine-6g-like"];
+
+  for (const id of classicIds) {
+    const preset = TEACHING_SAMPLE_PRESETS[id];
+    const profile = SAMPLE_PROFILES[id];
+
+    assert.ok(preset, `${id} should exist as a teaching preset`);
+    assert.equal(preset.claimLevel, "synthetic-teaching");
+    assert.equal(preset.controlBinding, "simulator-control");
+    assert.equal(preset.evidenceKey, "ILAB-013");
+    assert.equal(preset.sources.length, 0, "classic presets must not imply measured spectra");
+    assert.equal(preset.classicSample?.kind, "synthetic-analog");
+    assert.match(preset.classicSample?.sourceDerivedExampleId || "", /r6g-emission|egfp-emission/);
+    assertLocalizedText(preset.classicSample?.feedback, `${id}.classicSample.feedback`);
+    assert.match(preset.notes.en, /synthetic/i);
+    assert.match(preset.notes.zh, /合成/);
+    assert.equal(profile.classicSample.kind, "synthetic-analog");
+    assert.equal(profile.classicSample.sourceDerivedExampleId, preset.classicSample.sourceDerivedExampleId);
+    assert.equal(profile.classicSample.feedback, `${preset.classicSample.feedback.en} / ${preset.classicSample.feedback.zh}`);
+  }
 });
 
 test("runtime sample profiles are derived from sample preset data", () => {
@@ -89,7 +112,7 @@ test("runtime sample profiles are derived from sample preset data", () => {
     assert.equal(profile.amplitude, preset.quantumYieldTeaching);
     assert.equal(profile.claimLevel, "synthetic-teaching");
     assert.equal(profile.controlBinding, "simulator-control");
-    assert.equal(profile.evidenceKey, "ILAB-008");
+    assert.match(profile.evidenceKey, /^ILAB-(008|013)$/);
     assert.equal(profile.boundary, `${preset.boundary.en} / ${preset.boundary.zh}`);
     assert.equal(option.label, profile.name);
   }

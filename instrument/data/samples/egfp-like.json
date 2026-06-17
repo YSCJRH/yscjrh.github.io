@@ -1,0 +1,47 @@
+{
+  "id": "egfp-like",
+  "label": {
+    "en": "EGFP-like protein",
+    "zh": "EGFP 类荧光蛋白"
+  },
+  "claimLevel": "synthetic-teaching",
+  "controlBinding": "simulator-control",
+  "evidenceKey": "ILAB-013",
+  "boundary": {
+    "en": "Synthetic teaching preset controlled only by the simulator; not a measured sample spectrum.",
+    "zh": "仅由模拟器控制的合成教学预设，不是实测样品谱图。"
+  },
+  "absorption": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 488, "fwhmNm": 48, "amplitude": 1 }
+    ]
+  },
+  "emission": {
+    "type": "gaussian-mixture",
+    "peaks": [
+      { "centerNm": 510, "fwhmNm": 44, "amplitude": 1 }
+    ]
+  },
+  "quantumYieldTeaching": 0.72,
+  "concentrationRelative": 0.2,
+  "innerFilterRisk": "low",
+  "notes": {
+    "en": "A synthetic analog of a fluorescent protein; tune near blue excitation and green emission.",
+    "zh": "荧光蛋白的合成类比；可在蓝光激发与绿色发射附近观察。"
+  },
+  "classicSample": {
+    "kind": "synthetic-analog",
+    "sourceDerivedExampleId": "egfp-emission",
+    "feedback": {
+      "en": "EGFP-like protein preset: synthetic analog, best viewed near Ex 488 nm and Em 510 nm; the cited EGFP source-derived spectrum remains display-only.",
+      "zh": "EGFP 类荧光蛋白预设：合成类比样品，适合在 Ex 488 nm 与 Em 510 nm 附近观察；引用的 EGFP 来源谱仍仅用于显示。"
+    }
+  },
+  "model": {
+    "baseline": 0.035,
+    "noise": 0.016,
+    "decay": 0.18
+  },
+  "sources": []
+}

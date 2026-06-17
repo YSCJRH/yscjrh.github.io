@@ -68,6 +68,86 @@ export const TEACHING_SAMPLE_PRESETS = Object.freeze({
     },
     sources: [],
   },
+  "rhodamine-6g-like": {
+    id: "rhodamine-6g-like",
+    label: {
+      en: "Rhodamine 6G-like dye",
+      zh: "罗丹明 6G 类染料",
+    },
+    claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-013",
+    boundary: SAMPLE_PRESET_BOUNDARY,
+    absorption: {
+      type: "gaussian-mixture",
+      peaks: [{ centerNm: 530, fwhmNm: 78, amplitude: 1 }],
+    },
+    emission: {
+      type: "gaussian-mixture",
+      peaks: [{ centerNm: 560, fwhmNm: 58, amplitude: 1 }],
+    },
+    quantumYieldTeaching: 0.94,
+    concentrationRelative: 0.22,
+    innerFilterRisk: "low",
+    notes: {
+      en: "A synthetic analog of a classic bright dye; tune near green excitation and orange emission.",
+      zh: "经典明亮染料的合成类比；可在绿色激发与橙色发射附近观察。",
+    },
+    classicSample: {
+      kind: "synthetic-analog",
+      sourceDerivedExampleId: "r6g-emission-ethylene-glycol",
+      feedback: {
+        en: "Rhodamine 6G-like dye preset: synthetic analog, best viewed near Ex 530 nm and Em 560 nm; the cited R6G source-derived spectrum remains display-only.",
+        zh: "罗丹明 6G 类染料预设：合成类比样品，适合在 Ex 530 nm 与 Em 560 nm 附近观察；引用的 R6G 来源谱仍仅用于显示。",
+      },
+    },
+    model: {
+      baseline: 0.032,
+      noise: 0.014,
+      decay: 0.1,
+    },
+    sources: [],
+  },
+  "egfp-like": {
+    id: "egfp-like",
+    label: {
+      en: "EGFP-like protein",
+      zh: "EGFP 类荧光蛋白",
+    },
+    claimLevel: "synthetic-teaching",
+    controlBinding: "simulator-control",
+    evidenceKey: "ILAB-013",
+    boundary: SAMPLE_PRESET_BOUNDARY,
+    absorption: {
+      type: "gaussian-mixture",
+      peaks: [{ centerNm: 488, fwhmNm: 48, amplitude: 1 }],
+    },
+    emission: {
+      type: "gaussian-mixture",
+      peaks: [{ centerNm: 510, fwhmNm: 44, amplitude: 1 }],
+    },
+    quantumYieldTeaching: 0.72,
+    concentrationRelative: 0.2,
+    innerFilterRisk: "low",
+    notes: {
+      en: "A synthetic analog of a fluorescent protein; tune near blue excitation and green emission.",
+      zh: "荧光蛋白的合成类比；可在蓝光激发与绿色发射附近观察。",
+    },
+    classicSample: {
+      kind: "synthetic-analog",
+      sourceDerivedExampleId: "egfp-emission",
+      feedback: {
+        en: "EGFP-like protein preset: synthetic analog, best viewed near Ex 488 nm and Em 510 nm; the cited EGFP source-derived spectrum remains display-only.",
+        zh: "EGFP 类荧光蛋白预设：合成类比样品，适合在 Ex 488 nm 与 Em 510 nm 附近观察；引用的 EGFP 来源谱仍仅用于显示。",
+      },
+    },
+    model: {
+      baseline: 0.035,
+      noise: 0.016,
+      decay: 0.18,
+    },
+    sources: [],
+  },
   blank: {
     id: "blank",
     label: {
@@ -162,6 +242,13 @@ function toProfile(preset) {
     decay: preset.model.decay,
     innerFilterRisk: preset.innerFilterRisk,
     concentrationRelative: preset.concentrationRelative,
+    classicSample: preset.classicSample
+      ? {
+          kind: preset.classicSample.kind,
+          sourceDerivedExampleId: preset.classicSample.sourceDerivedExampleId,
+          feedback: `${preset.classicSample.feedback.en} / ${preset.classicSample.feedback.zh}`,
+        }
+      : null,
   };
 }
 

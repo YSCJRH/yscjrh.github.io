@@ -304,6 +304,38 @@ test("diagnostics surface response-chain consequences", () => {
   assert.ok(highTraceLabels.includes("Signal headroom / 信号余量"));
 });
 
+test("classic sample presets produce sample-specific synthetic feedback", () => {
+  const cases = [
+    { id: "rhodamine-6g-like", ex: 530, em: 560, label: /Rhodamine 6G-like/i },
+    { id: "egfp-like", ex: 488, em: 510, label: /EGFP-like/i },
+  ];
+
+  for (const item of cases) {
+    const matched = createInstrumentState();
+    matched.sample.preset = item.id;
+    matched.source.id = "ideal-flat";
+    matched.detector.id = "ideal-flat";
+    setGratingWavelength(matched, "excitation", item.ex);
+    setGratingWavelength(matched, "emission", item.em);
+    const matchedDerived = deriveInstrument(matched);
+
+    const mismatched = createInstrumentState();
+    mismatched.sample.preset = item.id;
+    mismatched.source.id = "ideal-flat";
+    mismatched.detector.id = "ideal-flat";
+    const mismatchedDerived = deriveInstrument(mismatched);
+
+    const feedback = matchedDerived.diagnostics.find((diagnostic) => diagnostic.label === "Classic sample preset / 经典样品预设");
+    assert.ok(feedback, `${item.id} should show classic sample feedback`);
+    assert.equal(feedback.evidenceKey, "ILAB-013");
+    assert.match(feedback.text, item.label);
+    assert.match(feedback.text, /synthetic analog/i);
+    assert.match(feedback.text, /合成类比/);
+    assert.ok(matchedDerived.responseChain.signal.normalized > mismatchedDerived.responseChain.signal.normalized);
+    assert.ok(matchedDerived.spectrum.peak > mismatchedDerived.spectrum.peak);
+  }
+});
+
 test("inner-filter risk remains a categorical diagnostic, not a correction", () => {
   const lowRisk = createInstrumentState();
   const lowRiskDerived = deriveInstrument(lowRisk);

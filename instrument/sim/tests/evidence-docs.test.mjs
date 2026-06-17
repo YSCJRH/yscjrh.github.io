@@ -128,6 +128,15 @@ test("sample environment evidence covers environmental fluorescence effects", ()
   assertTeachingCardEvidence("Sample environment", "ILAB-012");
 });
 
+test("classic named sample presets are bounded as synthetic analogs", () => {
+  assert.match(researchLog, /Claim ILAB-013:/);
+  assert.match(researchLog, /classic named sample presets/i);
+  assert.match(researchLog, /synthetic analogs/i);
+  assert.match(researchLog, /Rhodamine 6G/i);
+  assert.match(researchLog, /EGFP/i);
+  assert.match(researchLog, /source-derived examples remain display-only/i);
+});
+
 test("final refine audit maps every Definition of Done section to current evidence", () => {
   for (const section of ["9.1", "9.2", "9.3", "9.4", "9.5", "9.6"]) {
     assert.match(finalAudit, new RegExp(`refine\\.md ${section}`), `missing DoD section ${section}`);

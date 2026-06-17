@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=readability-polish-20260617").catch((error) => {
+        import("./instrument.js?v=classic-samples-20260617").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
@@ -511,10 +511,12 @@
                       <select data-control="sample">
                         <option value="low-background">Low-background sample / 低背景样品</option>
                         <option value="broad-emission">Broad-emission sample / 宽发射样品</option>
+                        <option value="rhodamine-6g-like">Rhodamine 6G-like dye / 罗丹明 6G 类染料</option>
+                        <option value="egfp-like">EGFP-like protein / EGFP 类荧光蛋白</option>
                         <option value="blank">Blank / background-dominant / 空白或背景主导</option>
                         <option value="scattering">Scattering sample / 散射样品</option>
                       </select>
-                      <small class="control-help" data-sample-note>Illustrative behavior only; not a real sample spectrum. 仅表示示意行为，不是真实样品谱图。</small>
+                      <small class="control-help" data-sample-note>Classic entries are synthetic analogs linked to display-only source examples; they still control only the synthetic model. / 经典条目是与仅显示引用示例相连的合成类比，仍只控制合成模型。</small>
                     </label>
 
                     <details class="advanced-geometry">
