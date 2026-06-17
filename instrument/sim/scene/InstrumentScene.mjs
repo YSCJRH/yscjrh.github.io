@@ -843,6 +843,35 @@ function createBeam(color, radius, opacity) {
   return mesh;
 }
 
+function createSignalLine(color, opacity) {
+  const line = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+    new THREE.LineDashedMaterial({
+      color,
+      transparent: true,
+      opacity,
+      dashSize: 0.13,
+      gapSize: 0.08,
+      depthWrite: false,
+    })
+  );
+  line.renderOrder = 8;
+  line.computeLineDistances();
+  return line;
+}
+
+function setSignalLineBetween(line, start, end) {
+  if (!line) {
+    return;
+  }
+  const position = line.geometry.getAttribute("position");
+  position.setXYZ(0, start.x, start.y, start.z);
+  position.setXYZ(1, end.x, end.y, end.z);
+  position.needsUpdate = true;
+  line.geometry.computeBoundingSphere();
+  line.computeLineDistances();
+}
+
 function createSegmentedBeam(color, radius, opacity, count = 6) {
   const group = new THREE.Group();
   group.userData.segments = Array.from({ length: count }, () => createBeam(color, radius, opacity));
@@ -1387,7 +1416,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     excitation: createBeam(0x6f88ff, 0.035, 0.82),
     residual: createSegmentedBeam(0x70809a, 0.014, 0.22, 6),
     emission: createBeam(0x52f0d3, 0.035, 0.58),
-    signal: createBeam(0x8490a8, 0.012, 0.28),
+    signal: createSignalLine(0x9aa7bd, 0.28),
   };
   root.add(beams.excitation, beams.residual, beams.emission, beams.signal);
 
@@ -1422,8 +1451,8 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   function updateAnnotationFocus(part) {
     const monoFocus = isMonochromatorPart(part);
     annotations.forEach(({ name, group }) => {
-      let labelOpacity = name === part ? 0.92 : 0.32;
-      let leaderOpacity = name === part ? 0.28 : 0.08;
+      let labelOpacity = name === part ? 0.92 : 0.18;
+      let leaderOpacity = name === part ? 0.28 : 0.05;
 
       if (monoFocus) {
         const isFocus = name === part;
@@ -1431,11 +1460,11 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
           name === "sample" ||
           (part === "excitation" && name === "beam-stop") ||
           (part === "emission" && name === "detector");
-        labelOpacity = isFocus ? 0.96 : isContextAnchor ? 0.28 : 0.08;
-        leaderOpacity = isFocus ? 0.34 : isContextAnchor ? 0.09 : 0.025;
+        labelOpacity = isFocus ? 0.96 : isContextAnchor ? 0.18 : 0.035;
+        leaderOpacity = isFocus ? 0.34 : isContextAnchor ? 0.06 : 0.012;
       } else if (name === "beam-stop" && part !== "sample") {
-        labelOpacity = 0.2;
-        leaderOpacity = 0.06;
+        labelOpacity = 0.08;
+        leaderOpacity = 0.025;
       }
 
       setAnnotationOpacity(group, labelOpacity, leaderOpacity);
@@ -1636,7 +1665,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
     setCylinderBetween(beams.excitation, new THREE.Vector3(-4, BENCH_Y + 0.1, sourceOffset), samplePoint);
     setSegmentedBeam(beams.residual, samplePoint, new THREE.Vector3(1.36, BENCH_Y + 0.1, 0));
     setCylinderBetween(beams.emission, samplePoint, components.detector.position.clone().setY(BENCH_Y + 0.1));
-    setCylinderBetween(beams.signal, components.detector.position.clone().setY(BENCH_Y + 0.16), components.output.position.clone().setY(BENCH_Y + 0.18));
+    setSignalLineBetween(beams.signal, components.detector.position.clone().setY(BENCH_Y + 0.16), components.output.position.clone().setY(BENCH_Y + 0.18));
     updateDetectorArmControl(detectorArmControl, components.sample.position, components.detector.position, currentState.detector.angleDeg);
     updateGeometryModeCue(geometryModeCue, currentState.geometry?.id, components.sample.position);
 

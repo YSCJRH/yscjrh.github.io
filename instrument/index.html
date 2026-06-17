@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=default-3d-20260611").catch((error) => {
+        import("./instrument.js?v=readability-polish-20260617").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
@@ -189,9 +189,14 @@
                 <div class="instrument-stage instrument-stage-3d" aria-label="3D teaching skeleton for the fluorescence instrument path / 荧光仪器光路的 3D 教学骨架">
                   <div class="instrument-scene-host" data-scene-host></div>
                   <div class="instrument-scene-overlay" aria-hidden="true">
-                    <p>Open optical bench / 3D teaching skeleton / 开放式光学台 / 3D 教学骨架</p>
-                    <p>Residual Ex is stopped; fluorescence is collected at 90 deg.</p>
-                    <p>剩余激发光进入终止器；荧光以 90° 侧向收集。</p>
+                    <p>
+                      <span data-language="en">Open optical bench / 3D teaching skeleton</span>
+                      <span data-language="zh" lang="zh-CN">开放式光学台 / 3D 教学骨架</span>
+                    </p>
+                    <p>
+                      <span data-language="en">Residual Ex is stopped; fluorescence is collected at 90 deg.</span>
+                      <span data-language="zh" lang="zh-CN">剩余激发光进入终止器；荧光以 90° 侧向收集。</span>
+                    </p>
                   </div>
                   <div class="instrument-view-toolbar" aria-label="3D view controls / 3D 视图控制">
                     <button type="button" data-action="reset-view" data-localize-text>Reset view / 重置视角</button>
@@ -432,6 +437,12 @@
                       <span data-language="zh" lang="zh-CN">荧光从侧向路径被收集，经过发射单色器后再进入检测器。</span>
                     </p>
                     <p>
+                      <span class="path-key path-key-emission" aria-hidden="true"></span>
+                      <strong data-localize-text>Monochromator interior / 单色器内部</strong>
+                      <span data-language="en">Internal rays are schematic selection cues, not ray-traced Czerny-Turner or manufacturer-specific optics.</span>
+                      <span data-language="zh" lang="zh-CN">内部光线是选通示意提示，不是光线追迹的 Czerny-Turner 或厂商专用光路复原。</span>
+                    </p>
+                    <p>
                       <span class="path-key path-key-residual" aria-hidden="true"></span>
                       <strong data-localize-text>Beam stop / 光束终止器</strong>
                       <span data-language="en">The straight-through excitation direction enters an absorbing stop, so it is not read as reflected light or detector collection.</span>
@@ -480,6 +491,7 @@
                       <span><span data-emission-label data-localize-text>Emission wavelength / 发射波长</span> <strong data-readout="emission">520 nm</strong></span>
                       <input data-control="emission-wavelength" type="range" min="200" max="900" step="1" value="520">
                       <small class="control-help" id="emission-range-help"><span data-localize-text>Angle: / 光栅角：</span><strong data-readout="emission-angle">18.5 deg</strong>. <span data-localize-text>UV/NIR use false-color cues. / 紫外/近红外为伪色提示。</span></small>
+                      <small class="control-help"><span data-localize-text>200-900 nm is a teaching selector range; source/detector/sample response may be synthetic or near zero, and UV/NIR use false-color cues. / 200-900 nm 是教学选通范围；光源、检测器与样品响应可能为合成或接近零，紫外/近红外使用伪色提示。</span></small>
                     </label>
 
                     <label class="instrument-control">

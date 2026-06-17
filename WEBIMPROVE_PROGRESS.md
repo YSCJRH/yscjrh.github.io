@@ -1,9 +1,37 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-12 Instrument Lab emission monochromator ray direction hotfix
-- Status: Full local validation and browser QA passed; not yet committed or published
-- Last updated: 2026-06-12
+- Active: 2026-06-17 Instrument Lab 3D readability and scientific-boundary polish
+- Status: Full local validation, browser QA, and visual screenshot review passed; ready for commit and publish
+- Last updated: 2026-06-17
+
+## 2026-06-17 Instrument Lab 3D readability and scientific-boundary polish
+- Status: Full local validation, browser QA, and visual screenshot review passed; ready for commit and publish.
+- Trigger:
+  - User requested another autonomous optimization pass for the `/instrument/` 3D fluorescence instrument simulator from aesthetics, scientific credibility, and related content.
+  - Read-only visual and science review found that the 3D scene was functional but still had dense labels, bilingual overlay text that bypassed language-mode filtering, and a detector-to-spectrum line that could read like an optical beam.
+- Changes:
+  - Added language-separable spans to the 3D scene overlay so English, Chinese, and bilingual display modes affect the WebGL overlay copy as well as the rest of the workbench.
+  - Added a visible teaching-range note for the 200-900 nm wavelength controls, including source/detector/sample response limits and UV/NIR false-color caveats.
+  - Added an optical-path note that internal monochromator rays are schematic selection cues, not ray-traced Czerny-Turner or manufacturer-specific optics.
+  - De-emphasized inactive 3D labels and leader lines so the selected optical bench context reads more clearly without removing scientific labels.
+  - Replaced the detector-to-spectrum connector with a dashed electronic signal line, preserving the boundary that the spectrum trace is not an optical beam.
+  - Updated `instrument/MODEL.md` so the instrument-function documentation matches the current code path: emission scan uses Gaussian teaching convolution, while excitation scan uses simplified width broadening.
+  - Added UI, documentation, and browser-QA contracts for the new language, visual-readability, signal-semantics, and scientific-boundary behavior.
+  - Bumped route-local ESM cache keys for the readability polish slice.
+- Validation result:
+  - TDD red: focused UI/document/browser-QA tests failed before implementation for missing wavelength boundary copy, schematic-ray copy, overlay language filtering, signal semantics, cache-key bump, and current MODEL.md instrument-function wording.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs instrument/sim/tests/evidence-docs.test.mjs instrument/sim/tests/browser-qa-tool.test.mjs` passed: 50/50.
+  - Green: `node --check instrument/instrument.js`; `node --check instrument/sim/scene/InstrumentScene.mjs`; `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 107/107.
+  - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+  - Green: `node tools/check-instrument-browser.js` passed with first viewport, default 3D scene, language switch, language density, scene overlay language, keyboard, mobile, no-JS fallback, WebGL fallback, source-derived, and module-failure checks.
+  - Visual QA screenshot saved locally at `C:\Users\34793\AppData\Local\Temp\instrument-visual-final-20260617.png`; manual review found no first-screen text overlap and confirmed inactive labels read as context rather than primary annotations.
+- Remaining notes:
+  - This slice intentionally keeps the default full-width 3D model and does not reduce the model height, because the user previously requested the 3D model to occupy the main page.
+  - Mobile camera adaptation and deeper optical-model variants remain deferred.
+- Blockers:
+  - None.
 
 ## 2026-06-12 Instrument Lab emission monochromator ray direction hotfix
 - Status: Full local validation and browser QA passed; not yet committed or published.

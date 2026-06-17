@@ -103,6 +103,31 @@ test("geometry boundary teaching copy covers every selectable geometry mode", ()
   assert.match(instrumentHtml, /直射激发光|背景风险/);
 });
 
+test("wavelength controls expose the teaching-range and false-color boundary", () => {
+  const wavelengthControlBlock = instrumentHtml.slice(
+    instrumentHtml.indexOf('data-control="excitation-wavelength"'),
+    instrumentHtml.indexOf('data-control="slit"')
+  );
+
+  assert.match(wavelengthControlBlock, /200-900 nm/i);
+  assert.match(wavelengthControlBlock, /teaching selector range/i);
+  assert.match(wavelengthControlBlock, /source\/detector\/sample response/i);
+  assert.match(wavelengthControlBlock, /UV\/NIR[\s\S]*false-color/i);
+  assert.match(wavelengthControlBlock, /教学选通范围/);
+  assert.match(wavelengthControlBlock, /伪色/);
+});
+
+test("optical path notes identify monochromator internals as schematic selection cues", () => {
+  const detailsStart = instrumentHtml.indexOf('<details class="instrument-principle-details">');
+  const detailsEnd = instrumentHtml.indexOf("</details>", detailsStart);
+  const detailsBlock = instrumentHtml.slice(detailsStart, detailsEnd);
+
+  assert.match(detailsBlock, /schematic selection cues/i);
+  assert.match(detailsBlock, /not ray-traced/i);
+  assert.match(detailsBlock, /示意/);
+  assert.match(detailsBlock, /不是光线追迹/);
+});
+
 test("geometry mode drives the fallback light-path diagram", () => {
   assert.match(
     instrumentScript,
@@ -313,6 +338,23 @@ test("3D scene exposes geometry-mode teaching cues", () => {
   assert.match(sceneScript, /Direct-path risk \/ 直射风险/);
 });
 
+test("3D overlay copy follows language-mode filtering", () => {
+  const overlayMatch = instrumentHtml.match(/<div class="instrument-scene-overlay"[\s\S]*?<\/div>/);
+  assert.ok(overlayMatch, "expected 3D overlay copy");
+  assert.match(overlayMatch[0], /data-language="en"/);
+  assert.match(overlayMatch[0], /data-language="zh"/);
+  assert.match(overlayMatch[0], /lang="zh-CN"/);
+});
+
+test("3D scene de-emphasizes inactive labels and uses signal semantics after the detector", () => {
+  assert.match(sceneScript, /isContextAnchor \? 0\.18 : 0\.035/);
+  assert.match(sceneScript, /function createSignalLine/);
+  assert.match(sceneScript, /LineDashedMaterial/);
+  assert.match(sceneScript, /function setSignalLineBetween/);
+  assert.match(sceneScript, /signal:\s*createSignalLine/);
+  assert.doesNotMatch(sceneScript, /signal:\s*createBeam/);
+});
+
 test("mobile view keeps WebGL fallback status visible", () => {
   assert.match(
     siteStyles,
@@ -477,11 +519,16 @@ test("single-language mode can collapse dense static workbench labels", () => {
   }
 });
 
-test("instrument route cache key changes with the browser QA hardening slice", () => {
+test("instrument route cache key changes with the 3D readability polish slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=default-3d-20260611/,
-    "instrument.js cache key should be bumped when runtime language switch behavior changes"
+    /instrument\.js\?v=readability-polish-20260617/,
+    "instrument.js cache key should be bumped when route-local scene or runtime copy changes"
+  );
+  assert.match(
+    instrumentScript,
+    /InstrumentScene\.mjs\?v=readability-polish-20260617/,
+    "scene module cache key should be bumped when 3D scene rendering changes"
   );
 });
 
@@ -567,7 +614,7 @@ test("optical path detail notes follow the language display framework", () => {
   const block = instrumentHtml.slice(detailsStart, detailsEnd);
   const notes = block.match(/<p>[\s\S]*?<\/p>/g) || [];
 
-  assert.equal(notes.length, 4, "expected four optical path notes");
+  assert.ok(notes.length >= 5, "expected optical path notes plus the monochromator schematic boundary");
   notes.forEach((note) => {
     assert.match(note, /data-language="en"/);
     assert.match(note, /data-language="zh" lang="zh-CN"/);

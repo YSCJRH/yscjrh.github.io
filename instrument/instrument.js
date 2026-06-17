@@ -172,7 +172,7 @@ if (root) {
   }
 
   function loadSceneModule() {
-    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=optical-confidence-20260509");
+    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=readability-polish-20260617");
     return sceneModulePromise;
   }
 

@@ -25,6 +25,7 @@ const MARKERS = [
   "module failure",
   "language switch",
   "language density",
+  "scene overlay language",
   "WebGL fallback",
 ];
 
@@ -337,12 +338,15 @@ async function main() {
           visibleText('.instrument-onboarding'),
           visibleText('.instrument-control-panel'),
         ].join(" ");
+        const zhOverlayText = visibleText('.instrument-scene-overlay');
+        const overlaySpans = document.querySelectorAll('.instrument-scene-overlay [data-language]').length;
         document.querySelector('[data-language-mode-option="en"]').click();
         await new Promise((resolve) => setTimeout(resolve, 80));
         const enWorkbenchText = [
           visibleText('.instrument-onboarding'),
           visibleText('.instrument-control-panel'),
         ].join(" ");
+        const enOverlayText = visibleText('.instrument-scene-overlay');
         return {
           zhMode,
           zhPressed,
@@ -350,6 +354,9 @@ async function main() {
           stored: localStorage.getItem('instrumentLanguageMode'),
           zhWorkbenchText,
           enWorkbenchText,
+          zhOverlayText,
+          enOverlayText,
+          overlaySpans,
         };
       }`
     );
@@ -364,6 +371,14 @@ async function main() {
       language
     );
     record("language density");
+    assertCheck(
+      language.overlaySpans >= 4 &&
+        !/Open optical bench|Residual Ex is stopped/.test(language.zhOverlayText) &&
+        !/开放式光学台|剩余激发光/.test(language.enOverlayText),
+      "3D scene overlay text did not follow the selected language mode",
+      language
+    );
+    record("scene overlay language");
 
     progress("checking keyboard activation");
     runCode(

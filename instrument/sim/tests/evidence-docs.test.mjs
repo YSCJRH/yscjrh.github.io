@@ -40,6 +40,12 @@ test("model notes describe deterministic noise and Gaussian instrument-function 
   assert.match(modelNotes, /teaching convolution/i);
 });
 
+test("model notes match the current instrument-function hookup by scan mode", () => {
+  assert.match(modelNotes, /emission scan[\s\S]*Gaussian[\s\S]*convolution/i);
+  assert.match(modelNotes, /excitation scan[\s\S]*simplified width broadening/i);
+  assert.doesNotMatch(modelNotes, /Gaussian[\s\S]*emission and excitation scan sample components/i);
+});
+
 test("model notes describe inner-filter risk as categorical teaching guidance", () => {
   assert.match(modelNotes, /inner-filter risk/i);
   assert.match(modelNotes, /categorical/i);
