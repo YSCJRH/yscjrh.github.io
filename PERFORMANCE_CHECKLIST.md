@@ -20,6 +20,7 @@ Core public pages:
 
 - Each HTML page has a descriptive `<title>`.
 - Each HTML page has a meta description.
+- Each checked HTML page has exactly one viewport meta value: `width=device-width, initial-scale=1`.
 - Each checked HTML page has a canonical URL and `og:url` matching its expected public route.
 - Local HTML links, including same-page and cross-page fragment links, must resolve to existing files and `id` targets.
 - Sitemap-listed public pages must not carry `robots` `noindex`.
@@ -73,6 +74,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 ## Results
 
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
+- 2026-06-19 `tools/check_site.py` now rejects missing, duplicated, or malformed viewport metadata; temporary negative checks confirmed bad and duplicated viewport values fail.
 - 2026-06-19 `tools/check_site.py` now rejects inline event-handler attributes and `javascript:` URLs; temporary negative checks confirmed both regression paths fail.
 - 2026-06-19 `tools/check_site.py` now rejects external, duplicated, or wrong-type favicon links; temporary negative checks confirmed those regression paths fail.
 - 2026-06-19 `tools/check_site.py` now checks 1 CSS file and rejects external stylesheets, external resource hints, embedded external media, `mailto:` / `tel:` links, and external CSS URL/import references; temporary negative checks confirmed the new guard catches those regression paths.

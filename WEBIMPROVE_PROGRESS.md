@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens inline HTML script-surface checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens viewport metadata checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Viewport metadata guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing mobile/accessibility QA found that viewport metadata is required by the project baseline, but `tools/check_site.py` did not enforce its exact value.
+  - Red-path check confirmed the previous checker allowed a temporary `width=1024` viewport value.
+- Changes:
+  - Added `EXPECTED_VIEWPORT` to `tools/check_site.py`.
+  - Required every checked HTML page to have exactly one `name="viewport"` value: `width=device-width, initial-scale=1`.
+  - Updated the performance/SEO and accessibility checklists to record the enforced viewport invariant.
+- Validation result:
+  - Red: temporary negative check confirmed the previous checker missed a malformed viewport value.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, inline SVG name checks, favicon metadata, inline script-surface checks, and viewport metadata.
+  - Green: sequential temporary checks confirmed malformed and duplicated viewport metadata are rejected.
+- Remaining notes:
+  - This is static mobile/accessibility QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Inline HTML script-surface guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

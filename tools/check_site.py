@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SITE_NAME = "HJR / YSCJRH"
 EXPECTED_OG_LOCALE = "en_US"
 EXPECTED_THEME_COLOR = "#05070d"
+EXPECTED_VIEWPORT = "width=device-width, initial-scale=1"
 EXPECTED_SHARE_IMAGE_URL = "https://yscjrh.github.io/assets/og-card.png"
 EXPECTED_SHARE_IMAGE_ALT = (
     "HJR / YSCJRH share card: fluorescence, methods, instruments, and open tools / "
@@ -368,6 +369,8 @@ def check_html(path: Path) -> list[str]:
     for name, expected_value in expected_name_values.items():
         if meta_name_values(parser, name) != [expected_value]:
             errors.append(f"{path}: {name} must be {expected_value}")
+    if meta_name_values(parser, "viewport") != [EXPECTED_VIEWPORT]:
+        errors.append(f"{path}: viewport must be {EXPECTED_VIEWPORT}")
     if meta_name_values(parser, "theme-color") != [EXPECTED_THEME_COLOR]:
         errors.append(f"{path}: theme-color must be {EXPECTED_THEME_COLOR}")
     favicon_links = [

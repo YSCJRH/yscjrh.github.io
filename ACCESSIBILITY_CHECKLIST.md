@@ -29,6 +29,7 @@ Core pages checked:
 - No-JS navigation: shared public pages keep a compact visible primary nav on mobile when JavaScript is disabled; the inactive hamburger toggle is hidden in that mode.
 - Mobile menu ARIA: toggle uses `aria-expanded`, `aria-controls="mobile-menu"`, and paired English / Chinese label text.
 - Touch targets: sampled first-viewport links and buttons at 320px, 375px, 414px, and 768px are at least 40px in both dimensions after the M5 notes-link fix. The `/instrument/` 3D toolbar reset buttons are covered by the 2026-06-19 browser QA touch-target check.
+- Viewport metadata: each checked page must keep exactly one `width=device-width, initial-scale=1` viewport meta tag so mobile rendering remains predictable.
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
 - Images and decorative graphics: `<img>` elements must carry `alt`; empty `alt` is allowed only when the image is explicitly decorative with `aria-hidden="true"` or `role="presentation"` / `role="none"`. Inline `<svg>` elements must either be decorative with `aria-hidden="true"` / presentation role or provide an accessible name through `aria-label`, `aria-labelledby`, or a child `<title>`.
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
