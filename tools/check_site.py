@@ -37,6 +37,7 @@ SITEMAP_HTML = [
     Path("notes/when-a-fluorescence-signal-becomes-usable.html"),
     Path("instrument/index.html"),
 ]
+CSS_FILES = [Path("styles.css")]
 RETIRED_HTML = [Path("review/index.html")]
 
 REQUIRED_META_MARKERS = [
@@ -77,6 +78,27 @@ ARIA_IDREF_ATTRIBUTES = {
     "aria-labelledby",
     "aria-owns",
 }
+EXTERNAL_RESOURCE_LINK_RELS = {
+    "dns-prefetch",
+    "modulepreload",
+    "preconnect",
+    "prefetch",
+    "preload",
+    "stylesheet",
+}
+MEDIA_SOURCE_ATTRIBUTES = {
+    "img": ("src", "srcset"),
+    "source": ("src", "srcset"),
+    "video": ("src", "poster"),
+    "audio": ("src",),
+    "iframe": ("src",),
+    "embed": ("src",),
+    "object": ("data",),
+}
+CSS_EXTERNAL_REFERENCE_PATTERN = re.compile(
+    r"@import\s+(?:url\(\s*)?['\"]?https?://|url\(\s*['\"]?https?://",
+    re.IGNORECASE,
+)
 
 
 class SiteParser(HTMLParser):
@@ -92,6 +114,9 @@ class SiteParser(HTMLParser):
         self.aria_id_refs: list[tuple[str, str]] = []
         self.local_refs: list[tuple[str, str]] = []
         self.external_scripts: list[str] = []
+        self.external_resource_links: list[tuple[str, str]] = []
+        self.external_media_refs: list[tuple[str, str, str]] = []
+        self.private_contact_refs: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
 
@@ -114,14 +139,27 @@ class SiteParser(HTMLParser):
         elif tag == "main" and attrs_dict.get("id") == "main":
             self.has_main_id = True
         elif tag == "a":
+            href = attrs_dict.get("href", "")
+            if href.startswith(("mailto:", "tel:")):
+                self.private_contact_refs.append(href)
             if attrs_dict.get("target", "").lower() == "_blank":
                 self.blank_target_links.append((attrs_dict.get("href", ""), attrs_dict.get("rel", "")))
-            if attrs_dict.get("href") == "#main":
+            if href == "#main":
                 classes = set(attrs_dict.get("class", "").split())
                 if "skip-link" in classes:
                     self.has_skip_to_main = True
+        elif tag == "link":
+            href = attrs_dict.get("href", "")
+            rel_tokens = set(attrs_dict.get("rel", "").lower().split())
+            if href.startswith(("http://", "https://")) and rel_tokens & EXTERNAL_RESOURCE_LINK_RELS:
+                self.external_resource_links.append((attrs_dict.get("rel", ""), href))
         elif tag == "form":
             self.forms += 1
+
+        for attr in MEDIA_SOURCE_ATTRIBUTES.get(tag, ()):
+            value = attrs_dict.get(attr, "")
+            if value.startswith(("http://", "https://")) or " http://" in value or " https://" in value:
+                self.external_media_refs.append((tag, attr, value))
 
         for attr in ("href", "src"):
             value = attrs_dict.get(attr)
@@ -319,6 +357,12 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: forms are not approved for v1")
     for src in parser.external_scripts:
         errors.append(f"{path}: external script is not approved: {src}")
+    for rel, href in parser.external_resource_links:
+        errors.append(f"{path}: external resource link is not approved: rel={rel} href={href}")
+    for tag, attr, value in parser.external_media_refs:
+        errors.append(f"{path}: external {tag} {attr} is not approved: {value}")
+    for href in parser.private_contact_refs:
+        errors.append(f"{path}: private contact link is not approved: {href}")
     for href, rel in parser.blank_target_links:
         rel_tokens = set(rel.lower().split())
         if not {"noopener", "noreferrer"}.issubset(rel_tokens):
@@ -359,11 +403,26 @@ def check_html(path: Path) -> list[str]:
     return errors
 
 
+def check_css(path: Path) -> list[str]:
+    full_path = ROOT / path
+    if not full_path.exists():
+        return [f"{path}: file missing"]
+
+    errors: list[str] = []
+    text = full_path.read_text(encoding="utf-8")
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if CSS_EXTERNAL_REFERENCE_PATTERN.search(line):
+            errors.append(f"{path}:{line_number}: external CSS reference is not approved")
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
     for path in HTML_FILES:
         errors.extend(check_html(path))
+    for path in CSS_FILES:
+        errors.extend(check_css(path))
 
     for required in [Path(".nojekyll"), Path("robots.txt"), Path("sitemap.xml"), Path("assets/og-card.png")]:
         if not (ROOT / required).exists():
@@ -411,7 +470,10 @@ def main() -> int:
         return 1
 
     print("Site check passed.")
-    print(f"Checked {len(HTML_FILES)} HTML pages, robots.txt, sitemap.xml, and local references.")
+    print(
+        f"Checked {len(HTML_FILES)} HTML pages, {len(CSS_FILES)} CSS files, "
+        "robots.txt, sitemap.xml, and local references."
+    )
     return 0
 
 

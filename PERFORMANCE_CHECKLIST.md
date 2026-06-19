@@ -1,6 +1,6 @@
 # Performance And SEO Checklist
 
-Status: 2026-06-19 public route, 404 fallback, `/instrument/`, sitemap, and release evidence refreshed
+Status: 2026-06-19 public route, 404 fallback, `/instrument/`, sitemap, static dependency boundary, and release evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -30,6 +30,7 @@ Core public pages:
 - Shared social image: `assets/og-card.png`, 1200 x 630 PNG.
 - Theme color metadata must remain `#05070d` across checked public pages.
 - New-tab links must use `rel="noopener noreferrer"`; `tools/check_site.py` fails any `target="_blank"` link that omits either token.
+- External runtime resource links remain blocked by default. `tools/check_site.py` rejects external stylesheets, preload/prefetch/preconnect hints, externally embedded media, external CSS imports or URL references, and unapproved `mailto:` / `tel:` contact links.
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `robots.txt` declares `Sitemap: https://yscjrh.github.io/sitemap.xml`.
@@ -47,6 +48,7 @@ Core public pages:
 - Shared JS: `script.js`, deferred.
 - Route-scoped heavier JavaScript is limited to `/instrument/`.
 - Images are SVG or small static PNG assets; the share card is about 80 KB.
+- CSS must not import external URLs, and deployable HTML must not depend on external stylesheets, resource hints, embedded media, or private contact links.
 - Reduced-motion CSS and JS handling remain in place.
 
 ## Validation Commands
@@ -70,6 +72,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 ## Results
 
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
+- 2026-06-19 `tools/check_site.py` now checks 1 CSS file and rejects external stylesheets, external resource hints, embedded external media, `mailto:` / `tel:` links, and external CSS URL/import references; temporary negative checks confirmed the new guard catches those regression paths.
 - 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker, no-JS mobile navigation, mobile keyboard menu behavior, desktop/mobile overflow checks, and reduced-motion guard.
 - 2026-06-19 `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte instrument data package.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.

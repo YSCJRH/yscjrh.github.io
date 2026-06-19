@@ -2,8 +2,28 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens ARIA id reference checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens external resource and private-contact boundary checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 External resource and contact boundary guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing privacy/performance review found that the site contract blocks external runtime dependencies, private contact links, forms, analytics, and tracking, while `tools/check_site.py` only rejected external scripts and forms.
+  - Red-path checks confirmed the previous checker missed an external stylesheet link, a temporary `mailto:` link, and an external CSS `@import`.
+- Changes:
+  - Added HTML checks for external stylesheet/preload/prefetch/preconnect/resource links.
+  - Added HTML checks for externally embedded media and unapproved `mailto:` / `tel:` links.
+  - Added CSS-file checks for external `@import` and `url(http...)` references.
+  - Updated the performance/SEO checklist to record this as a static dependency and contact-boundary invariant.
+- Validation result:
+  - Red: temporary negative checks confirmed the previous checker missed external stylesheet, `mailto:`, and external CSS import cases.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, and the shared social image file.
+  - Green: sequential temporary negative checks confirmed the new guard rejects external stylesheet, `mailto:`, and external CSS import cases.
+- Remaining notes:
+  - This is static QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 ARIA id reference guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
