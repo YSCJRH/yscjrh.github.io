@@ -64,6 +64,7 @@ class SiteParser(HTMLParser):
         self.has_skip_to_main = False
         self.local_refs: list[tuple[str, str]] = []
         self.external_scripts: list[str] = []
+        self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -77,10 +78,13 @@ class SiteParser(HTMLParser):
             self.h1_count += 1
         elif tag == "main" and attrs_dict.get("id") == "main":
             self.has_main_id = True
-        elif tag == "a" and attrs_dict.get("href") == "#main":
-            classes = set(attrs_dict.get("class", "").split())
-            if "skip-link" in classes:
-                self.has_skip_to_main = True
+        elif tag == "a":
+            if attrs_dict.get("target", "").lower() == "_blank":
+                self.blank_target_links.append((attrs_dict.get("href", ""), attrs_dict.get("rel", "")))
+            if attrs_dict.get("href") == "#main":
+                classes = set(attrs_dict.get("class", "").split())
+                if "skip-link" in classes:
+                    self.has_skip_to_main = True
         elif tag == "form":
             self.forms += 1
 
@@ -252,6 +256,12 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: forms are not approved for v1")
     for src in parser.external_scripts:
         errors.append(f"{path}: external script is not approved: {src}")
+    for href, rel in parser.blank_target_links:
+        rel_tokens = set(rel.lower().split())
+        if not {"noopener", "noreferrer"}.issubset(rel_tokens):
+            errors.append(
+                f"{path}: target=\"_blank\" link must use rel=\"noopener noreferrer\": {href}"
+            )
 
     for attr, value in parser.local_refs:
         resolved = resolve_local_reference(path, value)

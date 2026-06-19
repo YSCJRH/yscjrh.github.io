@@ -27,6 +27,7 @@ Core public pages:
 - Twitter large-image card metadata is present.
 - Shared social image metadata must point to `https://yscjrh.github.io/assets/og-card.png`, use paired English / Chinese alt text, and match the local `assets/og-card.png` dimensions.
 - Shared social image: `assets/og-card.png`, 1200 x 630 PNG.
+- New-tab links must use `rel="noopener noreferrer"`; `tools/check_site.py` fails any `target="_blank"` link that omits either token.
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `robots.txt` declares `Sitemap: https://yscjrh.github.io/sitemap.xml`.

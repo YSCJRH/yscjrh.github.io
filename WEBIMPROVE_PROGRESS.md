@@ -2,8 +2,29 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens social share-card metadata checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens new-tab link safety checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 New-tab link safety guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing public-surface QA found that current HTML links already use `rel="noopener noreferrer"` with `target="_blank"`, but the static site gate did not enforce that invariant.
+  - This left a small but real regression path where a future external link could open a new tab without the expected opener/referrer protection.
+- Changes:
+  - Added `target="_blank"` link collection to `tools/check_site.py`.
+  - Added a static assertion that every new-tab link includes both `noopener` and `noreferrer` in `rel`.
+  - Updated the accessibility and performance/SEO checklists to record the new-tab link safety invariant.
+- Validation result:
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, local references, and the shared social image file.
+  - Green: temporary negative check confirmed a new-tab link missing `noreferrer` now reports `target="_blank" link must use rel="noopener noreferrer"`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Social share-card metadata guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
