@@ -21,6 +21,7 @@ Core public pages:
 - Each HTML page has a descriptive `<title>`.
 - Each HTML page has a meta description.
 - Each checked HTML page has a canonical URL and `og:url` matching its expected public route.
+- Local HTML links, including same-page and cross-page fragment links, must resolve to existing files and `id` targets.
 - Sitemap-listed public pages must not carry `robots` `noindex`.
 - `sitemap.xml` must contain exactly the expected public route URLs; extra, duplicated, stale, or malformed sitemap entries fail `tools/check_site.py`.
 - Open Graph title, description, type, URL, site name, locale, and image metadata are present; `tools/check_site.py` enforces the expected site name, locale, and page type values.

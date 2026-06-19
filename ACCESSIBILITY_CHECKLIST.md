@@ -22,6 +22,7 @@ Core pages checked:
 
 - Heading structure: each core page has one main `<h1>` and section headings are present in a readable order.
 - Skip link: each core page has a skip link that targets `#main`.
+- Fragment links and IDs: checked pages must not contain duplicate `id` values, and local `#fragment` links must resolve to an existing HTML target.
 - Focus visible: global `:focus-visible` styles are present for links, buttons, mobile nav, project links, footer links, and instrument controls.
 - Keyboard navigation: mobile menu opens from the toggle, moves focus into the menu, closes with Escape, and returns focus to the toggle.
 - No-JS navigation: shared public pages keep a compact visible primary nav on mobile when JavaScript is disabled; the inactive hamburger toggle is hidden in that mode.

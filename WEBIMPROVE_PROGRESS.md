@@ -2,8 +2,30 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens site identity metadata checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens fragment link and id checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Fragment link and id guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing accessibility/navigation review found that `tools/check_site.py` verified local files, skip links, and one `h1`, but did not reject duplicate HTML `id` values or broken `#fragment` targets.
+  - Red-path checks confirmed the previous checker missed a duplicate `id="main"` and a broken same-page `#missing-section` link.
+- Changes:
+  - Added HTML `id` collection and duplicate-id rejection to `tools/check_site.py`.
+  - Added local fragment target validation for same-page, cross-page, root-relative, and SVG `href="#..."` references that resolve to checked HTML files.
+  - Updated the accessibility and performance/SEO checklists to record fragment and `id` integrity as enforced invariants.
+- Validation result:
+  - Red: temporary negative checks confirmed the previous checker missed duplicate `id` values and broken same-page fragment links.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, local references, fragment links, and the shared social image file.
+  - Green: sequential temporary negative checks confirmed duplicate `id`, broken same-page fragment, and broken cross-page fragment cases are rejected.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static accessibility/navigation QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Site identity metadata guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

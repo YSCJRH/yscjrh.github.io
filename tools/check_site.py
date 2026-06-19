@@ -77,6 +77,8 @@ class SiteParser(HTMLParser):
         self.html_lang = ""
         self.has_main_id = False
         self.has_skip_to_main = False
+        self.ids: list[str] = []
+        self.fragment_refs: list[str] = []
         self.local_refs: list[tuple[str, str]] = []
         self.external_scripts: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
@@ -86,6 +88,9 @@ class SiteParser(HTMLParser):
         attrs_dict = {key.lower(): value or "" for key, value in attrs}
         tag = tag.lower()
         self.tags.append((tag, attrs_dict))
+        element_id = attrs_dict.get("id")
+        if element_id:
+            self.ids.append(element_id)
 
         if tag == "html":
             self.html_lang = attrs_dict.get("lang", "")
@@ -109,6 +114,9 @@ class SiteParser(HTMLParser):
                 continue
             if tag == "script" and value.startswith(("http://", "https://")):
                 self.external_scripts.append(value)
+            parsed = urlparse(value)
+            if attr == "href" and parsed.scheme == "" and parsed.netloc == "" and parsed.fragment:
+                self.fragment_refs.append(value)
             if is_local_reference(value):
                 self.local_refs.append((attr, value))
 
@@ -213,6 +221,12 @@ def png_dimensions(path: Path) -> tuple[int, int] | None:
     return (int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big"))
 
 
+def html_ids(path: Path) -> set[str]:
+    parser = SiteParser()
+    parser.feed(path.read_text(encoding="utf-8"))
+    return set(parser.ids)
+
+
 def check_html(path: Path) -> list[str]:
     errors: list[str] = []
     full_path = ROOT / path
@@ -223,6 +237,7 @@ def check_html(path: Path) -> list[str]:
     lower = text.lower()
     parser = SiteParser()
     parser.feed(text)
+    current_ids = set(parser.ids)
 
     for label, marker in REQUIRED_META_MARKERS:
         if marker not in lower:
@@ -273,6 +288,9 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: missing <main id=\"main\">")
     if not parser.has_skip_to_main:
         errors.append(f"{path}: missing skip link to #main")
+    duplicate_ids = sorted({element_id for element_id in parser.ids if parser.ids.count(element_id) > 1})
+    for element_id in duplicate_ids:
+        errors.append(f"{path}: duplicate id {element_id}")
     robots_meta = robots_meta_contents(parser)
     if path == Path("404.html"):
         if not any("noindex" in content for content in robots_meta):
@@ -298,6 +316,20 @@ def check_html(path: Path) -> list[str]:
             errors.append(f"{path}: missing local {attr} target {value} -> {resolved.relative_to(ROOT)}")
         if path == Path("404.html") and not urlparse(value).path.startswith("/"):
             errors.append(f"{path}: custom 404 local {attr} must be root-relative: {value}")
+
+    fragment_target_cache: dict[Path, set[str]] = {full_path: current_ids}
+    for value in parser.fragment_refs:
+        parsed = urlparse(value)
+        target_id = unquote(parsed.fragment)
+        if not target_id:
+            continue
+        resolved = full_path if parsed.path == "" else resolve_local_reference(path, value)
+        if resolved is None or not resolved.exists() or resolved.suffix.lower() not in {".html", ".htm"}:
+            continue
+        if resolved not in fragment_target_cache:
+            fragment_target_cache[resolved] = html_ids(resolved)
+        if target_id not in fragment_target_cache[resolved]:
+            errors.append(f"{path}: missing fragment target {value} -> #{target_id}")
 
     zh_pattern = re.compile(
         r'<[^>]*class="[^"]*(?:hero-title-zh|hero-lead-zh|section-copy-zh|card-copy-zh|project-copy-zh|stream-copy-zh|about-summary-zh|article-lead-zh)[^"]*"(?:(?!lang=)[^>])*?>',
