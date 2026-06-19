@@ -2,8 +2,36 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens SEO/share preview metadata checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass widens public mobile browser QA coverage.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Public mobile browser QA width coverage
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Read-only public-surface/QA review found that `ACCESSIBILITY_CHECKLIST.md` claimed sampled mobile touch-target coverage at multiple widths, while `tools/check-public-browser.js` only ran the main public-page mobile check at 390px.
+  - Red-path contract test confirmed the public browser QA tool did not declare or iterate the documented mobile width set.
+- Changes:
+  - Added `PUBLIC_MOBILE_VIEWPORT_WIDTHS = [320, 375, 390, 414, 768]` to `tools/check-public-browser.js`.
+  - Ran every shared public route through mobile structure, horizontal-overflow, and sampled touch-target checks at all five widths.
+  - Extended the no-JS mobile navigation check across the same width set.
+  - Added a browser QA contract test so the public browser tool keeps the documented width coverage.
+  - Updated the accessibility and performance checklists to reflect the enforced multi-width coverage.
+- Validation result:
+  - Red: `node --test instrument/sim/tests/browser-qa-tool.test.mjs` failed before implementation because the public browser QA tool did not declare `PUBLIC_MOBILE_VIEWPORT_WIDTHS`.
+  - Green: `node --test instrument/sim/tests/browser-qa-tool.test.mjs` passed: 2/2.
+  - Green: `node --check tools/check-public-browser.js` and `node --check instrument/sim/tests/browser-qa-tool.test.mjs`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `node --check script.js`, `node --check instrument/instrument.js`, and `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 113/113.
+  - Green: `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte data package.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, with mobile checks at 320px, 375px, 390px, 414px, and 768px.
+  - Green: `node tools/check-instrument-browser.js` passed across first viewport, fallback, language, keyboard, geometry, response-normalized, classic samples, sample picker, default 3D, source-derived, and module-failure checks.
+  - Green: `git diff --check` passed with only Windows line-ending normalization warnings.
+- Remaining notes:
+  - This is public-page browser QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+  - The remaining read-only subagent candidate is to remove duplicate project-card CTAs that point to the same URL.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Title and preview metadata guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

@@ -7,6 +7,7 @@ import { dirname, resolve } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "../../..");
 const qaToolPath = resolve(repoRoot, "tools/check-instrument-browser.js");
+const publicQaToolPath = resolve(repoRoot, "tools/check-public-browser.js");
 
 test("instrument browser QA tool exists and covers refine DoD browser gates", () => {
   assert.equal(existsSync(qaToolPath), true, "expected tools/check-instrument-browser.js");
@@ -55,5 +56,26 @@ test("instrument browser QA tool exists and covers refine DoD browser gates", ()
     script,
     /spawn\(commandName\("python"\), \["tools\/serve\.py"\], \{[\s\S]*?shell:\s*false/,
     "browser QA server should launch python directly so cleanup kills the server process on Windows"
+  );
+});
+
+test("public browser QA tool samples the documented mobile viewport widths", () => {
+  assert.equal(existsSync(publicQaToolPath), true, "expected tools/check-public-browser.js");
+
+  const script = readFileSync(publicQaToolPath, "utf8");
+  assert.match(
+    script,
+    /PUBLIC_MOBILE_VIEWPORT_WIDTHS\s*=\s*\[\s*320,\s*375,\s*390,\s*414,\s*768\s*\]/,
+    "public browser QA should declare the documented mobile widths"
+  );
+  assert.match(
+    script,
+    /for\s*\(\s*const\s+width\s+of\s+PUBLIC_MOBILE_VIEWPORT_WIDTHS\s*\)/,
+    "public browser QA should run the mobile route scan across every documented width"
+  );
+  assert.match(
+    script,
+    /mobile structure \$\{route\} \$\{width\}px/,
+    "public browser QA output should expose width-specific mobile structure checks"
   );
 });

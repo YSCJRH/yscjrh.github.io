@@ -16,6 +16,8 @@ const PUBLIC_ROUTES = [
   "/notes/build-logs-homepage-second-pass.html",
   "/notes/when-a-fluorescence-signal-becomes-usable.html",
 ];
+const PUBLIC_MOBILE_VIEWPORT_WIDTHS = [320, 375, 390, 414, 768];
+const PUBLIC_MOBILE_VIEWPORT_HEIGHT = 900;
 const MARKERS = [
   "desktop structure",
   "desktop console",
@@ -220,60 +222,63 @@ async function main() {
       assertCheck(/Total messages: 0/.test(consoleErrors), `console errors on ${route}`, consoleErrors);
       record(`desktop console ${route}`);
 
-      progress(`checking mobile ${route}`);
-      const mobile = runCode(
-        `async (page) => {
-          await page.setViewportSize({ width: 390, height: 900 });
-          await page.goto('${baseUrl}${route.slice(1)}', { waitUntil: 'networkidle' });
-          return await page.evaluate(() => {
-            const interactiveSelector = [
-              '.nav-toggle',
-              '.button',
-              '.hero-shortcut',
-              '.supporting-project-card',
-              '.project-card .project-cta-group a',
-              '.stream-meta .stream-link',
-              '.article-actions a',
-              '.article-card a',
-              '.project-detail-card a',
-              '.project-repo-link'
-            ].join(',');
-            const smallTargets = [...document.querySelectorAll(interactiveSelector)]
-              .filter((element) => {
-                const rect = element.getBoundingClientRect();
-                const style = getComputedStyle(element);
-                return rect.width > 0 &&
-                  rect.height > 0 &&
-                  style.display !== 'none' &&
-                  style.visibility !== 'hidden' &&
-                  (rect.width < 40 || rect.height < 40);
-              })
-              .map((element) => {
-                const rect = element.getBoundingClientRect();
-                return {
-                  text: element.textContent.trim().replace(/\\s+/g, ' ').slice(0, 80),
-                  width: Math.round(rect.width),
-                  height: Math.round(rect.height),
-                };
-              });
-            return {
-              h1Count: document.querySelectorAll('h1').length,
-              hasSkip: Boolean(document.querySelector('.skip-link[href="#main"]')),
-              overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
-              smallTargets,
-            };
-          });
-        }`
-      );
-      assertCheck(
-        mobile.h1Count === 1 &&
-          mobile.hasSkip &&
-          mobile.overflowX === 0 &&
-          mobile.smallTargets.length === 0,
-        `mobile public-page structure failed for ${route}`,
-        mobile
-      );
-      record(`mobile structure ${route}`);
+      for (const width of PUBLIC_MOBILE_VIEWPORT_WIDTHS) {
+        progress(`checking mobile ${route} ${width}px`);
+        const mobile = runCode(
+          `async (page) => {
+            await page.setViewportSize({ width: ${width}, height: ${PUBLIC_MOBILE_VIEWPORT_HEIGHT} });
+            await page.goto('${baseUrl}${route.slice(1)}', { waitUntil: 'networkidle' });
+            return await page.evaluate((viewportWidth) => {
+              const interactiveSelector = [
+                '.nav-toggle',
+                '.button',
+                '.hero-shortcut',
+                '.supporting-project-card',
+                '.project-card .project-cta-group a',
+                '.stream-meta .stream-link',
+                '.article-actions a',
+                '.article-card a',
+                '.project-detail-card a',
+                '.project-repo-link'
+              ].join(',');
+              const smallTargets = [...document.querySelectorAll(interactiveSelector)]
+                .filter((element) => {
+                  const rect = element.getBoundingClientRect();
+                  const style = getComputedStyle(element);
+                  return rect.width > 0 &&
+                    rect.height > 0 &&
+                    style.display !== 'none' &&
+                    style.visibility !== 'hidden' &&
+                    (rect.width < 40 || rect.height < 40);
+                })
+                .map((element) => {
+                  const rect = element.getBoundingClientRect();
+                  return {
+                    text: element.textContent.trim().replace(/\\s+/g, ' ').slice(0, 80),
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height),
+                  };
+                });
+              return {
+                viewportWidth,
+                h1Count: document.querySelectorAll('h1').length,
+                hasSkip: Boolean(document.querySelector('.skip-link[href="#main"]')),
+                overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+                smallTargets,
+              };
+            }, ${width});
+          }`
+        );
+        assertCheck(
+          mobile.h1Count === 1 &&
+            mobile.hasSkip &&
+            mobile.overflowX === 0 &&
+            mobile.smallTargets.length === 0,
+          `mobile public-page structure failed for ${route} at ${width}px`,
+          mobile
+        );
+        record(`mobile structure ${route} ${width}px`);
+      }
     }
 
     progress("checking mobile menu keyboard");
@@ -319,55 +324,59 @@ async function main() {
     const noJsNavigation = runCode(
       `async (page) => {
         const browser = page.context().browser();
-        const context = await browser.newContext({
-          javaScriptEnabled: false,
-          viewport: { width: 390, height: 900 },
-        });
-        try {
-          const noJsPage = await context.newPage();
-          const routes = ${JSON.stringify(PUBLIC_ROUTES)};
-          const results = [];
-          for (const route of routes) {
-            await noJsPage.goto('${baseUrl}' + route.slice(1), { waitUntil: 'domcontentloaded' });
-            await noJsPage.waitForTimeout(300);
-            results.push(await noJsPage.evaluate((currentRoute) => {
-              const links = [...document.querySelectorAll('.site-nav a')].map((link) => {
-                const rect = link.getBoundingClientRect();
-                const style = getComputedStyle(link);
+        const widths = ${JSON.stringify(PUBLIC_MOBILE_VIEWPORT_WIDTHS)};
+        const routes = ${JSON.stringify(PUBLIC_ROUTES)};
+        const results = [];
+        for (const width of widths) {
+          const context = await browser.newContext({
+            javaScriptEnabled: false,
+            viewport: { width, height: ${PUBLIC_MOBILE_VIEWPORT_HEIGHT} },
+          });
+          try {
+            for (const route of routes) {
+              const noJsPage = await context.newPage();
+              await noJsPage.goto('${baseUrl}' + route.slice(1), { waitUntil: 'domcontentloaded' });
+              await noJsPage.waitForTimeout(300);
+              results.push(await noJsPage.evaluate(({ currentRoute, viewportWidth }) => {
+                const links = [...document.querySelectorAll('.site-nav a')].map((link) => {
+                  const rect = link.getBoundingClientRect();
+                  const style = getComputedStyle(link);
+                  return {
+                    text: link.textContent.trim().replace(/\\s+/g, ' '),
+                    visible: rect.width > 0 &&
+                      rect.height > 0 &&
+                      style.display !== 'none' &&
+                      style.visibility !== 'hidden',
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height),
+                  };
+                });
+                const toggle = document.querySelector('[data-nav-toggle]');
+                const toggleRect = toggle?.getBoundingClientRect();
+                const toggleStyle = toggle ? getComputedStyle(toggle) : null;
+                const toggleVisible = Boolean(toggle && toggleRect && toggleRect.width > 0 && toggleRect.height > 0 && toggleStyle.display !== 'none' && toggleStyle.visibility !== 'hidden');
                 return {
-                  text: link.textContent.trim().replace(/\\s+/g, ' '),
-                  visible: rect.width > 0 &&
-                    rect.height > 0 &&
-                    style.display !== 'none' &&
-                    style.visibility !== 'hidden',
-                  width: Math.round(rect.width),
-                  height: Math.round(rect.height),
+                  route: currentRoute,
+                  viewportWidth,
+                  bodyClass: document.body.className,
+                  overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+                  links,
+                  visibleLinks: links.filter((link) => link.visible).map((link) => link.text),
+                  undersizedLinks: links.filter((link) => link.visible && (link.width < 40 || link.height < 40)),
+                  toggleVisible,
                 };
-              });
-              const toggle = document.querySelector('[data-nav-toggle]');
-              const toggleRect = toggle?.getBoundingClientRect();
-              const toggleStyle = toggle ? getComputedStyle(toggle) : null;
-              const toggleVisible = Boolean(toggle && toggleRect && toggleRect.width > 0 && toggleRect.height > 0 && toggleStyle.display !== 'none' && toggleStyle.visibility !== 'hidden');
-              return {
-                route: currentRoute,
-                bodyClass: document.body.className,
-                overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
-                links,
-                visibleLinks: links.filter((link) => link.visible).map((link) => link.text),
-                undersizedLinks: links.filter((link) => link.visible && (link.width < 40 || link.height < 40)),
-                toggleVisible,
-              };
-            }, route));
+              }, { currentRoute: route, viewportWidth: width }));
+            }
+          } finally {
+            await context.close();
           }
-          return results;
-        } finally {
-          await context.close();
         }
+        return results;
       }`
     );
     assertCheck(
       Array.isArray(noJsNavigation) &&
-        noJsNavigation.length === PUBLIC_ROUTES.length &&
+        noJsNavigation.length === PUBLIC_ROUTES.length * PUBLIC_MOBILE_VIEWPORT_WIDTHS.length &&
         noJsNavigation.every((entry) =>
           /no-js/.test(entry.bodyClass) &&
             entry.overflowX === 0 &&

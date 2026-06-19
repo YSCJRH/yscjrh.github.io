@@ -80,7 +80,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 - 2026-06-19 `tools/check_site.py` now rejects inline event-handler attributes and `javascript:` URLs; temporary negative checks confirmed both regression paths fail.
 - 2026-06-19 `tools/check_site.py` now rejects external, duplicated, or wrong-type favicon links; temporary negative checks confirmed those regression paths fail.
 - 2026-06-19 `tools/check_site.py` now checks 1 CSS file and rejects external stylesheets, external resource hints, embedded external media, `mailto:` / `tel:` links, and external CSS URL/import references; temporary negative checks confirmed the new guard catches those regression paths.
-- 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker, no-JS mobile navigation, mobile keyboard menu behavior, desktop/mobile overflow checks, and reduced-motion guard.
+- 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker, no-JS mobile navigation across 320px, 375px, 390px, 414px, and 768px, mobile keyboard menu behavior, desktop/multi-width mobile overflow checks, mobile touch-target checks, and reduced-motion guard.
 - 2026-06-19 `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte instrument data package.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
 - 2026-06-19 `git diff --check` passed during this checklist refresh with only Windows line-ending normalization warnings.
