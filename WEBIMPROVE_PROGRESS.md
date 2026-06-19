@@ -2,8 +2,34 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens viewport metadata checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens SEO/share preview metadata checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Title and preview metadata guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO/public-surface QA found that `tools/check_site.py` required title and preview metadata markers, but did not verify that visitor-facing title/description values were non-empty and unique.
+  - Red-path check confirmed the previous checker allowed an empty document `<title>` and empty meta description.
+- Changes:
+  - Added document title text parsing to `tools/check_site.py`.
+  - Required document title, meta description, Open Graph title/description, and Twitter title/description to be present exactly once and non-empty.
+  - Updated the performance/SEO checklist to record the enforced title and preview metadata invariant.
+- Validation result:
+  - Red: temporary negative check confirmed the previous checker missed an empty title and empty description.
+  - Green: temporary negative checks confirmed the new guard rejects empty title/description and duplicated document titles.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, inline SVG name checks, favicon metadata, inline script-surface checks, viewport metadata, and non-empty title/preview metadata.
+  - Green: `node --check script.js`, `node --check instrument/instrument.js`, `node --check tools/check-public-browser.js`, and `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 112/112.
+  - Green: `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte data package.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `node tools/check-instrument-browser.js` passed across first viewport, fallback, language, keyboard, geometry, response-normalized, classic samples, sample picker, default 3D, source-derived, and module-failure checks.
+  - Green: `git diff --check` passed with only Windows line-ending normalization warnings.
+- Remaining notes:
+  - This is static SEO/share QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+  - Read-only subagent review identified two next candidates after this checkpoint: widen public browser QA mobile viewport coverage and remove duplicate project-card CTAs that point to the same URL.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Viewport metadata guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

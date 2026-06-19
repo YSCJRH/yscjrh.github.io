@@ -106,6 +106,9 @@ class SiteParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.tags: list[tuple[str, dict[str, str]]] = []
+        self.document_titles: list[str] = []
+        self.in_document_title = False
+        self.document_title_chunks: list[str] = []
         self.h1_count = 0
         self.html_lang = ""
         self.has_main_id = False
@@ -159,8 +162,12 @@ class SiteParser(HTMLParser):
                 }
             )
             self.svg_stack.append(len(self.svg_accessibility_refs) - 1)
-        elif tag == "title" and self.svg_stack:
-            self.svg_accessibility_refs[self.svg_stack[-1]]["has-title"] = True
+        elif tag == "title":
+            if self.svg_stack:
+                self.svg_accessibility_refs[self.svg_stack[-1]]["has-title"] = True
+            else:
+                self.in_document_title = True
+                self.document_title_chunks = []
         elif tag == "main" and attrs_dict.get("id") == "main":
             self.has_main_id = True
         elif tag == "a":
@@ -209,8 +216,16 @@ class SiteParser(HTMLParser):
                 self.local_refs.append((attr, value))
 
     def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "title" and self.in_document_title:
+            self.document_titles.append("".join(self.document_title_chunks).strip())
+            self.in_document_title = False
+            self.document_title_chunks = []
         if tag.lower() == "svg" and self.svg_stack:
             self.svg_stack.pop()
+
+    def handle_data(self, data: str) -> None:
+        if self.in_document_title:
+            self.document_title_chunks.append(data)
 
 
 def is_local_reference(value: str) -> bool:
@@ -286,6 +301,16 @@ def meta_name_values(parser: SiteParser, name: str) -> list[str]:
     ]
 
 
+def require_single_nonempty(
+    errors: list[str],
+    path: Path,
+    label: str,
+    values: list[str],
+) -> None:
+    if len(values) != 1 or not values[0].strip():
+        errors.append(f"{path}: {label} must be present exactly once and non-empty")
+
+
 def expected_sitemap_urls() -> list[str]:
     return [expected_public_url(path) for path in SITEMAP_HTML]
 
@@ -334,6 +359,11 @@ def check_html(path: Path) -> list[str]:
     for label, marker in REQUIRED_META_MARKERS:
         if marker not in lower:
             errors.append(f"{path}: missing {label}")
+    require_single_nonempty(errors, path, "title", parser.document_titles)
+    for name in ("description", "twitter:title", "twitter:description"):
+        require_single_nonempty(errors, path, name, meta_name_values(parser, name))
+    for property_name in ("og:title", "og:description"):
+        require_single_nonempty(errors, path, property_name, meta_property_values(parser, property_name))
 
     expected_url = expected_public_url(path)
     canonical_values = link_values(parser, "canonical")
