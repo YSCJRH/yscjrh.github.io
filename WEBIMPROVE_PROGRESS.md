@@ -2,8 +2,28 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens image alternative-text checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens inline SVG accessible-name checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Inline SVG accessible-name guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing accessibility review found that the checklist required meaningful SVG diagrams to use labels or titles, but `tools/check_site.py` did not enforce inline SVG accessible-name behavior.
+  - Red-path checks confirmed the previous checker missed a non-decorative inline SVG without `aria-label`, `aria-labelledby`, or `<title>`.
+- Changes:
+  - Added inline SVG tracking to `tools/check_site.py`.
+  - Added static failures for SVGs that are neither explicitly decorative nor given an accessible name.
+  - Kept decorative SVGs valid when marked with `aria-hidden="true"`, `role="presentation"`, or `role="none"`.
+  - Updated the accessibility checklist to record the enforced SVG naming invariant.
+- Validation result:
+  - Red: temporary negative check confirmed the previous checker missed an unlabeled meaningful SVG.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, inline SVG name checks, and the shared social image file.
+  - Green: sequential temporary checks confirmed unlabeled meaningful SVGs are rejected, while `aria-hidden` decorative SVGs and titled SVGs are allowed.
+- Remaining notes:
+  - This is static accessibility QA hardening only. It does not change public copy, routing, styles, images, SVG markup, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Image alternative-text guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Status: 2026-06-19 public-page, image-alt, and `/instrument/` browser evidence refreshed
+Status: 2026-06-19 public-page, image/SVG accessibility, and `/instrument/` browser evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -30,7 +30,7 @@ Core pages checked:
 - Mobile menu ARIA: toggle uses `aria-expanded`, `aria-controls="mobile-menu"`, and paired English / Chinese label text.
 - Touch targets: sampled first-viewport links and buttons at 320px, 375px, 414px, and 768px are at least 40px in both dimensions after the M5 notes-link fix. The `/instrument/` 3D toolbar reset buttons are covered by the 2026-06-19 browser QA touch-target check.
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
-- Images and decorative graphics: `<img>` elements must carry `alt`; empty `alt` is allowed only when the image is explicitly decorative with `aria-hidden="true"` or `role="presentation"` / `role="none"`. Meaningful SVG diagrams use accessible labels or titles where present.
+- Images and decorative graphics: `<img>` elements must carry `alt`; empty `alt` is allowed only when the image is explicitly decorative with `aria-hidden="true"` or `role="presentation"` / `role="none"`. Inline `<svg>` elements must either be decorative with `aria-hidden="true"` / presentation role or provide an accessible name through `aria-label`, `aria-labelledby`, or a child `<title>`.
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
 - Bilingual language semantics: full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
 - New-tab links: every `target="_blank"` link must include `rel="noopener noreferrer"` and is enforced by `tools/check_site.py`.
@@ -59,6 +59,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
 - 2026-06-19 `tools/check_site.py` now rejects missing `<img>` alt text and non-decorative empty image alt text; temporary negative checks confirmed both failures are caught while explicitly decorative empty-alt images are allowed.
+- 2026-06-19 `tools/check_site.py` now rejects inline SVGs that are neither explicitly decorative nor given an accessible name; temporary checks confirmed unlabeled meaningful SVGs fail while `aria-hidden` and titled SVGs pass.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
 - 2026-06-19 live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
 - Post-push Pages run IDs are recorded in the release report for each commit. This checklist records the accessibility baseline and repeatable local/browser gates rather than a single latest deployment number.

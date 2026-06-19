@@ -117,6 +117,8 @@ class SiteParser(HTMLParser):
         self.external_resource_links: list[tuple[str, str]] = []
         self.external_media_refs: list[tuple[str, str, str]] = []
         self.image_alt_refs: list[tuple[str, bool, str, str, str]] = []
+        self.svg_accessibility_refs: list[dict[str, str | bool]] = []
+        self.svg_stack: list[int] = []
         self.private_contact_refs: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
@@ -138,6 +140,20 @@ class SiteParser(HTMLParser):
             self.html_lang = attrs_dict.get("lang", "")
         elif tag == "h1":
             self.h1_count += 1
+        elif tag == "svg":
+            self.svg_accessibility_refs.append(
+                {
+                    "id": attrs_dict.get("id", ""),
+                    "aria-hidden": attrs_dict.get("aria-hidden", ""),
+                    "role": attrs_dict.get("role", ""),
+                    "aria-label": attrs_dict.get("aria-label", ""),
+                    "aria-labelledby": attrs_dict.get("aria-labelledby", ""),
+                    "has-title": False,
+                }
+            )
+            self.svg_stack.append(len(self.svg_accessibility_refs) - 1)
+        elif tag == "title" and self.svg_stack:
+            self.svg_accessibility_refs[self.svg_stack[-1]]["has-title"] = True
         elif tag == "main" and attrs_dict.get("id") == "main":
             self.has_main_id = True
         elif tag == "a":
@@ -184,6 +200,10 @@ class SiteParser(HTMLParser):
                 self.fragment_refs.append(value)
             if is_local_reference(value):
                 self.local_refs.append((attr, value))
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "svg" and self.svg_stack:
+            self.svg_stack.pop()
 
 
 def is_local_reference(value: str) -> bool:
@@ -380,6 +400,23 @@ def check_html(path: Path) -> list[str]:
             errors.append(
                 f"{path}: empty image alt must be marked decorative with aria-hidden=\"true\" "
                 f"or role=\"presentation\": {src}"
+            )
+    for svg in parser.svg_accessibility_refs:
+        is_decorative = (
+            str(svg["aria-hidden"]).lower() == "true"
+            or str(svg["role"]).lower() in {"presentation", "none"}
+        )
+        has_accessible_name = any(
+            [
+                str(svg["aria-label"]).strip(),
+                str(svg["aria-labelledby"]).strip(),
+                bool(svg["has-title"]),
+            ]
+        )
+        if not is_decorative and not has_accessible_name:
+            label = str(svg["id"]).strip() or "inline svg"
+            errors.append(
+                f"{path}: svg must be aria-hidden/role=presentation or have an accessible name: {label}"
             )
     for href in parser.private_contact_refs:
         errors.append(f"{path}: private contact link is not approved: {href}")
