@@ -117,6 +117,7 @@ class SiteParser(HTMLParser):
         self.body_class_tokens: set[str] = set()
         self.has_main_id = False
         self.has_skip_to_main = False
+        self.first_anchor_attrs: dict[str, str] | None = None
         self.ids: list[str] = []
         self.fragment_refs: list[str] = []
         self.aria_id_refs: list[tuple[str, str]] = []
@@ -177,6 +178,8 @@ class SiteParser(HTMLParser):
         elif tag == "main" and attrs_dict.get("id") == "main":
             self.has_main_id = True
         elif tag == "a":
+            if self.first_anchor_attrs is None:
+                self.first_anchor_attrs = attrs_dict
             href = attrs_dict.get("href", "")
             if href.startswith(("mailto:", "tel:")):
                 self.private_contact_refs.append(href)
@@ -471,6 +474,9 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: missing <main id=\"main\">")
     if not parser.has_skip_to_main:
         errors.append(f"{path}: missing skip link to #main")
+    first_anchor_classes = set((parser.first_anchor_attrs or {}).get("class", "").split())
+    if (parser.first_anchor_attrs or {}).get("href") != "#main" or "skip-link" not in first_anchor_classes:
+        errors.append(f"{path}: first link must be the skip link to #main")
     duplicate_ids = sorted({element_id for element_id in parser.ids if parser.ids.count(element_id) > 1})
     for element_id in duplicate_ids:
         errors.append(f"{path}: duplicate id {element_id}")

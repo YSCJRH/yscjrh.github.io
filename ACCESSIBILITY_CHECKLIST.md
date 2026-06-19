@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Status: 2026-06-19 public-page progressive enhancement, multi-width mobile, image/SVG accessibility, and `/instrument/` browser evidence refreshed
+Status: 2026-06-19 public-page skip-link order, progressive enhancement, multi-width mobile, image/SVG accessibility, and `/instrument/` browser evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -21,7 +21,7 @@ Core pages checked:
 ## Checks
 
 - Heading structure: each core page has one main `<h1>` and section headings are present in a readable order.
-- Skip link: each core page has a skip link that targets `#main`.
+- Skip link: each core page has a skip link that targets `#main`, and that skip link must be the first link in DOM order.
 - Fragment links and IDs: checked pages must not contain duplicate `id` values, and local `#fragment` links must resolve to an existing HTML target.
 - ARIA references: `aria-controls`, `aria-labelledby`, `aria-describedby`, and related idref attributes must point to existing IDs in the same page.
 - Focus visible: global `:focus-visible` styles are present for links, buttons, mobile nav, project links, footer links, and instrument controls.
@@ -60,6 +60,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `tools/check_site.py` now rejects checked HTML pages whose first link is not the `skip-link` to `#main`; temporary negative checks confirmed a homepage link inserted before the skip link fails.
 - 2026-06-19 `tools/check_site.py` now rejects checked HTML pages whose `<body>` lacks the `no-js` bootstrap class; temporary negative checks confirmed a homepage `body class="js-enabled"` regression fails.
 - 2026-06-19 `tools/check_site.py` now rejects wrong root `<html lang>` values; temporary negative checks confirmed `lang="zh-CN"` on the homepage root fails while `lang="en"` passes.
 - 2026-06-19 `tools/check_site.py` now rejects wrong shared stylesheet targets and non-deferred shared `script.js`; temporary negative checks confirmed both regressions are caught.

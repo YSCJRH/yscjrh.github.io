@@ -2,8 +2,24 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces the public-page `body.no-js` progressive-enhancement bootstrap.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces public-page skip-link ordering.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Skip-link first-link guard
+- Status: Local red/green validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Keyboard users should encounter the skip link before brand, navigation, or content links.
+  - A red-path check confirmed `tools/check_site.py` accepted a homepage where a normal link was inserted before the skip link.
+- Changes:
+  - Added first-anchor capture to `SiteParser` in `tools/check_site.py`.
+  - Required every checked HTML page's first link to be the `skip-link` pointing to `#main`.
+  - Updated the accessibility checklist to record the enforced skip-link ordering invariant.
+- Validation result:
+  - Red: `python tools/check_site.py` passed before implementation after temporarily inserting a normal homepage link before the skip link.
+  - Green: `python tools/check_site.py` passed with the homepage restored.
+  - Negative after implementation: `python tools/check_site.py` failed with `index.html: first link must be the skip link to #main` when the normal link was temporarily inserted before the skip link.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Progressive enhancement body-state guard
 - Status: Local red/green validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
