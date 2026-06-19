@@ -4522,6 +4522,10 @@ section[id] {
 .instrument-view-toolbar button {
   color: #d8fff8;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
   pointer-events: auto;
 }
 

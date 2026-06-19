@@ -294,12 +294,21 @@ async function main() {
             return rect.width > 0 && rect.height > 0 && rect.height < 40;
           })
           .map((button) => ({ label: button.textContent.trim(), height: button.getBoundingClientRect().height })),
+        shortToolbarTargets: [...document.querySelectorAll('.instrument-view-toolbar button')]
+          .filter((button) => {
+            const rect = button.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0 && rect.height < 40;
+          })
+          .map((button) => ({ label: button.textContent.trim(), height: button.getBoundingClientRect().height })),
         onboardingColumns: getComputedStyle(document.querySelector('.instrument-onboarding')).gridTemplateColumns,
       })`
     );
     assertCheck(
-      mobile.overflowX === 0 && mobile.visibleFallbackStatus && mobile.shortLanguageTargets.length === 0,
-      "mobile overflow, hidden fallback status, or undersized language target",
+      mobile.overflowX === 0 &&
+        mobile.visibleFallbackStatus &&
+        mobile.shortLanguageTargets.length === 0 &&
+        mobile.shortToolbarTargets.length === 0,
+      "mobile overflow, hidden fallback status, or undersized touch target",
       mobile
     );
     record("mobile overflow");

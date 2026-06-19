@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass refreshes accessibility/performance evidence and `/instrument/` sitemap freshness.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass improves mobile toolbar touch targets and regression coverage.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Instrument mobile toolbar touch-target repair
+- Status: Local validation and browser QA passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Mobile rendered-page QA at 390 px found the `/instrument/` `Reset view / 重置视角` and `Reset alignment / 重置对准` toolbar buttons at about 23 px high, below the 40 px touch-target baseline used elsewhere in the site.
+- Root cause:
+  - The narrow-screen `.instrument-view-toolbar button` rule reduced padding and font size without a minimum height, so the pill buttons shrank below the practical mobile target size.
+- Changes:
+  - Added a 2.5 rem minimum height and centered inline-flex alignment to `.instrument-view-toolbar button`.
+  - Extended `tools/check-instrument-browser.js` mobile layout QA so undersized `.instrument-view-toolbar button` targets fail alongside undersized language buttons.
+  - Updated the accessibility checklist to record the toolbar touch-target coverage.
+- Validation result:
+  - Mobile Playwright CLI check at 390 x 900 confirmed both toolbar reset buttons are now 40 px high.
+  - Green: `python tools/check_site.py`; `node tools/preprocess-instrument-data.js --validate`; `node --check script.js`; `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `git diff --check`.
+  - Green: `node tools/check-instrument-browser.js` passed with the updated mobile touch-target check.
+- Remaining notes:
+  - This is an interaction/accessibility polish only. It does not change the instrument model, spectrum generation, source-derived examples, or scientific boundaries.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Checklist and sitemap evidence refresh
 - Status: Local validation and browser QA passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
