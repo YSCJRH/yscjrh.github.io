@@ -1,6 +1,6 @@
 # Performance And SEO Checklist
 
-Status: 2026-06-19 `/instrument/` interaction, sitemap, and release evidence refreshed
+Status: 2026-06-19 public route, 404 fallback, `/instrument/`, sitemap, and release evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -9,6 +9,7 @@ Latest local preview used: `http://127.0.0.1:4173/instrument/`
 Core public pages:
 
 - `/`
+- `/404.html`
 - `/projects/`
 - `/notes/`
 - `/notes/build-logs-homepage-second-pass.html`
@@ -26,6 +27,7 @@ Core public pages:
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `sitemap.xml` exists and excludes `/review/`.
+- `404.html` exists as a custom bilingual fallback, is checked for metadata/local references, and is intentionally excluded from `sitemap.xml`.
 - `sitemap.xml` keeps the shared public pages at `2026-06-10`; `/instrument/` is refreshed to `2026-06-19` after the published default-3D, language-mode, classic-sample, and sample-picker interaction releases.
 - The former `/review/` internal review route is retired from the deployable tree.
 - JSON-LD was intentionally not added because encoding personal identity facts should wait until About content is more stable.
@@ -47,8 +49,10 @@ git diff --check
 python tools/check_site.py
 node --check script.js
 node --check instrument/instrument.js
+node --check tools/check-public-browser.js
 node --check tools/check-instrument-browser.js
 node tools/preprocess-instrument-data.js --validate
+node tools/check-public-browser.js
 node tools/check-instrument-browser.js
 npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=performance,seo,best-practices" --output=json --output-path=reports/lighthouse-seo-perf-home.json --chrome-flags="--headless=new"
 npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"
@@ -58,12 +62,13 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 
 ## Results
 
-- 2026-06-19 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
+- 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker, no-JS mobile navigation, mobile keyboard menu behavior, desktop/mobile overflow checks, and reduced-motion guard.
 - 2026-06-19 `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte instrument data package.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
 - 2026-06-19 `git diff --check` passed during this checklist refresh with only Windows line-ending normalization warnings.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for first viewport, WebGL fallback, fallback label collisions, console errors, mobile overflow, reduced motion, language switching, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived examples, source-derived language mode, and module-failure fallback.
-- 2026-06-19 live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
+- 2026-06-19 live route checks returned `200` for `/`, `/404.html`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`; an unknown route returned HTTP `404` with the custom bilingual fallback content.
 - 2026-06-19 GitHub Pages reported `built` from `main` and deployment `27801068726` for commit `66a8e30` completed successfully before this checklist refresh.
 - 2026-06-11 `/instrument/` Lighthouse on local preview:
   - Performance: `86`

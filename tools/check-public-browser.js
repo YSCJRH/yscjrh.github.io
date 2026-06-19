@@ -22,6 +22,7 @@ const MARKERS = [
   "mobile structure",
   "mobile overflow",
   "mobile touch targets",
+  "custom 404 content",
   "no-JS mobile navigation",
   "mobile menu keyboard",
   "reduced motion",

@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass adds a custom bilingual 404 fallback and covers it in shared public-page QA.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass aligns performance/SEO evidence with the custom 404 fallback.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Performance evidence alignment for 404 fallback
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - After publishing the custom bilingual 404 fallback, `PERFORMANCE_CHECKLIST.md` still described the older 6-page public route baseline and did not record the new 404 SEO boundary.
+- Changes:
+  - Added `/404.html` to the performance/SEO scope as a checked fallback route while preserving its intentional exclusion from `sitemap.xml`.
+  - Updated the validation command list to include `tools/check-public-browser.js`.
+  - Recorded the latest 404 route, unknown-route, sitemap-exclusion, and public browser QA evidence in the performance checklist.
+  - Added `custom 404 content` to the public browser QA marker list so the terminal summary reflects the route-specific assertion.
+- Validation result:
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages; the terminal marker list now includes `custom 404 content`.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is a maintenance-evidence alignment only. It does not change public claims, visual design, page routing, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Custom 404 fallback
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
