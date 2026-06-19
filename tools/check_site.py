@@ -114,6 +114,8 @@ class SiteParser(HTMLParser):
         self.aria_id_refs: list[tuple[str, str]] = []
         self.local_refs: list[tuple[str, str]] = []
         self.external_scripts: list[str] = []
+        self.inline_event_handlers: list[tuple[str, str]] = []
+        self.script_scheme_refs: list[tuple[str, str, str]] = []
         self.external_resource_links: list[tuple[str, str]] = []
         self.external_media_refs: list[tuple[str, str, str]] = []
         self.image_alt_refs: list[tuple[str, bool, str, str, str]] = []
@@ -132,6 +134,10 @@ class SiteParser(HTMLParser):
         if element_id:
             self.ids.append(element_id)
         for attr, value in attrs_dict.items():
+            if attr.startswith("on"):
+                self.inline_event_handlers.append((tag, attr))
+            if value.strip().lower().startswith("javascript:"):
+                self.script_scheme_refs.append((tag, attr, value))
             if attr in ARIA_IDREF_ATTRIBUTES and value.strip():
                 for target_id in value.split():
                     self.aria_id_refs.append((attr, target_id))
@@ -403,6 +409,10 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: sitemap page must not include robots noindex")
     if parser.forms:
         errors.append(f"{path}: forms are not approved for v1")
+    for tag, attr in parser.inline_event_handlers:
+        errors.append(f"{path}: inline event handler is not approved: <{tag} {attr}>")
+    for tag, attr, value in parser.script_scheme_refs:
+        errors.append(f"{path}: javascript: URL is not approved: <{tag} {attr}={value}>")
     for src in parser.external_scripts:
         errors.append(f"{path}: external script is not approved: {src}")
     for rel, href in parser.external_resource_links:

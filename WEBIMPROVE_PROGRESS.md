@@ -2,8 +2,28 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens favicon metadata and local static-asset checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens inline HTML script-surface checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Inline HTML script-surface guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing static-site safety review found that external scripts, forms, and resource links were blocked, but inline event-handler attributes and `javascript:` URLs were not explicitly rejected.
+  - Red-path checks confirmed the previous checker allowed a temporary `onclick` attribute and a temporary `javascript:` GitHub link.
+- Changes:
+  - Added inline event-handler collection to `tools/check_site.py`.
+  - Added `javascript:` URL detection across parsed HTML attributes.
+  - Added static failures for both patterns.
+  - Updated the performance/SEO and accessibility checklists to record the enforced no-inline-script-surface invariant.
+- Validation result:
+  - Red: temporary negative checks confirmed the previous checker missed `onclick` and ordinary `javascript:` link regressions.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, inline SVG name checks, favicon metadata, and inline script-surface checks.
+  - Green: sequential temporary checks confirmed inline event-handler attributes and `javascript:` URLs are rejected.
+- Remaining notes:
+  - This is static safety/QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Favicon metadata guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

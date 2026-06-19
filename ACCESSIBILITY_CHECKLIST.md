@@ -34,7 +34,7 @@ Core pages checked:
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
 - Bilingual language semantics: full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
 - New-tab links: every `target="_blank"` link must include `rel="noopener noreferrer"` and is enforced by `tools/check_site.py`.
-- No forms, analytics, tracking scripts, backend flows, or private contact collection were introduced.
+- No forms, analytics, tracking scripts, inline event-handler attributes, `javascript:` URLs, backend flows, or private contact collection were introduced.
 
 ## Validation Commands
 
