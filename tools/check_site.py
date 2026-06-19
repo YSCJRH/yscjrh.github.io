@@ -68,6 +68,16 @@ EXPECTED_OG_TYPES = {
     Path("instrument/index.html"): "website",
 }
 
+ARIA_IDREF_ATTRIBUTES = {
+    "aria-activedescendant",
+    "aria-controls",
+    "aria-describedby",
+    "aria-details",
+    "aria-errormessage",
+    "aria-labelledby",
+    "aria-owns",
+}
+
 
 class SiteParser(HTMLParser):
     def __init__(self) -> None:
@@ -79,6 +89,7 @@ class SiteParser(HTMLParser):
         self.has_skip_to_main = False
         self.ids: list[str] = []
         self.fragment_refs: list[str] = []
+        self.aria_id_refs: list[tuple[str, str]] = []
         self.local_refs: list[tuple[str, str]] = []
         self.external_scripts: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
@@ -91,6 +102,10 @@ class SiteParser(HTMLParser):
         element_id = attrs_dict.get("id")
         if element_id:
             self.ids.append(element_id)
+        for attr, value in attrs_dict.items():
+            if attr in ARIA_IDREF_ATTRIBUTES and value.strip():
+                for target_id in value.split():
+                    self.aria_id_refs.append((attr, target_id))
 
         if tag == "html":
             self.html_lang = attrs_dict.get("lang", "")
@@ -291,6 +306,9 @@ def check_html(path: Path) -> list[str]:
     duplicate_ids = sorted({element_id for element_id in parser.ids if parser.ids.count(element_id) > 1})
     for element_id in duplicate_ids:
         errors.append(f"{path}: duplicate id {element_id}")
+    for attr, target_id in parser.aria_id_refs:
+        if target_id not in current_ids:
+            errors.append(f"{path}: {attr} references missing id {target_id}")
     robots_meta = robots_meta_contents(parser)
     if path == Path("404.html"):
         if not any("noindex" in content for content in robots_meta):

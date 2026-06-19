@@ -2,8 +2,30 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens fragment link and id checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens ARIA id reference checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 ARIA id reference guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing accessibility review found that `tools/check_site.py` now verifies duplicate IDs and fragment targets, but still did not reject broken ARIA id references.
+  - Red-path checks confirmed the previous checker missed a broken `aria-controls="missing-menu"` and a broken `aria-labelledby` reference inside the Instrument chart.
+- Changes:
+  - Added ARIA idref collection to `tools/check_site.py` for `aria-controls`, `aria-labelledby`, `aria-describedby`, `aria-owns`, `aria-activedescendant`, `aria-details`, and `aria-errormessage`.
+  - Added same-page ID validation for those ARIA references.
+  - Updated the accessibility checklist to record ARIA idref integrity as an enforced invariant.
+- Validation result:
+  - Red: temporary negative checks confirmed the previous checker missed broken `aria-controls` and `aria-labelledby` references.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, and the shared social image file.
+  - Green: sequential temporary negative checks confirmed broken `aria-controls` and `aria-labelledby` cases are rejected.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static accessibility QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Fragment link and id guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
