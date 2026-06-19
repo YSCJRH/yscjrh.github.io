@@ -1,9 +1,33 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-17 Instrument Lab classic sample presets
-- Status: Full local validation and browser QA passed locally; ready for commit and publish
-- Last updated: 2026-06-17
+- Active: 2026-06-19 Instrument Lab sample-cell picker
+- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish
+- Last updated: 2026-06-19
+
+## 2026-06-19 Instrument Lab sample-cell picker
+- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish.
+- Trigger:
+  - User requested changing sample replacement into a direct chooser opened by clicking the sample cell.
+- Changes:
+  - Added an accessible sample chooser popup beside the sample preset control.
+  - Kept the original sample `<select>` as the no-JS and side-panel fallback control.
+  - Clicking the 3D sample cell or the `Sample cell / 样品池` part button now selects the sample cell and opens the chooser.
+  - Sample picker options are generated from the same `SAMPLE_PRESET_OPTIONS` source as the select, so classic sample presets remain synchronized.
+  - Selecting a picker option updates the shared simulator state, side-panel select, diagnostics, spectrum, and sample feedback.
+  - Added bilingual chooser copy and kept the synthetic-teaching / display-only source-derived boundary visible.
+  - Bumped route-local ESM cache keys for the sample picker interaction slice.
+- Validation result:
+  - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation for missing sample picker structure and cache keys; `node --test instrument/sim/tests/browser-qa-tool.test.mjs` failed for missing `sample picker` marker.
+  - Green: `node --test instrument/sim/tests/ui-contract.test.mjs`; `node --test instrument/sim/tests/browser-qa-tool.test.mjs`.
+  - Green: `node --check instrument/instrument.js`; `node --check instrument/sim/ui/spectrum.mjs`; `node --check instrument/sim/scene/InstrumentScene.mjs`; `node --check tools/check-instrument-browser.js`.
+  - Green: `node tools/check-instrument-browser.js` passed with the added `sample picker` check, including open, option selection, state synchronization, diagnostics, and Escape close behavior.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 112/112.
+  - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+- Remaining notes:
+  - This is an interaction change only. It does not alter sample physics, source-derived datasets, calibration boundaries, or synthetic spectrum formulas.
+- Blockers:
+  - None.
 
 ## 2026-06-17 Instrument Lab classic sample presets
 - Status: Full local validation and browser QA passed locally; ready for commit and publish.

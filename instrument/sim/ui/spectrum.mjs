@@ -6,7 +6,7 @@ import {
   SAMPLE_PRESET_OPTIONS,
   SPECTRUM_VIEW_OPTIONS,
   SOURCE_PRESET_OPTIONS,
-} from "../state.mjs?v=classic-samples-20260617";
+} from "../state.mjs?v=sample-picker-20260619";
 
 const chart = {
   left: 54,
@@ -100,12 +100,70 @@ export function syncSamplePresetOptions(elements, documentRef = globalThis.docum
   syncPresetSelectOptions(elements?.controls?.sample, SAMPLE_PRESET_OPTIONS, documentRef, languageMode);
 }
 
+function samplePickerOptionValues(container) {
+  return Array.from(container?.querySelectorAll?.("[data-sample-picker-option]") || []).map((button) => button.dataset.samplePickerOption);
+}
+
+function selectedSampleStatus(option, languageMode) {
+  if (!option) {
+    return "";
+  }
+
+  if (languageMode === "en") {
+    return `Selected sample: ${localizedText(option.label, "en")}`;
+  }
+
+  if (languageMode === "zh") {
+    return `已选择样品：${localizedText(option.label, "zh")}`;
+  }
+
+  return `Selected sample: ${option.label} / 已选择样品：${option.label}`;
+}
+
+export function syncSamplePickerOptions(
+  elements,
+  documentRef = globalThis.document,
+  languageMode = languageModeForElements(elements)
+) {
+  const container = elements?.samplePickerOptions;
+  if (!container || !documentRef?.createElement) {
+    return;
+  }
+
+  const desiredValues = SAMPLE_PRESET_OPTIONS.map((option) => option.id);
+  if (JSON.stringify(samplePickerOptionValues(container)) !== JSON.stringify(desiredValues)) {
+    container.textContent = "";
+    SAMPLE_PRESET_OPTIONS.forEach((option) => {
+      const button = documentRef.createElement("button");
+      button.type = "button";
+      button.className = "sample-picker-option";
+      button.dataset.samplePickerOption = option.id;
+      container.append(button);
+    });
+  }
+
+  const selectedId = elements?.controls?.sample?.value || SAMPLE_PRESET_OPTIONS[0]?.id || "";
+  container.querySelectorAll("[data-sample-picker-option]").forEach((button) => {
+    const option = SAMPLE_PRESET_OPTIONS.find((entry) => entry.id === button.dataset.samplePickerOption);
+    const selected = button.dataset.samplePickerOption === selectedId;
+    button.textContent = localizedText(option?.label || button.dataset.samplePickerOption, languageMode);
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+
+  setText(
+    elements?.samplePickerStatus,
+    selectedSampleStatus(SAMPLE_PRESET_OPTIONS.find((option) => option.id === selectedId), languageMode)
+  );
+}
+
 export function syncSimulatorPresetOptions(
   elements,
   documentRef = globalThis.document,
   languageMode = languageModeForElements(elements)
 ) {
   syncSamplePresetOptions(elements, documentRef, languageMode);
+  syncSamplePickerOptions(elements, documentRef, languageMode);
   syncPresetSelectOptions(elements?.controls?.sourceType, SOURCE_PRESET_OPTIONS, documentRef, languageMode);
   syncPresetSelectOptions(elements?.controls?.detectorType, DETECTOR_PRESET_OPTIONS, documentRef, languageMode);
   syncPresetSelectOptions(elements?.controls?.geometryMode, GEOMETRY_PRESET_OPTIONS, documentRef, languageMode);
@@ -240,6 +298,11 @@ export function collectInstrumentElements(root) {
     enableSceneButtons: Array.from(root.querySelectorAll('[data-action="enable-3d"]')),
     resetViewButtons: Array.from(root.querySelectorAll('[data-action="reset-view"]')),
     resetGeometryButtons: Array.from(root.querySelectorAll('[data-action="reset-geometry"]')),
+    samplePicker: root.querySelector("[data-sample-picker]"),
+    samplePickerTrigger: root.querySelector("[data-sample-picker-trigger]"),
+    samplePickerOptions: root.querySelector("[data-sample-picker-options]"),
+    samplePickerClose: root.querySelector("[data-sample-picker-close]"),
+    samplePickerStatus: root.querySelector("[data-sample-picker-status]"),
     fallbackDiagram: root.querySelector("[data-fallback-diagram]"),
     sceneHost: root.querySelector("[data-scene-host]"),
     webglStatus: root.querySelector("[data-webgl-status]"),

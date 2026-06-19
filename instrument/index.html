@@ -45,7 +45,7 @@
           return;
         }
 
-        import("./instrument.js?v=classic-samples-20260617").catch((error) => {
+        import("./instrument.js?v=sample-picker-20260619").catch((error) => {
           console.error("Instrument Lab module failed to load.", error);
           const root = document.querySelector("[data-instrument-lab]");
           const statusElements = Array.from(document.querySelectorAll("[data-webgl-status]"));
@@ -518,6 +518,40 @@
                       </select>
                       <small class="control-help" data-sample-note>Classic entries are synthetic analogs linked to display-only source examples; they still control only the synthetic model. / 经典条目是与仅显示引用示例相连的合成类比，仍只控制合成模型。</small>
                     </label>
+
+                    <div class="sample-picker-anchor">
+                      <button
+                        class="instrument-inline-action sample-picker-trigger"
+                        type="button"
+                        data-sample-picker-trigger
+                        aria-haspopup="dialog"
+                        aria-expanded="false"
+                        aria-controls="sample-picker"
+                        data-localize-text
+                      >Open sample chooser / 打开样品选择</button>
+                      <div
+                        class="sample-picker-panel"
+                        id="sample-picker"
+                        data-sample-picker
+                        role="dialog"
+                        aria-labelledby="sample-picker-title"
+                        hidden
+                      >
+                        <div class="sample-picker-head">
+                          <strong id="sample-picker-title" data-localize-text>Choose a sample / 选择样品</strong>
+                          <button
+                            class="sample-picker-close"
+                            type="button"
+                            data-sample-picker-close
+                            aria-label="Close sample chooser / 关闭样品选择"
+                            data-localize-text
+                          >Close / 关闭</button>
+                        </div>
+                        <p class="sample-picker-copy" data-localize-text>Synthetic teaching presets only; source-derived examples stay display-only. / 仅为合成教学预设；引用示例仍只用于显示。</p>
+                        <div class="sample-picker-options" data-sample-picker-options aria-label="Sample presets / 样品预设"></div>
+                        <p class="sample-picker-status" data-sample-picker-status aria-live="polite"></p>
+                      </div>
+                    </div>
 
                     <details class="advanced-geometry">
                       <summary>

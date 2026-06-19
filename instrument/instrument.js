@@ -7,15 +7,15 @@ import {
   setGratingAngle,
   setMode,
   setSelectedPart,
-} from "./sim/state.mjs?v=classic-samples-20260617";
-import { deriveInstrument } from "./sim/physics/derive.mjs?v=classic-samples-20260617";
+} from "./sim/state.mjs?v=sample-picker-20260619";
+import { deriveInstrument } from "./sim/physics/derive.mjs?v=sample-picker-20260619";
 import {
   collectInstrumentElements,
   localizedText,
   updateDiagnostics,
   updatePartChrome,
   updateSpectrumChrome,
-} from "./sim/ui/spectrum.mjs?v=classic-samples-20260617";
+} from "./sim/ui/spectrum.mjs?v=sample-picker-20260619";
 
 const root = document.querySelector("[data-instrument-lab]");
 let sceneModulePromise = null;
@@ -104,6 +104,61 @@ if (root) {
     });
   }
 
+  function isSamplePickerOpen() {
+    return Boolean(elements.samplePicker && !elements.samplePicker.hidden);
+  }
+
+  function setSamplePickerExpanded(expanded) {
+    elements.samplePickerTrigger?.setAttribute("aria-expanded", String(Boolean(expanded)));
+  }
+
+  function openSamplePicker({ focusFirst = true } = {}) {
+    if (!elements.samplePicker) {
+      return;
+    }
+
+    elements.samplePicker.hidden = false;
+    setSamplePickerExpanded(true);
+
+    if (focusFirst) {
+      const selectedOption =
+        elements.samplePickerOptions?.querySelector?.("[data-sample-picker-option].is-active") ||
+        elements.samplePickerOptions?.querySelector?.("[data-sample-picker-option]");
+      selectedOption?.focus?.({ preventScroll: true });
+    }
+  }
+
+  function closeSamplePicker({ restoreFocus = false } = {}) {
+    if (!elements.samplePicker) {
+      return;
+    }
+
+    elements.samplePicker.hidden = true;
+    setSamplePickerExpanded(false);
+
+    if (restoreFocus) {
+      elements.samplePickerTrigger?.focus?.({ preventScroll: true });
+    }
+  }
+
+  function chooseSamplePreset(presetId) {
+    applyControlValue(state, "sample", presetId);
+    syncInputsFromState();
+    applyState();
+    closeSamplePicker({ restoreFocus: true });
+  }
+
+  function handlePartSelection(part, { openSample = true } = {}) {
+    setSelectedPart(state, part);
+    applyState();
+
+    if (part === "sample" && openSample) {
+      openSamplePicker({ focusFirst: true });
+    } else if (part !== "sample") {
+      closeSamplePicker();
+    }
+  }
+
   function setLanguageMode(mode, { persist = true } = {}) {
     const nextMode = normalizeLanguageMode(mode);
     root.dataset.languageMode = nextMode;
@@ -172,7 +227,7 @@ if (root) {
   }
 
   function loadSceneModule() {
-    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=readability-polish-20260617");
+    sceneModulePromise ||= import("./sim/scene/InstrumentScene.mjs?v=sample-picker-20260619");
     return sceneModulePromise;
   }
 
@@ -253,8 +308,7 @@ if (root) {
       state,
       reducedMotion: reduceMotionQuery.matches,
       onSelectPart: (part) => {
-        setSelectedPart(state, part);
-        applyState();
+        handlePartSelection(part);
       },
       onGeometryChange: (changes) => {
         setGeometryOffsets(state, changes);
@@ -296,8 +350,7 @@ if (root) {
 
   elements.partButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      setSelectedPart(state, button.dataset.part);
-      applyState();
+      handlePartSelection(button.dataset.part);
     });
 
     if (button.tagName.toLowerCase() !== "button") {
@@ -307,9 +360,38 @@ if (root) {
         }
 
         event.preventDefault();
-        setSelectedPart(state, button.dataset.part);
-        applyState();
+        handlePartSelection(button.dataset.part);
       });
+    }
+  });
+
+  elements.samplePickerTrigger?.addEventListener("click", () => {
+    setSelectedPart(state, "sample");
+    applyState();
+    if (isSamplePickerOpen()) {
+      closeSamplePicker({ restoreFocus: true });
+    } else {
+      openSamplePicker({ focusFirst: true });
+    }
+  });
+
+  elements.samplePickerClose?.addEventListener("click", () => {
+    closeSamplePicker({ restoreFocus: true });
+  });
+
+  elements.samplePickerOptions?.addEventListener("click", (event) => {
+    const option = event.target.closest?.("[data-sample-picker-option]");
+    if (!option) {
+      return;
+    }
+
+    chooseSamplePreset(option.dataset.samplePickerOption);
+  });
+
+  root.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isSamplePickerOpen()) {
+      event.preventDefault();
+      closeSamplePicker({ restoreFocus: true });
     }
   });
 

@@ -4,7 +4,7 @@ import { evaluateSourceSpectrum } from "./source.mjs?v=response-chain-20260611";
 import { convolveLineShape } from "./instrumentFunction.mjs?v=response-chain-20260611";
 import { composeRawSignal } from "./radiometry.mjs?v=response-chain-20260611";
 import { clamp } from "../math.mjs?v=wavelength-control-20260429";
-import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=classic-samples-20260617";
+import { SAMPLE_PROFILES, SPECTRUM_VIEW_OPTIONS } from "../state.mjs?v=sample-picker-20260619";
 
 export const FIXED_Y_SCALE_MAX = 1.35;
 

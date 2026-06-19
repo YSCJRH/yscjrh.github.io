@@ -27,6 +27,7 @@ const MARKERS = [
   "language density",
   "scene overlay language",
   "classic samples",
+  "sample picker",
   "WebGL fallback",
 ];
 
@@ -597,6 +598,62 @@ async function main() {
       classicSamples
     );
     record("classic samples");
+
+    progress("checking sample picker");
+    const samplePicker = runCode(
+      SESSION,
+      `async (page) => {
+        await page.locator('.instrument-flow-strip [data-part="sample"]').click();
+        await page.waitForTimeout(120);
+        const opened = await page.evaluate(() => ({
+          hidden: document.querySelector('[data-sample-picker]')?.hidden ?? true,
+          expanded: document.querySelector('[data-sample-picker-trigger]')?.getAttribute('aria-expanded') || '',
+          options: [...document.querySelectorAll('[data-sample-picker-option]')].map((button) => ({
+            value: button.dataset.samplePickerOption,
+            text: button.textContent.trim(),
+            pressed: button.getAttribute('aria-pressed'),
+          })),
+          activePart: document.querySelector('[data-instrument-lab]')?.dataset.activePart || '',
+        }));
+
+        await page.locator('[data-sample-picker-option="rhodamine-6g-like"]').click();
+        await page.waitForTimeout(160);
+        const selected = await page.evaluate(() => ({
+          hidden: document.querySelector('[data-sample-picker]')?.hidden ?? false,
+          expanded: document.querySelector('[data-sample-picker-trigger]')?.getAttribute('aria-expanded') || '',
+          sampleValue: document.querySelector('[data-control="sample"]')?.value || '',
+          diagnostics: document.querySelector('[data-diagnostics-list]')?.textContent.trim() || '',
+          status: document.querySelector('[data-sample-picker-status]')?.textContent.trim() || '',
+        }));
+
+        await page.locator('[data-sample-picker-trigger]').click();
+        await page.waitForTimeout(80);
+        await page.keyboard.press('Escape');
+        await page.waitForTimeout(80);
+        const closedByEscape = await page.evaluate(() => ({
+          hidden: document.querySelector('[data-sample-picker]')?.hidden ?? false,
+          expanded: document.querySelector('[data-sample-picker-trigger]')?.getAttribute('aria-expanded') || '',
+        }));
+
+        return { opened, selected, closedByEscape };
+      }`
+    );
+    assertCheck(
+      samplePicker.opened.hidden === false &&
+        samplePicker.opened.expanded === "true" &&
+        samplePicker.opened.activePart === "sample" &&
+        samplePicker.opened.options.some((option) => option.value === "rhodamine-6g-like") &&
+        samplePicker.opened.options.some((option) => option.value === "egfp-like") &&
+        samplePicker.selected.hidden === true &&
+        samplePicker.selected.expanded === "false" &&
+        samplePicker.selected.sampleValue === "rhodamine-6g-like" &&
+        /Rhodamine 6G-like dye/.test(samplePicker.selected.diagnostics) &&
+        samplePicker.closedByEscape.hidden === true &&
+        samplePicker.closedByEscape.expanded === "false",
+      "sample cell picker did not open, synchronize, or close correctly",
+      samplePicker
+    );
+    record("sample picker");
 
     progress("checking default 3D scene");
     const default3d = runCode(

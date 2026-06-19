@@ -294,6 +294,21 @@ test("sample control exposes classic fluorescence teaching presets with boundari
   assert.match(sampleBlock, /合成类比/);
 });
 
+test("sample cell exposes an accessible popup sample chooser", () => {
+  assert.match(instrumentHtml, /data-sample-picker-trigger/);
+  assert.match(instrumentHtml, /aria-haspopup="dialog"/);
+  assert.match(instrumentHtml, /aria-controls="sample-picker"/);
+  assert.match(instrumentHtml, /Open sample chooser \/ 打开样品选择/);
+  assert.match(instrumentHtml, /id="sample-picker"[\s\S]*data-sample-picker[\s\S]*role="dialog"/);
+  assert.match(instrumentHtml, /data-sample-picker-options/);
+  assert.match(instrumentHtml, /data-sample-picker-close/);
+  assert.match(instrumentHtml, /Choose a sample \/ 选择样品/);
+  assert.match(instrumentHtml, /synthetic teaching presets|合成教学预设/);
+  assert.match(instrumentScript, /openSamplePicker/);
+  assert.match(instrumentScript, /data-sample-picker-option/);
+  assert.match(sceneScript, /sample cell to open the sample chooser|点击样品池打开样品选择/);
+});
+
 test("source, detector, and geometry no-JS fallback options match the shared preset options", () => {
   assert.deepEqual(
     selectOptionsFromHtml("source-type"),
@@ -530,20 +545,20 @@ test("single-language mode can collapse dense static workbench labels", () => {
   }
 });
 
-test("instrument route cache key changes with the classic sample preset slice", () => {
+test("instrument route cache key changes with the sample picker slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=classic-samples-20260617/,
+    /instrument\.js\?v=sample-picker-20260619/,
     "instrument.js cache key should be bumped when route-local runtime controls change"
   );
   assert.match(
     instrumentScript,
-    /state\.mjs\?v=classic-samples-20260617/,
+    /state\.mjs\?v=sample-picker-20260619/,
     "state module cache key should be bumped when preset runtime data changes"
   );
   assert.match(
     instrumentScript,
-    /InstrumentScene\.mjs\?v=readability-polish-20260617/,
+    /InstrumentScene\.mjs\?v=sample-picker-20260619/,
     "scene module cache key should be bumped when 3D scene rendering changes"
   );
 });

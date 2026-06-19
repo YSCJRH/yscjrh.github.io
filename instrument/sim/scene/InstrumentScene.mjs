@@ -1280,7 +1280,7 @@ export function createInstrumentScene({ host, state, onSelectPart, onGeometryCha
   renderer.domElement.tabIndex = 0;
   renderer.domElement.setAttribute(
     "aria-label",
-    "3D fluorescence instrument scene. Click a monochromator to open it, then drag its grating or use arrow keys. / 3D 荧光仪器场景；点击单色器打开外壳，然后拖动光栅或使用方向键。"
+    "3D fluorescence instrument scene. Click a monochromator to open it, click the sample cell to open the sample chooser, then drag grating handles or use arrow keys. / 3D 荧光仪器场景；点击单色器打开外壳，点击样品池打开样品选择，然后拖动光栅手柄或使用方向键。"
   );
 
   const root = new THREE.Group();
