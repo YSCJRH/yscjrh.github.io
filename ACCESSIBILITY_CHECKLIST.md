@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Status: 2026-06-19 public-page multi-width mobile, image/SVG accessibility, and `/instrument/` browser evidence refreshed
+Status: 2026-06-19 public-page progressive enhancement, multi-width mobile, image/SVG accessibility, and `/instrument/` browser evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -26,14 +26,14 @@ Core pages checked:
 - ARIA references: `aria-controls`, `aria-labelledby`, `aria-describedby`, and related idref attributes must point to existing IDs in the same page.
 - Focus visible: global `:focus-visible` styles are present for links, buttons, mobile nav, project links, footer links, and instrument controls.
 - Keyboard navigation: mobile menu opens from the toggle, moves focus into the menu, closes with Escape, and returns focus to the toggle.
-- No-JS navigation: shared public pages keep a compact visible primary nav on mobile when JavaScript is disabled; the inactive hamburger toggle is hidden in that mode.
+- No-JS navigation: shared public pages keep a compact visible primary nav on mobile when JavaScript is disabled; the inactive hamburger toggle is hidden in that mode, and checked page bodies must start with the `no-js` class.
 - Mobile menu ARIA: toggle uses `aria-expanded`, `aria-controls="mobile-menu"`, and paired English / Chinese label text.
 - Touch targets: sampled first-viewport links and buttons at 320px, 375px, 390px, 414px, and 768px are at least 40px in both dimensions in `tools/check-public-browser.js`. The `/instrument/` 3D toolbar reset buttons are covered by the 2026-06-19 browser QA touch-target check.
 - Viewport metadata: each checked page must keep exactly one `width=device-width, initial-scale=1` viewport meta tag so mobile rendering remains predictable.
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
 - Images and decorative graphics: `<img>` elements must carry `alt`; empty `alt` is allowed only when the image is explicitly decorative with `aria-hidden="true"` or `role="presentation"` / `role="none"`. Inline `<svg>` elements must either be decorative with `aria-hidden="true"` / presentation role or provide an accessible name through `aria-label`, `aria-labelledby`, or a child `<title>`.
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
-- Shared assets: each checked page loads the shared stylesheet and deferred shared JavaScript so skip-link, focus, no-JS, reduced-motion, and mobile-navigation behavior remain consistent.
+- Shared assets and body state: each checked page loads the shared stylesheet and deferred shared JavaScript, and keeps the `body.no-js` bootstrap class so skip-link, focus, no-JS, reduced-motion, and mobile-navigation behavior remain consistent.
 - Bilingual language semantics: each checked page keeps root `<html lang="en">`, while full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
 - New-tab links: every `target="_blank"` link must include `rel="noopener noreferrer"` and is enforced by `tools/check_site.py`.
 - No forms, analytics, tracking scripts, inline event-handler attributes, `javascript:` URLs, backend flows, or private contact collection were introduced.
@@ -60,6 +60,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `tools/check_site.py` now rejects checked HTML pages whose `<body>` lacks the `no-js` bootstrap class; temporary negative checks confirmed a homepage `body class="js-enabled"` regression fails.
 - 2026-06-19 `tools/check_site.py` now rejects wrong root `<html lang>` values; temporary negative checks confirmed `lang="zh-CN"` on the homepage root fails while `lang="en"` passes.
 - 2026-06-19 `tools/check_site.py` now rejects wrong shared stylesheet targets and non-deferred shared `script.js`; temporary negative checks confirmed both regressions are caught.
 - 2026-06-19 `tools/check_site.py` now rejects missing `<img>` alt text and non-decorative empty image alt text; temporary negative checks confirmed both failures are caught while explicitly decorative empty-alt images are allowed.

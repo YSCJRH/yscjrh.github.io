@@ -114,6 +114,7 @@ class SiteParser(HTMLParser):
         self.document_title_chunks: list[str] = []
         self.h1_count = 0
         self.html_lang = ""
+        self.body_class_tokens: set[str] = set()
         self.has_main_id = False
         self.has_skip_to_main = False
         self.ids: list[str] = []
@@ -151,6 +152,8 @@ class SiteParser(HTMLParser):
 
         if tag == "html":
             self.html_lang = attrs_dict.get("lang", "")
+        elif tag == "body":
+            self.body_class_tokens.update(attrs_dict.get("class", "").split())
         elif tag == "h1":
             self.h1_count += 1
         elif tag == "svg":
@@ -460,6 +463,8 @@ def check_html(path: Path) -> list[str]:
 
     if parser.html_lang != EXPECTED_HTML_LANG:
         errors.append(f"{path}: html lang must be {EXPECTED_HTML_LANG}")
+    if "no-js" not in parser.body_class_tokens:
+        errors.append(f"{path}: body must include no-js class for progressive enhancement fallback")
     if parser.h1_count != 1:
         errors.append(f"{path}: expected one h1, found {parser.h1_count}")
     if not parser.has_main_id:

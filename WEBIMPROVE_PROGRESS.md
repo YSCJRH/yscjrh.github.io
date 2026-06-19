@@ -2,8 +2,24 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces shared CSS/JS loading semantics.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces the public-page `body.no-js` progressive-enhancement bootstrap.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Progressive enhancement body-state guard
+- Status: Local red/green validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - No-JS mobile navigation and progressive enhancement depend on each checked page starting with `body.no-js` before shared `script.js` swaps it to `js-enabled`.
+  - A red-path check confirmed `tools/check_site.py` accepted a homepage with `body class="js-enabled"` before this guard was added.
+- Changes:
+  - Added body class capture to `SiteParser` in `tools/check_site.py`.
+  - Required every checked HTML page to include the `no-js` body class.
+  - Updated accessibility and performance/SEO checklists to record the body-state invariant.
+- Validation result:
+  - Red: `python tools/check_site.py` passed before implementation after temporarily changing the homepage body class to `js-enabled`.
+  - Green: `python tools/check_site.py` passed with all checked pages restored to `body.no-js`.
+  - Negative after implementation: `python tools/check_site.py` failed with `index.html: body must include no-js class for progressive enhancement fallback` when the homepage body class was temporarily changed to `js-enabled`.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Shared asset loading guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
