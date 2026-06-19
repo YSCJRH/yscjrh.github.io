@@ -182,6 +182,7 @@ async function main() {
             const h1 = [...document.querySelectorAll('h1')].map((heading) => heading.textContent.trim());
             return {
               title: document.title,
+              bodyText: document.body.textContent.replace(/\s+/g, ' '),
               h1,
               hasMain: Boolean(main),
               hasSkip: Boolean(skip),
@@ -207,8 +208,9 @@ async function main() {
 
       if (route === "/404.html") {
         assertCheck(
-          desktop.h1[0].includes("not part of the site map"),
-          "custom 404 route headline is missing",
+          desktop.h1[0].includes("not part of the site map") &&
+            desktop.bodyText.includes("这个地址不在当前站点地图中。"),
+          "custom 404 route bilingual headline is missing",
           desktop
         );
         record("custom 404 content");

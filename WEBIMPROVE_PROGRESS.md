@@ -2,8 +2,25 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens the custom 404 SEO boundary in static checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens bilingual browser QA for the custom 404 fallback.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Custom 404 bilingual QA guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing bilingual review found that `tools/check-public-browser.js` checked the English custom 404 headline but did not assert that the Chinese recovery headline remained present.
+- Changes:
+  - Added route-specific browser QA for the `/404.html` Chinese headline `这个地址不在当前站点地图中。`.
+  - Kept the existing English headline assertion and `custom 404 content` marker.
+- Validation result:
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages; the `/404.html` check now requires both English and Chinese recovery headlines.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is a browser QA hardening change only. It does not change public copy, route behavior, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Custom 404 noindex guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
