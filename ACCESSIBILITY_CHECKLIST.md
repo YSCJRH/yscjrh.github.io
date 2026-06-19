@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Status: 2026-06-19 `/instrument/` interaction and language-mode evidence refreshed
+Status: 2026-06-19 public-page and `/instrument/` browser evidence refreshed
 Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
@@ -37,8 +37,10 @@ Core pages checked:
 git diff --check
 python tools/check_site.py
 node --check script.js
+node --check tools/check-public-browser.js
 node --check instrument/instrument.js
 node --check tools/check-instrument-browser.js
+node tools/check-public-browser.js
 node tools/check-instrument-browser.js
 npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=accessibility" --output=json --output-path=reports/lighthouse-a11y-home.json --chrome-flags="--headless=new"
 npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"
@@ -47,6 +49,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 
 ## Results
 
+- 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/projects/`, `/notes/`, and both published note pages: one `h1`, skip link to `#main`, no desktop/mobile horizontal overflow, no sampled undersized mobile controls, no console errors, mobile menu keyboard open/Escape close, and reduced-motion parallax guard.
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.

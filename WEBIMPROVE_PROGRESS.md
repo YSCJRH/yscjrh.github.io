@@ -2,8 +2,24 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass improves mobile toolbar touch targets and regression coverage.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass adds shared public-page browser QA coverage.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Shared public-page browser QA gate
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing autonomous review found that `/instrument/` had a strong repeatable browser QA gate, while the homepage, Projects, Notes, and article pages still relied on static link checks plus older manual browser evidence.
+- Changes:
+  - Added `tools/check-public-browser.js` as a reusable browser QA command for `/`, `/projects/`, `/notes/`, and both published note pages.
+  - The new gate checks desktop structure, single `h1`, skip link to `#main`, console errors, mobile horizontal overflow, sampled mobile touch targets, mobile menu keyboard open/Escape close, and reduced-motion parallax behavior.
+  - Documented the command in `README.md` and recorded it in the accessibility checklist.
+- Validation result:
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across all shared public routes listed above.
+- Remaining notes:
+  - This is a QA and maintainability improvement. It does not add new public claims, new dependencies, analytics, forms, or runtime behavior for visitors.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Instrument mobile toolbar touch-target repair
 - Status: Local validation and browser QA passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

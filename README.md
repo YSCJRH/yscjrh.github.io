@@ -65,6 +65,12 @@ Run the site sanity checker after scoped HTML, metadata, sitemap, robots, or lin
 python tools/check_site.py
 ```
 
+For the shared public pages browser QA gates:
+
+```powershell
+node tools/check-public-browser.js
+```
+
 For the Instrument Lab browser QA gates:
 
 ```powershell
