@@ -112,7 +112,7 @@ if (root) {
     elements.samplePickerTrigger?.setAttribute("aria-expanded", String(Boolean(expanded)));
   }
 
-  function openSamplePicker({ focusFirst = true } = {}) {
+  function openSamplePicker({ focusFirst = true, reveal = false } = {}) {
     if (!elements.samplePicker) {
       return;
     }
@@ -120,11 +120,15 @@ if (root) {
     elements.samplePicker.hidden = false;
     setSamplePickerExpanded(true);
 
+    if (reveal) {
+      elements.samplePicker.scrollIntoView?.({ block: "center", inline: "nearest" });
+    }
+
     if (focusFirst) {
       const selectedOption =
         elements.samplePickerOptions?.querySelector?.("[data-sample-picker-option].is-active") ||
         elements.samplePickerOptions?.querySelector?.("[data-sample-picker-option]");
-      selectedOption?.focus?.({ preventScroll: true });
+      selectedOption?.focus?.({ preventScroll: !reveal });
     }
   }
 
@@ -153,7 +157,7 @@ if (root) {
     applyState();
 
     if (part === "sample" && openSample) {
-      openSamplePicker({ focusFirst: true });
+      openSamplePicker({ focusFirst: true, reveal: true });
     } else if (part !== "sample") {
       closeSamplePicker();
     }

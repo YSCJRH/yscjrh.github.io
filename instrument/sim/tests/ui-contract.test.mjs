@@ -545,10 +545,10 @@ test("single-language mode can collapse dense static workbench labels", () => {
   }
 });
 
-test("instrument route cache key changes with the sample picker slice", () => {
+test("instrument route cache key changes with the sample picker reveal slice", () => {
   assert.match(
     instrumentHtml,
-    /instrument\.js\?v=sample-picker-20260619/,
+    /instrument\.js\?v=sample-picker-reveal-20260619/,
     "instrument.js cache key should be bumped when route-local runtime controls change"
   );
   assert.match(

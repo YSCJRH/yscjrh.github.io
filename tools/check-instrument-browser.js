@@ -603,11 +603,21 @@ async function main() {
     const samplePicker = runCode(
       SESSION,
       `async (page) => {
-        await page.locator('.instrument-flow-strip [data-part="sample"]').click();
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.evaluate(() => {
+          document.querySelector('.instrument-flow-strip [data-part="sample"]')?.click();
+        });
         await page.waitForTimeout(120);
         const opened = await page.evaluate(() => ({
           hidden: document.querySelector('[data-sample-picker]')?.hidden ?? true,
           expanded: document.querySelector('[data-sample-picker-trigger]')?.getAttribute('aria-expanded') || '',
+          panelRect: (() => {
+            const rect = document.querySelector('[data-sample-picker]')?.getBoundingClientRect();
+            return rect
+              ? { top: Math.round(rect.top), bottom: Math.round(rect.bottom), height: Math.round(rect.height) }
+              : null;
+          })(),
+          viewportHeight: window.innerHeight,
           options: [...document.querySelectorAll('[data-sample-picker-option]')].map((button) => ({
             value: button.dataset.samplePickerOption,
             text: button.textContent.trim(),
@@ -642,6 +652,9 @@ async function main() {
       samplePicker.opened.hidden === false &&
         samplePicker.opened.expanded === "true" &&
         samplePicker.opened.activePart === "sample" &&
+        samplePicker.opened.panelRect &&
+        samplePicker.opened.panelRect.top >= 0 &&
+        samplePicker.opened.panelRect.bottom <= samplePicker.opened.viewportHeight &&
         samplePicker.opened.options.some((option) => option.value === "rhodamine-6g-like") &&
         samplePicker.opened.options.some((option) => option.value === "egfp-like") &&
         samplePicker.selected.hidden === true &&

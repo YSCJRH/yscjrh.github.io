@@ -1,9 +1,30 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-19 Instrument Lab sample-cell picker
+- Active: 2026-06-19 Instrument Lab sample-picker reveal
 - Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish
 - Last updated: 2026-06-19
+
+## 2026-06-19 Instrument Lab sample-picker reveal
+- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish.
+- Trigger:
+  - Autonomous review found that selecting the sample cell from the top workbench could open the sample picker down in the controls area without bringing it into view.
+- Root cause:
+  - `openSamplePicker()` always focused the active option with `preventScroll: true`.
+  - That was correct for opening from the inline chooser button, but wrong for opening from a scene or part-selection action whose visual origin is away from the controls.
+- Changes:
+  - Added a browser QA regression that opens the sample picker from the top of the page through the sample-cell part action and requires the picker panel to be inside the viewport.
+  - Updated `openSamplePicker()` with a `reveal` mode.
+  - Part and scene sample-cell selection now reveals the picker; the inline chooser button keeps its non-scrolling toggle behavior.
+  - Bumped the `/instrument/` entry cache key for the runtime behavior change.
+- Validation result:
+  - TDD red: `node tools/check-instrument-browser.js` failed before implementation with the sample picker panel at `top: 2297` while the viewport height was `900`.
+  - Green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node --test instrument/sim/tests/*.mjs` passed: 112/112.
+  - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`; `node tools/check-instrument-browser.js`.
+- Remaining notes:
+  - This changes only reveal/focus behavior. It does not alter sample presets, physics, diagnostics, source-derived examples, or scientific boundaries.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Instrument Lab sample-cell picker
 - Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish.
