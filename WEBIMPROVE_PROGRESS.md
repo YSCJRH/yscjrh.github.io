@@ -2,8 +2,35 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces root document language semantics.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces shared CSS/JS loading semantics.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Shared asset loading guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Performance/accessibility baselines depend on every checked public page loading shared `styles.css` and deferred shared `script.js`.
+  - Red-path checks confirmed `tools/check_site.py` accepted a homepage with non-deferred shared `script.js`, and accepted a stylesheet link pointing to an existing but wrong local file.
+- Changes:
+  - Added shared asset constants and local-reference matching in `tools/check_site.py`.
+  - Required exactly one stylesheet resolving to `styles.css` on every checked HTML page.
+  - Required exactly one shared `script.js` tag on every checked HTML page, and required that tag to use `defer`.
+  - Updated the accessibility and performance/SEO checklists to record the shared asset invariant.
+- Validation result:
+  - Red: `python tools/check_site.py` passed before implementation after temporarily removing `defer` from the homepage shared script.
+  - Red: `python tools/check_site.py` passed before implementation after temporarily pointing the homepage stylesheet at `assets/favicon.svg`.
+  - Green: `python tools/check_site.py` passed after implementation with current pages restored.
+  - Green: after implementation, the same temporary non-deferred script failed with `index.html: shared script.js must use defer`.
+  - Green: after implementation, the same temporary wrong stylesheet failed with `expected exactly one shared stylesheet link to styles.css` and `stylesheet href must resolve to styles.css`.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `node --check script.js`, `node --check instrument/instrument.js`, `node --check tools/check-public-browser.js`, and `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 114/114.
+  - Green: `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte data package.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, with mobile checks at 320px, 375px, 390px, 414px, and 768px.
+  - Green: `node tools/check-instrument-browser.js` passed across first viewport, fallback, language, keyboard, geometry, response-normalized, classic samples, sample picker, default 3D, source-derived, and module-failure checks.
+- Remaining notes:
+  - This is static performance/accessibility QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Root document language guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

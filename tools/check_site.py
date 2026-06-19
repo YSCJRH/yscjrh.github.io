@@ -21,6 +21,8 @@ EXPECTED_SHARE_IMAGE_ALT = (
 )
 EXPECTED_SHARE_IMAGE_SIZE = (1200, 630)
 EXPECTED_FAVICON_PATH = Path("assets/favicon.svg")
+EXPECTED_STYLESHEET_PATH = Path("styles.css")
+EXPECTED_SHARED_SCRIPT_PATH = Path("script.js")
 
 HTML_FILES = [
     Path("index.html"),
@@ -259,6 +261,13 @@ def resolve_local_reference(source: Path, value: str) -> Path | None:
     return candidate
 
 
+def local_reference_matches(source: Path, value: str, expected_path: Path) -> bool:
+    resolved = resolve_local_reference(source, value)
+    if resolved is None:
+        return False
+    return resolved.resolve() == (ROOT / expected_path).resolve()
+
+
 def robots_meta_contents(parser: SiteParser) -> list[str]:
     return [
         attrs.get("content", "").lower()
@@ -420,6 +429,34 @@ def check_html(path: Path) -> list[str]:
             errors.append(f"{path}: favicon href must resolve to {EXPECTED_FAVICON_PATH.as_posix()}")
         if favicon_type != "image/svg+xml":
             errors.append(f"{path}: favicon type must be image/svg+xml")
+
+    stylesheet_links = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "link" and "stylesheet" in attrs.get("rel", "").lower().split()
+    ]
+    shared_stylesheet_links = [
+        attrs
+        for attrs in stylesheet_links
+        if local_reference_matches(path, attrs.get("href", ""), EXPECTED_STYLESHEET_PATH)
+    ]
+    if len(shared_stylesheet_links) != 1:
+        errors.append(f"{path}: expected exactly one shared stylesheet link to styles.css")
+    for attrs in stylesheet_links:
+        if not local_reference_matches(path, attrs.get("href", ""), EXPECTED_STYLESHEET_PATH):
+            errors.append(f"{path}: stylesheet href must resolve to styles.css: {attrs.get('href', '')}")
+
+    shared_script_tags = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "script"
+        and local_reference_matches(path, attrs.get("src", ""), EXPECTED_SHARED_SCRIPT_PATH)
+    ]
+    if len(shared_script_tags) != 1:
+        errors.append(f"{path}: expected exactly one shared script tag for script.js")
+    for attrs in shared_script_tags:
+        if "defer" not in attrs:
+            errors.append(f"{path}: shared script.js must use defer")
 
     if parser.html_lang != EXPECTED_HTML_LANG:
         errors.append(f"{path}: html lang must be {EXPECTED_HTML_LANG}")

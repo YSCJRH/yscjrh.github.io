@@ -50,6 +50,7 @@ Core public pages:
 - Static site with no build step and no third-party analytics or tracking scripts.
 - Shared CSS: `styles.css`.
 - Shared JS: `script.js`, deferred.
+- Each checked HTML page must include exactly one shared stylesheet resolving to `styles.css` and exactly one shared `script.js` tag with `defer`; `tools/check_site.py` enforces this shared asset contract.
 - Route-scoped heavier JavaScript is limited to `/instrument/`.
 - Images are SVG or small static PNG assets; the share card is about 80 KB.
 - CSS must not import external URLs, and deployable HTML must not depend on external stylesheets, resource hints, embedded media, or private contact links.
@@ -77,6 +78,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
 - 2026-06-19 `tools/check_site.py` now rejects wrong root `<html lang>` values; temporary negative checks confirmed `lang="zh-CN"` on the homepage root fails while `lang="en"` passes.
+- 2026-06-19 `tools/check_site.py` now rejects missing/wrong shared stylesheet targets and non-deferred shared `script.js`; temporary negative checks confirmed a favicon stylesheet target and a non-deferred homepage script fail.
 - 2026-06-19 `tools/check_site.py` now rejects empty or duplicated document titles and empty SEO/share preview descriptions; temporary negative checks confirmed empty title/description and duplicated title regressions fail.
 - 2026-06-19 `tools/check_site.py` now rejects missing, duplicated, or malformed viewport metadata; temporary negative checks confirmed bad and duplicated viewport values fail.
 - 2026-06-19 `tools/check_site.py` now rejects inline event-handler attributes and `javascript:` URLs; temporary negative checks confirmed both regression paths fail.
