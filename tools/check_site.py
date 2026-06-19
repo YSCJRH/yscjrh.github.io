@@ -11,6 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SITE_NAME = "HJR / YSCJRH"
 EXPECTED_OG_LOCALE = "en_US"
+EXPECTED_HTML_LANG = "en"
 EXPECTED_THEME_COLOR = "#05070d"
 EXPECTED_VIEWPORT = "width=device-width, initial-scale=1"
 EXPECTED_SHARE_IMAGE_URL = "https://yscjrh.github.io/assets/og-card.png"
@@ -420,8 +421,8 @@ def check_html(path: Path) -> list[str]:
         if favicon_type != "image/svg+xml":
             errors.append(f"{path}: favicon type must be image/svg+xml")
 
-    if not parser.html_lang:
-        errors.append(f"{path}: missing html lang")
+    if parser.html_lang != EXPECTED_HTML_LANG:
+        errors.append(f"{path}: html lang must be {EXPECTED_HTML_LANG}")
     if parser.h1_count != 1:
         errors.append(f"{path}: expected one h1, found {parser.h1_count}")
     if not parser.has_main_id:

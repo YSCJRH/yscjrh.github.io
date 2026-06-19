@@ -22,6 +22,7 @@ Core public pages:
 - Each HTML page has a meta description.
 - Document titles, meta descriptions, Open Graph titles/descriptions, and Twitter titles/descriptions must each be present exactly once and non-empty.
 - Each checked HTML page has exactly one viewport meta value: `width=device-width, initial-scale=1`.
+- Each checked HTML page keeps root `<html lang="en">`; substantial Chinese sentence blocks use local `lang="zh-CN"` semantics instead of changing the document root language.
 - Each checked HTML page has a canonical URL and `og:url` matching its expected public route.
 - Local HTML links, including same-page and cross-page fragment links, must resolve to existing files and `id` targets.
 - Sitemap-listed public pages must not carry `robots` `noindex`.
@@ -75,6 +76,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 ## Results
 
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
+- 2026-06-19 `tools/check_site.py` now rejects wrong root `<html lang>` values; temporary negative checks confirmed `lang="zh-CN"` on the homepage root fails while `lang="en"` passes.
 - 2026-06-19 `tools/check_site.py` now rejects empty or duplicated document titles and empty SEO/share preview descriptions; temporary negative checks confirmed empty title/description and duplicated title regressions fail.
 - 2026-06-19 `tools/check_site.py` now rejects missing, duplicated, or malformed viewport metadata; temporary negative checks confirmed bad and duplicated viewport values fail.
 - 2026-06-19 `tools/check_site.py` now rejects inline event-handler attributes and `javascript:` URLs; temporary negative checks confirmed both regression paths fail.

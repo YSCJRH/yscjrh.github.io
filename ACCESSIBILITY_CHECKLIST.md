@@ -33,7 +33,7 @@ Core pages checked:
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
 - Images and decorative graphics: `<img>` elements must carry `alt`; empty `alt` is allowed only when the image is explicitly decorative with `aria-hidden="true"` or `role="presentation"` / `role="none"`. Inline `<svg>` elements must either be decorative with `aria-hidden="true"` / presentation role or provide an accessible name through `aria-label`, `aria-labelledby`, or a child `<title>`.
 - Reduced motion: CSS includes `prefers-reduced-motion: reduce`; JavaScript disables reveal/parallax dependence when reduced motion is requested.
-- Bilingual language semantics: full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
+- Bilingual language semantics: each checked page keeps root `<html lang="en">`, while full-sentence Chinese blocks with `*-zh` classes or `[data-language="zh"]` spans carry `lang="zh-CN"`. Instrument optical-path detail notes are language-separable. Compact mixed labels such as `Projects / 项目` remain inline mixed-language labels.
 - New-tab links: every `target="_blank"` link must include `rel="noopener noreferrer"` and is enforced by `tools/check_site.py`.
 - No forms, analytics, tracking scripts, inline event-handler attributes, `javascript:` URLs, backend flows, or private contact collection were introduced.
 
@@ -59,6 +59,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `tools/check_site.py` now rejects wrong root `<html lang>` values; temporary negative checks confirmed `lang="zh-CN"` on the homepage root fails while `lang="en"` passes.
 - 2026-06-19 `tools/check_site.py` now rejects missing `<img>` alt text and non-decorative empty image alt text; temporary negative checks confirmed both failures are caught while explicitly decorative empty-alt images are allowed.
 - 2026-06-19 `tools/check_site.py` now rejects inline SVGs that are neither explicitly decorative nor given an accessible name; temporary checks confirmed unlabeled meaningful SVGs fail while `aria-hidden` and titled SVGs pass.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.

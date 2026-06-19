@@ -2,8 +2,32 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass removes duplicate project CTA destinations.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces root document language semantics.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Root document language guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Accessibility baseline requires stable English-root pages with explicit `lang="zh-CN"` on substantial Chinese sentence blocks.
+  - Red-path check confirmed `tools/check_site.py` accepted a temporary homepage root `<html lang="zh-CN">`, which could make bilingual pages expose the wrong document language to browsers and assistive technology.
+- Changes:
+  - Added `EXPECTED_HTML_LANG = "en"` to `tools/check_site.py`.
+  - Upgraded the checker from "html lang exists" to "html lang must be en" for every checked public page.
+  - Updated the accessibility and performance/SEO checklists to record the root-language invariant.
+- Validation result:
+  - Red: `python tools/check_site.py` passed before implementation after temporarily changing homepage root language to `zh-CN`.
+  - Green: `python tools/check_site.py` passed after implementation with current pages restored to `lang="en"`.
+  - Green: after implementation, the same temporary `lang="zh-CN"` mutation failed with `index.html: html lang must be en`.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `node --check script.js`, `node --check instrument/instrument.js`, `node --check tools/check-public-browser.js`, and `node --check tools/check-instrument-browser.js`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 114/114.
+  - Green: `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte data package.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, with mobile checks at 320px, 375px, 390px, 414px, and 768px.
+  - Green: `node tools/check-instrument-browser.js` passed across first viewport, fallback, language, keyboard, geometry, response-normalized, classic samples, sample picker, default 3D, source-derived, and module-failure checks.
+- Remaining notes:
+  - This is static accessibility/SEO QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Duplicate project CTA cleanup
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
