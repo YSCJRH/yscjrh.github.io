@@ -23,10 +23,11 @@ Core public pages:
 - Each checked HTML page has a canonical URL and `og:url` matching its expected public route.
 - Sitemap-listed public pages must not carry `robots` `noindex`.
 - `sitemap.xml` must contain exactly the expected public route URLs; extra, duplicated, stale, or malformed sitemap entries fail `tools/check_site.py`.
-- Open Graph title, description, type, URL, site name, locale, and image metadata are present.
+- Open Graph title, description, type, URL, site name, locale, and image metadata are present; `tools/check_site.py` enforces the expected site name, locale, and page type values.
 - Twitter large-image card metadata is present.
 - Shared social image metadata must point to `https://yscjrh.github.io/assets/og-card.png`, use paired English / Chinese alt text, and match the local `assets/og-card.png` dimensions.
 - Shared social image: `assets/og-card.png`, 1200 x 630 PNG.
+- Theme color metadata must remain `#05070d` across checked public pages.
 - New-tab links must use `rel="noopener noreferrer"`; `tools/check_site.py` fails any `target="_blank"` link that omits either token.
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.

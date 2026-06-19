@@ -9,6 +9,9 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_SITE_NAME = "HJR / YSCJRH"
+EXPECTED_OG_LOCALE = "en_US"
+EXPECTED_THEME_COLOR = "#05070d"
 EXPECTED_SHARE_IMAGE_URL = "https://yscjrh.github.io/assets/og-card.png"
 EXPECTED_SHARE_IMAGE_ALT = (
     "HJR / YSCJRH share card: fluorescence, methods, instruments, and open tools / "
@@ -46,12 +49,24 @@ REQUIRED_META_MARKERS = [
     ("og:type", 'property="og:type"'),
     ("og:url", 'property="og:url"'),
     ("og:site_name", 'property="og:site_name"'),
+    ("og:locale", 'property="og:locale"'),
     ("og:image", 'property="og:image"'),
+    ("theme-color", 'name="theme-color"'),
     ("twitter:card", 'name="twitter:card"'),
     ("twitter:title", 'name="twitter:title"'),
     ("twitter:description", 'name="twitter:description"'),
     ("twitter:image", 'name="twitter:image"'),
 ]
+
+EXPECTED_OG_TYPES = {
+    Path("index.html"): "website",
+    Path("404.html"): "website",
+    Path("projects/index.html"): "website",
+    Path("notes/index.html"): "website",
+    Path("notes/build-logs-homepage-second-pass.html"): "article",
+    Path("notes/when-a-fluorescence-signal-becomes-usable.html"): "article",
+    Path("instrument/index.html"): "website",
+}
 
 
 class SiteParser(HTMLParser):
@@ -220,6 +235,16 @@ def check_html(path: Path) -> list[str]:
     og_url_values = meta_property_values(parser, "og:url")
     if og_url_values != [expected_url]:
         errors.append(f"{path}: og:url must be {expected_url}")
+    expected_identity_property_values = {
+        "og:site_name": EXPECTED_SITE_NAME,
+        "og:locale": EXPECTED_OG_LOCALE,
+    }
+    for property_name, expected_value in expected_identity_property_values.items():
+        if meta_property_values(parser, property_name) != [expected_value]:
+            errors.append(f"{path}: {property_name} must be {expected_value}")
+    expected_og_type = EXPECTED_OG_TYPES.get(path)
+    if expected_og_type and meta_property_values(parser, "og:type") != [expected_og_type]:
+        errors.append(f"{path}: og:type must be {expected_og_type}")
     expected_property_values = {
         "og:image": EXPECTED_SHARE_IMAGE_URL,
         "og:image:width": str(EXPECTED_SHARE_IMAGE_SIZE[0]),
@@ -237,6 +262,8 @@ def check_html(path: Path) -> list[str]:
     for name, expected_value in expected_name_values.items():
         if meta_name_values(parser, name) != [expected_value]:
             errors.append(f"{path}: {name} must be {expected_value}")
+    if meta_name_values(parser, "theme-color") != [EXPECTED_THEME_COLOR]:
+        errors.append(f"{path}: theme-color must be {EXPECTED_THEME_COLOR}")
 
     if not parser.html_lang:
         errors.append(f"{path}: missing html lang")

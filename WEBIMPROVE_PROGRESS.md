@@ -2,8 +2,29 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens new-tab link safety checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens site identity metadata checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Site identity metadata guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO/public-surface review found that `tools/check_site.py` required Open Graph and theme metadata markers, but did not verify the concrete site identity values behind those markers.
+  - A red-path check confirmed that changing a checked page's `og:site_name` to `Wrong Site` was not rejected by the previous checker.
+- Changes:
+  - Added exact checks for `og:site_name`, `og:locale`, route-appropriate `og:type`, and `theme-color` to `tools/check_site.py`.
+  - Updated the performance/SEO checklist so these metadata values are recorded as enforced invariants, not only present fields.
+- Validation result:
+  - Red: temporary negative check confirmed the previous checker missed a changed `projects/index.html` `og:site_name` value.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, local references, and the shared social image file.
+  - Green: temporary negative checks confirmed wrong `og:site_name`, article `og:type`, and `theme-color` values are rejected.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static SEO/metadata QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 New-tab link safety guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
