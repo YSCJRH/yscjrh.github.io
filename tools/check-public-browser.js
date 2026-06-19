@@ -10,6 +10,7 @@ const SESSION = `publicqa-${Date.now()}`;
 const SERVER_READY_RE = /Serving .* at (http:\/\/127\.0\.0\.1:\d+\/)/;
 const PUBLIC_ROUTES = [
   "/",
+  "/404.html",
   "/projects/",
   "/notes/",
   "/notes/build-logs-homepage-second-pass.html",
@@ -202,6 +203,15 @@ async function main() {
         desktop
       );
       record(`desktop structure ${route}`);
+
+      if (route === "/404.html") {
+        assertCheck(
+          desktop.h1[0].includes("not part of the site map"),
+          "custom 404 route headline is missing",
+          desktop
+        );
+        record("custom 404 content");
+      }
 
       const consoleErrors = consoleMessages("error");
       assertCheck(/Total messages: 0/.test(consoleErrors), `console errors on ${route}`, consoleErrors);

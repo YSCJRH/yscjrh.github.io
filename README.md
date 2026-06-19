@@ -23,7 +23,7 @@ When taking over this repo, read these files in order:
 
 ## Current State
 
-- A mixed-bilingual static personal site with live public pages at `/`, `/projects/`, `/notes/`, two published note pages, and `/instrument/`.
+- A mixed-bilingual static personal site with live public pages at `/`, `/projects/`, `/notes/`, two published note pages, `/instrument/`, and a custom bilingual `/404.html` fallback.
 - The former `/review/` internal review route is retired from the deployable tree; it remains excluded from `sitemap.xml` and disallowed in `robots.txt`.
 - The current implementation has moved beyond the initial one-page version into a homepage-first small static site.
 - The project gateway upgrade has landed on the homepage and `/projects/`.
@@ -93,6 +93,7 @@ Current Lighthouse baselines are documented in:
 Main public surfaces:
 
 - `index.html`
+- `404.html`
 - `projects/index.html`
 - `notes/index.html`
 - `notes/build-logs-homepage-second-pass.html`

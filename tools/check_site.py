@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 HTML_FILES = [
     Path("index.html"),
+    Path("404.html"),
     Path("projects/index.html"),
     Path("notes/index.html"),
     Path("notes/build-logs-homepage-second-pass.html"),
@@ -18,7 +19,14 @@ HTML_FILES = [
     Path("instrument/index.html"),
 ]
 
-PUBLIC_HTML = HTML_FILES
+SITEMAP_HTML = [
+    Path("index.html"),
+    Path("projects/index.html"),
+    Path("notes/index.html"),
+    Path("notes/build-logs-homepage-second-pass.html"),
+    Path("notes/when-a-fluorescence-signal-becomes-usable.html"),
+    Path("instrument/index.html"),
+]
 RETIRED_HTML = [Path("review/index.html")]
 
 REQUIRED_META_MARKERS = [
@@ -143,6 +151,8 @@ def check_html(path: Path) -> list[str]:
             continue
         if not resolved.exists():
             errors.append(f"{path}: missing local {attr} target {value} -> {resolved.relative_to(ROOT)}")
+        if path == Path("404.html") and not urlparse(value).path.startswith("/"):
+            errors.append(f"{path}: custom 404 local {attr} must be root-relative: {value}")
 
     zh_pattern = re.compile(
         r'<[^>]*class="[^"]*(?:hero-title-zh|hero-lead-zh|section-copy-zh|card-copy-zh|project-copy-zh|stream-copy-zh|about-summary-zh|article-lead-zh)[^"]*"(?:(?!lang=)[^>])*?>',
@@ -174,7 +184,9 @@ def main() -> int:
         errors.append("robots.txt: must disallow /review/")
     if "https://yscjrh.github.io/review/" in sitemap:
         errors.append("sitemap.xml: must not include /review/")
-    for path in PUBLIC_HTML:
+    if "https://yscjrh.github.io/404.html" in sitemap:
+        errors.append("sitemap.xml: must not include /404.html")
+    for path in SITEMAP_HTML:
         public_url = "https://yscjrh.github.io/"
         if path != Path("index.html"):
             public_url += path.as_posix().removesuffix("index.html")
@@ -188,7 +200,7 @@ def main() -> int:
         return 1
 
     print("Site check passed.")
-    print(f"Checked {len(HTML_FILES)} public HTML pages, robots.txt, sitemap.xml, and local references.")
+    print(f"Checked {len(HTML_FILES)} HTML pages, robots.txt, sitemap.xml, and local references.")
     return 0
 
 

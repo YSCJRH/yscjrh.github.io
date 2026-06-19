@@ -2,8 +2,31 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass repairs no-JS mobile navigation on shared public pages.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass adds a custom bilingual 404 fallback and covers it in shared public-page QA.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Custom 404 fallback
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing autonomous review found that the repository did not provide a custom `404.html`, so unknown public routes would fall through to the default GitHub Pages 404 instead of a site-consistent bilingual recovery path.
+- Changes:
+  - Added a static bilingual `404.html` with the same header, skip link, metadata baseline, no-JS navigation behavior, and stable route links as the rest of the public site.
+  - Marked the page `noindex, follow` and kept it out of `sitemap.xml`.
+  - Updated `tools/check_site.py` so the 404 page is checked for HTML quality and local references without requiring sitemap inclusion; custom 404 local paths must remain root-relative so nested unknown URLs keep working.
+  - Extended `tools/check-public-browser.js` to cover `/404.html` in desktop, mobile, no-JS, console, and custom-content checks.
+- Validation result:
+  - Green: `node --check script.js`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node --check tools/check-instrument-browser.js`.
+  - Green: `node --check instrument/instrument.js`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker.
+  - Green: `node tools/check-instrument-browser.js` passed with the current Instrument Lab marker set.
+  - Green: `node tools/preprocess-instrument-data.js --validate`.
+- Remaining notes:
+  - This is a navigation fallback only. It does not add public personal claims, analytics, forms, dependencies, Instrument Lab physics changes, or new sitemap URLs.
+- Blockers:
+  - None.
 
 ## 2026-06-19 No-JS mobile navigation fallback
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

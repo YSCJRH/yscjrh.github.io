@@ -11,6 +11,7 @@ This checklist records the current accessibility baseline for the static persona
 Core pages checked:
 
 - `/`
+- `/404.html`
 - `/projects/`
 - `/notes/`
 - `/notes/build-logs-homepage-second-pass.html`
@@ -50,10 +51,10 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 
 ## Results
 
-- 2026-06-19 follow-up `node tools/check-public-browser.js` passed for `/`, `/projects/`, `/notes/`, and both published note pages, including no-JS mobile navigation fallback, one `h1`, skip link to `#main`, no desktop/mobile horizontal overflow, no sampled undersized mobile controls, no console errors, mobile menu keyboard open/Escape close, and reduced-motion parallax guard.
+- 2026-06-19 follow-up `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including no-JS mobile navigation fallback, one `h1`, skip link to `#main`, no desktop/mobile horizontal overflow, no sampled undersized mobile controls, no console errors, mobile menu keyboard open/Escape close, custom 404 content, and reduced-motion parallax guard.
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
-- 2026-06-19 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
 - 2026-06-19 live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
 - 2026-06-19 Pages deployment `27801068726` for commit `66a8e30` completed successfully before this checklist refresh.
