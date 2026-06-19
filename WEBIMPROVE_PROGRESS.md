@@ -2,8 +2,28 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens external resource and private-contact boundary checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens image alternative-text checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Image alternative-text guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing accessibility review found that the site checklist requires images to have alt text, but `tools/check_site.py` did not enforce `<img>` alt behavior.
+  - Red-path checks confirmed the previous checker missed a missing `alt` and a non-decorative empty `alt`.
+- Changes:
+  - Added `<img>` alt collection to `tools/check_site.py`.
+  - Added static failures for images missing `alt`.
+  - Added static failures for empty `alt` unless the image is explicitly decorative with `aria-hidden="true"`, `role="presentation"`, or `role="none"`.
+  - Updated the accessibility checklist to record the enforced image-alt invariant.
+- Validation result:
+  - Red: temporary negative checks confirmed the previous checker missed missing `alt` and non-decorative empty `alt` cases.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, and the shared social image file.
+  - Green: sequential temporary checks confirmed missing `alt` and non-decorative empty `alt` are rejected, while explicitly decorative empty-alt images are allowed.
+- Remaining notes:
+  - This is static accessibility QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 External resource and contact boundary guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

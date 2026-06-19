@@ -116,11 +116,13 @@ class SiteParser(HTMLParser):
         self.external_scripts: list[str] = []
         self.external_resource_links: list[tuple[str, str]] = []
         self.external_media_refs: list[tuple[str, str, str]] = []
+        self.image_alt_refs: list[tuple[str, bool, str, str, str]] = []
         self.private_contact_refs: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr_names = {key.lower() for key, _ in attrs}
         attrs_dict = {key.lower(): value or "" for key, value in attrs}
         tag = tag.lower()
         self.tags.append((tag, attrs_dict))
@@ -160,6 +162,16 @@ class SiteParser(HTMLParser):
             value = attrs_dict.get(attr, "")
             if value.startswith(("http://", "https://")) or " http://" in value or " https://" in value:
                 self.external_media_refs.append((tag, attr, value))
+        if tag == "img":
+            self.image_alt_refs.append(
+                (
+                    attrs_dict.get("src", ""),
+                    "alt" in attr_names,
+                    attrs_dict.get("alt", ""),
+                    attrs_dict.get("aria-hidden", ""),
+                    attrs_dict.get("role", ""),
+                )
+            )
 
         for attr in ("href", "src"):
             value = attrs_dict.get(attr)
@@ -361,6 +373,14 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: external resource link is not approved: rel={rel} href={href}")
     for tag, attr, value in parser.external_media_refs:
         errors.append(f"{path}: external {tag} {attr} is not approved: {value}")
+    for src, has_alt, alt_text, aria_hidden, role in parser.image_alt_refs:
+        if not has_alt:
+            errors.append(f"{path}: image missing alt text: {src}")
+        elif not alt_text.strip() and aria_hidden.lower() != "true" and role.lower() not in {"presentation", "none"}:
+            errors.append(
+                f"{path}: empty image alt must be marked decorative with aria-hidden=\"true\" "
+                f"or role=\"presentation\": {src}"
+            )
     for href in parser.private_contact_refs:
         errors.append(f"{path}: private contact link is not approved: {href}")
     for href, rel in parser.blank_target_links:
