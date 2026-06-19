@@ -9,6 +9,12 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_SHARE_IMAGE_URL = "https://yscjrh.github.io/assets/og-card.png"
+EXPECTED_SHARE_IMAGE_ALT = (
+    "HJR / YSCJRH share card: fluorescence, methods, instruments, and open tools / "
+    "荧光、方法、仪器与开放工具."
+)
+EXPECTED_SHARE_IMAGE_SIZE = (1200, 630)
 
 HTML_FILES = [
     Path("index.html"),
@@ -153,6 +159,14 @@ def meta_property_values(parser: SiteParser, property_name: str) -> list[str]:
     ]
 
 
+def meta_name_values(parser: SiteParser, name: str) -> list[str]:
+    return [
+        attrs.get("content", "")
+        for tag, attrs in parser.tags
+        if tag == "meta" and attrs.get("name", "").lower() == name
+    ]
+
+
 def expected_sitemap_urls() -> list[str]:
     return [expected_public_url(path) for path in SITEMAP_HTML]
 
@@ -171,6 +185,13 @@ def sitemap_locations(text: str) -> list[str]:
     if not locations:
         raise ValueError("sitemap.xml: no sitemap loc entries found")
     return locations
+
+
+def png_dimensions(path: Path) -> tuple[int, int] | None:
+    header = path.read_bytes()[:24]
+    if len(header) < 24 or not header.startswith(b"\x89PNG\r\n\x1a\n"):
+        return None
+    return (int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big"))
 
 
 def check_html(path: Path) -> list[str]:
@@ -195,6 +216,23 @@ def check_html(path: Path) -> list[str]:
     og_url_values = meta_property_values(parser, "og:url")
     if og_url_values != [expected_url]:
         errors.append(f"{path}: og:url must be {expected_url}")
+    expected_property_values = {
+        "og:image": EXPECTED_SHARE_IMAGE_URL,
+        "og:image:width": str(EXPECTED_SHARE_IMAGE_SIZE[0]),
+        "og:image:height": str(EXPECTED_SHARE_IMAGE_SIZE[1]),
+        "og:image:alt": EXPECTED_SHARE_IMAGE_ALT,
+    }
+    for property_name, expected_value in expected_property_values.items():
+        if meta_property_values(parser, property_name) != [expected_value]:
+            errors.append(f"{path}: {property_name} must be {expected_value}")
+    expected_name_values = {
+        "twitter:card": "summary_large_image",
+        "twitter:image": EXPECTED_SHARE_IMAGE_URL,
+        "twitter:image:alt": EXPECTED_SHARE_IMAGE_ALT,
+    }
+    for name, expected_value in expected_name_values.items():
+        if meta_name_values(parser, name) != [expected_value]:
+            errors.append(f"{path}: {name} must be {expected_value}")
 
     if not parser.html_lang:
         errors.append(f"{path}: missing html lang")
@@ -243,6 +281,12 @@ def main() -> int:
     for required in [Path(".nojekyll"), Path("robots.txt"), Path("sitemap.xml"), Path("assets/og-card.png")]:
         if not (ROOT / required).exists():
             errors.append(f"{required}: required file missing")
+    share_image = ROOT / "assets/og-card.png"
+    if share_image.exists() and png_dimensions(share_image) != EXPECTED_SHARE_IMAGE_SIZE:
+        errors.append(
+            "assets/og-card.png: must be "
+            f"{EXPECTED_SHARE_IMAGE_SIZE[0]}x{EXPECTED_SHARE_IMAGE_SIZE[1]} PNG"
+        )
 
     for path in RETIRED_HTML:
         if (ROOT / path).exists():

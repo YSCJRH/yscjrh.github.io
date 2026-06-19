@@ -25,7 +25,8 @@ Core public pages:
 - `sitemap.xml` must contain exactly the expected public route URLs; extra, duplicated, stale, or malformed sitemap entries fail `tools/check_site.py`.
 - Open Graph title, description, type, URL, site name, locale, and image metadata are present.
 - Twitter large-image card metadata is present.
-- Shared social image: `assets/og-card.png`, 1200 x 630.
+- Shared social image metadata must point to `https://yscjrh.github.io/assets/og-card.png`, use paired English / Chinese alt text, and match the local `assets/og-card.png` dimensions.
+- Shared social image: `assets/og-card.png`, 1200 x 630 PNG.
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `robots.txt` declares `Sitemap: https://yscjrh.github.io/sitemap.xml`.

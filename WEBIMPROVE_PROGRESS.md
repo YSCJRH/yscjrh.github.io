@@ -2,8 +2,30 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens sitemap and robots route checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens social share-card metadata checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Social share-card metadata guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO/share review found that `tools/check_site.py` required Open Graph and Twitter image markers, but did not verify that every page used the same public share-card URL, dimensions, or paired English / Chinese alt text.
+  - This left a realistic regression path where a future page could keep the marker while dropping the bilingual alt or pointing at a stale share image.
+- Changes:
+  - Added exact `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `twitter:card`, `twitter:image`, and `twitter:image:alt` checks to `tools/check_site.py`.
+  - Added a stdlib PNG header check requiring `assets/og-card.png` to remain a 1200 x 630 PNG.
+  - Updated `PERFORMANCE_CHECKLIST.md` to record the shared social-image metadata invariant.
+- Validation result:
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, local references, and the shared social image file.
+  - Green: temporary negative check confirmed a shortened `projects/index.html` share-card alt now reports both `og:image:alt` and `twitter:image:alt` errors.
+  - Green: temporary negative check confirmed a modified `assets/og-card.png` width now reports `assets/og-card.png: must be 1200x630 PNG`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static SEO/share QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Strict sitemap route guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
