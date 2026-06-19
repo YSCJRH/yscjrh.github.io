@@ -23,6 +23,7 @@ Core pages checked:
 - Skip link: each core page has a skip link that targets `#main`.
 - Focus visible: global `:focus-visible` styles are present for links, buttons, mobile nav, project links, footer links, and instrument controls.
 - Keyboard navigation: mobile menu opens from the toggle, moves focus into the menu, closes with Escape, and returns focus to the toggle.
+- No-JS navigation: shared public pages keep a compact visible primary nav on mobile when JavaScript is disabled; the inactive hamburger toggle is hidden in that mode.
 - Mobile menu ARIA: toggle uses `aria-expanded`, `aria-controls="mobile-menu"`, and paired English / Chinese label text.
 - Touch targets: sampled first-viewport links and buttons at 320px, 375px, 414px, and 768px are at least 40px in both dimensions after the M5 notes-link fix. The `/instrument/` 3D toolbar reset buttons are covered by the 2026-06-19 browser QA touch-target check.
 - Color contrast: Lighthouse accessibility audit reported no contrast failures on the homepage.
@@ -49,7 +50,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 
 ## Results
 
-- 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/projects/`, `/notes/`, and both published note pages: one `h1`, skip link to `#main`, no desktop/mobile horizontal overflow, no sampled undersized mobile controls, no console errors, mobile menu keyboard open/Escape close, and reduced-motion parallax guard.
+- 2026-06-19 follow-up `node tools/check-public-browser.js` passed for `/`, `/projects/`, `/notes/`, and both published note pages, including no-JS mobile navigation fallback, one `h1`, skip link to `#main`, no desktop/mobile horizontal overflow, no sampled undersized mobile controls, no console errors, mobile menu keyboard open/Escape close, and reduced-motion parallax guard.
 - 2026-06-19 follow-up `/instrument/` mobile review found the `Reset view / 重置视角` and `Reset alignment / 重置对准` 3D toolbar buttons at about 23 px high on a 390 px viewport; the toolbar now enforces a 40 px minimum touch height and `node tools/check-instrument-browser.js` checks the toolbar buttons.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, fallback label collisions, console errors, mobile overflow, prefers-reduced-motion, language switch, language density, scene overlay language, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-19 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.

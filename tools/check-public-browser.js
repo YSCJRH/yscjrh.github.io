@@ -21,6 +21,7 @@ const MARKERS = [
   "mobile structure",
   "mobile overflow",
   "mobile touch targets",
+  "no-JS mobile navigation",
   "mobile menu keyboard",
   "reduced motion",
 ];
@@ -300,6 +301,71 @@ async function main() {
       mobileMenu
     );
     record("mobile menu keyboard");
+
+    progress("checking no-JS mobile navigation");
+    const noJsNavigation = runCode(
+      `async (page) => {
+        const browser = page.context().browser();
+        const context = await browser.newContext({
+          javaScriptEnabled: false,
+          viewport: { width: 390, height: 900 },
+        });
+        try {
+          const noJsPage = await context.newPage();
+          const routes = ${JSON.stringify(PUBLIC_ROUTES)};
+          const results = [];
+          for (const route of routes) {
+            await noJsPage.goto('${baseUrl}' + route.slice(1), { waitUntil: 'domcontentloaded' });
+            await noJsPage.waitForTimeout(300);
+            results.push(await noJsPage.evaluate((currentRoute) => {
+              const links = [...document.querySelectorAll('.site-nav a')].map((link) => {
+                const rect = link.getBoundingClientRect();
+                const style = getComputedStyle(link);
+                return {
+                  text: link.textContent.trim().replace(/\\s+/g, ' '),
+                  visible: rect.width > 0 &&
+                    rect.height > 0 &&
+                    style.display !== 'none' &&
+                    style.visibility !== 'hidden',
+                  width: Math.round(rect.width),
+                  height: Math.round(rect.height),
+                };
+              });
+              const toggle = document.querySelector('[data-nav-toggle]');
+              const toggleRect = toggle?.getBoundingClientRect();
+              const toggleStyle = toggle ? getComputedStyle(toggle) : null;
+              const toggleVisible = Boolean(toggle && toggleRect && toggleRect.width > 0 && toggleRect.height > 0 && toggleStyle.display !== 'none' && toggleStyle.visibility !== 'hidden');
+              return {
+                route: currentRoute,
+                bodyClass: document.body.className,
+                overflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+                links,
+                visibleLinks: links.filter((link) => link.visible).map((link) => link.text),
+                undersizedLinks: links.filter((link) => link.visible && (link.width < 40 || link.height < 40)),
+                toggleVisible,
+              };
+            }, route));
+          }
+          return results;
+        } finally {
+          await context.close();
+        }
+      }`
+    );
+    assertCheck(
+      Array.isArray(noJsNavigation) &&
+        noJsNavigation.length === PUBLIC_ROUTES.length &&
+        noJsNavigation.every((entry) =>
+          /no-js/.test(entry.bodyClass) &&
+            entry.overflowX === 0 &&
+            entry.toggleVisible === false &&
+            entry.visibleLinks.length >= 4 &&
+            entry.undersizedLinks.length === 0
+        ),
+      "no-JS mobile navigation is not usable",
+      noJsNavigation
+    );
+    record("no-JS mobile navigation");
 
     progress("checking reduced motion");
     const reduced = runCode(

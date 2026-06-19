@@ -11,6 +11,9 @@
   const finePointerQuery = window.matchMedia("(pointer: fine)");
   let prefersReducedMotion = reduceMotionQuery.matches;
 
+  body.classList.remove("no-js");
+  body.classList.add("js-enabled");
+
   function setScrollLock(isLocked) {
     body.classList.toggle("is-scroll-locked", isLocked);
   }

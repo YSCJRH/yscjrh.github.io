@@ -1969,6 +1969,27 @@ button {
     display: inline-flex;
   }
 
+  .no-js .site-header__cluster {
+    align-items: flex-start;
+  }
+
+  .no-js .site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: min(38rem, 100%);
+    white-space: normal;
+  }
+
+  .no-js .site-nav a {
+    min-height: 2.5rem;
+  }
+
+  .no-js .nav-toggle,
+  .no-js .mobile-menu-wrap {
+    display: none;
+  }
+
   .hero-grid,
   .about-grid {
     grid-template-columns: 1fr;

@@ -2,8 +2,25 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass adds shared public-page browser QA coverage.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass repairs no-JS mobile navigation on shared public pages.
 - Last updated: 2026-06-19
+
+## 2026-06-19 No-JS mobile navigation fallback
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Follow-up review found that shared public pages hid `.site-nav` below 1100 px and relied on the JavaScript mobile-menu toggle. With JavaScript disabled, mobile visitors could see an inactive hamburger button while the real navigation stayed hidden.
+- Changes:
+  - Added `no-js` to public page bodies and switched it to `js-enabled` when `script.js` loads.
+  - Added no-JS mobile CSS that displays a compact wrapped primary nav and hides the inactive hamburger/menu wrapper.
+  - Extended `tools/check-public-browser.js` to verify no-JS mobile navigation visibility, touch target size, and no horizontal overflow.
+- Validation result:
+  - Green: `node --check script.js`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed with the new `no-JS mobile navigation` marker.
+- Remaining notes:
+  - This keeps the JavaScript-enabled mobile menu behavior unchanged. It does not alter public claims, visual identity, Instrument Lab physics, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Shared public-page browser QA gate
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
