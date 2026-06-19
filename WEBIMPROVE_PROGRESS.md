@@ -2,8 +2,31 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass widens public mobile browser QA coverage.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass removes duplicate project CTA destinations.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Duplicate project CTA cleanup
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Read-only public-surface review found that several project-card CTA groups contained multiple links pointing to the same destination.
+  - The duplication added visual weight without adding a new proof path for visitors.
+- Changes:
+  - Added `instrument/sim/tests/public-surface.test.mjs` to reject duplicate hrefs inside each `.project-cta-group`.
+  - Removed the duplicate AnswerLens docs CTA on the homepage and projects page, keeping the live demo and GitHub repository links.
+  - Removed duplicate repository links from the WinChronicle, encourage-loop, and mirror-sim project CTA groups where the primary CTA already pointed to the same repository.
+- Validation result:
+  - Red: `node --test instrument/sim/tests/public-surface.test.mjs` failed before cleanup on the duplicate AnswerLens repository destination.
+  - Green: `node --test instrument/sim/tests/public-surface.test.mjs` passed after cleanup.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `node --check script.js`, `node --check instrument/instrument.js`, `node --check tools/check-public-browser.js`, `node --check tools/check-instrument-browser.js`, and `node --check instrument/sim/tests/public-surface.test.mjs`.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed: 114/114.
+  - Green: `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte data package.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, with mobile checks at 320px, 375px, 390px, 414px, and 768px.
+  - Green: `node tools/check-instrument-browser.js` passed across first viewport, fallback, language, keyboard, geometry, response-normalized, classic samples, sample picker, default 3D, source-derived, and module-failure checks.
+- Remaining notes:
+  - This is public-surface CTA simplification only. It does not change project facts, ordering, statuses, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Public mobile browser QA width coverage
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
