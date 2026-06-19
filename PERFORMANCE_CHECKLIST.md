@@ -22,11 +22,13 @@ Core public pages:
 - Each HTML page has a meta description.
 - Each checked HTML page has a canonical URL and `og:url` matching its expected public route.
 - Sitemap-listed public pages must not carry `robots` `noindex`.
+- `sitemap.xml` must contain exactly the expected public route URLs; extra, duplicated, stale, or malformed sitemap entries fail `tools/check_site.py`.
 - Open Graph title, description, type, URL, site name, locale, and image metadata are present.
 - Twitter large-image card metadata is present.
 - Shared social image: `assets/og-card.png`, 1200 x 630.
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
+- `robots.txt` declares `Sitemap: https://yscjrh.github.io/sitemap.xml`.
 - `sitemap.xml` exists and excludes `/review/`.
 - `404.html` exists as a custom bilingual fallback, is checked for metadata/local references, must carry `robots` `noindex`, and is intentionally excluded from `sitemap.xml`.
 - `sitemap.xml` keeps the shared public pages at `2026-06-10`; `/instrument/` is refreshed to `2026-06-19` after the published default-3D, language-mode, classic-sample, and sample-picker interaction releases.

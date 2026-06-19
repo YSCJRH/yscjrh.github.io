@@ -3,6 +3,7 @@ from __future__ import annotations
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
+import xml.etree.ElementTree as ET
 import re
 import sys
 
@@ -152,6 +153,26 @@ def meta_property_values(parser: SiteParser, property_name: str) -> list[str]:
     ]
 
 
+def expected_sitemap_urls() -> list[str]:
+    return [expected_public_url(path) for path in SITEMAP_HTML]
+
+
+def sitemap_locations(text: str) -> list[str]:
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as error:
+        raise ValueError(f"sitemap.xml: invalid XML: {error}") from error
+
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    locations = [
+        (element.text or "").strip()
+        for element in root.findall("sm:url/sm:loc", namespace)
+    ]
+    if not locations:
+        raise ValueError("sitemap.xml: no sitemap loc entries found")
+    return locations
+
+
 def check_html(path: Path) -> list[str]:
     errors: list[str] = []
     full_path = ROOT / path
@@ -231,16 +252,26 @@ def main() -> int:
     sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8") if (ROOT / "sitemap.xml").exists() else ""
     if "Disallow: /review/" not in robots:
         errors.append("robots.txt: must disallow /review/")
-    if "https://yscjrh.github.io/review/" in sitemap:
-        errors.append("sitemap.xml: must not include /review/")
-    if "https://yscjrh.github.io/404.html" in sitemap:
-        errors.append("sitemap.xml: must not include /404.html")
-    for path in SITEMAP_HTML:
-        public_url = "https://yscjrh.github.io/"
-        if path != Path("index.html"):
-            public_url += path.as_posix().removesuffix("index.html")
-        if public_url not in sitemap:
-            errors.append(f"sitemap.xml: missing {public_url}")
+    if "Sitemap: https://yscjrh.github.io/sitemap.xml" not in robots:
+        errors.append("robots.txt: must declare the public sitemap URL")
+    if sitemap:
+        try:
+            sitemap_urls = sitemap_locations(sitemap)
+        except ValueError as error:
+            errors.append(str(error))
+        else:
+            expected_urls = expected_sitemap_urls()
+            duplicate_urls = sorted({
+                public_url for public_url in sitemap_urls if sitemap_urls.count(public_url) > 1
+            })
+            for public_url in duplicate_urls:
+                errors.append(f"sitemap.xml: duplicate public URL {public_url}")
+            for public_url in expected_urls:
+                if public_url not in sitemap_urls:
+                    errors.append(f"sitemap.xml: missing {public_url}")
+            for public_url in sitemap_urls:
+                if public_url not in expected_urls:
+                    errors.append(f"sitemap.xml: unexpected public URL {public_url}")
 
     if errors:
         print("Site check failed:")

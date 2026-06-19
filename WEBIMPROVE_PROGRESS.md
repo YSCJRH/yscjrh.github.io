@@ -2,8 +2,30 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens canonical and Open Graph URL checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens sitemap and robots route checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Strict sitemap route guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO review found that `tools/check_site.py` verified required sitemap URLs by substring, but did not parse the sitemap or reject extra public URLs.
+  - This left a realistic regression path where a stale route, mistyped public URL, or reintroduced internal route could remain in `sitemap.xml` without failing the static gate.
+- Changes:
+  - Added strict XML parsing for `sitemap.xml` in `tools/check_site.py`.
+  - Required sitemap `<loc>` entries to match the expected public route set derived from `SITEMAP_HTML`, with duplicate URL detection.
+  - Added a `robots.txt` guard requiring the public sitemap declaration.
+  - Updated `PERFORMANCE_CHECKLIST.md` to record exact sitemap-route and robots sitemap invariants.
+- Validation result:
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: temporary negative check confirmed an extra `https://yscjrh.github.io/stale-route/` sitemap `<loc>` now reports `sitemap.xml: unexpected public URL https://yscjrh.github.io/stale-route/`.
+  - Green: temporary negative check confirmed a duplicated `https://yscjrh.github.io/projects/` sitemap `<loc>` now reports `sitemap.xml: duplicate public URL https://yscjrh.github.io/projects/`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node tools/check-public-browser.js` passed across `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static SEO QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Canonical and OG URL route guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
