@@ -21,6 +21,7 @@ Core public pages:
 - Each HTML page has a descriptive `<title>`.
 - Each HTML page has a meta description.
 - Each public page has a canonical URL.
+- Sitemap-listed public pages must not carry `robots` `noindex`.
 - Open Graph title, description, type, URL, site name, locale, and image metadata are present.
 - Twitter large-image card metadata is present.
 - Shared social image: `assets/og-card.png`, 1200 x 630.

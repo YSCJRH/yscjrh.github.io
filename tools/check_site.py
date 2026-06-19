@@ -117,6 +117,14 @@ def resolve_local_reference(source: Path, value: str) -> Path | None:
     return candidate
 
 
+def robots_meta_contents(parser: SiteParser) -> list[str]:
+    return [
+        attrs.get("content", "").lower()
+        for tag, attrs in parser.tags
+        if tag == "meta" and attrs.get("name", "").lower() == "robots"
+    ]
+
+
 def check_html(path: Path) -> list[str]:
     errors: list[str] = []
     full_path = ROOT / path
@@ -140,14 +148,12 @@ def check_html(path: Path) -> list[str]:
         errors.append(f"{path}: missing <main id=\"main\">")
     if not parser.has_skip_to_main:
         errors.append(f"{path}: missing skip link to #main")
+    robots_meta = robots_meta_contents(parser)
     if path == Path("404.html"):
-        robots_meta = [
-            attrs.get("content", "").lower()
-            for tag, attrs in parser.tags
-            if tag == "meta" and attrs.get("name", "").lower() == "robots"
-        ]
         if not any("noindex" in content for content in robots_meta):
             errors.append(f"{path}: custom 404 must include robots noindex")
+    elif path in SITEMAP_HTML and any("noindex" in content for content in robots_meta):
+        errors.append(f"{path}: sitemap page must not include robots noindex")
     if parser.forms:
         errors.append(f"{path}: forms are not approved for v1")
     for src in parser.external_scripts:

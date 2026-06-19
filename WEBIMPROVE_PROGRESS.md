@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens bilingual browser QA for the custom 404 fallback.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens public-page noindex checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Public page noindex guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO review found that `404.html` now has a required `noindex` guard, but sitemap-listed public pages did not have the opposite guard preventing accidental `robots` `noindex`.
+- Changes:
+  - Added a shared robots meta parser to `tools/check_site.py`.
+  - `404.html` still must include `noindex`.
+  - Any sitemap-listed public page now fails `tools/check_site.py` if it contains a robots meta value with `noindex`.
+  - Updated `PERFORMANCE_CHECKLIST.md` to record the new public-page indexing invariant.
+- Validation result:
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: temporary negative check confirmed a sitemap-listed `index.html` with robots `noindex` now reports `index.html: sitemap page must not include robots noindex`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static SEO QA hardening only. It does not change public page copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Custom 404 bilingual QA guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
