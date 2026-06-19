@@ -69,7 +69,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 - 2026-06-19 `git diff --check` passed during this checklist refresh with only Windows line-ending normalization warnings.
 - 2026-06-19 `node tools/check-instrument-browser.js` passed for first viewport, WebGL fallback, fallback label collisions, console errors, mobile overflow, reduced motion, language switching, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived examples, source-derived language mode, and module-failure fallback.
 - 2026-06-19 live route checks returned `200` for `/`, `/404.html`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`; an unknown route returned HTTP `404` with the custom bilingual fallback content.
-- 2026-06-19 GitHub Pages reported `built` from `main` and deployment `27801068726` for commit `66a8e30` completed successfully before this checklist refresh.
+- Post-push Pages run IDs are recorded in the release report for each commit. This checklist records the performance/SEO baseline and repeatable route checks rather than a single latest deployment number.
 - 2026-06-11 `/instrument/` Lighthouse on local preview:
   - Performance: `86`
   - Accessibility: `100`

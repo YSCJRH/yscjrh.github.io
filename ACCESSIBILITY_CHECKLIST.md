@@ -57,7 +57,7 @@ npx --yes @axe-core/cli http://127.0.0.1:4174/ --exit
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
 - 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
 - 2026-06-19 live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
-- 2026-06-19 Pages deployment `27801068726` for commit `66a8e30` completed successfully before this checklist refresh.
+- Post-push Pages run IDs are recorded in the release report for each commit. This checklist records the accessibility baseline and repeatable local/browser gates rather than a single latest deployment number.
 - 2026-06-11 `node tools/check-instrument-browser.js` passed for `/instrument/`: first viewport workbench, WebGL fallback status, console errors, mobile overflow, prefers-reduced-motion, language switch, keyboard activation, no-JS fallback, geometry mode, response-normalized view, optional 3D scene, source-derived panel, source-derived language mode, and module failure fallback.
 - 2026-06-11 `/instrument/` Lighthouse accessibility score was `100`; the same run reported Performance `86`, Best Practices `100`, and SEO `100`.
 - 2026-06-10 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.

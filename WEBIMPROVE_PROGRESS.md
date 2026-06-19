@@ -2,8 +2,26 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass aligns performance/SEO evidence with the custom 404 fallback.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass removes stale release-ID coupling from maintenance checklists.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Release evidence de-staling
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing maintenance review found that `ACCESSIBILITY_CHECKLIST.md` and `PERFORMANCE_CHECKLIST.md` still contained a specific older Pages deployment ID as if it were the current baseline.
+  - Because this repository publishes frequent small checkpoints, hard-coding one run ID in long-lived baseline checklists makes the docs stale immediately after the next publish.
+- Changes:
+  - Reworded the accessibility checklist to keep repeatable accessibility/browser gates as the baseline and leave commit-specific Pages run IDs to release reports.
+  - Reworded the performance/SEO checklist the same way, preserving route, sitemap, and 404 invariants without claiming one deployment ID is permanently current.
+- Validation result:
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node --check tools/check-instrument-browser.js`.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is documentation governance only. It does not change public pages, visitor copy, routing, scripts, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Performance evidence alignment for 404 fallback
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
