@@ -31,7 +31,7 @@ Core public pages:
 - Theme color metadata must remain `#05070d` across checked public pages.
 - New-tab links must use `rel="noopener noreferrer"`; `tools/check_site.py` fails any `target="_blank"` link that omits either token.
 - External runtime resource links remain blocked by default. `tools/check_site.py` rejects external stylesheets, preload/prefetch/preconnect hints, externally embedded media, external CSS imports or URL references, and unapproved `mailto:` / `tel:` contact links.
-- Favicon: `assets/favicon.svg`.
+- Favicon must resolve to local `assets/favicon.svg`, use `type="image/svg+xml"`, and appear exactly once per checked HTML page.
 - `robots.txt` exists and disallows `/review/`.
 - `robots.txt` declares `Sitemap: https://yscjrh.github.io/sitemap.xml`.
 - `sitemap.xml` exists and excludes `/review/`.
@@ -72,6 +72,7 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 ## Results
 
 - 2026-06-19 `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references, with `/404.html` checked but excluded from `sitemap.xml`.
+- 2026-06-19 `tools/check_site.py` now rejects external, duplicated, or wrong-type favicon links; temporary negative checks confirmed those regression paths fail.
 - 2026-06-19 `tools/check_site.py` now checks 1 CSS file and rejects external stylesheets, external resource hints, embedded external media, `mailto:` / `tel:` links, and external CSS URL/import references; temporary negative checks confirmed the new guard catches those regression paths.
 - 2026-06-19 `node tools/check-public-browser.js` passed for `/`, `/404.html`, `/projects/`, `/notes/`, and both published note pages, including the custom 404 content marker, no-JS mobile navigation, mobile keyboard menu behavior, desktop/mobile overflow checks, and reduced-motion guard.
 - 2026-06-19 `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte instrument data package.

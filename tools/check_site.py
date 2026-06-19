@@ -18,6 +18,7 @@ EXPECTED_SHARE_IMAGE_ALT = (
     "荧光、方法、仪器与开放工具."
 )
 EXPECTED_SHARE_IMAGE_SIZE = (1200, 630)
+EXPECTED_FAVICON_PATH = Path("assets/favicon.svg")
 
 HTML_FILES = [
     Path("index.html"),
@@ -44,7 +45,6 @@ REQUIRED_META_MARKERS = [
     ("title", "<title"),
     ("description", 'name="description"'),
     ("canonical", 'rel="canonical"'),
-    ("favicon", 'rel="icon"'),
     ("og:title", 'property="og:title"'),
     ("og:description", 'property="og:description"'),
     ("og:type", 'property="og:type"'),
@@ -364,6 +364,22 @@ def check_html(path: Path) -> list[str]:
             errors.append(f"{path}: {name} must be {expected_value}")
     if meta_name_values(parser, "theme-color") != [EXPECTED_THEME_COLOR]:
         errors.append(f"{path}: theme-color must be {EXPECTED_THEME_COLOR}")
+    favicon_links = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "link" and "icon" in attrs.get("rel", "").lower().split()
+    ]
+    if len(favicon_links) != 1:
+        errors.append(f"{path}: expected exactly one favicon link")
+    else:
+        favicon_href = favicon_links[0].get("href", "")
+        favicon_type = favicon_links[0].get("type", "")
+        resolved_favicon = resolve_local_reference(path, favicon_href)
+        expected_favicon = (ROOT / EXPECTED_FAVICON_PATH).resolve()
+        if resolved_favicon is None or resolved_favicon.resolve() != expected_favicon:
+            errors.append(f"{path}: favicon href must resolve to {EXPECTED_FAVICON_PATH.as_posix()}")
+        if favicon_type != "image/svg+xml":
+            errors.append(f"{path}: favicon type must be image/svg+xml")
 
     if not parser.html_lang:
         errors.append(f"{path}: missing html lang")
@@ -481,7 +497,13 @@ def main() -> int:
     for path in CSS_FILES:
         errors.extend(check_css(path))
 
-    for required in [Path(".nojekyll"), Path("robots.txt"), Path("sitemap.xml"), Path("assets/og-card.png")]:
+    for required in [
+        Path(".nojekyll"),
+        Path("robots.txt"),
+        Path("sitemap.xml"),
+        Path("assets/og-card.png"),
+        EXPECTED_FAVICON_PATH,
+    ]:
         if not (ROOT / required).exists():
             errors.append(f"{required}: required file missing")
     share_image = ROOT / "assets/og-card.png"

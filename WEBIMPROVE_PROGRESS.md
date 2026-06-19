@@ -2,8 +2,29 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens inline SVG accessible-name checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens favicon metadata and local static-asset checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Favicon metadata guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO/static-resource review found that the checklist required the local SVG favicon, but `tools/check_site.py` only checked for a generic `rel="icon"` marker.
+  - Red-path check confirmed the previous checker allowed a temporary external favicon URL.
+- Changes:
+  - Added favicon parsing to `tools/check_site.py`.
+  - Required exactly one icon link per checked HTML page.
+  - Required that the icon href resolves to local `assets/favicon.svg`.
+  - Required `type="image/svg+xml"` and checked that the favicon asset exists.
+  - Updated the performance/SEO checklist to record the enforced favicon invariant.
+- Validation result:
+  - Red: temporary negative check confirmed the previous checker missed an external favicon URL.
+  - Green: `python -m py_compile tools/check_site.py`.
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, 1 CSS file, `robots.txt`, `sitemap.xml`, local references, fragment links, ARIA idrefs, image alt checks, inline SVG name checks, and favicon metadata.
+  - Green: sequential temporary checks confirmed external favicon, wrong favicon MIME type, and duplicated favicon links are rejected.
+- Remaining notes:
+  - This is static SEO/resource QA hardening only. It does not change public copy, routing, styles, images, Instrument Lab behavior, analytics, forms, external links, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Inline SVG accessible-name guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
