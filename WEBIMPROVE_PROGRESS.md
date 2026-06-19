@@ -1,12 +1,12 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: 2026-06-19 Instrument Lab sample-picker reveal
-- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish
+- Active: Continuous site optimization and Instrument Lab maintenance
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; use fresh QA to choose the next highest-impact improvement.
 - Last updated: 2026-06-19
 
 ## 2026-06-19 Instrument Lab sample-picker reveal
-- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish.
+- Status: Published in `bc2eac7 instrument: reveal sample picker from part selection`; Pages run `27800499941` succeeded.
 - Trigger:
   - Autonomous review found that selecting the sample cell from the top workbench could open the sample picker down in the controls area without bringing it into view.
 - Root cause:
@@ -21,13 +21,14 @@
   - TDD red: `node tools/check-instrument-browser.js` failed before implementation with the sample picker panel at `top: 2297` while the viewport height was `900`.
   - Green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node --test instrument/sim/tests/*.mjs` passed: 112/112.
   - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`; `node tools/check-instrument-browser.js`.
+  - Published: commit `bc2eac7`; GitHub Pages deployment `27800499941` completed successfully.
 - Remaining notes:
   - This changes only reveal/focus behavior. It does not alter sample presets, physics, diagnostics, source-derived examples, or scientific boundaries.
 - Blockers:
   - None.
 
 ## 2026-06-19 Instrument Lab sample-cell picker
-- Status: Full local validation and browser QA passed locally; queued for the 2026-06-19 publish.
+- Status: Published in `7fbeec1 instrument: add sample cell chooser`; Pages run `27798337670` succeeded.
 - Trigger:
   - User requested changing sample replacement into a direct chooser opened by clicking the sample cell.
 - Changes:
@@ -45,13 +46,14 @@
   - Green: `node tools/check-instrument-browser.js` passed with the added `sample picker` check, including open, option selection, state synchronization, diagnostics, and Escape close behavior.
   - Green: `node --test instrument/sim/tests/*.mjs` passed: 112/112.
   - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+  - Published: commit `7fbeec1`; GitHub Pages deployment `27798337670` completed successfully.
 - Remaining notes:
   - This is an interaction change only. It does not alter sample physics, source-derived datasets, calibration boundaries, or synthetic spectrum formulas.
 - Blockers:
   - None.
 
 ## 2026-06-17 Instrument Lab classic sample presets
-- Status: Full local validation and browser QA passed locally; ready for commit and publish.
+- Status: Published in `fc7ebda instrument: add classic sample presets`; Pages run `27667600344` succeeded.
 - Trigger:
   - User requested adding classic fluorescent samples inside the sample cell with corresponding simulator feedback.
 - Changes:
@@ -68,6 +70,7 @@
   - Green: `node --test instrument/sim/tests/*.mjs` passed: 111/111.
   - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
   - Green: `node tools/check-instrument-browser.js` passed with the added `classic samples` check, including Rhodamine-like and EGFP-like selector changes plus synthetic-boundary diagnostics.
+  - Published: commit `fc7ebda`; GitHub Pages deployment `27667600344` completed successfully.
 - Remaining notes:
   - This slice does not reinterpret or reprocess source-derived spectra; those examples remain separate display-only references.
   - Preset peak centers and widths are qualitative teaching parameters, not measured or calibrated values.
@@ -75,7 +78,7 @@
   - None.
 
 ## 2026-06-17 Instrument Lab 3D readability and scientific-boundary polish
-- Status: Full local validation, browser QA, and visual screenshot review passed; ready for commit and publish.
+- Status: Published in `019d80a instrument: polish 3d readability boundaries`; Pages run `27666267542` succeeded.
 - Trigger:
   - User requested another autonomous optimization pass for the `/instrument/` 3D fluorescence instrument simulator from aesthetics, scientific credibility, and related content.
   - Read-only visual and science review found that the 3D scene was functional but still had dense labels, bilingual overlay text that bypassed language-mode filtering, and a detector-to-spectrum line that could read like an optical beam.
@@ -96,6 +99,7 @@
   - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
   - Green: `node tools/check-instrument-browser.js` passed with first viewport, default 3D scene, language switch, language density, scene overlay language, keyboard, mobile, no-JS fallback, WebGL fallback, source-derived, and module-failure checks.
   - Visual QA screenshot saved locally at `C:\Users\34793\AppData\Local\Temp\instrument-visual-final-20260617.png`; manual review found no first-screen text overlap and confirmed inactive labels read as context rather than primary annotations.
+  - Published: commit `019d80a`; GitHub Pages deployment `27666267542` completed successfully.
 - Remaining notes:
   - This slice intentionally keeps the default full-width 3D model and does not reduce the model height, because the user previously requested the 3D model to occupy the main page.
   - Mobile camera adaptation and deeper optical-model variants remain deferred.
@@ -103,7 +107,7 @@
   - None.
 
 ## 2026-06-12 Instrument Lab emission monochromator ray direction hotfix
-- Status: Full local validation and browser QA passed; not yet committed or published.
+- Status: Published in `9dc67b4 instrument: fix emission monochromator ray direction`; Pages run `27383175176` succeeded.
 - Trigger:
   - User screenshot showed the emission monochromator internal dispersed/selected ray pointing back toward the sample instead of toward the detector.
 - Root cause:
@@ -122,13 +126,14 @@
   - Green: `python tools/check_site.py`; `node tools/preprocess-instrument-data.js --validate`; `git diff --check`.
   - Green: `node tools/check-instrument-browser.js` passed with default 3D, language density, keyboard, mobile, no-JS fallback, WebGL fallback, and module-failure checks.
   - Visual QA screenshot confirmed that opening Em mono now routes the internal dispersed/selected ray toward the detector side.
+  - Published: commit `9dc67b4`; GitHub Pages deployment `27383175176` completed successfully.
 - Remaining notes:
   - This is a visual geometry hotfix only. It does not change wavelength derivation, synthetic spectra, diagnostics, or source-derived examples.
 - Blockers:
   - None.
 
 ## 2026-06-11 Instrument Lab default 3D workbench
-- Status: Full local validation and browser QA passed; ready for commit and publish.
+- Status: Published in `59c8159 instrument: make 3d workbench the default`; Pages run `27348307910` succeeded.
 - Trigger:
   - User requested the instrument model default to the 3D model and occupy the full main workbench area instead of sharing half the desktop layout.
 - Changes:
@@ -145,13 +150,14 @@
   - Green: `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
   - Green: `node tools/check-instrument-browser.js` passed with `default 3D scene`, language density, keyboard, mobile overflow, no-JS fallback, WebGL fallback, and module-failure checks.
   - Visual QA screenshot confirmed the default 3D model is visible in the first desktop viewport and the model panel spans the workbench width.
+  - Published: commit `59c8159`; GitHub Pages deployment `27348307910` completed successfully.
 - Remaining notes:
   - This is a layout/runtime-default change only. It does not change the simulator physics, source-derived examples, or calibration boundary.
 - Blockers:
   - None.
 
 ## 2026-06-11 Instrument Lab fallback label overlap hotfix
-- Status: Focused regression and browser QA passed locally; ready for commit and publish
+- Status: Published in `d4ae01d instrument: fix fallback label overlap`; Pages run `27342665418` succeeded.
 - Trigger:
   - User screenshot showed overlapping text on first load in the `/instrument/` 2D fallback diagram.
 - Root cause:
@@ -168,13 +174,14 @@
   - Green: `node tools/check-instrument-browser.js` passed with `fallback label collisions` included in the real browser checks.
   - Release green: `node --test instrument/sim/tests/*.mjs` passed: 98/98.
   - Release green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `git diff --check`.
+  - Published: commit `d4ae01d`; GitHub Pages deployment `27342665418` completed successfully.
 - Remaining notes:
   - This is a layout-only hotfix. It does not change the simulator model, controls, or scientific claims.
 - Blockers:
   - None.
 
 ## 2026-06-11 Final refine DoD audit and first-screen clarity closeout
-- Status: Completed and validated locally; ready for commit and publish
+- Status: Published in `8e37081 instrument: close refine audit`; Pages run `27340497220` succeeded.
 - Trigger:
   - `PLANS.md` and the 2026-06-11 decision record require requirement-by-requirement proof against `refine.md` section 9 before the long-running goal can be marked complete.
   - Read-only review found that first-screen copy implied grating dragging before optional 3D was enabled, and optical-path detail notes bypassed the language-mode framework.
@@ -189,6 +196,7 @@
   - TDD red: `node --test instrument/sim/tests/ui-contract.test.mjs` failed before implementation because first-screen copy still promised immediate grating dragging and optical-path notes lacked language spans.
   - TDD red: `node --test instrument/sim/tests/evidence-docs.test.mjs` failed before the final audit file existed.
   - Final green: `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `node --test instrument/sim/tests/*.mjs`; `node tools/preprocess-instrument-data.js --validate`; `python tools/check_site.py`; `node tools/check-instrument-browser.js`; `git diff --check`.
+  - Published: commit `8e37081`; GitHub Pages deployment `27340497220` completed successfully.
 - Remaining non-blocking notes:
   - The “30 seconds understand” item is closed by interface/QA evidence and heuristic review, not by a controlled human usability study.
 - Blockers:
@@ -661,7 +669,7 @@
   - None after the bilingual `aria-label` and share-card alt fixes.
 
 ## 2026-06-09 Front-end aesthetic and repo-local skill pass
-- Status: Complete locally; not published
+- Status: Published in `b564caa`; Pages run `27241762667` succeeded, with a follow-up progress-log-only commit recording the live verification.
 - Trigger:
   - Active thread goal asked for autonomous front-end aesthetics and quality improvements, plus repo-local Codex skills when repeated workflows appear.
 - Checkpoint 1 - rendered review and homepage identity hierarchy:
@@ -1463,7 +1471,7 @@
   - None.
 
 ## Instrument preset option synchronization
-- Status: Completed locally; pending commit and publish
+- Status: Published in `8636ad3 instrument: sync sample preset options`; Pages run `27324052324` succeeded.
 - Trigger:
   - Continue `refine.md` DoD work on maintainability, source/synthetic separation, and tested UI contracts.
 - Root cause:
@@ -1484,13 +1492,14 @@
   - `git diff --check` passed with only line-ending normalization warnings.
   - Local Playwright smoke on `http://127.0.0.1:4173/instrument/?qa=preset-sync` passed using local Chrome: module loaded, `preset-sync-20260611` cache key present, source/detector/sample options matched shared runtime order, default values remained `xenon-like`, `pmt-like-visible`, and `low-background`, horizontal overflow was `0`, and one `h1` was present.
   - Screenshot saved: `output/playwright/preset-sync-instrument-1366.png`.
+  - Published: commit `8636ad3`; GitHub Pages deployment `27324052324` completed successfully.
 - Remaining non-blocking notes:
   - This slice adds no new scientific source claim; existing `ILAB-008` placeholder boundary remains the evidence anchor for teaching source and detector presets.
 - Blockers:
   - None.
 
 ## Instrument geometry preset option synchronization
-- Status: Completed locally; pending commit and publish
+- Status: Published in `caa0c49 instrument: sync geometry preset options`; Pages run `27325093795` succeeded.
 - Trigger:
   - Continue `refine.md` DoD work on geometry boundary maintainability and tested no-JS/runtime UI parity.
 - Root cause:
@@ -1510,6 +1519,7 @@
   - `python tools/check_site.py` passed.
   - `git diff --check` passed with only line-ending normalization warnings.
   - Local Playwright smoke on `http://127.0.0.1:4173/instrument/?qa=geometry-sync` passed using local Chrome: module loaded, `geometry-sync-20260611` cache key present, geometry options matched shared runtime order, default geometry remained `right-angle-90`, horizontal overflow was `0`, and one `h1` was present.
+  - Published: commit `caa0c49`; GitHub Pages deployment `27325093795` completed successfully.
 - Remaining non-blocking notes:
   - This slice adds no new geometry physics claim; existing right-angle/front-face/transmission boundaries remain covered by `ILAB-006`.
 - Blockers:
