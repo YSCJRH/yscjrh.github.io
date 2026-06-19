@@ -1,7 +1,7 @@
 # Performance And SEO Checklist
 
-Status: 2026-06-11 `/instrument/` refine evidence refreshed
-Last updated: 2026-06-11
+Status: 2026-06-19 `/instrument/` interaction, sitemap, and release evidence refreshed
+Last updated: 2026-06-19
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
 ## Scope
@@ -26,7 +26,7 @@ Core public pages:
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `sitemap.xml` exists and excludes `/review/`.
-- `sitemap.xml` `lastmod` values were refreshed to `2026-06-10` after the published visual, metadata, and Instrument Lab fixes.
+- `sitemap.xml` keeps the shared public pages at `2026-06-10`; `/instrument/` is refreshed to `2026-06-19` after the published default-3D, language-mode, classic-sample, and sample-picker interaction releases.
 - The former `/review/` internal review route is retired from the deployable tree.
 - JSON-LD was intentionally not added because encoding personal identity facts should wait until About content is more stable.
 - `feed.xml` was intentionally deferred; current published notes are few enough that a feed maintenance flow would add more overhead than value.
@@ -44,6 +44,12 @@ Core public pages:
 
 ```powershell
 git diff --check
+python tools/check_site.py
+node --check script.js
+node --check instrument/instrument.js
+node --check tools/check-instrument-browser.js
+node tools/preprocess-instrument-data.js --validate
+node tools/check-instrument-browser.js
 npx --yes lighthouse http://127.0.0.1:4174/ "--only-categories=performance,seo,best-practices" --output=json --output-path=reports/lighthouse-seo-perf-home.json --chrome-flags="--headless=new"
 npx --yes lighthouse http://127.0.0.1:4173/instrument/ "--only-categories=performance,accessibility,best-practices,seo" --output=json --output-path=reports/lighthouse-instrument-2026-06-11.json --chrome-flags="--headless=new"
 Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/robots.txt
@@ -52,6 +58,13 @@ Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:4174/sitemap.xml
 
 ## Results
 
+- 2026-06-19 `python tools/check_site.py` passed for 6 public HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+- 2026-06-19 `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte instrument data package.
+- 2026-06-19 syntax checks passed for `script.js`, `instrument/instrument.js`, and `tools/check-instrument-browser.js`.
+- 2026-06-19 `git diff --check` passed during this checklist refresh with only Windows line-ending normalization warnings.
+- 2026-06-19 `node tools/check-instrument-browser.js` passed for first viewport, WebGL fallback, fallback label collisions, console errors, mobile overflow, reduced motion, language switching, keyboard activation, no-JS fallback, geometry mode, response-normalized view, classic samples, sample picker, default 3D scene, source-derived examples, source-derived language mode, and module-failure fallback.
+- 2026-06-19 live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
+- 2026-06-19 GitHub Pages reported `built` from `main` and deployment `27801068726` for commit `66a8e30` completed successfully before this checklist refresh.
 - 2026-06-11 `/instrument/` Lighthouse on local preview:
   - Performance: `86`
   - Accessibility: `100`

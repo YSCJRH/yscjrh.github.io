@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; use fresh QA to choose the next highest-impact improvement.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass refreshes accessibility/performance evidence and `/instrument/` sitemap freshness.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Checklist and sitemap evidence refresh
+- Status: Local validation and browser QA passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing autonomous optimization found that `ACCESSIBILITY_CHECKLIST.md` and `PERFORMANCE_CHECKLIST.md` still presented 2026-06-10/11 evidence as the current baseline after the 2026-06-17 and 2026-06-19 Instrument Lab releases.
+  - `sitemap.xml` still reported `/instrument/` as last modified on `2026-06-10`, even though the route had published default-3D, language-mode, classic-sample, and sample-picker interaction updates.
+- Changes:
+  - Refreshed accessibility and performance checklist status dates, validation command lists, and current evidence bullets.
+  - Recorded current Instrument Lab browser QA coverage for language switching, keyboard activation, no-JS fallback, classic samples, sample picker, default 3D, source-derived language mode, and module-failure fallback.
+  - Updated `/instrument/` sitemap `lastmod` to `2026-06-19`; left other route dates unchanged because this pass does not modify those pages.
+- Validation result:
+  - Green before editing: `python tools/check_site.py`; `node tools/preprocess-instrument-data.js --validate`; `node --check script.js`; `node --check instrument/instrument.js`; `node --check tools/check-instrument-browser.js`; `git diff --check`.
+  - Green before editing: `node tools/check-instrument-browser.js` passed with the current browser QA marker set.
+  - Green after editing: `python tools/check_site.py`; `node tools/preprocess-instrument-data.js --validate`; `node --check script.js`; `node --check instrument/instrument.js`; `git diff --check`; `node tools/check-instrument-browser.js`.
+  - Live route checks returned `200` for `/`, `/projects/`, `/notes/`, both published note pages, `/instrument/`, `/robots.txt`, `/sitemap.xml`, and `/assets/og-card.png`.
+- Remaining notes:
+  - Lighthouse and screen-reader checks are still manual follow-up items; this pass records automated and route-level evidence only.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Instrument Lab sample-picker reveal
 - Status: Published in `bc2eac7 instrument: reveal sample picker from part selection`; Pages run `27800499941` succeeded.
