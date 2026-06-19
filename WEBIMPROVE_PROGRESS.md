@@ -2,8 +2,27 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens public-page noindex checks.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens canonical and Open Graph URL checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Canonical and OG URL route guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing SEO review found that `tools/check_site.py` required canonical and `og:url` markers but did not verify that their URLs matched each page's expected public route.
+  - This left a realistic copy/paste regression path where a new or edited page could point social previews or canonical indexing at the wrong URL.
+- Changes:
+  - Added `expected_public_url()` to derive the correct public route for root, `/404.html`, directory index pages, note articles, and `/instrument/`.
+  - Added canonical link and `og:url` value checks to `tools/check_site.py`.
+  - Updated `PERFORMANCE_CHECKLIST.md` to record route-matched canonical and Open Graph URL metadata as a baseline invariant.
+- Validation result:
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: temporary negative check confirmed a copied `projects/index.html` with root canonical and root `og:url` now reports route-specific canonical and `og:url` errors.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is static SEO QA hardening only. It does not change public copy, routing, styles, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Public page noindex guard
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

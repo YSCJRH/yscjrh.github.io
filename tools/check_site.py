@@ -125,6 +125,33 @@ def robots_meta_contents(parser: SiteParser) -> list[str]:
     ]
 
 
+def expected_public_url(path: Path) -> str:
+    if path == Path("index.html"):
+        return "https://yscjrh.github.io/"
+    if path == Path("404.html"):
+        return "https://yscjrh.github.io/404.html"
+    suffix = path.as_posix()
+    if suffix.endswith("index.html"):
+        suffix = suffix.removesuffix("index.html")
+    return f"https://yscjrh.github.io/{suffix}"
+
+
+def link_values(parser: SiteParser, rel: str) -> list[str]:
+    return [
+        attrs.get("href", "")
+        for tag, attrs in parser.tags
+        if tag == "link" and attrs.get("rel", "").lower() == rel
+    ]
+
+
+def meta_property_values(parser: SiteParser, property_name: str) -> list[str]:
+    return [
+        attrs.get("content", "")
+        for tag, attrs in parser.tags
+        if tag == "meta" and attrs.get("property", "").lower() == property_name
+    ]
+
+
 def check_html(path: Path) -> list[str]:
     errors: list[str] = []
     full_path = ROOT / path
@@ -139,6 +166,14 @@ def check_html(path: Path) -> list[str]:
     for label, marker in REQUIRED_META_MARKERS:
         if marker not in lower:
             errors.append(f"{path}: missing {label}")
+
+    expected_url = expected_public_url(path)
+    canonical_values = link_values(parser, "canonical")
+    if canonical_values != [expected_url]:
+        errors.append(f"{path}: canonical must be {expected_url}")
+    og_url_values = meta_property_values(parser, "og:url")
+    if og_url_values != [expected_url]:
+        errors.append(f"{path}: og:url must be {expected_url}")
 
     if not parser.html_lang:
         errors.append(f"{path}: missing html lang")
