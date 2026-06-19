@@ -2,8 +2,26 @@
 
 ## Current milestone
 - Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass removes stale release-ID coupling from maintenance checklists.
+- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass hardens the custom 404 SEO boundary in static checks.
 - Last updated: 2026-06-19
+
+## 2026-06-19 Custom 404 noindex guard
+- Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
+- Trigger:
+  - Continuing review found that `404.html` was documented as a noindex fallback and excluded from `sitemap.xml`, but `tools/check_site.py` did not fail if its robots `noindex` marker was accidentally removed later.
+- Changes:
+  - Added a `tools/check_site.py` assertion that the custom 404 page must include a robots meta value containing `noindex`.
+  - Updated the performance/SEO checklist so the noindex requirement is part of the recorded 404 boundary, not only a page implementation detail.
+- Validation result:
+  - Green: `python tools/check_site.py` passed for 7 HTML pages, `robots.txt`, `sitemap.xml`, and local references.
+  - Green: temporary negative check confirmed a custom 404 page without robots `noindex` now reports `404.html: custom 404 must include robots noindex`.
+  - Green: `node --check tools/check-public-browser.js`.
+  - Green: `node --check tools/check-instrument-browser.js`.
+  - Green: `git diff --check`.
+- Remaining notes:
+  - This is a static QA hardening change only. It does not change public page copy, routing, visual design, Instrument Lab behavior, analytics, forms, or dependencies.
+- Blockers:
+  - None.
 
 ## 2026-06-19 Release evidence de-staling
 - Status: Local validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.

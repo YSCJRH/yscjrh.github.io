@@ -27,7 +27,7 @@ Core public pages:
 - Favicon: `assets/favicon.svg`.
 - `robots.txt` exists and disallows `/review/`.
 - `sitemap.xml` exists and excludes `/review/`.
-- `404.html` exists as a custom bilingual fallback, is checked for metadata/local references, and is intentionally excluded from `sitemap.xml`.
+- `404.html` exists as a custom bilingual fallback, is checked for metadata/local references, must carry `robots` `noindex`, and is intentionally excluded from `sitemap.xml`.
 - `sitemap.xml` keeps the shared public pages at `2026-06-10`; `/instrument/` is refreshed to `2026-06-19` after the published default-3D, language-mode, classic-sample, and sample-picker interaction releases.
 - The former `/review/` internal review route is retired from the deployable tree.
 - JSON-LD was intentionally not added because encoding personal identity facts should wait until About content is more stable.
