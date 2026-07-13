@@ -2,11 +2,11 @@
 
 ## Current milestone
 - Active: Homepage evidence hierarchy and bilingual surface integrity
-- Status: Homepage Research evidence roles, project-first Build order, and affected bilingual copy are implemented and validated locally; publication remains unauthorized.
+- Status: Published in `2e3b5a2 site: publish evidence hierarchy and note integrity`; Pages run `29217816495` succeeded and the changed public surfaces were live-verified.
 - Last updated: 2026-07-13
 
 ## 2026-07-13 Homepage evidence hierarchy and bilingual surface integrity
-- Status: Focused red/green, full local repository, and targeted rendered-page validation passed.
+- Status: Published and live-verified.
 - Trigger:
   - Two Research cards used link-like text without destinations, while all three cards appeared equally interactive despite having different public evidence strength.
   - The generalized project workflow appeared before the inspectable project entries, weakening the homepage's evidence-first reading order.
@@ -29,12 +29,17 @@
   - Green: targeted direct Chromium checks passed at 1280 x 900 and 390 x 900 with two real Research anchors at least 40px high, a noninteractive algorithm direction, project-before-workflow DOM and visual order, expected bilingual block counts, paired note titles, working mobile-menu keyboard behavior, no console errors, and no horizontal overflow.
   - Green: a 390 x 900 no-JS Chromium check found the hamburger hidden, five visible navigation links, retained `body.no-js`, and no horizontal overflow.
   - Green: the final read-only re-review returned `ready` with no remaining Important or Minor findings after the fail-closed interaction contract and decision boundaries were added.
+- Publication result:
+  - The user authorized publication on 2026-07-13.
+  - Commit `2e3b5a2 site: publish evidence hierarchy and note integrity` was fast-forwarded to `main` through the GitHub Git data API after the Codex subprocess's system DNS resolver could not reach the normal Git transport.
+  - GitHub Pages run `29217816495` completed successfully for commit `2e3b5a2`.
+  - Live HTTPS checks verified the three homepage Research evidence roles, the published-reflection route, project-before-workflow surface marker, and Chinese `lang` content on both published Notes pages.
 - Remaining notes:
   - The public intelligent-algorithms example remains intentionally pending; promoting it requires owner-provided public evidence rather than inferred claims.
   - The aggregate `node tools/check-public-browser.js` runner is not claimed as passed in this environment; targeted direct Chromium checks cover the changed homepage surface.
-  - This checkpoint does not commit, push, or publish changes to GitHub Pages.
+  - The implementation checkpoint began under a no-publish boundary; the later user-authorized release is recorded above as a separate publication step.
 - Blockers:
-  - None locally; live Pages evidence remains unchanged until an authorized publish step.
+  - None. The normal local Git transport remains unavailable to the current Codex subprocess because its system DNS resolver cannot resolve GitHub, but the authenticated GitHub API release path and live verification both succeeded.
 
 ## 2026-07-13 Published-note source and governance integrity
 - Status: Focused red/green, full local repository, and targeted rendered-page validation passed.
