@@ -1,7 +1,7 @@
 # Performance And SEO Checklist
 
-Status: 2026-06-19 public route, 404 fallback, `/instrument/`, sitemap, static dependency/progressive enhancement boundary, and release evidence refreshed
-Last updated: 2026-06-19
+Status: 2026-07-13 responsive generated Hero delivery, local WebP budgets, native source selection, and local-only performance evidence refreshed; not published
+Last updated: 2026-07-13
 Latest local preview used: `http://127.0.0.1:4173/instrument/`
 
 ## Scope
@@ -47,13 +47,15 @@ Core public pages:
 
 ## Performance Baseline
 
+- Homepage Hero delivery uses three local WebP files derived from one master: 1200 × 960 desktop at no more than 200 KiB, 1280 × 720 tablet at no more than 150 KiB, and 720 × 405 mobile at no more than 90 KiB.
+- The Hero uses native `<picture>` source selection, explicit desktop intrinsic dimensions, breakpoint-owned aspect-ratio reservation, `decoding="async"`, and no external image request, JavaScript image loader, animation, or unverified high-priority fetch hint.
 - Static site with no build step and no third-party analytics or tracking scripts.
 - Shared CSS: `styles.css`.
 - Shared JS: `script.js`, deferred.
 - Each checked HTML page must include exactly one shared stylesheet resolving to `styles.css` and exactly one shared `script.js` tag with `defer`; `tools/check_site.py` enforces this shared asset contract.
 - Each checked HTML page must keep `body class="no-js"` as the progressive-enhancement bootstrap state until the shared script switches it to `js-enabled`; `tools/check_site.py` enforces this body-state contract.
 - Route-scoped heavier JavaScript is limited to `/instrument/`.
-- Images are SVG or small static PNG assets; the share card is about 80 KB.
+- Images are SVG, optimized static WebP, or small static PNG assets; the share card is about 80 KB.
 - CSS must not import external URLs, and deployable HTML must not depend on external stylesheets, resource hints, embedded media, or private contact links.
 - Reduced-motion CSS and JS handling remain in place.
 

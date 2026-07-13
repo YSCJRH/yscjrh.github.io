@@ -1,9 +1,34 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: Homepage evidence hierarchy and bilingual surface integrity
-- Status: Published in `2e3b5a2 site: publish evidence hierarchy and note integrity`; Pages run `29217816495` succeeded and the changed public surfaces were live-verified.
+- Active: Generated homepage Hero illustration
+- Status: Implemented and verified locally; not published.
 - Last updated: 2026-07-13
+
+## 2026-07-13 Generated responsive homepage Hero illustration
+- Status: Implemented and verified locally; not published.
+- Trigger:
+  - The previous CSS-built Hero mixed instrument parts, a microscope, slide, nodes, spectrum card, and purple haze without one clear focal point.
+  - Desktop and mobile used different abstract subjects, and the overlaid caption competed with the spectrum decoration.
+- Changes:
+  - Replaced the decorative span tree with one semantic `figure` and responsive `picture`.
+  - Added desktop 5:4, tablet 16:9, and mobile 16:9 WebP crops derived from one approved master.
+  - Used a bilingual alt description and a visible bilingual concept-only boundary in normal flow.
+  - Removed the legacy `.lab-*`, `.scope-*`, `.hero-lab-visual`, and `.hero-mobile-visual` implementation.
+  - Added static and rendered QA for asset paths, semantics, `currentSrc`, caption flow, figure motion, mobile document position, and overflow.
+- Validation result:
+  - Green: all three WebP files passed exact format, dimension, and KiB-ceiling checks.
+  - Green: focused Hero contract tests, the full Python test set, Python compilation, and `python tools/check_site.py` passed.
+  - Green: JavaScript syntax, Instrument Lab regression tests, and instrument data-package validation passed.
+  - Direct Chromium substitute: `node tools/check-public-browser.js` remained resident after printing its Playwright `open` command and did not emit `Public browser QA passed.`; exact direct Chromium checks passed at desktop 1280 × 900, tablet 1024 × 900, and mobile 390 × 900 with the expected responsive source, static normal-flow caption, no console or page error, no horizontal overflow, and preserved desktop/mobile 404 behavior.
+  - Visual review: the sample cell remained the focal point in every crop; the two light paths remained legible; no generated text, brand, false data, or commercial hardware was present.
+- Boundary:
+  - The image is a concept illustration, not an experiment record, real device, calibrated model, instrument specification, or research result.
+  - No Hero copy, CTA, Research evidence role, project order, navigation, Notes/About content, or `/instrument/` behavior changed.
+  - No external media, dependency, framework, analytics, form, backend, push, deployment, or publication was added.
+- Remaining note:
+  - Aesthetic appeal is a reviewed judgment rather than a machine-verifiable fact; the recorded evidence covers composition, truthfulness, responsive integrity, accessibility, and performance boundaries.
+  - Future hardening: the committed mobile copy-before-figure gate enforces DOM order, while rendered vertical order is currently covered by the direct Chromium evidence rather than a persistent aggregate assertion.
 
 ## 2026-07-13 Homepage evidence hierarchy and bilingual surface integrity
 - Status: Published and live-verified.

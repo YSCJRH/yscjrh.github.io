@@ -1,4 +1,26 @@
-# Current Phase: Homepage Evidence Hierarchy And Bilingual Surface Integrity
+# Current Phase: Generated Homepage Hero Illustration
+
+## Goal
+- Replace the abstract CSS laboratory collage with one generated, concept-only fluorescent sample-cell illustration.
+- Deliver one coherent scene through exact desktop, tablet, and mobile WebP crops.
+- Preserve homepage copy, evidence roles, section order, bilingual semantics, static architecture, and publication boundaries.
+
+## Current Baseline
+- The approved design is recorded in `docs/superpowers/specs/2026-07-13-homepage-generated-hero-design.md`.
+- The implementation plan is recorded in `docs/superpowers/plans/2026-07-13-homepage-generated-hero.md`.
+- The image is a conceptual editorial illustration, not an experiment record, device claim, calibrated model, or result.
+- The implementation remains local until the user separately authorizes publication.
+
+## Validation
+1. Validate exact WebP format, dimensions, and KiB ceilings.
+2. Run the focused Hero contract, all Python static tests, and `tools/check_site.py`.
+3. Run JavaScript syntax, Instrument Lab regression tests, data-package validation, and public/instrument browser QA.
+4. Inspect desktop 1280 × 900, tablet 1024 × 900, and mobile 390 × 900 screenshots.
+5. Review the complete diff, repository status, public-claim boundary, and no-publish state.
+
+---
+
+# Previous Phase: Homepage Evidence Hierarchy And Bilingual Surface Integrity
 
 ## Goal
 - Make the homepage distinguish published reflection, unsupported direction, and bounded concept evidence without changing the canonical section order.

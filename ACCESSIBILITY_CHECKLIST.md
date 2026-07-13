@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Status: 2026-07-13 homepage Research semantics, bilingual language blocks, keyboard navigation, no-JS behavior, and responsive evidence hierarchy refreshed
+Status: 2026-07-13 responsive generated Hero figure, bilingual image description, caption language semantics, keyboard navigation, no-JS behavior, and evidence hierarchy refreshed
 Last updated: 2026-07-13
 Latest local preview used: `http://127.0.0.1:4173/`
 
@@ -20,6 +20,7 @@ Core pages checked:
 
 ## Checks
 
+- Homepage Hero image: one semantic `<figure><picture>` provides exact local responsive sources; the meaningful `<img>` carries the paired English / Chinese description, the Chinese concept-boundary sentence uses `lang="zh-CN"`, the caption remains outside the image in normal flow, and no duplicate `role="img"` or decorative mobile substitute is exposed.
 - Heading structure: each core page has one main `<h1>` and section headings are present in a readable order.
 - Skip link: each core page has a skip link that targets `#main`, and that skip link must be the first link in DOM order.
 - Fragment links and IDs: checked pages must not contain duplicate `id` values, and local `#fragment` links must resolve to an existing HTML target.
