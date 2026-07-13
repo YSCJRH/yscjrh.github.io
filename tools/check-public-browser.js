@@ -18,6 +18,32 @@ const PUBLIC_ROUTES = [
 ];
 const PUBLIC_MOBILE_VIEWPORT_WIDTHS = [320, 375, 390, 414, 768];
 const PUBLIC_MOBILE_VIEWPORT_HEIGHT = 900;
+const HERO_RESPONSIVE_VIEWPORTS = [
+  {
+    name: "desktop",
+    width: 1280,
+    height: 900,
+    expectedPath: "/assets/img/hero-fluorescence-desktop-v1.webp",
+    requiresInitialVisibility: true,
+    requiresCopyBeforeFigure: false,
+  },
+  {
+    name: "tablet",
+    width: 1024,
+    height: 900,
+    expectedPath: "/assets/img/hero-fluorescence-tablet-v1.webp",
+    requiresInitialVisibility: true,
+    requiresCopyBeforeFigure: false,
+  },
+  {
+    name: "mobile",
+    width: 390,
+    height: 900,
+    expectedPath: "/assets/img/hero-fluorescence-mobile-v1.webp",
+    requiresInitialVisibility: false,
+    requiresCopyBeforeFigure: true,
+  },
+];
 const MARKERS = [
   "desktop structure",
   "desktop console",
@@ -27,6 +53,7 @@ const MARKERS = [
   "custom 404 content",
   "no-JS mobile navigation",
   "mobile menu keyboard",
+  "responsive hero image",
   "reduced motion",
 ];
 
@@ -281,6 +308,86 @@ async function main() {
         record(`mobile structure ${route} ${width}px`);
       }
     }
+
+    progress("checking responsive hero image");
+    const heroResponsive = runCode(
+      `async (page) => {
+        const scenarios = ${JSON.stringify(HERO_RESPONSIVE_VIEWPORTS)};
+        const results = [];
+        for (const scenario of scenarios) {
+          await page.setViewportSize({ width: scenario.width, height: scenario.height });
+          await page.goto('${baseUrl}', { waitUntil: 'networkidle' });
+          await page.waitForFunction(() => {
+            const image = document.querySelector('.hero-illustration');
+            return Boolean(image && image.complete && image.naturalWidth > 0);
+          });
+          results.push(await page.evaluate(async (currentScenario) => {
+            const figure = document.querySelector('figure.hero-visual');
+            const picture = document.querySelector('.hero-visual-picture');
+            const image = document.querySelector('.hero-illustration');
+            const caption = document.querySelector('figcaption.hero-visual-note');
+            const copy = document.querySelector('.hero-copy');
+            if (!figure || !picture || !image || !caption || !copy) {
+              return { ...currentScenario, missing: true };
+            }
+
+            const initialFigureRect = figure.getBoundingClientRect();
+            const pictureRect = picture.getBoundingClientRect();
+            const captionRect = caption.getBoundingClientRect();
+            const copyBeforeFigure = Boolean(
+              copy.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING
+            );
+            const result = {
+              ...currentScenario,
+              missing: false,
+              currentPath: new URL(image.currentSrc).pathname,
+              imageLoaded: image.complete && image.naturalWidth > 0,
+              initialInViewport:
+                initialFigureRect.top < window.innerHeight && initialFigureRect.bottom > 0,
+              captionAfterImage: captionRect.top >= pictureRect.bottom - 1,
+              captionPosition: getComputedStyle(caption).position,
+              staticFigure: getComputedStyle(figure).transform === 'none',
+              copyBeforeFigure,
+              overflowX: Math.max(
+                0,
+                document.documentElement.scrollWidth - document.documentElement.clientWidth
+              ),
+            };
+
+            const centeredTop =
+              initialFigureRect.top +
+              window.scrollY -
+              Math.max(0, (window.innerHeight - initialFigureRect.height) / 2);
+            window.scrollTo(0, Math.max(0, centeredTop));
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            const scrolledFigureRect = figure.getBoundingClientRect();
+            result.afterScrollFullyVisible =
+              scrolledFigureRect.top >= -1 && scrolledFigureRect.bottom <= window.innerHeight + 1;
+            return result;
+          }, scenario));
+        }
+        return results;
+      }`
+    );
+    assertCheck(
+      Array.isArray(heroResponsive) &&
+        heroResponsive.length === HERO_RESPONSIVE_VIEWPORTS.length &&
+        heroResponsive.every((entry) =>
+          entry.missing === false &&
+          entry.currentPath === entry.expectedPath &&
+          entry.imageLoaded === true &&
+          entry.captionAfterImage === true &&
+          entry.captionPosition === "static" &&
+          entry.staticFigure === true &&
+          entry.afterScrollFullyVisible === true &&
+          entry.overflowX === 0 &&
+          (!entry.requiresInitialVisibility || entry.initialInViewport === true) &&
+          (!entry.requiresCopyBeforeFigure || entry.copyBeforeFigure === true)
+        ),
+      "responsive hero image delivery failed",
+      heroResponsive
+    );
+    record("responsive hero image");
 
     progress("checking mobile menu keyboard");
     const mobileMenu = runCode(

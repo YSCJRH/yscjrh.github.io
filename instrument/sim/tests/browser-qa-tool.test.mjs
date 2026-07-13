@@ -79,3 +79,25 @@ test("public browser QA tool samples the documented mobile viewport widths", () 
     "public browser QA output should expose width-specific mobile structure checks"
   );
 });
+
+test("public browser QA verifies responsive homepage hero delivery", () => {
+  assert.equal(existsSync(publicQaToolPath), true, "expected tools/check-public-browser.js");
+
+  const script = readFileSync(publicQaToolPath, "utf8");
+  assert.match(
+    script,
+    /HERO_RESPONSIVE_VIEWPORTS\s*=\s*\[[\s\S]*?1280[\s\S]*?1024[\s\S]*?390[\s\S]*?\]/,
+    "public browser QA should declare desktop, tablet, and mobile Hero viewports"
+  );
+  for (const asset of [
+    "hero-fluorescence-desktop-v1.webp",
+    "hero-fluorescence-tablet-v1.webp",
+    "hero-fluorescence-mobile-v1.webp",
+  ]) {
+    assert.match(script, new RegExp(asset.replaceAll(".", "\\.")), `missing Hero asset check: ${asset}`);
+  }
+  assert.match(script, /currentSrc/, "Hero QA should verify the selected responsive source");
+  assert.match(script, /captionAfterImage/, "Hero QA should verify that the caption stays outside the image");
+  assert.match(script, /afterScrollFullyVisible/, "Hero QA should verify full figure visibility after scroll");
+  assert.match(script, /responsive hero image/i, "Hero QA should expose a stable result marker");
+});
