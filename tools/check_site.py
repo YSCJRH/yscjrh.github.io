@@ -70,6 +70,7 @@ HOME_BILINGUAL_CONTAINERS = {
     "about-route-copy-zh": "about-routes",
 }
 HOME_DIRECTION_STATIC_TAGS = {"div", "h3", "p", "span"}
+HOME_HERO_STYLESHEET_HREF = "styles.css?v=homepage-generated-hero-20260713"
 HOME_HERO_ALT = (
     "Conceptual illustration of a fluorescent sample cell and perpendicular light paths / "
     "荧光样品池与垂直光路的概念插图"
@@ -579,6 +580,14 @@ def element_texts_by_class(text: str, class_name: str) -> list[str]:
 
 def check_homepage_hero_figure(parser: SiteParser, text: str) -> list[str]:
     errors: list[str] = []
+
+    homepage_stylesheets = [
+        attrs.get("href", "")
+        for tag, attrs in parser.tags
+        if tag == "link" and "stylesheet" in attrs.get("rel", "").lower().split()
+    ]
+    if homepage_stylesheets != [HOME_HERO_STYLESHEET_HREF]:
+        errors.append("index.html: homepage stylesheet must use the generated Hero cache key")
 
     def node_matches(node: dict[str, object], tag: str, class_name: str) -> bool:
         classes = node["classes"]

@@ -15,12 +15,12 @@
   - Added desktop 5:4, tablet 16:9, and mobile 16:9 WebP crops derived from one approved master.
   - Used a bilingual alt description and a visible bilingual concept-only boundary in normal flow.
   - Removed the legacy `.lab-*`, `.scope-*`, `.hero-lab-visual`, and `.hero-mobile-visual` implementation.
-  - Added static and rendered QA for asset paths, semantics, `currentSrc`, caption flow, figure motion, mobile document position, and overflow.
+  - Added static and rendered QA for asset paths, semantics, `currentSrc`, caption flow, deterministic scrolling, figure motion, mobile DOM/rendered order, and overflow.
 - Validation result:
   - Green: all three WebP files passed exact format, dimension, and KiB-ceiling checks.
   - Green: focused Hero contract tests, the full Python test set, Python compilation, and `python tools/check_site.py` passed.
   - Green: JavaScript syntax, Instrument Lab regression tests, and instrument data-package validation passed.
-  - Direct Chromium substitute: `node tools/check-public-browser.js` remained resident after printing its Playwright `open` command and did not emit `Public browser QA passed.`; exact direct Chromium checks passed at desktop 1280 × 900, tablet 1024 × 900, and mobile 390 × 900 with the expected responsive source, static normal-flow caption, no console or page error, no horizontal overflow, and preserved desktop/mobile 404 behavior.
+  - Green with a local Windows launcher workaround: the unmodified `node tools/check-public-browser.js` completed and emitted `Public browser QA passed.` when an ignored PATH-only shim forwarded the same arguments to the cached `@playwright/cli` entrypoint. The aggregate run covered all public routes and mobile widths, exact responsive Hero source selection, normal-flow caption, deterministic scroll visibility, mobile DOM/rendered order, console errors, overflow, keyboard/no-JS navigation, reduced motion, and desktop/mobile 404 behavior.
   - Visual review: the sample cell remained the focal point in every crop; the two light paths remained legible; no generated text, brand, false data, or commercial hardware was present.
 - Boundary:
   - The image is a concept illustration, not an experiment record, real device, calibrated model, instrument specification, or research result.
@@ -28,7 +28,7 @@
   - No external media, dependency, framework, analytics, form, backend, push, deployment, or publication was added.
 - Remaining note:
   - Aesthetic appeal is a reviewed judgment rather than a machine-verifiable fact; the recorded evidence covers composition, truthfulness, responsive integrity, accessibility, and performance boundaries.
-  - Future hardening: the committed mobile copy-before-figure gate enforces DOM order, while rendered vertical order is currently covered by the direct Chromium evidence rather than a persistent aggregate assertion.
+  - The native Windows `npx.cmd` wrapper can remain resident at Playwright `open`; the completed aggregate run used only an ignored PATH shim and added no tracked dependency or runtime code.
 
 ## 2026-07-13 Homepage evidence hierarchy and bilingual surface integrity
 - Status: Published and live-verified.

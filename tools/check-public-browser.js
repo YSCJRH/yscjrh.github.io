@@ -334,6 +334,7 @@ async function main() {
             const initialFigureRect = figure.getBoundingClientRect();
             const pictureRect = picture.getBoundingClientRect();
             const captionRect = caption.getBoundingClientRect();
+            const copyRect = copy.getBoundingClientRect();
             const copyBeforeFigure = Boolean(
               copy.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING
             );
@@ -348,6 +349,7 @@ async function main() {
               captionPosition: getComputedStyle(caption).position,
               staticFigure: getComputedStyle(figure).transform === 'none',
               copyBeforeFigure,
+              renderedCopyBeforeFigure: copyRect.bottom <= initialFigureRect.top + 1,
               overflowX: Math.max(
                 0,
                 document.documentElement.scrollWidth - document.documentElement.clientWidth
@@ -358,11 +360,14 @@ async function main() {
               initialFigureRect.top +
               window.scrollY -
               Math.max(0, (window.innerHeight - initialFigureRect.height) / 2);
+            const previousRootScrollBehavior = document.documentElement.style.scrollBehavior;
+            document.documentElement.style.scrollBehavior = 'auto';
             window.scrollTo(0, Math.max(0, centeredTop));
             await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
             const scrolledFigureRect = figure.getBoundingClientRect();
             result.afterScrollFullyVisible =
               scrolledFigureRect.top >= -1 && scrolledFigureRect.bottom <= window.innerHeight + 1;
+            document.documentElement.style.scrollBehavior = previousRootScrollBehavior;
             return result;
           }, scenario));
         }
@@ -382,7 +387,9 @@ async function main() {
           entry.afterScrollFullyVisible === true &&
           entry.overflowX === 0 &&
           (!entry.requiresInitialVisibility || entry.initialInViewport === true) &&
-          (!entry.requiresCopyBeforeFigure || entry.copyBeforeFigure === true)
+          (!entry.requiresCopyBeforeFigure || (
+            entry.copyBeforeFigure === true && entry.renderedCopyBeforeFigure === true
+          ))
         ),
       "responsive hero image delivery failed",
       heroResponsive

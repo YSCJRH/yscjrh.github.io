@@ -11,6 +11,7 @@ EXPECTED_ALT = (
     "Conceptual illustration of a fluorescent sample cell and perpendicular light paths / "
     "荧光样品池与垂直光路的概念插图"
 )
+EXPECTED_STYLESHEET_HREF = "styles.css?v=homepage-generated-hero-20260713"
 HERO_FIGURE_OPEN = '                <figure class="hero-visual">\n'
 HERO_FIGURE_CLOSE = "                </figure>\n"
 HERO_COPY_OPEN = '                <article class="hero-copy" data-reveal>\n'
@@ -59,6 +60,20 @@ class HomepageHeroContractTests(unittest.TestCase):
 
     def test_current_homepage_satisfies_contract(self) -> None:
         self.assertEqual(hero_errors(self.homepage), [])
+
+    def test_current_homepage_uses_generated_hero_stylesheet_cache_key(self) -> None:
+        self.assertIn(f'href="{EXPECTED_STYLESHEET_HREF}"', self.homepage)
+
+    def test_rejects_stale_stylesheet_cache_key(self) -> None:
+        mutated = self.homepage.replace(
+            EXPECTED_STYLESHEET_HREF,
+            "styles.css?v=site-visual-polish-20260507",
+            1,
+        )
+        self.assertIn(
+            "index.html: homepage stylesheet must use the generated Hero cache key",
+            hero_errors(mutated),
+        )
 
     def test_rejects_non_figure_hero_container(self) -> None:
         mutated = self.homepage.replace(

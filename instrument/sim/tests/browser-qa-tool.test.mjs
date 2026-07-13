@@ -98,6 +98,26 @@ test("public browser QA verifies responsive homepage hero delivery", () => {
   }
   assert.match(script, /currentSrc/, "Hero QA should verify the selected responsive source");
   assert.match(script, /captionAfterImage/, "Hero QA should verify that the caption stays outside the image");
+  assert.match(
+    script,
+    /renderedCopyBeforeFigure/,
+    "Hero QA should verify rendered mobile copy order in addition to DOM order"
+  );
   assert.match(script, /afterScrollFullyVisible/, "Hero QA should verify full figure visibility after scroll");
+  assert.match(
+    script,
+    /const previousRootScrollBehavior = document\.documentElement\.style\.scrollBehavior;/,
+    "Hero QA should preserve the page's inline scroll behavior before forcing a deterministic scroll"
+  );
+  assert.match(
+    script,
+    /document\.documentElement\.style\.scrollBehavior = ['"]auto['"];/,
+    "Hero QA should disable smooth scrolling before measuring the scrolled figure"
+  );
+  assert.match(
+    script,
+    /document\.documentElement\.style\.scrollBehavior = previousRootScrollBehavior;/,
+    "Hero QA should restore the page's inline scroll behavior after measurement"
+  );
   assert.match(script, /responsive hero image/i, "Hero QA should expose a stable result marker");
 });
