@@ -70,6 +70,38 @@ HOME_BILINGUAL_CONTAINERS = {
     "about-route-copy-zh": "about-routes",
 }
 HOME_DIRECTION_STATIC_TAGS = {"div", "h3", "p", "span"}
+HOME_HERO_ALT = (
+    "Conceptual illustration of a fluorescent sample cell and perpendicular light paths / "
+    "荧光样品池与垂直光路的概念插图"
+)
+HOME_HERO_SOURCE_CONTRACT = [
+    (
+        "(max-width: 780px)",
+        "assets/img/hero-fluorescence-mobile-v1.webp",
+        "image/webp",
+    ),
+    (
+        "(max-width: 1100px)",
+        "assets/img/hero-fluorescence-tablet-v1.webp",
+        "image/webp",
+    ),
+]
+HOME_HERO_IMAGE_CONTRACT = {
+    "src": "assets/img/hero-fluorescence-desktop-v1.webp",
+    "alt": HOME_HERO_ALT,
+    "width": "1200",
+    "height": "960",
+    "decoding": "async",
+}
+HOME_HERO_CAPTION_TEXT = {
+    "hero-visual-note-en": "Concept illustration, not an experimental record.",
+    "hero-visual-note-zh": "概念插图，非实验记录。",
+}
+HOME_HERO_ASSET_PATHS = [
+    Path("assets/img/hero-fluorescence-desktop-v1.webp"),
+    Path("assets/img/hero-fluorescence-tablet-v1.webp"),
+    Path("assets/img/hero-fluorescence-mobile-v1.webp"),
+]
 VOID_HTML_TAGS = {
     "area",
     "base",
@@ -183,7 +215,9 @@ class SiteParser(HTMLParser):
         self.private_contact_refs: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
+        self.home_elements: list[dict[str, object]] = []
         self.home_open_elements: list[dict[str, object]] = []
+        self.home_event_position = 0
         self.home_research_cards: list[dict[str, object]] = []
         self.home_current_research_card: dict[str, object] | None = None
         self.home_bilingual_nodes: list[dict[str, object]] = []
@@ -292,6 +326,10 @@ class SiteParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.in_document_title:
             self.document_title_chunks.append(data)
+        for element in self.home_open_elements:
+            text_chunks = element["text"]
+            assert isinstance(text_chunks, list)
+            text_chunks.append(data)
         for node in self.home_active_bilingual_nodes:
             text_chunks = node["text"]
             assert isinstance(text_chunks, list)
@@ -306,10 +344,21 @@ class SiteParser(HTMLParser):
 
         element: dict[str, object] = {
             "tag": tag,
+            "attrs": attrs,
             "classes": set(attrs.get("class", "").split()),
+            "children": [],
+            "start_position": self.home_event_position,
+            "end_position": self.home_event_position if tag in VOID_HTML_TAGS else None,
+            "text": [],
             "bilingual_nodes": [],
             "research_card": None,
         }
+        self.home_event_position += 1
+        if self.home_open_elements:
+            parent_children = self.home_open_elements[-1]["children"]
+            assert isinstance(parent_children, list)
+            parent_children.append(element)
+        self.home_elements.append(element)
 
         if self.home_current_research_card is not None:
             descendants = self.home_current_research_card["descendants"]
@@ -351,6 +400,8 @@ class SiteParser(HTMLParser):
         self.home_open_elements.append(element)
 
     def _capture_homepage_endtag(self, tag: str) -> None:
+        end_position = self.home_event_position
+        self.home_event_position += 1
         matching_index = next(
             (
                 index
@@ -365,6 +416,7 @@ class SiteParser(HTMLParser):
         closing_elements = self.home_open_elements[matching_index:]
         self.home_open_elements = self.home_open_elements[:matching_index]
         for element in reversed(closing_elements):
+            element["end_position"] = end_position
             bilingual_nodes = element["bilingual_nodes"]
             assert isinstance(bilingual_nodes, list)
             for node in bilingual_nodes:
@@ -511,6 +563,204 @@ def is_home_interactive_descendant(tag: str, attrs: dict[str, str]) -> bool:
     if "contenteditable" in attrs:
         return True
     return attrs.get("draggable", "").strip().lower() == "true"
+
+
+def element_texts_by_class(text: str, class_name: str) -> list[str]:
+    pattern = re.compile(
+        rf'<(?P<tag>[a-z][\w:-]*)\b(?=[^>]*\bclass="[^"]*\b{re.escape(class_name)}\b[^"]*")[^>]*>'
+        rf'(?P<body>.*?)</(?P=tag)>',
+        re.IGNORECASE | re.DOTALL,
+    )
+    return [
+        re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", match.group("body"))).strip()
+        for match in pattern.finditer(text)
+    ]
+
+
+def check_homepage_hero_figure(parser: SiteParser, text: str) -> list[str]:
+    errors: list[str] = []
+
+    def node_matches(node: dict[str, object], tag: str, class_name: str) -> bool:
+        classes = node["classes"]
+        assert isinstance(classes, set)
+        return node["tag"] == tag and class_name in classes
+
+    def node_attrs(node: dict[str, object]) -> dict[str, str]:
+        attrs = node["attrs"]
+        assert isinstance(attrs, dict)
+        return attrs
+
+    def node_children(node: dict[str, object]) -> list[dict[str, object]]:
+        children = node["children"]
+        assert isinstance(children, list)
+        return children
+
+    def node_text(node: dict[str, object]) -> str:
+        text_chunks = node["text"]
+        assert isinstance(text_chunks, list)
+        return re.sub(r"\s+", " ", "".join(text_chunks)).strip()
+
+    hero_nodes = [
+        node
+        for node in parser.home_elements
+        if "hero-visual" in node["classes"]
+    ]
+    figure_node = (
+        hero_nodes[0]
+        if len(hero_nodes) == 1 and hero_nodes[0]["tag"] == "figure"
+        else None
+    )
+    if figure_node is None:
+        errors.append("index.html: expected one semantic hero figure")
+
+    picture_nodes = [
+        node
+        for node in parser.home_elements
+        if node_matches(node, "picture", "hero-visual-picture")
+    ]
+    caption_nodes = [
+        node
+        for node in parser.home_elements
+        if node_matches(node, "figcaption", "hero-visual-note")
+    ]
+    if len(picture_nodes) != 1 or len(caption_nodes) != 1:
+        errors.append("index.html: hero picture and caption must each appear exactly once")
+
+    if figure_node is not None:
+        hero_copy_nodes = [
+            node
+            for node in parser.home_elements
+            if "hero-copy" in node["classes"]
+        ]
+        figure_start = figure_node["start_position"]
+        copy_end = hero_copy_nodes[0]["end_position"] if len(hero_copy_nodes) == 1 else None
+        if (
+            not isinstance(figure_start, int)
+            or not isinstance(copy_end, int)
+            or figure_start <= copy_end
+        ):
+            errors.append("index.html: hero figure must follow the complete hero copy")
+
+        figure_children = node_children(figure_node)
+        if (
+            len(figure_children) != 2
+            or not node_matches(figure_children[0], "picture", "hero-visual-picture")
+            or not node_matches(figure_children[1], "figcaption", "hero-visual-note")
+        ):
+            errors.append(
+                "index.html: hero picture and caption must be direct children of the hero figure in that order"
+            )
+
+        figure_attrs = node_attrs(figure_node)
+        role_tokens = figure_attrs.get("role", "").lower().split()
+        if (
+            "data-reveal" in figure_attrs
+            or "img" in role_tokens
+            or "aria-label" in figure_attrs
+        ):
+            errors.append(
+                "index.html: hero figure must not define data-reveal, role=img, or aria-label"
+            )
+
+    if len(picture_nodes) == 1:
+        picture_children = node_children(picture_nodes[0])
+        if (
+            len(picture_children) != 3
+            or not node_matches(picture_children[0], "source", "hero-visual-source")
+            or not node_matches(picture_children[1], "source", "hero-visual-source")
+            or not node_matches(picture_children[2], "img", "hero-illustration")
+        ):
+            errors.append(
+                "index.html: hero picture children must be source, source, image in contract order"
+            )
+
+    if len(caption_nodes) == 1:
+        caption_children = node_children(caption_nodes[0])
+        if (
+            len(caption_children) != 2
+            or not node_matches(caption_children[0], "span", "hero-visual-note-en")
+            or not node_matches(caption_children[1], "span", "hero-visual-note-zh")
+            or node_attrs(caption_children[1]).get("lang", "") != "zh-CN"
+        ):
+            errors.append(
+                "index.html: hero caption children must be English then lang=zh-CN Chinese spans"
+            )
+        expected_caption_text = (
+            f'{HOME_HERO_CAPTION_TEXT["hero-visual-note-en"]} '
+            f'{HOME_HERO_CAPTION_TEXT["hero-visual-note-zh"]}'
+        )
+        if node_text(caption_nodes[0]) != expected_caption_text:
+            errors.append(
+                "index.html: hero caption visible text must contain only the paired concept boundary"
+            )
+
+    source_contract = [
+        (attrs.get("media", ""), attrs.get("srcset", ""), attrs.get("type", ""))
+        for tag, attrs in parser.tags
+        if tag == "source" and "hero-visual-source" in tag_classes(attrs)
+    ]
+    if source_contract != HOME_HERO_SOURCE_CONTRACT:
+        errors.append(
+            "index.html: hero responsive sources must match mobile then tablet WebP contract"
+        )
+
+    images = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "img" and "hero-illustration" in tag_classes(attrs)
+    ]
+    if len(images) != 1 or any(
+        images[0].get(name, "") != expected
+        for name, expected in HOME_HERO_IMAGE_CONTRACT.items()
+    ):
+        errors.append(
+            "index.html: hero image must match the desktop asset, dimensions, decode mode, and bilingual alt"
+        )
+    if any("fetchpriority" in attrs for attrs in images):
+        errors.append("index.html: hero image must not define fetchpriority")
+
+    caption_en = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "span" and "hero-visual-note-en" in tag_classes(attrs)
+    ]
+    caption_zh = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "span" and "hero-visual-note-zh" in tag_classes(attrs)
+    ]
+    caption_text_matches = all(
+        element_texts_by_class(text, class_name) == [expected_text]
+        for class_name, expected_text in HOME_HERO_CAPTION_TEXT.items()
+    )
+    if (
+        len(caption_en) != 1
+        or len(caption_zh) != 1
+        or caption_zh[0].get("lang", "") != "zh-CN"
+        or not caption_text_matches
+    ):
+        errors.append(
+            "index.html: hero concept caption must keep paired English and lang=zh-CN Chinese text"
+        )
+
+    class_tokens = [
+        class_name
+        for _, attrs in parser.tags
+        for class_name in tag_classes(attrs)
+    ]
+    if any(
+        class_name in {"hero-mobile-visual", "hero-lab-visual"}
+        or class_name.startswith("lab-")
+        or class_name.startswith("scope-")
+        for class_name in class_tokens
+    ):
+        errors.append("index.html: legacy hero lab/mobile markup must be removed")
+
+    for asset_path in HOME_HERO_ASSET_PATHS:
+        if not (ROOT / asset_path).is_file():
+            errors.append(f"index.html: missing responsive hero asset {asset_path.as_posix()}")
+
+    return errors
 
 
 def check_homepage_evidence_hierarchy(parser: SiteParser) -> list[str]:
@@ -846,6 +1096,7 @@ def check_html(path: Path) -> list[str]:
 
     if path == Path("index.html"):
         errors.extend(check_homepage_evidence_hierarchy(parser))
+        errors.extend(check_homepage_hero_figure(parser, text))
 
     return errors
 
