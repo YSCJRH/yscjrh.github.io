@@ -43,5 +43,4 @@ And keep the document short:
 
 ## Current Status
 
-As of 2026-04-21, this directory is newly scaffolded and does not yet contain project decision records.
-
+This directory now contains dated decision records for site architecture, information architecture, public project positioning, content systems, and Instrument Lab boundaries. Add a new record when a later change materially alters those decisions instead of silently rewriting their history.

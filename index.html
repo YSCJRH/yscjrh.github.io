@@ -266,7 +266,12 @@
               </div>
 
               <div class="research-grid">
-                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                <article
+                  class="surface surface-interactive research-card"
+                  data-research-role="published-reflection"
+                  data-reveal
+                  data-spotlight
+                >
                   <div class="research-visual research-visual-signal" aria-hidden="true">
                     <span></span>
                     <span></span>
@@ -281,12 +286,17 @@
                     关注荧光信号如何转化为足以支撑分析判断的信息。
                   </p>
                   <div class="research-card-footer">
-                    <span class="research-card-link">Explore direction / 查看方向</span>
+                    <div class="research-card-action">
+                      <span class="research-card-kicker">Published reflection / 已公开反思</span>
+                      <a class="research-card-link" href="notes/when-a-fluorescence-signal-becomes-usable.html">
+                        Read published reflection / 阅读已公开反思
+                      </a>
+                    </div>
                     <span class="card-hint" aria-hidden="true">01</span>
                   </div>
                 </article>
 
-                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                <article class="surface research-card" data-research-role="direction-statement" data-reveal>
                   <div class="research-visual research-visual-network" aria-hidden="true">
                     <span></span>
                     <span></span>
@@ -301,12 +311,20 @@
                     把算法方法与领域约束放在一起，让比较、解释与使用过程保持可检查。
                   </p>
                   <div class="research-card-footer">
-                    <span class="research-card-link">Explore direction / 查看方向</span>
+                    <div class="research-card-action">
+                      <span class="research-card-kicker">Direction statement / 方向说明</span>
+                      <span class="research-card-state">Public example pending / 公开示例待补充</span>
+                    </div>
                     <span class="card-hint" aria-hidden="true">02</span>
                   </div>
                 </article>
 
-                <article class="surface surface-interactive research-card" data-reveal data-spotlight>
+                <article
+                  class="surface surface-interactive research-card"
+                  data-research-role="concept-route"
+                  data-reveal
+                  data-spotlight
+                >
                   <div class="research-visual research-visual-instrument" aria-hidden="true">
                     <span></span>
                     <span></span>
@@ -322,8 +340,8 @@
                   </p>
                   <div class="research-card-footer">
                     <div class="research-card-action">
-                      <span class="research-card-kicker">Concept model / 概念模型</span>
-                      <a class="research-card-link" href="instrument/">Explore concept model / 查看概念模型</a>
+                      <span class="research-card-kicker">Concept route / 概念页面</span>
+                      <a class="research-card-link" href="instrument/">Explore bounded concept model / 查看受约束概念模型</a>
                     </div>
                     <span class="card-hint" aria-hidden="true">03</span>
                   </div>
@@ -358,29 +376,6 @@
                 <a class="button button-secondary module-button" href="projects/">All Projects / 全部项目</a>
               </div>
 
-              <div class="workflow-map" aria-label="Project workflow map / 项目工作流图" data-reveal>
-                <article class="workflow-step">
-                  <span class="workflow-index">01</span>
-                  <h3>Find the constraint / 找到约束</h3>
-                  <p>Start from a signal, interface, repo task, or access problem that needs clearer handling.</p>
-                </article>
-                <article class="workflow-step">
-                  <span class="workflow-index">02</span>
-                  <h3>Shape the method / 整理方法</h3>
-                  <p>Turn the question into a bounded method with visible assumptions and tradeoffs.</p>
-                </article>
-                <article class="workflow-step">
-                  <span class="workflow-index">03</span>
-                  <h3>Build the tool / 做成工具</h3>
-                  <p>Prefer small, inspectable systems that can be tried, read, or reviewed from public entry points.</p>
-                </article>
-                <article class="workflow-step">
-                  <span class="workflow-index">04</span>
-                  <h3>Keep the trail / 留下路径</h3>
-                  <p>Use docs, demos, repo links, and notes to make the work easier to revisit.</p>
-                </article>
-              </div>
-
               <div class="build-grid">
                 <article class="surface surface-interactive project-card project-card-featured" data-reveal data-spotlight>
                   <div class="project-topline">
@@ -403,11 +398,12 @@
                   <div class="project-why">
                     <p class="project-why-label">What to inspect / 看什么</p>
                     <p class="project-why-copy">It lets readers inspect the public site surface before they dive into repository details.</p>
+                    <p class="project-why-copy project-why-copy-zh" lang="zh-CN">它让读者在进入仓库细节之前，先检查公开站点表面。</p>
                   </div>
                   <ol class="project-flow" aria-label="AnswerLens workflow / AnswerLens 工作流">
-                    <li>Site surface</li>
-                    <li>CLI audit</li>
-                    <li>Reviewable report</li>
+                    <li>Site surface / 站点表面</li>
+                    <li>CLI audit / CLI 审查</li>
+                    <li>Reviewable report / 可复查报告</li>
                   </ol>
                   <ul class="tag-list" aria-label="Project tags / 项目标签">
                     <li>AI Visibility / AI 可见性</li>
@@ -433,11 +429,12 @@
                   <div class="project-why">
                     <p class="project-why-label">What to inspect / 看什么</p>
                     <p class="project-why-copy">It gives readers a documentation-first path into a complex local runtime before they inspect repository internals.</p>
+                    <p class="project-why-copy project-why-copy-zh" lang="zh-CN">它先提供文档路径，让读者理解复杂的本地运行时，再检查仓库内部。</p>
                   </div>
                   <ol class="project-flow" aria-label="skylattice workflow / skylattice 工作流">
-                    <li>Docs first</li>
-                    <li>Quick start</li>
-                    <li>Governed tasks</li>
+                    <li>Docs first / 先读文档</li>
+                    <li>Quick start / 快速开始</li>
+                    <li>Governed tasks / 治理任务</li>
                   </ol>
                   <ul class="tag-list" aria-label="Project tags / 项目标签">
                     <li>Agent Runtime / Agent 运行时</li>
@@ -464,11 +461,12 @@
                   <div class="project-why">
                     <p class="project-why-label">What to inspect / 看什么</p>
                     <p class="project-why-copy">It shows how remote access can stay practical without treating safety and trust boundaries as afterthoughts.</p>
+                    <p class="project-why-copy project-why-copy-zh" lang="zh-CN">它展示远程访问如何保持实用，同时不把安全与信任边界当作事后补充。</p>
                   </div>
                   <ol class="project-flow" aria-label="codex-via-phone workflow / codex-via-phone 工作流">
-                    <li>Local session</li>
-                    <li>Trusted device</li>
-                    <li>Phone control</li>
+                    <li>Local session / 本地会话</li>
+                    <li>Trusted device / 可信设备</li>
+                    <li>Phone control / 手机控制</li>
                   </ol>
                   <ul class="tag-list" aria-label="Project tags / 项目标签">
                     <li>Windows</li>
@@ -482,6 +480,33 @@
                   </div>
                 </article>
 
+              </div>
+
+              <div class="workflow-map" aria-label="Project workflow map / 项目工作流图" data-reveal>
+                <article class="workflow-step">
+                  <span class="workflow-index">01</span>
+                  <h3>Find the constraint / 找到约束</h3>
+                  <p>Start from a signal, interface, repo task, or access problem that needs clearer handling.</p>
+                  <p class="workflow-copy-zh" lang="zh-CN">从需要更清楚处理的信号、界面、仓库任务或访问问题开始。</p>
+                </article>
+                <article class="workflow-step">
+                  <span class="workflow-index">02</span>
+                  <h3>Shape the method / 整理方法</h3>
+                  <p>Turn the question into a bounded method with visible assumptions and tradeoffs.</p>
+                  <p class="workflow-copy-zh" lang="zh-CN">把问题整理成边界明确的方法，并公开关键假设与取舍。</p>
+                </article>
+                <article class="workflow-step">
+                  <span class="workflow-index">03</span>
+                  <h3>Build the tool / 做成工具</h3>
+                  <p>Prefer small, inspectable systems that can be tried, read, or reviewed from public entry points.</p>
+                  <p class="workflow-copy-zh" lang="zh-CN">优先做成可从公开入口试用、阅读或复查的小型可检视系统。</p>
+                </article>
+                <article class="workflow-step">
+                  <span class="workflow-index">04</span>
+                  <h3>Keep the trail / 留下路径</h3>
+                  <p>Use docs, demos, repo links, and notes to make the work easier to revisit.</p>
+                  <p class="workflow-copy-zh" lang="zh-CN">用文档、演示、仓库链接与笔记留下可再次进入的路径。</p>
+                </article>
               </div>
 
               <div class="supporting-projects surface surface-glass" aria-labelledby="supporting-projects-title" data-reveal>
@@ -550,7 +575,7 @@
                     <p class="stream-copy">Short notes on the choices, constraints, and tradeoffs behind the site and selected tools.</p>
                     <p class="stream-copy stream-copy-zh" lang="zh-CN">记录站点与工具为何长成现在的样子，以及背后的设计取舍。</p>
                     <p class="stream-detail">
-                      Latest / 最新：<a href="notes/build-logs-homepage-second-pass.html">Why The Homepage Needed A Second Pass</a>
+                      Latest / 最新：<a href="notes/build-logs-homepage-second-pass.html">Why The Homepage Needed A Second Pass / 为什么首页需要第二次优化</a>
                     </p>
                     <p class="stream-detail">Related / 关联：Homepage IA, project storytelling / 首页结构、项目叙事</p>
                   </div>
@@ -568,7 +593,7 @@
                     <p class="stream-copy">Notes on ambiguity, signal quality, and how a research question becomes clearer over time.</p>
                     <p class="stream-copy stream-copy-zh" lang="zh-CN">围绕信号质量、问题澄清与研究判断的简短反思。</p>
                     <p class="stream-detail">
-                      Latest / 最新：<a href="notes/when-a-fluorescence-signal-becomes-usable.html">When A Fluorescence Signal Becomes Usable</a>
+                      Latest / 最新：<a href="notes/when-a-fluorescence-signal-becomes-usable.html">When A Fluorescence Signal Becomes Usable / 当一个荧光信号真正变得可用</a>
                     </p>
                     <p class="stream-detail">Related / 关联：Fluorescence analysis / 荧光分析</p>
                   </div>
@@ -651,31 +676,33 @@
                   <p class="surface-label">Public Facts / 公开信息</p>
                   <ul class="fact-list">
                     <li>
-                      <strong>Public name</strong>
+                      <strong>Public name / 公开名称</strong>
                       <span>HJR</span>
                     </li>
                     <li>
-                      <strong>GitHub handle</strong>
+                      <strong>GitHub handle / GitHub 用户名</strong>
                       <span>YSCJRH</span>
                     </li>
                     <li>
-                      <strong>Focus</strong>
-                      <span>Fluorescence analysis · Intelligent algorithms · Scientific instrumentation</span>
+                      <strong>Focus / 关注方向</strong>
+                      <span>Fluorescence analysis / 荧光分析 · Intelligent algorithms / 智能算法 · Scientific instrumentation / 科学仪器</span>
                     </li>
                     <li>
-                      <strong>Public entry</strong>
+                      <strong>Public entry / 公开入口</strong>
                       <span>GitHub</span>
                     </li>
                   </ul>
                   <div class="about-routes" aria-label="Visitor routes / 访问路径">
                     <p class="surface-label">Visitor routes / 访问路径</p>
                     <a href="projects/">
-                      <strong>Project paths</strong>
+                      <strong>Project paths / 项目路径</strong>
                       <span>Inspect projects through docs, demos, and repo-first entries.</span>
+                      <span class="about-route-copy-zh" lang="zh-CN">通过文档、演示与仓库优先入口检视项目。</span>
                     </a>
                     <a href="notes/">
-                      <strong>Working notes</strong>
+                      <strong>Working notes / 工作笔记</strong>
                       <span>Read research reflections, build decisions, and method notes.</span>
+                      <span class="about-route-copy-zh" lang="zh-CN">阅读研究反思、构建决策与方法备忘。</span>
                     </a>
                   </div>
                   <a

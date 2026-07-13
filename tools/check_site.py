@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -44,6 +45,55 @@ SITEMAP_HTML = [
 ]
 CSS_FILES = [Path("styles.css")]
 RETIRED_HTML = [Path("review/index.html")]
+
+PUBLISHED_NOTES = {
+    Path("content/notes/build-logs-homepage-second-pass.md"): Path(
+        "notes/build-logs-homepage-second-pass.html"
+    ),
+    Path("content/notes/research-reflections-signals-and-judgment.md"): Path(
+        "notes/when-a-fluorescence-signal-becomes-usable.html"
+    ),
+}
+HOME_RESEARCH_ROLES = ["published-reflection", "direction-statement", "concept-route"]
+HOME_RESEARCH_EVIDENCE_HREFS = [
+    "notes/when-a-fluorescence-signal-becomes-usable.html",
+    "instrument/",
+]
+HOME_BILINGUAL_CLASS_COUNTS = {
+    "workflow-copy-zh": 4,
+    "project-why-copy-zh": 3,
+    "about-route-copy-zh": 2,
+}
+HOME_BILINGUAL_CONTAINERS = {
+    "workflow-copy-zh": "workflow-map",
+    "project-why-copy-zh": "project-why",
+    "about-route-copy-zh": "about-routes",
+}
+HOME_DIRECTION_STATIC_TAGS = {"div", "h3", "p", "span"}
+VOID_HTML_TAGS = {
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+}
+NOTE_FIELD_PATTERN = re.compile(r"^(Status|Published):\s*(.+?)\s*$", re.MULTILINE)
+NOTE_PUBLISHED_DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+LATIN_LETTER_PATTERN = re.compile(r"[A-Za-z]")
+HAN_CHARACTER_PATTERN = re.compile(r"[\u3400-\u9fff]")
+ZH_LANG_BLOCK_PATTERN = re.compile(
+    r'<(?P<tag>[a-z][\w:-]*)\b(?=[^>]*\blang="zh-CN")[^>]*>(?P<body>.*?)</(?P=tag)>',
+    re.IGNORECASE | re.DOTALL,
+)
 
 REQUIRED_META_MARKERS = [
     ("title", "<title"),
@@ -133,12 +183,18 @@ class SiteParser(HTMLParser):
         self.private_contact_refs: list[str] = []
         self.blank_target_links: list[tuple[str, str]] = []
         self.forms = 0
+        self.home_open_elements: list[dict[str, object]] = []
+        self.home_research_cards: list[dict[str, object]] = []
+        self.home_current_research_card: dict[str, object] | None = None
+        self.home_bilingual_nodes: list[dict[str, object]] = []
+        self.home_active_bilingual_nodes: list[dict[str, object]] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_names = {key.lower() for key, _ in attrs}
         attrs_dict = {key.lower(): value or "" for key, value in attrs}
         tag = tag.lower()
         self.tags.append((tag, attrs_dict))
+        self._capture_homepage_starttag(tag, attrs_dict)
         element_id = attrs_dict.get("id")
         if element_id:
             self.ids.append(element_id)
@@ -225,6 +281,7 @@ class SiteParser(HTMLParser):
                 self.local_refs.append((attr, value))
 
     def handle_endtag(self, tag: str) -> None:
+        self._capture_homepage_endtag(tag.lower())
         if tag.lower() == "title" and self.in_document_title:
             self.document_titles.append("".join(self.document_title_chunks).strip())
             self.in_document_title = False
@@ -235,6 +292,86 @@ class SiteParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.in_document_title:
             self.document_title_chunks.append(data)
+        for node in self.home_active_bilingual_nodes:
+            text_chunks = node["text"]
+            assert isinstance(text_chunks, list)
+            text_chunks.append(data)
+
+    def _capture_homepage_starttag(self, tag: str, attrs: dict[str, str]) -> None:
+        ancestor_classes: set[str] = set()
+        for element in self.home_open_elements:
+            classes = element["classes"]
+            assert isinstance(classes, set)
+            ancestor_classes.update(classes)
+
+        element: dict[str, object] = {
+            "tag": tag,
+            "classes": set(attrs.get("class", "").split()),
+            "bilingual_nodes": [],
+            "research_card": None,
+        }
+
+        if self.home_current_research_card is not None:
+            descendants = self.home_current_research_card["descendants"]
+            assert isinstance(descendants, list)
+            descendants.append((tag, attrs))
+
+        role = attrs.get("data-research-role", "") if tag == "article" else ""
+        if role:
+            card: dict[str, object] = {
+                "role": role,
+                "attrs": attrs,
+                "descendants": [],
+            }
+            self.home_research_cards.append(card)
+            self.home_current_research_card = card
+            element["research_card"] = card
+
+        element_classes = element["classes"]
+        assert isinstance(element_classes, set)
+        for class_name in HOME_BILINGUAL_CLASS_COUNTS:
+            if class_name not in element_classes:
+                continue
+            node: dict[str, object] = {
+                "class_name": class_name,
+                "attrs": attrs,
+                "ancestor_classes": ancestor_classes,
+                "text": [],
+            }
+            self.home_bilingual_nodes.append(node)
+            self.home_active_bilingual_nodes.append(node)
+            bilingual_nodes = element["bilingual_nodes"]
+            assert isinstance(bilingual_nodes, list)
+            bilingual_nodes.append(node)
+
+        if tag in VOID_HTML_TAGS:
+            for node in element["bilingual_nodes"]:
+                self.home_active_bilingual_nodes.remove(node)
+            return
+        self.home_open_elements.append(element)
+
+    def _capture_homepage_endtag(self, tag: str) -> None:
+        matching_index = next(
+            (
+                index
+                for index in range(len(self.home_open_elements) - 1, -1, -1)
+                if self.home_open_elements[index]["tag"] == tag
+            ),
+            None,
+        )
+        if matching_index is None:
+            return
+
+        closing_elements = self.home_open_elements[matching_index:]
+        self.home_open_elements = self.home_open_elements[:matching_index]
+        for element in reversed(closing_elements):
+            bilingual_nodes = element["bilingual_nodes"]
+            assert isinstance(bilingual_nodes, list)
+            for node in bilingual_nodes:
+                if node in self.home_active_bilingual_nodes:
+                    self.home_active_bilingual_nodes.remove(node)
+            if element["research_card"] is self.home_current_research_card:
+                self.home_current_research_card = None
 
 
 def is_local_reference(value: str) -> bool:
@@ -358,6 +495,148 @@ def html_ids(path: Path) -> set[str]:
     parser = SiteParser()
     parser.feed(path.read_text(encoding="utf-8"))
     return set(parser.ids)
+
+
+def tag_classes(attrs: dict[str, str]) -> set[str]:
+    return set(attrs.get("class", "").split())
+
+
+def is_home_interactive_descendant(tag: str, attrs: dict[str, str]) -> bool:
+    if tag not in HOME_DIRECTION_STATIC_TAGS:
+        return True
+    if "role" in attrs:
+        return True
+    if "tabindex" in attrs:
+        return True
+    if "contenteditable" in attrs:
+        return True
+    return attrs.get("draggable", "").strip().lower() == "true"
+
+
+def check_homepage_evidence_hierarchy(parser: SiteParser) -> list[str]:
+    errors: list[str] = []
+    research_link_tags = [
+        (tag, attrs)
+        for tag, attrs in parser.tags
+        if "research-card-link" in tag_classes(attrs)
+    ]
+    if any(tag != "a" for tag, _ in research_link_tags):
+        errors.append("index.html: every research-card-link must be an anchor")
+
+    research_hrefs = [attrs.get("href", "") for tag, attrs in research_link_tags if tag == "a"]
+    if research_hrefs != HOME_RESEARCH_EVIDENCE_HREFS:
+        errors.append(
+            "index.html: research evidence links must be the published reflection followed by Instrument Lab"
+        )
+
+    research_role_tags = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "article" and attrs.get("data-research-role")
+    ]
+    research_roles = [attrs.get("data-research-role", "") for attrs in research_role_tags]
+    if research_roles != HOME_RESEARCH_ROLES:
+        errors.append(
+            "index.html: research card roles must be published-reflection, direction-statement, concept-route"
+        )
+
+    cards_by_role = {
+        str(card["role"]): card
+        for card in parser.home_research_cards
+    }
+    expected_role_links = {
+        "published-reflection": HOME_RESEARCH_EVIDENCE_HREFS[0],
+        "concept-route": HOME_RESEARCH_EVIDENCE_HREFS[1],
+    }
+    for role, expected_href in expected_role_links.items():
+        card = cards_by_role.get(role)
+        descendants = card.get("descendants", []) if card else []
+        anchors = [
+            attrs
+            for tag, attrs in descendants
+            if tag == "a"
+        ]
+        if len(anchors) != 1 or anchors[0].get("href") != expected_href or (
+            "research-card-link" not in tag_classes(anchors[0])
+        ):
+            errors.append(
+                f"index.html: {role} research card must contain exactly its declared evidence link"
+            )
+
+    direction_attrs = next(
+        (
+            attrs
+            for attrs in research_role_tags
+            if attrs.get("data-research-role") == "direction-statement"
+        ),
+        None,
+    )
+    if direction_attrs is not None and (
+        "surface-interactive" in tag_classes(direction_attrs) or "data-spotlight" in direction_attrs
+    ):
+        errors.append("index.html: direction-statement research card must be noninteractive")
+
+    direction_card = cards_by_role.get("direction-statement")
+    direction_descendants = direction_card.get("descendants", []) if direction_card else []
+    if any(
+        is_home_interactive_descendant(tag, attrs)
+        for tag, attrs in direction_descendants
+    ):
+        errors.append(
+            "index.html: direction-statement research card must not contain interactive descendants"
+        )
+
+    build_grid_position = next(
+        (
+            index
+            for index, (_, attrs) in enumerate(parser.tags)
+            if "build-grid" in tag_classes(attrs)
+        ),
+        None,
+    )
+    workflow_position = next(
+        (
+            index
+            for index, (_, attrs) in enumerate(parser.tags)
+            if "workflow-map" in tag_classes(attrs)
+        ),
+        None,
+    )
+    if (
+        build_grid_position is None
+        or workflow_position is None
+        or build_grid_position >= workflow_position
+    ):
+        errors.append("index.html: build-grid must precede workflow-map")
+
+    for class_name, expected_count in HOME_BILINGUAL_CLASS_COUNTS.items():
+        matching_attrs = [
+            attrs
+            for _, attrs in parser.tags
+            if class_name in tag_classes(attrs)
+        ]
+        if len(matching_attrs) != expected_count or any(
+            attrs.get("lang") != "zh-CN" for attrs in matching_attrs
+        ):
+            errors.append(
+                f"index.html: expected {expected_count} lang=zh-CN elements with class {class_name}"
+            )
+        scoped_nodes = [
+            node
+            for node in parser.home_bilingual_nodes
+            if node["class_name"] == class_name
+        ]
+        expected_container = HOME_BILINGUAL_CONTAINERS[class_name]
+        if len(scoped_nodes) == expected_count and any(
+            expected_container not in node["ancestor_classes"]
+            or not HAN_CHARACTER_PATTERN.search("".join(node["text"]))
+            for node in scoped_nodes
+        ):
+            errors.append(
+                f"index.html: {class_name} must contain Chinese text inside the expected container {expected_container}"
+            )
+
+    return errors
 
 
 def check_html(path: Path) -> list[str]:
@@ -565,6 +844,9 @@ def check_html(path: Path) -> list[str]:
     if zh_pattern.search(text):
         errors.append(f"{path}: substantial Chinese text block missing lang=\"zh-CN\"")
 
+    if path == Path("index.html"):
+        errors.extend(check_homepage_evidence_hierarchy(parser))
+
     return errors
 
 
@@ -581,6 +863,77 @@ def check_css(path: Path) -> list[str]:
     return errors
 
 
+def markdown_section(text: str, heading: str) -> str:
+    match = re.search(
+        rf"^### {re.escape(heading)}\s*$\n(.*?)(?=^### |\Z)",
+        text,
+        re.MULTILINE | re.DOTALL,
+    )
+    return match.group(1).strip() if match else ""
+
+
+def check_published_note(source_path: Path, html_path: Path) -> list[str]:
+    errors: list[str] = []
+    source_full_path = ROOT / source_path
+    html_full_path = ROOT / html_path
+    if not source_full_path.exists():
+        return [f"{source_path}: published note source missing"]
+    if not html_full_path.exists():
+        return [f"{html_path}: published note page missing"]
+
+    source_text = source_full_path.read_text(encoding="utf-8")
+    html_text = html_full_path.read_text(encoding="utf-8")
+    fields = dict(NOTE_FIELD_PATTERN.findall(source_text))
+
+    if fields.get("Status", "").strip().lower() != "published":
+        errors.append(f"{source_path}: published note source must use Status: published")
+
+    published = fields.get("Published", "").strip()
+    try:
+        if not NOTE_PUBLISHED_DATE_PATTERN.fullmatch(published):
+            raise ValueError
+        date.fromisoformat(published)
+    except ValueError:
+        errors.append(f"{source_path}: published note source must use Published: YYYY-MM-DD")
+    else:
+        semantic_time = re.search(
+            rf'<time\b(?=[^>]*\bdatetime="{re.escape(published)}")[^>]*>\s*{re.escape(published)}\s*</time>',
+            html_text,
+            re.IGNORECASE,
+        )
+        if not semantic_time:
+            errors.append(
+                f"{html_path}: published note must expose <time datetime=\"{published}\">{published}</time>"
+            )
+
+    english_section = markdown_section(source_text, "EN")
+    if len(LATIN_LETTER_PATTERN.findall(english_section)) < 80:
+        errors.append(f"{source_path}: published note source needs substantial English in ### EN")
+
+    chinese_section = markdown_section(source_text, "中文")
+    if len(HAN_CHARACTER_PATTERN.findall(chinese_section)) < 80:
+        errors.append(f"{source_path}: published note source needs substantial Chinese in ### 中文")
+
+    article_body_match = re.search(
+        r'<div class="article-body">(.*?)</div>\s*<nav class="article-next"',
+        html_text,
+        re.DOTALL,
+    )
+    article_body = article_body_match.group(1) if article_body_match else ""
+    if not article_body:
+        errors.append(f"{html_path}: published note must contain an article-body before article-next")
+    else:
+        zh_lang_blocks = [match.group("body") for match in ZH_LANG_BLOCK_PATTERN.finditer(article_body)]
+        if not zh_lang_blocks:
+            errors.append(f'{html_path}: published note article body needs lang="zh-CN" Chinese blocks')
+        elif len(HAN_CHARACTER_PATTERN.findall("".join(zh_lang_blocks))) < 80:
+            errors.append(
+                f'{html_path}: published note article body needs substantial Chinese inside lang="zh-CN" blocks'
+            )
+
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -588,6 +941,8 @@ def main() -> int:
         errors.extend(check_html(path))
     for path in CSS_FILES:
         errors.extend(check_css(path))
+    for source_path, html_path in PUBLISHED_NOTES.items():
+        errors.extend(check_published_note(source_path, html_path))
 
     for required in [
         Path(".nojekyll"),
@@ -643,7 +998,7 @@ def main() -> int:
     print("Site check passed.")
     print(
         f"Checked {len(HTML_FILES)} HTML pages, {len(CSS_FILES)} CSS files, "
-        "robots.txt, sitemap.xml, and local references."
+        f"robots.txt, sitemap.xml, local references, and {len(PUBLISHED_NOTES)} published-note source contracts."
     )
     return 0
 

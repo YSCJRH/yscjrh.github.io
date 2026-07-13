@@ -236,6 +236,7 @@ async function main() {
                 '.supporting-project-card',
                 '.project-card .project-cta-group a',
                 '.stream-meta .stream-link',
+                '.research-card-link',
                 '.article-actions a',
                 '.article-card a',
                 '.project-detail-card a',

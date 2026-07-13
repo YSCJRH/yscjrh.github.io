@@ -1,4 +1,35 @@
-# Current Phase: Instrument Lab Refine Reconstruction
+# Current Phase: Homepage Evidence Hierarchy And Bilingual Surface Integrity
+
+## Goal
+- Make the homepage distinguish published reflection, unsupported direction, and bounded concept evidence without changing the canonical section order.
+- Put inspectable project entries before the generalized workflow explanation.
+- Complete paired English / Chinese copy on the affected Research, Build, Notes, and About surfaces.
+- Preserve the published-note source contracts established in the preceding content-integrity milestone.
+
+## Current Baseline
+- The site remains a static GitHub Pages repository with no build step or third-party runtime services.
+- Two public Notes articles now have explicit published source status, Git-history-backed ISO publication dates, and paired English / Chinese bodies.
+- The homepage Research cards now declare three distinct evidence roles: `published-reflection`, `direction-statement`, and `concept-route`.
+- The homepage Build section now leads with the featured project grid, followed by the method workflow and supporting work.
+- `tools/check_site.py` validates both published-note source contracts and the homepage evidence/order/language contract.
+- The completed Instrument Lab reconstruction remains preserved below as historical phase evidence.
+
+## Immediate Implementation Notes
+1. Treat `content/notes/*.md` as the source record for publication status and date.
+2. Keep public English / Chinese article bodies semantically paired; substantial Chinese blocks use `lang="zh-CN"`.
+3. Do not add research results, publication claims, instrument specifications, or personal facts without an allowed source.
+4. Keep the intelligent-algorithms Research card noninteractive until owner-provided public evidence exists.
+5. Keep Instrument Lab framed as a bounded concept route and outside the featured Build grid.
+
+## Validation
+1. Run `python tools/check_site.py` and `python -m py_compile tools/check_site.py`.
+2. Run JavaScript syntax, Instrument Lab test, and data-package gates to detect regressions outside the changed surface.
+3. Preview the homepage at desktop and mobile widths; inspect Research semantics, project-before-workflow order, paired copy, link target size, navigation, no-JS fallback, console output, and overflow.
+4. Review `git diff --check`, the complete diff, and current repository status before closeout.
+
+---
+
+# Previous Phase: Instrument Lab Refine Reconstruction
 
 ## Goal
 - Execute `refine.md` as the active long-cycle specification for `/instrument/`.

@@ -50,6 +50,24 @@ Projects page rule:
 - Expose `status`, `audience`, `proof`, and `not_for` / boundary fields on full project cards.
 - Do not add stars, forks, users, customers, institutions, awards, or adoption metrics.
 
+## Homepage Research Evidence Model
+
+The three Research cards represent different public evidence states. Their shared visual weight must not imply equal proof maturity.
+
+| Direction | Homepage role | Current evidence | Public interaction rule |
+|---|---|---|---|
+| Fluorescence Analysis | `published-reflection` | Published framing note about when a signal becomes usable | Link to the note as a reflection, not as a research result. |
+| Fluorescence Analysis × Intelligent Algorithms | `direction-statement` | High-level direction only; no public example is currently recorded | Keep noninteractive and state `Public example pending / 公开示例待补充`. |
+| Fluorescence Instrumentation | `concept-route` | Bounded Instrument Lab teaching route | Link to `/instrument/` as a concept model, not a calibrated simulator or real instrument controller. |
+
+Homepage Research rules:
+
+- Use a real anchor only when a current public evidence route exists.
+- Make the link label disclose the evidence type: published reflection or bounded concept route.
+- Do not add hover, spotlight, pointer, or focus affordances to a direction without a destination.
+- Promoting the intelligent-algorithms direction requires owner-provided public evidence and a content-model update; do not infer an example from private or unrelated project work.
+- Preserve the direction order from `personalweb.md`: analysis, algorithms, instrumentation.
+
 ## Note Card Model
 
 Use these fields for note hub cards and homepage note summaries:

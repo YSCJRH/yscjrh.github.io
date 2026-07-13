@@ -1,13 +1,13 @@
 # Homepage Project Positioning
 
 - Date: 2026-06-05
-- Status: Proposed default; no visual implementation in this checkpoint
+- Status: Implemented in the public homepage and Projects surface; retained as the current project-positioning baseline
 - Scope: homepage and `/projects/` information architecture after the 2026-06-04 project inventory
 
 ## Context
 
 This decision continues from `docs/project-inventory-ia-proposal-2026-06-04.md` and `WEBIMPROVE_PROGRESS.md`.
-It records product-positioning defaults before any public visual files are edited.
+It originally recorded product-positioning defaults before public visual files were edited. The selected project order, WinChronicle placement, and Instrument Lab routing are now implemented in the public site and content model.
 
 Inputs reviewed:
 
@@ -120,9 +120,9 @@ Tradeoffs:
 - Cost: instrumentation is slightly less prominent than it would be with a dedicated nav item.
 - Mitigation: keep Instrument Lab visibly linked from Research and make its conceptual boundary obvious.
 
-## Next Implementation Files
+## Implemented Files
 
-If the owner proceeds with these defaults, the next implementation pass should edit:
+The accepted defaults were implemented across:
 
 - `CONTENT_MODEL.md`: adopt the new featured order, add `WinChronicle` as `Featured System / 重点系统`, and keep Instrument Lab route-only.
 - `CONTENT_GAPS.md`: add or refine `WinChronicle` and `encourage-loop` story/proof gaps and boundary-copy requirements.
@@ -143,5 +143,4 @@ Rejected next-pass path:
 
 ## Follow-up
 
-Stop before public visual implementation in this checkpoint.
-If the owner accepts these defaults, the next pass can implement the content-model and public-page changes together, preserving paired English / Chinese public UI.
+Preserve paired English / Chinese public UI and create a new decision record before materially changing the featured trio, promoting WinChronicle into it, or moving Instrument Lab into global navigation.

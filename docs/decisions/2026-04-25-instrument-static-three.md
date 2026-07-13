@@ -19,7 +19,7 @@ The page keeps the existing 2D SVG diagram as a fallback for unavailable WebGL, 
 
 The vendored control add-ons use relative local imports rather than browser import maps. This keeps the static route easier to serve from GitHub Pages and from the repository's lightweight local server.
 
-Runtime note: the current MVP imports `three.module.js`, `three.core.js`, `OrbitControls.js`, and `WebGL.js`. `TransformControls.js` is vendored for a later restricted-manipulation phase, but is not loaded by the current page.
+Historical runtime note: the initial MVP loaded the Three.js core, `OrbitControls.js`, and `WebGL.js` while reserving `TransformControls.js` for a later phase. The current implementation now imports and instantiates `TransformControls.js` inside `instrument/sim/scene/InstrumentScene.mjs` for bounded source/sample alignment handles. It remains route-local and does not change the static-site architecture decided here.
 
 ## Why Not R3F Or Vite Now
 - The rest of the site is a static GitHub Pages site with no build step.

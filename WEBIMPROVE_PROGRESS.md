@@ -1,9 +1,65 @@
 # WEBIMPROVE_PROGRESS.md
 
 ## Current milestone
-- Active: Continuous site optimization and Instrument Lab maintenance
-- Status: Latest Instrument Lab interaction slices are published and Pages-verified; current pass enforces public-page skip-link ordering.
-- Last updated: 2026-06-19
+- Active: Homepage evidence hierarchy and bilingual surface integrity
+- Status: Homepage Research evidence roles, project-first Build order, and affected bilingual copy are implemented and validated locally; publication remains unauthorized.
+- Last updated: 2026-07-13
+
+## 2026-07-13 Homepage evidence hierarchy and bilingual surface integrity
+- Status: Focused red/green, full local repository, and targeted rendered-page validation passed.
+- Trigger:
+  - Two Research cards used link-like text without destinations, while all three cards appeared equally interactive despite having different public evidence strength.
+  - The generalized project workflow appeared before the inspectable project entries, weakening the homepage's evidence-first reading order.
+  - Workflow explanations, project inspection copy, note titles, and About routes had incomplete English / Chinese pairing.
+- Changes:
+  - Added machine-readable Research roles for a published reflection, an evidence-pending direction statement, and a bounded concept route.
+  - Linked Fluorescence Analysis to the published framing note, kept the intelligent-algorithms direction explicitly noninteractive, and retained Instrument Lab as a bounded concept route.
+  - Moved the featured project grid before the workflow map without changing the project or section order.
+  - Added paired Chinese workflow, project-inspection, note-title, About-fact, and visitor-route copy with scoped `lang="zh-CN"` semantics.
+  - Added a homepage evidence/order/language contract to `tools/check_site.py`, bound role links and Chinese copy to their semantic containers, and added Research links to mobile touch-target QA coverage.
+  - Added six focused Python contract tests, including negative cases for an algorithm-card link, a native focusable descendant, an ARIA widget role, an evidence link moved under the wrong role, and empty scoped Chinese blocks.
+  - Recorded the implementation design, plan, content model, and decision boundary for future evidence promotion.
+- Validation result:
+  - Red: the new homepage contract reported seven expected failures for non-anchor Research affordances, missing evidence roles, reversed project/workflow order, and absent scoped Chinese copy.
+  - Red after final review: three focused negative tests failed because the first contract checked only flat href/order/count attributes and did not bind descendants or Chinese text to their containers.
+  - Red after interaction-coverage review: two additional cases failed because enumerating common native controls and widget roles missed an `iframe` and `role="combobox"`.
+  - Green: `python tools/check_site.py` passed after the homepage implementation.
+  - Green after hardening: `python -m unittest discover -s tools/tests -p "test_*.py" -v` passed 6/6. The direction card now fails closed against descendants outside its static tag allowlist and against role, tabindex, contenteditable, or draggable interaction semantics.
+  - Green: Python compilation, shared and Instrument Lab JavaScript syntax checks, 114/114 Instrument Lab tests, and the 65,160-byte data-package validation passed.
+  - Green: targeted direct Chromium checks passed at 1280 x 900 and 390 x 900 with two real Research anchors at least 40px high, a noninteractive algorithm direction, project-before-workflow DOM and visual order, expected bilingual block counts, paired note titles, working mobile-menu keyboard behavior, no console errors, and no horizontal overflow.
+  - Green: a 390 x 900 no-JS Chromium check found the hamburger hidden, five visible navigation links, retained `body.no-js`, and no horizontal overflow.
+  - Green: the final read-only re-review returned `ready` with no remaining Important or Minor findings after the fail-closed interaction contract and decision boundaries were added.
+- Remaining notes:
+  - The public intelligent-algorithms example remains intentionally pending; promoting it requires owner-provided public evidence rather than inferred claims.
+  - The aggregate `node tools/check-public-browser.js` runner is not claimed as passed in this environment; targeted direct Chromium checks cover the changed homepage surface.
+  - This checkpoint does not commit, push, or publish changes to GitHub Pages.
+- Blockers:
+  - None locally; live Pages evidence remains unchanged until an authorized publish step.
+
+## 2026-07-13 Published-note source and governance integrity
+- Status: Focused red/green, full local repository, and targeted rendered-page validation passed.
+- Trigger:
+  - Two public Notes articles were marked as drafts in their Markdown sources, lacked canonical publication dates there, and exposed English-only article bodies on an otherwise bilingual public surface.
+  - Active planning and decision records no longer described the repository's current state consistently.
+- Changes:
+  - Added explicit `Status: published` and ISO `Published` fields to both published Notes source files.
+  - Added paired Chinese article bodies with explicit `lang="zh-CN"` and canonical `<time datetime>` publication dates to both public Notes pages.
+  - Derived publication dates from each public page's first-add commit in Git history: 2026-04-21 for the build log and 2026-04-22 for the research reflection.
+  - Added source-to-public Notes contract checks to `tools/check_site.py`.
+  - Reset `PLANS.md` to the current content-integrity milestone and corrected stale decision-record status text.
+- Validation result:
+  - Red: the new Notes checks reported eight expected source, date, and bilingual-body failures before content alignment.
+  - Red: a reviewer-designed bypass fixture passed before hardening even though it used a non-`time` date marker, English-only `### 中文`, and Han text outside the `lang="zh-CN"` block.
+  - Green: `python tools/check_site.py` passed after aligning the two source/public pairs.
+  - Green: the same bypass fixture now reports all three intended semantic-time, source-language, and scoped-language errors.
+  - Green: `python -m py_compile tools/check_site.py` and JavaScript syntax checks passed for the four existing site/browser entry files.
+  - Green: `node --test instrument/sim/tests/*.mjs` passed 114/114; `node tools/preprocess-instrument-data.js --validate` passed for the 65,160 byte package.
+  - Green: targeted Chromium rendering passed for both Notes articles at 1280 x 900 and 390 x 900, with Git-history-backed dates, bilingual reader trails, substantial Chinese bodies, working mobile menus, no console errors, and no horizontal overflow.
+- Remaining notes:
+  - This checkpoint does not redesign the homepage or publish changes to GitHub Pages.
+  - The aggregate `node tools/check-public-browser.js` runner remained resident during Playwright CLI startup in this environment. Targeted direct Playwright rendering covered the two changed public pages; the aggregate runner itself was not claimed as passed.
+- Blockers:
+  - None locally; public Pages evidence will remain unchanged until a later authorized publish step.
 
 ## 2026-06-19 Skip-link first-link guard
 - Status: Local red/green validation passed for this checkpoint; post-push Pages evidence belongs to the release report for the commit containing this entry.
